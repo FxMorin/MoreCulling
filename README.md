@@ -4,7 +4,7 @@
   
 **Warning this mod is still in alpha testing, make sure to report any bugs [here](https://github.com/fxmorin/moreculling/issues)!**  
   
-### Current Bugs this fixes:  
+## Current Bugs this fixes:  
 [MC-249693](https://bugs.mojang.com/browse/MC-249693) - Chorus plant culling  
 [MC-238739](https://bugs.mojang.com/browse/MC-238739) - Bamboo culling  
 [MC-209633](https://bugs.mojang.com/browse/MC-209633) - Glass pane culling  
@@ -12,15 +12,16 @@
 [MC-217653](https://bugs.mojang.com/browse/MC-217653) - End Rod culling (Not all but most)  
 **Plus a lot more that haven't been reported**  
 
-### Comparing Performance  
+## Comparing Performance  
 **Results may vary drastically!**  
 Without MoreCulling, I get around ~136 frames  
 ![Normal - FPS ~136](https://github.com/fxmorin/MoreCulling/blob/master/images/normally.png)  
-Without MoreCulling, I get around ~210 frames  
+With MoreCulling, I get around ~210 frames  
 ![MoreCulling - FPS ~210](https://github.com/fxmorin/MoreCulling/blob/master/images/moreculling.png)  
-Do not expect these results all the time. Bamboo renders 2 extra faces for each block without MoreCulling, which why the results are so drastic here!  
+Don't mind that bar, it was a screenshot
+Do not expect these results all the time. Bamboo renders 2 extra faces for each block without MoreCulling, which is why the results are so drastic here!  
   
-### More Info    
+## More Info    
 Feel free to contribute to the project!  
 I'm also fine if you use this mod in your modpacks  
   

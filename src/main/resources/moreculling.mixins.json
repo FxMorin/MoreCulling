@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ca.fxco.moreculling.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "accessors.AbstractBlockAccessor",
+    "BlockModelRenderer_drawSideMixin",
+    "models.BasicBakedModel_cacheMixin",
+    "models.BuiltinBakedModel_cacheMixin",
+    "models.MultipartBakedModel_cacheMixin",
+    "models.WeightedBakedModel_cacheMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

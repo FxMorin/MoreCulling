@@ -1,0 +1,3 @@
+accessWidener	v1	 named
+accessible field net/minecraft/block/Block FACE_CULL_MAP Ljava/lang/ThreadLocal;
+accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
