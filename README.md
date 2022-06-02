@@ -18,7 +18,7 @@ Without MoreCulling, I get around ~136 frames
 ![Normal - FPS ~136](https://github.com/fxmorin/MoreCulling/blob/master/images/normally.png)  
 With MoreCulling, I get around ~210 frames  
 ![MoreCulling - FPS ~210](https://github.com/fxmorin/MoreCulling/blob/master/images/moreculling.png)  
-Don't mind that bar, it was a screenshot
+Don't mind that bar, it was a screenshot.  
 Do not expect these results all the time. Bamboo renders 2 extra faces for each block without MoreCulling, which is why the results are so drastic here!  
   
 ## More Info    
