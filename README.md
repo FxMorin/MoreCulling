@@ -1,4 +1,4 @@
-# moreCulling  
+# More Culling  
 ### A mod that changes how blockstate culling is handled in order to improve performance  
 ###### Culling is when you don't render things that the player can't see, to improve performance
   
