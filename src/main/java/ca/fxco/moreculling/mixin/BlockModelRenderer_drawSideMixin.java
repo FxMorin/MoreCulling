@@ -2,8 +2,10 @@ package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.utils.BlockUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.BlockModelRenderer;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -21,6 +24,9 @@ import java.util.Random;
 @Mixin(BlockModelRenderer.class)
 public class BlockModelRenderer_drawSideMixin {
 
+    private static BlockRenderManager blockRenderManager = null;
+
+    @Unique
     private final ThreadLocal<Boolean> hasTransparency = new ThreadLocal<>();
 
 
@@ -58,7 +64,8 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private boolean shouldDrawSideSmooth(BlockState state, BlockView world,
                                          BlockPos pos, Direction side, BlockPos otherPos) {
-        return BlockUtils.shouldDrawSideTransparency(state, world, pos, side, otherPos, hasTransparency.get());
+        if (blockRenderManager == null) blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
+        return BlockUtils.shouldDrawSideTransparency(blockRenderManager, state, world, pos, side, otherPos, hasTransparency.get());
     }
 
 
@@ -96,6 +103,7 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private boolean shouldDrawSideFlat(BlockState state, BlockView world,
                                        BlockPos pos, Direction side, BlockPos otherPos) {
-        return BlockUtils.shouldDrawSideTransparency(state, world, pos, side, otherPos, hasTransparency.get());
+        if (blockRenderManager == null) blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
+        return BlockUtils.shouldDrawSideTransparency(blockRenderManager, state, world, pos, side, otherPos, hasTransparency.get());
     }
 }

@@ -13,5 +13,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "Block_drawSideMixin",
+    "models.BakedModel_extendsMixin"
+  ]
 }

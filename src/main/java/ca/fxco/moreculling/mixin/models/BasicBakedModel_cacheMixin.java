@@ -9,6 +9,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Mixin(BasicBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedModel {
 
+    @Unique
     private boolean hasTransparency;
 
     @Override
