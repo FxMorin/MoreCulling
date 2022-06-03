@@ -1,5 +1,9 @@
 package ca.fxco.moreculling.patches;
 
 public interface BakedTransparency {
-    boolean hasTransparency();
+
+    // When true, block will be treated like a normal block
+    default boolean hasTransparency() {
+        return true;
+    }
 }

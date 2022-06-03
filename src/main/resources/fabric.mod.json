@@ -33,6 +33,9 @@
     "mc-publish": {
       "curseforge": 630104,
       "modrinth": "51shyZVL"
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/client/render/model/BakedModel": ["ca/fxco/moreculling/patches/BakedTransparency"]
     }
   }
 }
