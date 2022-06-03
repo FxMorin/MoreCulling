@@ -1,10 +1,9 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
+import ca.fxco.moreculling.patches.BakedTransparency;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockModelRenderer;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +23,7 @@ public class BlockUtils {
         if (state.isSideInvisible(blockState, side)) return false;
         Block block = blockState.getBlock();
         if (blockState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
-                !blockRenderManager.getModel(blockState).hasTransparency())) {
+                !((BakedTransparency)blockRenderManager.getModel(blockState)).hasTransparency())) {
             if (block instanceof LeavesBlock || block instanceof DoorBlock) return true; // Replace to a blockTag instead
             Block.NeighborGroup neighborGroup = new Block.NeighborGroup(state, blockState, side);
             Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();

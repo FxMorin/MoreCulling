@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin.models;
 
+import ca.fxco.moreculling.patches.BakedTransparency;
 import ca.fxco.moreculling.utils.SpriteUtils;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(BasicBakedModel.class)
-public abstract class BasicBakedModel_cacheMixin implements BakedModel {
+public abstract class BasicBakedModel_cacheMixin implements BakedTransparency {
 
     @Unique
     private boolean hasTransparency;

@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin;
 
+import ca.fxco.moreculling.patches.BakedTransparency;
 import ca.fxco.moreculling.utils.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -46,7 +47,7 @@ public class BlockModelRenderer_drawSideMixin {
     private void getBakedQuadsSmooth(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                      MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
                                      long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
-        this.hasTransparency.set(model.hasTransparency());
+        this.hasTransparency.set(((BakedTransparency)model).hasTransparency());
     }
 
 
@@ -85,7 +86,7 @@ public class BlockModelRenderer_drawSideMixin {
     private void getBakedQuadsFlat(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                    MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
                                    long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
-        this.hasTransparency.set(model.hasTransparency());
+        this.hasTransparency.set(((BakedTransparency)model).hasTransparency());
     }
 
 

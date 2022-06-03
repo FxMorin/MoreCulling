@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin;
 
+import ca.fxco.moreculling.patches.BakedTransparency;
 import ca.fxco.moreculling.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,6 +24,6 @@ public class Block_drawSideMixin {
     @Overwrite
     public static boolean shouldDrawSide(BlockState state, BlockView world, BlockPos pos, Direction side, BlockPos otherPos) {
         if (blockRenderManager == null) blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
-        return BlockUtils.shouldDrawSideTransparency(blockRenderManager, state, world, pos, side, otherPos, blockRenderManager.getModel(state).hasTransparency());
+        return BlockUtils.shouldDrawSideTransparency(blockRenderManager, state, world, pos, side, otherPos, ((BakedTransparency)blockRenderManager.getModel(state)).hasTransparency());
     }
 }
