@@ -13,7 +13,7 @@
     "issues": "https://github.com/fxmorin/moreculling/issues"
   },
   "icon": "assets/moreculling/MoreCulling.png",
-  "license": "GPL-3.0-only",
+  "license": "LGPL-2.1-only",
   "environment": "client",
   "entrypoints": {
     "main": [
