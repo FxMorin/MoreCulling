@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BlockModelRenderer_drawSideMixin",
+    "Block_drawSideMixin",
     "accessors.AbstractBlockAccessor",
     "models.BasicBakedModel_cacheMixin",
     "models.BuiltinBakedModel_cacheMixin",
@@ -13,9 +14,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "Block_drawSideMixin",
-    "models.BakedModel_extendsMixin"
-  ]
+  }
 }
