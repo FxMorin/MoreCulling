@@ -16,23 +16,23 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class BlockUtils {
 
-    public static boolean shouldDrawSideTransparency(BlockState state,
-                                                     BlockView world, BlockPos pos, Direction side,
-                                                     BlockPos otherPos, boolean hasTransparency) {
-        BlockState blockState = world.getBlockState(otherPos);
-        if (state.isSideInvisible(blockState, side)) return false;
-        Block block = blockState.getBlock();
-        if (blockState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
-                !((BakedTransparency)blockRenderManager.getModel(blockState)).hasTransparency())) {
+    public static boolean shouldDrawSideTransparency(BlockState thisState,
+                                                     BlockView world, BlockPos thisPos, Direction side,
+                                                     BlockPos sidePos, boolean hasTransparency) {
+        BlockState sideState = world.getBlockState(sidePos);
+        if (thisState.isSideInvisible(sideState, side)) return false;
+        Block block = sideState.getBlock();
+        if (sideState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
+                !((BakedTransparency)blockRenderManager.getModel(sideState)).hasTransparency())) {
             if (block instanceof LeavesBlock || block instanceof DoorBlock) return true; // Replace with a blockTag
-            Block.NeighborGroup neighborGroup = new Block.NeighborGroup(state, blockState, side);
+            Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);
             Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();
             byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(neighborGroup);
             if (b != 127) return b != 0;
-            VoxelShape voxelShape = state.getCullingFace(world, pos, side);
-            if (voxelShape.isEmpty()) return true;
-            VoxelShape voxelShape2 = blockState.getCullingFace(world, otherPos, side.getOpposite());
-            boolean bl = VoxelShapes.matchesAnywhere(voxelShape, voxelShape2, BooleanBiFunction.ONLY_FIRST);
+            VoxelShape thisShape = thisState.getCullingFace(world, thisPos, side);
+            if (thisShape.isEmpty()) return true;
+            VoxelShape sideShape = sideState.getCullingFace(world, sidePos, side.getOpposite());
+            boolean bl = VoxelShapes.matchesAnywhere(thisShape, sideShape, BooleanBiFunction.ONLY_FIRST);
             if (object2ByteLinkedOpenHashMap.size() == 2048) object2ByteLinkedOpenHashMap.removeLastByte();
             object2ByteLinkedOpenHashMap.putAndMoveToFirst(neighborGroup, (byte)(bl ? 1 : 0));
             return bl;
