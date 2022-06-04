@@ -1,8 +1,11 @@
 package ca.fxco.moreculling;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.render.block.BlockRenderManager;
 
-public class MoreCulling implements ModInitializer {
+public class MoreCulling implements ClientModInitializer {
+
+    public static BlockRenderManager blockRenderManager = null;
 
     //public static final String MOD_ID = "moreculling";
     //public static final TagKey<Block> DONT_CULL = TagKey.of(Registry.BLOCK_KEY, new Identifier(MOD_ID, "dont_cull"));
@@ -13,5 +16,5 @@ public class MoreCulling implements ModInitializer {
      */
 
     @Override
-    public void onInitialize() {}
+    public void onInitializeClient() {}
 }

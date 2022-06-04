@@ -16,7 +16,7 @@
   "license": "LGPL-2.1-only",
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "ca.fxco.moreculling.MoreCulling"
     ]
   },

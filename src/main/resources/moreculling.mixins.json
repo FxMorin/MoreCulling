@@ -16,6 +16,8 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "MinecraftClient_blockRenderManagerMixin",
+    "compat.BlockOcclusionCache_sodiumMixin",
     "models.BakedModel_extendsMixin"
   ]
 }

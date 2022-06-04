@@ -9,7 +9,14 @@ runClient.doFirst {
 }
 
 repositories {
-    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -29,8 +36,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
+    //modRuntimeOnly "maven.modrinth:sodium:mc1.18.2-0.4.1"
 }
 
 processResources {
