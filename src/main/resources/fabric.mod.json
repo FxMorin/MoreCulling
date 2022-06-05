@@ -29,6 +29,9 @@
     "minecraft": "1.18.x",
     "java": ">=17"
   },
+  "breaks": {
+    "cull-less-leaves": "*"
+  },
   "custom": {
     "mc-publish": {
       "curseforge": 630104,
