@@ -17,7 +17,7 @@ public class Block_drawSideMixin {
 
     /**
      * @author Fx Morin
-     * @reason Unfortunately needed for fabric support
+     * @reason Many mods use Block.shouldDrawSide() directly so its basically required that I overwrite it
      */
     @Overwrite
     public static boolean shouldDrawSide(BlockState state, BlockView world,
