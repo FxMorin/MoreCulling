@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
-import ca.fxco.moreculling.patches.BakedTransparency;
+import ca.fxco.moreculling.api.model.BakedTransparency;
 import ca.fxco.moreculling.utils.SpriteUtils;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.WeightedBakedModel;
@@ -26,7 +26,7 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedTransparency
     private boolean hasTransparency;
 
     @Override
-    public boolean hasTransparency() {
+    public boolean hasTextureTransparency() {
         return hasTransparency;
     }
 
@@ -39,6 +39,6 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedTransparency
         hasTransparency = SpriteUtils.doesHaveTransparency(this.defaultModel.getParticleSprite());
         if (!hasTransparency)
             for (Weighted.Present<BakedModel> bakedModelPresent : models)
-                hasTransparency |= ((BakedTransparency)bakedModelPresent.getData()).hasTransparency();
+                hasTransparency |= ((BakedTransparency)bakedModelPresent.getData()).hasTextureTransparency();
     }
 }

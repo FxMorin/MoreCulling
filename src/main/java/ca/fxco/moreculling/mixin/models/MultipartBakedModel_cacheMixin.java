@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
-import ca.fxco.moreculling.patches.BakedTransparency;
+import ca.fxco.moreculling.api.model.BakedTransparency;
 import net.minecraft.client.render.model.MultipartBakedModel;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class MultipartBakedModel_cacheMixin implements BakedTransparency {
 
     @Override
-    public boolean hasTransparency() {
+    public boolean hasTextureTransparency() {
         return false;
     }
 }

@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.compat;
 
-import ca.fxco.moreculling.patches.BakedTransparency;
+import ca.fxco.moreculling.api.model.BakedTransparency;
 import ca.fxco.moreculling.utils.BlockUtils;
 import me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache;
 import net.minecraft.block.BlockState;
@@ -44,7 +44,7 @@ public class BlockOcclusionCache_sodiumMixin {
                 pos,
                 facing,
                 adjPos,
-                ((BakedTransparency)blockRenderManager.getModel(selfState)).hasTransparency()
+                ((BakedTransparency)blockRenderManager.getModel(selfState)).hasTextureTransparency()
         ));
     }
 }

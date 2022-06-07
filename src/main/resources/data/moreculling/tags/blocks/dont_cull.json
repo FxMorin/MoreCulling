@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#minecraft:leaves",
-    "#minecraft:doors"
+    "#minecraft:doors",
+    "minecraft:oak_door"
   ]
 }
