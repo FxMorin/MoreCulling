@@ -22,6 +22,7 @@ jobs:
         run: ./gradlew build
       - uses: Kir-Antipov/mc-publish@v2.1
         with:
+          files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
           version-type: alpha
           version-resolver: releases
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
