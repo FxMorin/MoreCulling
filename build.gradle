@@ -81,12 +81,13 @@ task apiJar(type: Jar) {
     from sourceSets.api.output
 }
 
-task remapApiJar(type: RemapJarTask, dependsOn: apiJar) {
+task remapApiJar(type: RemapJarTask) {
     classifier "api"
 
     input = apiJar.archiveFile.get().asFile
     addNestedDependencies = false
 }
+prepareRemapApiJar.dependsOn(apiJar)
 
 runClient.doFirst {
     args = ['--username', "PR0CESS", '--uuid', UUID.randomUUID()]
