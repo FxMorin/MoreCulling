@@ -54,6 +54,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // Conditional-Mixins
+    modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
+    include "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
+
     // Sodium Compatibility - All Sodium related dependencies are for development only
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 

@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "ca.fxco.moreculling.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "ca.fxco.moreculling.utils.MixinConfigPlugin",
   "client": [
     "AbstractBlockState_moreMixin",
     "Block_drawSideMixin",
