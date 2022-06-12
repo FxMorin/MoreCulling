@@ -16,6 +16,7 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     /**
      * @author Fx Morin
      * @reason Many mods use Block.shouldDrawSide() directly so its basically required that I overwrite it
+     * If your mixin breaks due to this, please use the API if MoreCulling is present
      */
     @Overwrite
     public static boolean shouldDrawSide(BlockState state, BlockView world,
