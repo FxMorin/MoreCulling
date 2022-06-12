@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin;
+package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.utils.CullingUtils;

@@ -12,6 +12,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.Optional;
+
 import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 import static net.minecraft.block.Block.FACE_CULL_MAP;
@@ -25,17 +27,20 @@ public class CullingUtils {
                                                 BlockView world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos) {
         BlockState sideState = world.getBlockState(sidePos);
-        MoreStateCulling thisStateCulling = ((MoreStateCulling)thisState);
-        if (thisStateCulling.isSideInvisibleAtPos(sideState, side, sidePos)) return false;
-        if (thisStateCulling.usesCustomShouldDrawFace())
-            return thisStateCulling.customShouldDrawFace(world, sideState, thisPos, sidePos, side);
-        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace())
-            return ((MoreStateCulling)sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+        if (thisState.isSideInvisible(sideState, side)) return false;
+        if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
+        }
+        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace()) {
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
+        }
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
                 !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency() &&
                 !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
-            return shouldDrawFace(thisState, world, thisPos, side, sidePos, sideState);
+            return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
     }
@@ -47,16 +52,19 @@ public class CullingUtils {
                                                 BlockView world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos, boolean hasTransparency) {
         BlockState sideState = world.getBlockState(sidePos);
-        MoreStateCulling thisStateCulling = ((MoreStateCulling)thisState);
-        if (thisStateCulling.isSideInvisibleAtPos(sideState, side, sidePos)) return false;
-        if (thisStateCulling.usesCustomShouldDrawFace())
-            return thisStateCulling.customShouldDrawFace(world, sideState, thisPos, sidePos, side);
-        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace())
-            return ((MoreStateCulling)sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+        if (thisState.isSideInvisible(sideState, side)) return false;
+        if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
+        }
+        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace()) {
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
+        }
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
                 !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
-            return shouldDrawFace(thisState, world, thisPos, side, sidePos, sideState);
+            return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
     }
@@ -64,8 +72,8 @@ public class CullingUtils {
     /**
      * Just the logic used to compare 2 block faces once we know that they are both solid textures
      */
-    private static boolean shouldDrawFace(BlockState thisState, BlockView world, BlockPos thisPos,
-                                          Direction side, BlockPos sidePos, BlockState sideState) {
+    private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
+                                          BlockPos thisPos, BlockPos sidePos, Direction side) {
         if (sideState.isIn(DONT_CULL)) return true; // Some states are special, so we use the dont_cull blockTag
         Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);
         Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();

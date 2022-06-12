@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin;
+package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.patches.MoreStateCulling;
@@ -11,6 +11,8 @@ import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Optional;
+
 @Mixin(AbstractBlock.AbstractBlockState.class)
 public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     @Shadow
@@ -20,17 +22,12 @@ public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     protected abstract BlockState asBlockState();
 
     @Override
-    public boolean isSideInvisibleAtPos(BlockState state, Direction direction, BlockPos pos) {
-        return ((MoreBlockCulling)this.getBlock()).isSideInvisibleAtPos(this.asBlockState(), state, direction, pos);
-    }
-
-    @Override
     public boolean usesCustomShouldDrawFace() {
         return ((MoreBlockCulling)this.getBlock()).usesCustomShouldDrawFace(this.asBlockState());
     }
 
     @Override
-    public boolean customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
         return ((MoreBlockCulling)this.getBlock()).customShouldDrawFace(view, this.asBlockState(), sideState, thisPos, sidePos, side);
     }
 }

@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin;
+package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.utils.CullingUtils;

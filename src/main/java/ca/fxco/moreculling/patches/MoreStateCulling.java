@@ -5,8 +5,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
+import java.util.Optional;
+
 public interface MoreStateCulling {
-    boolean isSideInvisibleAtPos(BlockState state, Direction direction, BlockPos pos);
     boolean usesCustomShouldDrawFace();
-    boolean customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side);
+    Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side);
 }
