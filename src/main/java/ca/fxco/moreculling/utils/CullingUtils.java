@@ -25,7 +25,12 @@ public class CullingUtils {
                                                 BlockView world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos) {
         BlockState sideState = world.getBlockState(sidePos);
-        if (((MoreStateCulling)thisState).isSideInvisibleAtPos(sideState, side, sidePos)) return false;
+        MoreStateCulling thisStateCulling = ((MoreStateCulling)thisState);
+        if (thisStateCulling.isSideInvisibleAtPos(sideState, side, sidePos)) return false;
+        if (thisStateCulling.usesCustomShouldDrawFace())
+            return thisStateCulling.customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace())
+            return ((MoreStateCulling)sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
                 !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency() &&
@@ -42,7 +47,12 @@ public class CullingUtils {
                                                 BlockView world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos, boolean hasTransparency) {
         BlockState sideState = world.getBlockState(sidePos);
-        if (((MoreStateCulling)thisState).isSideInvisibleAtPos(sideState, side, sidePos)) return false;
+        MoreStateCulling thisStateCulling = ((MoreStateCulling)thisState);
+        if (thisStateCulling.isSideInvisibleAtPos(sideState, side, sidePos)) return false;
+        if (thisStateCulling.usesCustomShouldDrawFace())
+            return thisStateCulling.customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace())
+            return ((MoreStateCulling)sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
                 !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
