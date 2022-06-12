@@ -8,6 +8,7 @@ public interface MoreBlockCulling {
 
     /**
      * An isSideInvisible() call which passes position which can be used for more complicated invisible side checks
+     * This provides more opportunities for aggressive culling at the cost of cpu performance over gpu performance
      */
     default boolean isSideInvisibleAtPos(BlockState state, BlockState sideState, Direction direction, BlockPos pos) {
         return state.isSideInvisible(sideState, direction);

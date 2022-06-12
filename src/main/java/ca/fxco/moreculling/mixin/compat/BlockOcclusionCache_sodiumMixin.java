@@ -1,7 +1,6 @@
 package ca.fxco.moreculling.mixin.compat;
 
-import ca.fxco.moreculling.api.model.BakedTransparency;
-import ca.fxco.moreculling.utils.BlockUtils;
+import ca.fxco.moreculling.utils.CullingUtils;
 import me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -13,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
 @Pseudo
 @Mixin(BlockOcclusionCache.class)
@@ -38,13 +35,6 @@ public class BlockOcclusionCache_sodiumMixin {
     )
     private void useMoreCulling(BlockState selfState, BlockView view, BlockPos pos,
                                 Direction facing, CallbackInfoReturnable<Boolean> cir, BlockPos.Mutable adjPos) {
-        cir.setReturnValue(BlockUtils.shouldDrawSideTransparency(
-                selfState,
-                view,
-                pos,
-                facing,
-                adjPos,
-                ((BakedTransparency)blockRenderManager.getModel(selfState)).hasTextureTransparency()
-        ));
+        cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
     }
 }

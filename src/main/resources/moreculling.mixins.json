@@ -6,6 +6,7 @@
   "client": [
     "Block_drawSideMixin",
     "BlockModelRenderer_drawSideMixin",
+    "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
     "models.BasicBakedModel_cacheMixin",
     "models.BuiltinBakedModel_cacheMixin",

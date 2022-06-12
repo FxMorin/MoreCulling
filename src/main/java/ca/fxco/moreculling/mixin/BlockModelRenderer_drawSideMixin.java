@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin;
 
-import ca.fxco.moreculling.api.model.BakedTransparency;
-import ca.fxco.moreculling.utils.BlockUtils;
+import ca.fxco.moreculling.api.model.BakedOpacity;
+import ca.fxco.moreculling.utils.CullingUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.BlockModelRenderer;
@@ -9,6 +9,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,20 +19,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Random;
-
 @Mixin(BlockModelRenderer.class)
 public class BlockModelRenderer_drawSideMixin {
 
     @Unique
-    private final ThreadLocal<Boolean> hasTransparency = new ThreadLocal<>();
+    private final ThreadLocal<Boolean> hasTranslucency = new ThreadLocal<>();
 
 
     @Inject(
             method = "renderSmooth(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/BlockPos$Mutable;set(" +
@@ -43,7 +42,7 @@ public class BlockModelRenderer_drawSideMixin {
     private void getBakedQuadsSmooth(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                      MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
                                      long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
-        this.hasTransparency.set(((BakedTransparency)model).hasTextureTransparency());
+        this.hasTranslucency.set(((BakedOpacity)model).hasTextureTranslucency());
     }
 
 
@@ -51,7 +50,7 @@ public class BlockModelRenderer_drawSideMixin {
             method = "renderSmooth(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;shouldDrawSide(Lnet/minecraft/block/BlockState;" +
@@ -61,15 +60,15 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private boolean shouldDrawSideSmooth(BlockState state, BlockView world,
                                          BlockPos pos, Direction side, BlockPos otherPos) {
-        return BlockUtils.shouldDrawSideTransparency(state, world, pos, side, otherPos, hasTransparency.get());
+        return CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos, hasTranslucency.get());
     }
 
 
     @Inject(
-            method = "renderFlat(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;" +
-                    "Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;" +
-                    "Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;" +
-                    "ZLjava/util/Random;JI)Z",
+            method = "renderFlat(Lnet/minecraft/world/BlockRenderView;" +
+                    "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
+                    "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/BlockPos$Mutable;set(" +
@@ -81,15 +80,15 @@ public class BlockModelRenderer_drawSideMixin {
     private void getBakedQuadsFlat(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                    MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
                                    long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
-        this.hasTransparency.set(((BakedTransparency)model).hasTextureTransparency());
+        this.hasTranslucency.set(((BakedOpacity)model).hasTextureTranslucency());
     }
 
 
     @Redirect(
-            method = "renderFlat(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;" +
-                    "Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;" +
-                    "Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;" +
-                    "ZLjava/util/Random;JI)Z",
+            method = "renderFlat(Lnet/minecraft/world/BlockRenderView;" +
+                    "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
+                    "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;shouldDrawSide(Lnet/minecraft/block/BlockState;" +
@@ -99,6 +98,6 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private boolean shouldDrawSideFlat(BlockState state, BlockView world,
                                        BlockPos pos, Direction side, BlockPos otherPos) {
-        return BlockUtils.shouldDrawSideTransparency(state, world, pos, side, otherPos, hasTransparency.get());
+        return CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos, hasTranslucency.get());
     }
 }

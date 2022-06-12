@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.models;
 
-import ca.fxco.moreculling.api.model.BakedTransparency;
+import ca.fxco.moreculling.api.model.BakedOpacity;
+import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.utils.SpriteUtils;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
@@ -18,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(BasicBakedModel.class)
-public abstract class BasicBakedModel_cacheMixin implements BakedTransparency {
+public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
     @Unique
-    private boolean hasTransparency;
+    private boolean hasTranslucency;
 
     @Override
-    public boolean hasTextureTransparency() {
-        return hasTransparency;
+    public boolean hasTextureTranslucency() {
+        return hasTranslucency;
     }
 
 
@@ -36,24 +37,24 @@ public abstract class BasicBakedModel_cacheMixin implements BakedTransparency {
     private void onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
                         boolean isSideLit, boolean hasDepth, Sprite sprite, ModelTransformation transformation,
                         ModelOverrideList itemPropertyOverrides, CallbackInfo ci) {
-        hasTransparency = SpriteUtils.doesHaveTransparency(sprite);
-        if (!hasTransparency) {
+        hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
+        if (!hasTranslucency) {
             for (BakedQuad baked : quads) {
-                if (SpriteUtils.doesHaveTransparency(baked.getSprite())) {
-                    hasTransparency = true;
+                if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
+                    hasTranslucency = true;
                     break;
                 }
             }
         }
-        if (!hasTransparency) {
+        if (!hasTranslucency) {
             for (List<BakedQuad> bakedList : faceQuads.values()) {
                 for (BakedQuad baked : bakedList) {
-                    if (SpriteUtils.doesHaveTransparency(baked.getSprite())) {
-                        hasTransparency = true;
+                    if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
+                        hasTranslucency = true;
                         break;
                     }
                 }
-                if (hasTransparency) break;
+                if (hasTranslucency) break;
             }
         }
     }
