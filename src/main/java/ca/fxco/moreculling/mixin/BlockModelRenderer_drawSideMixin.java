@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockModelRenderer.class)
 public class BlockModelRenderer_drawSideMixin {
@@ -41,7 +41,7 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private void getBakedQuadsSmooth(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                      MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
-                                     long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
+                                     long seed, int overlay, CallbackInfo ci) {
         this.hasTranslucency.set(((BakedOpacity)model).hasTextureTranslucency());
     }
 
@@ -79,7 +79,7 @@ public class BlockModelRenderer_drawSideMixin {
     )
     private void getBakedQuadsFlat(BlockRenderView world, BakedModel model, BlockState state, BlockPos pos,
                                    MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random,
-                                   long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
+                                   long seed, int overlay, CallbackInfo ci) {
         this.hasTranslucency.set(((BakedOpacity)model).hasTextureTranslucency());
     }
 
