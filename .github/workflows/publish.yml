@@ -20,7 +20,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - uses: Kir-Antipov/mc-publish@v2.1
+      - uses: Kir-Antipov/mc-publish@v3.0
         with:
           files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
           version-type: alpha
