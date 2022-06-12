@@ -4,10 +4,14 @@
   "package": "ca.fxco.moreculling.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "AbstractBlockState_moreMixin",
     "Block_drawSideMixin",
     "BlockModelRenderer_drawSideMixin",
+    "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
+    "compat.BlockOcclusionCache_sodiumMixin",
+    "models.BakedModel_extendsMixin",
     "models.BasicBakedModel_cacheMixin",
     "models.BuiltinBakedModel_cacheMixin",
     "models.MultipartBakedModel_cacheMixin",
@@ -15,11 +19,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "AbstractBlockState_moreMixin",
-    "MinecraftClient_blockRenderManagerMixin",
-    "compat.BlockOcclusionCache_sodiumMixin",
-    "models.BakedModel_extendsMixin"
-  ]
+  }
 }
