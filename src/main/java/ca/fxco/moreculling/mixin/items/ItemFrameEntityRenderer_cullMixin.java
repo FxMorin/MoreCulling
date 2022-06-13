@@ -41,7 +41,8 @@ public class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> {
                 vertexConsumers,
                 light,
                 seed,
-                blockState.isOpaque()
+                blockState.isOpaque(),
+                itemFrameEntity.isInvisible()
         );
     }
 }

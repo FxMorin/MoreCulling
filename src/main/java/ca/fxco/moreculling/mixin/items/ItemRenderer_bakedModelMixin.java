@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -32,11 +31,9 @@ import java.util.List;
 
 import static net.minecraft.client.render.item.ItemRenderer.*;
 
-@Restriction(conflict = @Condition("sodium"))
+@Restriction(conflict = @Condition("sodium")) // TODO: Remove
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
-
-    private static final Transformation DEFAULT_BLOCK_FIXED_TRANSFORMATION = new Transformation(Vec3f.ZERO, Vec3f.ZERO, new Vec3f(0.5f, 0.5f, 0.5f));
 
     @Shadow
     @Final
@@ -71,20 +68,40 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             );
         }
         rand.setSeed(42L);
-        this.renderBakedItemQuads(
-                matrices,
-                vertices,
-                model.getQuads(null, null, rand),
-                stack,
-                light,
-                overlay
-        );
+        List<BakedQuad> bakedQuads = model.getQuads(null, null, rand);
+        if (withoutFace != null)
+            bakedQuads.removeIf(bakedQuad -> bakedQuad.getFace() == withoutFace);
+        this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+    }
+
+    private boolean canCullTransformation(Transformation transform) {
+        if (transform.scale.getX() > 2.0F || transform.scale.getY() > 2.0F || transform.scale.getZ() > 2.0F) {
+            return false; //TODO: Allow Z axis
+        }
+        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0) { // || transform.rotation.getY() % 90 != 0
+            return false; //TODO: Allow Y axis, see if the face is correct
+        }
+        if (transform.translation.getX() != 0 || transform.translation.getY() != 0 || transform.translation.getZ() != 0) {
+            return false; //TODO: Maybe allow Z axis, although would require checking scale also
+        }
+        return true;
+    }
+
+    private Direction changeDirectionBasedOnTransformation(Direction dir, Transformation transform) {
+        if (transform.rotation.getY() == 0) {
+            return dir.getOpposite();
+        } else if (transform.rotation.getY() == 90) {
+            return dir.rotateYCounterclockwise();
+        } else if (transform.rotation.getY() == 270) {
+            return dir.rotateYClockwise();
+        }
+        return dir;
     }
 
 
     @Override
     public void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc,
-                                    int light, int seed, boolean shouldCullBack) {
+                                    int light, int seed, boolean shouldCullBack, boolean isInvisible) {
         BakedModel model = this.getModel(stack, null, null, seed);
         matrices.push();
         if (stack.isOf(Items.TRIDENT)) { // Jank mojang checks, yay
@@ -96,9 +113,10 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         transformation.apply(false, matrices);
         matrices.translate(-0.5, -0.5, -0.5);
         if (!model.isBuiltin()) {
-            boolean canCull = shouldCullBack && transformation.equals(DEFAULT_BLOCK_FIXED_TRANSFORMATION);
+            boolean isBlockItem = stack.getItem() instanceof BlockItem;
+            boolean canCull = ((!isBlockItem && !isInvisible) || shouldCullBack) && canCullTransformation(transformation);
             // Use faster cached check for translucency instead of multiple instanceof checks
-            boolean bl2 = !(stack.getItem() instanceof BlockItem) || !((BakedOpacity) model).hasTextureTranslucency();
+            boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency();
             RenderLayer renderLayer = RenderLayers.getItemLayer(stack, bl2);
             VertexConsumer vertexConsumer;
             if (stack.isIn(ItemTags.COMPASSES) && stack.hasGlint()) {
@@ -118,7 +136,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                     OverlayTexture.DEFAULT_UV,
                     matrices,
                     vertexConsumer,
-                    canCull ? Direction.SOUTH : null
+                    canCull ? changeDirectionBasedOnTransformation(Direction.NORTH, transformation) : null
             );
         } else {
             this.builtinModelItemRenderer.render(

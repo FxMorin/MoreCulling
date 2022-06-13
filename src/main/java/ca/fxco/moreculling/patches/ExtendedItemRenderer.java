@@ -9,6 +9,6 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public interface ExtendedItemRenderer {
-    void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc, int light, int seed, boolean shouldCullBack);
+    void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc, int light, int seed, boolean shouldCullBack, boolean isInvisible);
     void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices, VertexConsumer vertices, @Nullable Direction withoutFace);
 }
