@@ -4,6 +4,7 @@ import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemModels;
@@ -28,6 +29,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.minecraft.client.render.item.ItemRenderer.*;
@@ -65,7 +68,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
         }
         rand.setSeed(42L);
-        List<BakedQuad> bakedQuads = model.getQuads(null, null, rand);
+        ArrayList<BakedQuad> bakedQuads = new ArrayList<>(model.getQuads(null, null, rand));
         if (!bakedQuads.isEmpty()) {
             if (withoutFace != null)
                 bakedQuads.removeIf(bakedQuad -> bakedQuad.getFace() == withoutFace);
