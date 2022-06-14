@@ -9,6 +9,8 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -32,17 +34,18 @@ public class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> {
     )
     public void render(ItemRenderer renderer, ItemStack stack, ModelTransformation.Mode transformationType, int light,
                        int overlay, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                       int seed, T itemFrameEntity) {
-        BlockState blockState = itemFrameEntity.world.getBlockState(itemFrameEntity.getDecorationBlockPos()
-                .offset(itemFrameEntity.getHorizontalFacing().getOpposite()));
+                       int seed, T frame) {
+        Direction dir = frame.getHorizontalFacing();
+        BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
+        BlockState blockState = frame.world.getBlockState(posBehind);
         ((ExtendedItemRenderer)renderer).renderItemFrameItem(
                 stack,
                 matrices,
                 vertexConsumers,
                 light,
                 seed,
-                blockState.isOpaque(),
-                itemFrameEntity.isInvisible()
+                blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir),
+                frame.isInvisible()
         );
     }
 }

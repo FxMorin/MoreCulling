@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
@@ -33,6 +34,9 @@ import static net.minecraft.client.render.item.ItemRenderer.*;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
+
+    @Unique
+    private final Random rand = Random.create(42L);
 
     @Shadow
     @Final
@@ -53,32 +57,28 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     public void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
                                                  MatrixStack matrices, VertexConsumer vertices,
                                                 @Nullable Direction withoutFace) {
-        Random rand = Random.create();
         for(Direction direction : Direction.values()) {
             if (direction == withoutFace) continue;
             rand.setSeed(42L);
-            this.renderBakedItemQuads(
-                    matrices,
-                    vertices,
-                    model.getQuads(null, direction, rand),
-                    stack,
-                    light,
-                    overlay
-            );
+            List<BakedQuad> bakedQuads = model.getQuads(null, direction, rand);
+            if (!bakedQuads.isEmpty())
+                this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
         }
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(null, null, rand);
-        if (withoutFace != null)
-            bakedQuads.removeIf(bakedQuad -> bakedQuad.getFace() == withoutFace);
-        this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        if (!bakedQuads.isEmpty()) {
+            if (withoutFace != null)
+                bakedQuads.removeIf(bakedQuad -> bakedQuad.getFace() == withoutFace);
+            this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        }
     }
 
     private boolean canCullTransformation(Transformation transform) {
         if (transform.scale.getX() > 2.0F || transform.scale.getY() > 2.0F || transform.scale.getZ() > 2.0F) {
-            return false; //TODO: Allow Z axis
+            return false; //TODO: Maybe Allow Z axis
         }
-        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0) { // || transform.rotation.getY() % 90 != 0
-            return false; //TODO: Allow Y axis, see if the face is correct
+        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0 || transform.rotation.getY() % 90 != 0) {
+            return false; //TODO: Maybe Allow Y axis, see if the face is correct
         }
         if (transform.translation.getX() != 0 || transform.translation.getY() != 0 || transform.translation.getZ() != 0) {
             return false; //TODO: Maybe allow Z axis, although would require checking scale also
@@ -112,7 +112,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         transformation.apply(false, matrices);
         matrices.translate(-0.5, -0.5, -0.5);
         if (!model.isBuiltin()) {
-            boolean isBlockItem = stack.getItem() instanceof BlockItem;
+            boolean isBlockItem = stack.getItem() instanceof BlockItem; //TODO: Do proper checks
             boolean canCull = ((!isBlockItem && !isInvisible) || shouldCullBack) && canCullTransformation(transformation);
             // Use faster cached check for translucency instead of multiple instanceof checks
             boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency();
