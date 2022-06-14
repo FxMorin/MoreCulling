@@ -86,14 +86,14 @@ tasks.withType(JavaCompile) {
 }
 
 tasks.withType(Jar) {
-    from "LICENSE.txt"
+    from "LICENSE"
     from sourceSets.api.output
 }
 
-task apiJar(type: Jar) {
+/*task apiJar(type: Jar) {
     classifier "api-dev"
     from sourceSets.api.output
-}
+}*/
 
 task remapApiJar(type: RemapJarTask) {
     classifier "api"
@@ -101,7 +101,7 @@ task remapApiJar(type: RemapJarTask) {
     input = apiJar.archiveFile.get().asFile
     addNestedDependencies = false
 }
-prepareRemapApiJar.dependsOn(apiJar)
+//prepareRemapApiJar.dependsOn(apiJar)
 
 runClient.doFirst {
     args = ['--username', "PR0CESS", '--uuid', UUID.randomUUID()]
