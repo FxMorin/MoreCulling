@@ -59,7 +59,8 @@ dependencies {
     include "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
 
     // Sodium Compatibility - All Sodium related dependencies are for development only
-    modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    modCompileOnlyApi "maven.modrinth:sodium:${project.sodium_version}"
+    //modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 
     // Dependencies of Sodium
     modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
