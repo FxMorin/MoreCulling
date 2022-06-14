@@ -1,17 +1,20 @@
 # More Culling  
-### A mod that changes how blockstate culling is handled in order to improve performance  
+### A mod that changes how multiple types of culling are handled in order to improve performance  
 ###### Culling is when you don't render things that the player can't see, to improve performance
   
 **Warning this mod is still in alpha testing, make sure to report any bugs [here](https://github.com/fxmorin/moreculling/issues)!**  
   
 ## Current Bugs fixed:  
 [MC-249693](https://bugs.mojang.com/browse/MC-249693) - Chorus plant culling  
-[MC-238739](https://bugs.mojang.com/browse/MC-238739) - Bamboo culling  
+[MC-238739](https://bugs.mojang.com/browse/MC-238739) - Bamboo culling (without leaves)  
 [MC-209633](https://bugs.mojang.com/browse/MC-209633) - Glass pane culling  
-[MC-139620](https://bugs.mojang.com/browse/MC-139620) - Fence culling (except pressure plate)  
-[MC-217653](https://bugs.mojang.com/browse/MC-217653) - End Rod culling (Not all but most)  
+[MC-139620](https://bugs.mojang.com/browse/MC-139620) - Fence culling (some exceptions)  
+[MC-217653](https://bugs.mojang.com/browse/MC-217653) - End Rod culling (some exceptions)  
 **Plus a lot more that haven't been reported or tested**  
 
+## Other Features:  
+- Item Frame culling  
+  
 ## Comparing Performance  
 **Results may vary drastically!**  
 Without MoreCulling, I get around ~136 frames  

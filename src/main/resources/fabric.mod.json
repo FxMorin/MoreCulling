@@ -3,7 +3,7 @@
   "id": "moreculling",
   "version": "${version}",
   "name": "More Culling",
-  "description": "A mod that changes how blockstate culling is handled in order to improve performance",
+  "description": "A mod that changes how multiple types of culling are handled in order to improve performance",
   "authors": [
     "FX - PR0CESS"
   ],
