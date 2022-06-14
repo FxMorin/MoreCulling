@@ -31,7 +31,6 @@ import java.util.List;
 
 import static net.minecraft.client.render.item.ItemRenderer.*;
 
-@Restriction(conflict = @Condition("sodium")) // TODO: Remove
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
 
