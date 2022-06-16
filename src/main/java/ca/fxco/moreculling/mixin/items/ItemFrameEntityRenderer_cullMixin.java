@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ItemFrameEntityRenderer.class)
 public class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> {
 
+    //TODO: Cull the back of item frames against solid block faces
+
 
     @Redirect(
             method = "render(Lnet/minecraft/entity/decoration/ItemFrameEntity;" +
