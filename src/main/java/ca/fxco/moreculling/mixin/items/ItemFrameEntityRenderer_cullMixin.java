@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ItemFrameEntityRenderer.class)
 public class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> {
 
-    //TODO: Cull the back of item frames against solid block faces
+    //TODO: - Cull the back of item frames against solid block faces
+    //      - Set shape cache of the block that a map item frame is in to solid face to cull blocks behind it
+    //      - Only render front face at large distances
 
 
     @Redirect(
