@@ -2,8 +2,9 @@ package ca.fxco.moreculling.mixin.items;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
-import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
+import ca.fxco.moreculling.utils.DirectionUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
@@ -13,18 +14,16 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.client.render.item.ItemRenderer.*;
+import static net.minecraft.util.math.Direction.*;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
@@ -73,29 +73,55 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         return bakedModel2 == null ? this.models.getModelManager().getMissingModel() : bakedModel2;
     }
 
+    private void renderBakedQuad(VertexConsumer vertices, ItemStack stack, int light, int overlay,
+                                 MatrixStack.Entry entry, BakedQuad bakedQuad) {
+        int color;
+        if (bakedQuad.hasColor()) {
+            Object2IntLinkedOpenHashMap<Item> itemColorCache = ITEM_COLOR_CACHE.get();
+            int cachedColor = itemColorCache.getAndMoveToFirst(stack.getItem());
+            if (cachedColor != Integer.MAX_VALUE) {
+                color = cachedColor;
+            } else {
+                color = this.colors.getColor(stack, bakedQuad.getColorIndex());
+                if (itemColorCache.size() == 256) itemColorCache.removeLastInt();
+                itemColorCache.putAndMoveToFirst(stack.getItem(), color);
+            }
+        } else {
+            color = -1;
+        }
+        float r = (float) (color >> 16 & 0xFF) / 255.0F;
+        float g = (float) (color >> 8 & 0xFF) / 255.0F;
+        float b = (float) (color & 0xFF) / 255.0F;
+        vertices.quad(entry, bakedQuad, r, g, b, light, overlay);
+    }
+
+
     private void renderBakedItemQuadsWithoutFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
                                                  ItemStack stack, int light, int overlay, Direction withoutFace) {
         MatrixStack.Entry entry = matrices.peek();
         for(BakedQuad bakedQuad : quads) {
             if (bakedQuad.getFace() == withoutFace) continue;
-            int color;
-            if (bakedQuad.hasColor()) {
-                Object2IntLinkedOpenHashMap<Item> itemColorCache = ITEM_COLOR_CACHE.get();
-                int cachedColor = itemColorCache.getAndMoveToFirst(stack.getItem());
-                if (cachedColor != Integer.MAX_VALUE) {
-                    color = cachedColor;
-                } else {
-                    color = this.colors.getColor(stack, bakedQuad.getColorIndex());
-                    if (itemColorCache.size() == 256) itemColorCache.removeLastInt();
-                    itemColorCache.putAndMoveToFirst(stack.getItem(), color);
-                }
-            } else {
-                color = -1;
-            }
-            float r = (float)(color >> 16 & 0xFF) / 255.0F;
-            float g = (float)(color >> 8 & 0xFF) / 255.0F;
-            float b = (float)(color & 0xFF) / 255.0F;
-            vertices.quad(entry, bakedQuad, r, g, b, light, overlay);
+            renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
+        }
+    }
+
+    private void renderBakedItemQuadsForFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
+                                                 ItemStack stack, int light, int overlay, Direction face) {
+        MatrixStack.Entry entry = matrices.peek();
+        for(BakedQuad bakedQuad : quads) {
+            if (bakedQuad.getFace() != face) continue;
+            renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
+        }
+    }
+
+    private void renderBakedItemQuadsFor3Faces(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
+                                               ItemStack stack, int light, int overlay,
+                                               Direction faceX, Direction faceY, Direction faceZ) {
+        MatrixStack.Entry entry = matrices.peek();
+        for(BakedQuad bakedQuad : quads) {
+            Direction face = bakedQuad.getFace();
+            if (face == faceX || face == faceY || face == faceZ)
+                renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
 
@@ -117,7 +143,40 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             this.renderBakedItemQuadsWithoutFace(matrices, vertices, bakedQuads, stack, light, overlay, withoutFace);
     }
 
-    private boolean canCullTransformation(Transformation transform) {
+    public void renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
+                                                MatrixStack matrices, VertexConsumer vertices,
+                                                Direction faceX, Direction faceY, Direction faceZ) {
+        for(Direction direction : Direction.values()) {
+            if (direction == faceX || direction == faceY || direction == faceZ) {
+                rand.setSeed(42L);
+                List<BakedQuad> bakedQuads = model.getQuads(null, direction, rand);
+                if (!bakedQuads.isEmpty())
+                    this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+            }
+        }
+        rand.setSeed(42L);
+        ArrayList<BakedQuad> bakedQuads = new ArrayList<>(model.getQuads(null, null, rand));
+        if (!bakedQuads.isEmpty())
+            this.renderBakedItemQuadsFor3Faces(
+                    matrices, vertices, bakedQuads, stack, light, overlay, faceX, faceY, faceZ
+            );
+    }
+
+    @Override
+    public void renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
+                                                MatrixStack matrices, VertexConsumer vertices,
+                                                Direction face) {
+        rand.setSeed(42L);
+        List<BakedQuad> bakedQuads = model.getQuads(null, face, rand);
+        if (!bakedQuads.isEmpty())
+            this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        rand.setSeed(42L);
+        bakedQuads = new ArrayList<>(model.getQuads(null, null, rand));
+        if (!bakedQuads.isEmpty())
+            this.renderBakedItemQuadsForFace(matrices, vertices, bakedQuads, stack, light, overlay, face);
+    }
+
+    private boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
         if (transform.scale.getX() > 2.0F || transform.scale.getY() > 2.0F || transform.scale.getZ() > 2.0F) {
             return false; //TODO: Maybe Allow Z axis
         }
@@ -130,29 +189,26 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         return true;
     }
 
-    private Direction changeDirectionBasedOnTransformation(Direction dir, Transformation transform) {
-        if (transform.rotation.getY() == 0) {
-            return dir.getOpposite();
-        } else if (transform.rotation.getY() == 90) {
-            return dir.rotateYCounterclockwise();
-        } else if (transform.rotation.getY() == 270) {
-            return dir.rotateYClockwise();
-        }
-        return dir;
+    private boolean shouldCullBack(ItemFrameEntity frame) {
+        Direction dir = frame.getHorizontalFacing();
+        BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
+        BlockState blockState = frame.world.getBlockState(posBehind);
+        return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
     }
-
 
     @Override
     public void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc,
-                                    int light, int seed, boolean shouldCullBack, boolean isInvisible) {
+                                    int light, int seed, ItemFrameEntity frame, Vec3d cameraPos) {
         BakedModel model = this.customGetModel(stack, seed);
         matrices.push();
-        Transformation transformation = model.getTransformation().getTransformation(ModelTransformation.Mode.FIXED);
+        ModelTransformation.Mode fixedMode = ModelTransformation.Mode.FIXED;
+        Transformation transformation = model.getTransformation().getTransformation(fixedMode);
         transformation.apply(false, matrices);
         matrices.translate(-0.5, -0.5, -0.5);
-        if (!model.isBuiltin()) {
+        if (model.isBuiltin()) {
+            this.builtinModelItemRenderer.render(stack, fixedMode, matrices, vc, light, OverlayTexture.DEFAULT_UV);
+        } else {
             boolean isBlockItem = stack.getItem() instanceof BlockItem; //TODO: Do proper checks
-            boolean canCull = ((!isBlockItem && !isInvisible) || shouldCullBack) && canCullTransformation(transformation);
             // Use faster cached check for translucency instead of multiple instanceof checks
             boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency();
             RenderLayer renderLayer = RenderLayers.getItemLayer(stack, bl2);
@@ -167,24 +223,64 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 vertexConsumer = bl2 ? getDirectItemGlintConsumer(vc, renderLayer, true, stack.hasGlint()) :
                         getItemGlintConsumer(vc, renderLayer, true, stack.hasGlint());
             }
-            renderBakedItemModelWithoutFace(
-                    model,
-                    stack,
-                    light,
-                    OverlayTexture.DEFAULT_UV,
-                    matrices,
-                    vertexConsumer,
-                    canCull ? changeDirectionBasedOnTransformation(Direction.NORTH, transformation) : null
-            );
-        } else {
-            this.builtinModelItemRenderer.render(
-                    stack,
-                    ModelTransformation.Mode.FIXED,
-                    matrices,
-                    vc,
-                    light,
-                    OverlayTexture.DEFAULT_UV
-            );
+            Vec3d framePos = frame.getPos();
+            double dist = cameraPos.squaredDistanceTo(framePos);
+            boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
+                    canCullTransformation(transformation);
+            // If more than 384 (128 blocks) away, only render the front and maybe back if can't cull
+            if (dist > (isBlockItem ? 768 : 384)) { // If it's a block, we want to render if further (256 blocks)
+                this.renderBakedItemModelForFace(
+                        model, stack, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumer, SOUTH
+                );
+                if (!canCull) { // Render back if it can't cull the back
+                    this.renderBakedItemModelForFace(
+                            model, stack, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumer, NORTH
+                    );
+                }
+            } else {
+                // EXPERIMENTAL CULLING
+                /*int itemRotationX, itemRotationY, itemRotationZ;
+                // Use smart culling to render only 3 face directions
+                if (dist > 0 && // (12) 4 blocks away
+                        frame.getRotation() % 2 == 0 &&
+                        (itemRotationX = (int)transformation.rotation.getX()) % 90 == 0 &&
+                        (itemRotationY = (int)transformation.rotation.getY()) % 90 == 0 &&
+                        (itemRotationZ = (int)transformation.rotation.getZ()) % 90 == 0
+                ) {
+                    int frameRotation = frame.getRotation() * 45;
+                    Direction facing = frame.getHorizontalFacing();
+                    Direction dirX = cameraPos.x > framePos.x ? Direction.WEST : Direction.EAST; // Flipped
+                    Direction dirY = cameraPos.y > framePos.y ? Direction.UP : Direction.DOWN; // Flipped
+                    Direction dirZ = cameraPos.z > framePos.z ? Direction.NORTH : Direction.SOUTH; // Flipped
+                    Direction rotX = DirectionUtils.transformDirectionByRotationZ(dirX, frameRotation);
+                    Direction rotY = DirectionUtils.transformDirectionByRotationZ(dirY, frameRotation);
+                    Direction rotZ = DirectionUtils.transformDirectionByRotationZ(dirZ, itemRotationZ);
+                    this.renderBakedItemModelOnly3Faces(
+                            model,
+                            stack,
+                            light,
+                            OverlayTexture.DEFAULT_UV,
+                            matrices,
+                            vertexConsumer,
+                            DirectionUtils.getDirectionFromFacing(rotX, facing),
+                            DirectionUtils.getDirectionFromFacing(rotY, facing),
+                            DirectionUtils.getDirectionFromFacing(rotZ, facing)
+                    );
+                } else {*/
+                this.renderBakedItemModelWithoutFace(
+                        model,
+                        stack,
+                        light,
+                        OverlayTexture.DEFAULT_UV,
+                        matrices,
+                        vertexConsumer,
+                        canCull ? DirectionUtils.changeDirectionUsingTransformation(
+                                Direction.NORTH,
+                                transformation
+                        ) : null
+                );
+                //}
+            }
         }
         matrices.pop();
     }
