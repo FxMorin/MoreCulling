@@ -24,7 +24,7 @@ jobs:
         with:
           files-primary: build/libs/!(*-@(dev|sources|api)).jar
           files-secondary: build/libs/*-@(dev|sources).jar
-          version-type: alpha
+          version-type: release
           version-resolver: releases
           modrinth-featured: true
           modrinth-unfeature-mode: subset
