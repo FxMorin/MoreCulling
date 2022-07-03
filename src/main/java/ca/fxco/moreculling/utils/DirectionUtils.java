@@ -18,71 +18,62 @@ public class DirectionUtils {
         return dir;
     }
 
-    public static Direction transformDirectionByRotationY(Direction dir, int rotation) {
-        return switch (rotation) {
-            case 270 -> dir.rotateYCounterclockwise();
-            case 180 -> dir.getOpposite();
-            case 90 -> dir.rotateYClockwise();
-            default -> dir;
+    public static Direction changeDirectionUsingRotation(Direction dir, float rotation) {
+        if (rotation == 0) {
+            return dir;
+        } else if (rotation == 90) {
+            return dir.rotateClockwise(Axis.Y);
+        } else if (rotation == 180) {
+            return dir.getOpposite();
+        } else if (rotation == 270) {
+            return dir.rotateCounterclockwise(Axis.Y);
+        }
+        return dir;
+    }
+
+    public static Direction magicalRotation(Direction face, int rotation) {
+        return switch(rotation) {
+            default -> face;
+            case 90 -> face.rotateClockwise(Axis.Z);
+            case 180 -> face != NORTH && face != SOUTH ? face.getOpposite() : face;
+            case 270 -> face.rotateCounterclockwise(Axis.Z);
         };
     }
 
-    public static Direction transformDirectionByRotationX(Direction dir, int rotation) {
-        return switch (rotation) {
-            case 270 -> dir.rotateCounterclockwise(Axis.X);
-            case 180 -> dir.getOpposite();
-            case 90 -> dir.rotateClockwise(Axis.X);
-            default -> dir;
-        };
-    }
-
-    public static Direction transformDirectionByRotationZ(Direction dir, int rotation) {
-        return switch (rotation) {
-            case 270 -> dir.rotateCounterclockwise(Axis.Z);
-            case 180 -> dir.getOpposite();
-            case 90 -> dir.rotateClockwise(Axis.Z);
-            default -> dir;
-        };
-    }
-
-    public static Direction getDirectionFromFacing(Direction dir, Direction facing) {
+    public static Direction magicalDirection(Direction facing, Direction face, int rotation) {
         return switch(facing) {
-            case DOWN -> dir.rotateCounterclockwise(Axis.X);
-            case UP -> dir.rotateClockwise(Axis.X);
-            case NORTH -> dir != UP && dir != DOWN ? oppositeY(dir) : dir;
-            case SOUTH -> dir;
-            case WEST -> dir != UP && dir != DOWN ? dir.rotateYCounterclockwise() : dir;
-            case EAST -> dir != UP && dir != DOWN ? dir.rotateYClockwise() : dir;
-        };
-    }
-
-    public static Direction oppositeY(Direction dir) {
-        return switch(dir) {
-            case NORTH -> SOUTH;
-            case SOUTH -> NORTH;
-            case WEST -> EAST;
-            case EAST -> WEST;
-            default -> throw new IllegalStateException("Unable to get OY facing of " + dir);
-        };
-    }
-
-    public static Direction rotateYOrdinalTop(Direction dir) {
-        return switch(dir) {
-            case NORTH -> WEST;
-            case SOUTH -> EAST;
-            case WEST -> NORTH;
-            case EAST -> SOUTH;
-            default -> throw new IllegalStateException("Unable to get PL facing of " + dir);
-        };
-    }
-
-    public static Direction rotateYOrdinalBottom(Direction dir) {
-        return switch(dir) {
-            case NORTH -> EAST;
-            case SOUTH -> WEST;
-            case WEST -> SOUTH;
-            case EAST -> NORTH;
-            default -> throw new IllegalStateException("Unable to get PR facing of " + dir);
+            case DOWN -> switch(face) {
+                case UP -> SOUTH;
+                case DOWN -> NORTH;
+                case SOUTH -> magicalRotation(UP, rotation);
+                case NORTH -> magicalRotation(DOWN, rotation);
+                default -> magicalRotation(face, rotation).getOpposite();
+            };
+            case UP -> switch(face) {
+                case UP -> NORTH;
+                case DOWN -> SOUTH;
+                case SOUTH -> magicalRotation(DOWN, rotation);
+                case NORTH -> magicalRotation(UP, rotation);
+                default -> magicalRotation(face, rotation).getOpposite();
+            };
+            case NORTH -> magicalRotation(face, rotation);
+            case SOUTH -> face != DOWN && face != UP ?
+                    magicalRotation(face, rotation).getOpposite() :
+                    magicalRotation(face, rotation);
+            case WEST -> switch(face) {
+                case EAST -> SOUTH;
+                case WEST -> NORTH;
+                case UP, DOWN -> magicalRotation(face, rotation);
+                case SOUTH -> magicalRotation(WEST, rotation);
+                case NORTH -> magicalRotation(EAST, rotation);
+            };
+            case EAST -> switch(face) {
+                case EAST -> NORTH;
+                case WEST -> SOUTH;
+                case UP, DOWN -> magicalRotation(face, rotation);
+                case SOUTH -> magicalRotation(EAST, rotation);
+                case NORTH -> magicalRotation(WEST, rotation);
+            };
         };
     }
 }

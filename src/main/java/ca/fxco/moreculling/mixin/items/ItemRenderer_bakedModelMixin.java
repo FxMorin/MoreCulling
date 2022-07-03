@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ca.fxco.moreculling.utils.DirectionUtils.magicalDirection;
 import static net.minecraft.client.render.item.ItemRenderer.*;
 import static net.minecraft.util.math.Direction.*;
 
@@ -177,7 +178,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     }
 
     private boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
-        if (transform.scale.getX() > 2.0F || transform.scale.getY() > 2.0F || transform.scale.getZ() > 2.0F) {
+        if (transform.scale.getX() > 1.0F || transform.scale.getY() > 1.0F || transform.scale.getZ() > 1.0F) {
             return false; //TODO: Maybe Allow Z axis
         }
         if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0 || transform.rotation.getY() % 90 != 0) {
@@ -228,7 +229,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
                     canCullTransformation(transformation);
             // If more than 384 (128 blocks) away, only render the front and maybe back if can't cull
-            if (dist > (isBlockItem ? 768 : 384)) { // If it's a block, we want to render if further (256 blocks)
+            if (!isBlockItem && dist > 384) { // Make blocks use the experimental culling or normal culling only
                 this.renderBakedItemModelForFace(
                         model, stack, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumer, SOUTH
                 );
@@ -239,22 +240,24 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 }
             } else {
                 // EXPERIMENTAL CULLING
-                /*int itemRotationX, itemRotationY, itemRotationZ;
-                // Use smart culling to render only 3 face directions
-                if (dist > 0 && // (12) 4 blocks away
-                        frame.getRotation() % 2 == 0 &&
-                        (itemRotationX = (int)transformation.rotation.getX()) % 90 == 0 &&
-                        (itemRotationY = (int)transformation.rotation.getY()) % 90 == 0 &&
-                        (itemRotationZ = (int)transformation.rotation.getZ()) % 90 == 0
+                // Use smart culling to render only 3 face directions.
+                // TODO: Add model rotation logic (items need this!) Currently we only support blocks and some models
+                if (dist > 12 && frame.getRotation() % 2 == 0 && // (12) 4 blocks away
+                        transformation.rotation.getY() == 0 &&
+                        transformation.rotation.getX() == 0 &&
+                        transformation.rotation.getZ() == 0
                 ) {
-                    int frameRotation = frame.getRotation() * 45;
+                    int rotation = frame.getRotation() * 45;
                     Direction facing = frame.getHorizontalFacing();
-                    Direction dirX = cameraPos.x > framePos.x ? Direction.WEST : Direction.EAST; // Flipped
-                    Direction dirY = cameraPos.y > framePos.y ? Direction.UP : Direction.DOWN; // Flipped
-                    Direction dirZ = cameraPos.z > framePos.z ? Direction.NORTH : Direction.SOUTH; // Flipped
-                    Direction rotX = DirectionUtils.transformDirectionByRotationZ(dirX, frameRotation);
-                    Direction rotY = DirectionUtils.transformDirectionByRotationZ(dirY, frameRotation);
-                    Direction rotZ = DirectionUtils.transformDirectionByRotationZ(dirZ, itemRotationZ);
+                    Direction dirX = cameraPos.x > framePos.x ?
+                            magicalDirection(facing, Direction.EAST, rotation) :
+                            magicalDirection(facing, Direction.WEST, rotation);
+                    Direction dirY = cameraPos.y > framePos.y ?
+                            magicalDirection(facing, Direction.UP, rotation) :
+                            magicalDirection(facing, Direction.DOWN, rotation);
+                    Direction dirZ = cameraPos.z > framePos.z ?
+                            magicalDirection(facing, Direction.SOUTH, rotation) :
+                            magicalDirection(facing, Direction.NORTH, rotation);
                     this.renderBakedItemModelOnly3Faces(
                             model,
                             stack,
@@ -262,24 +265,24 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                             OverlayTexture.DEFAULT_UV,
                             matrices,
                             vertexConsumer,
-                            DirectionUtils.getDirectionFromFacing(rotX, facing),
-                            DirectionUtils.getDirectionFromFacing(rotY, facing),
-                            DirectionUtils.getDirectionFromFacing(rotZ, facing)
+                            dirX,
+                            dirY,
+                            dirZ
                     );
-                } else {*/
-                this.renderBakedItemModelWithoutFace(
-                        model,
-                        stack,
-                        light,
-                        OverlayTexture.DEFAULT_UV,
-                        matrices,
-                        vertexConsumer,
-                        canCull ? DirectionUtils.changeDirectionUsingTransformation(
-                                Direction.NORTH,
-                                transformation
-                        ) : null
-                );
-                //}
+                } else {
+                    this.renderBakedItemModelWithoutFace(
+                            model,
+                            stack,
+                            light,
+                            OverlayTexture.DEFAULT_UV,
+                            matrices,
+                            vertexConsumer,
+                            canCull ? DirectionUtils.changeDirectionUsingTransformation(
+                                    Direction.NORTH,
+                                    transformation
+                            ) : null
+                    );
+                }
             }
         }
         matrices.pop();
