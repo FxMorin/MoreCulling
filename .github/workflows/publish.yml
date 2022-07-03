@@ -23,7 +23,7 @@ jobs:
       - uses: Kir-Antipov/mc-publish@v3.0
         with:
           files-primary: build/libs/!(*-@(dev|sources|api)).jar
-          files-secondary: build/libs/*-@(dev|sources|api).jar
+          files-secondary: build/libs/*-@(dev|sources).jar
           version-type: alpha
           version-resolver: releases
           modrinth-featured: true
