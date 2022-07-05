@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin.items;
+package ca.fxco.moreculling.mixin.entities;
 
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -21,8 +21,6 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
     }
 
     //TODO: - Cull the back of item frames against solid block faces
-    //      - Set shape cache of the block that a map item frame is in to solid face to cull blocks behind it
-    //      - Only render front face at large distances
 
 
     @Redirect(
