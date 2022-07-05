@@ -32,10 +32,6 @@ public class CullingUtils {
             Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
-        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace()) {
-            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
-            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
-        }
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
                 !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency() &&
@@ -55,10 +51,6 @@ public class CullingUtils {
         if (thisState.isSideInvisible(sideState, side)) return false;
         if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
             Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
-            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
-        }
-        if (((MoreStateCulling)sideState).usesCustomShouldDrawFace()) {
-            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) sideState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
         Block block = sideState.getBlock();
