@@ -18,7 +18,6 @@ import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.BlockPos;
@@ -41,13 +40,13 @@ import static net.minecraft.util.math.Direction.*;
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
 
-    private static final ThreadLocal<Object2IntLinkedOpenHashMap<Item>> ITEM_COLOR_CACHE = ThreadLocal.withInitial(() -> {
-        Object2IntLinkedOpenHashMap<Item> initialItemColorCache = new Object2IntLinkedOpenHashMap<>(256, 0.25F) {
+    private static final ThreadLocal<Object2IntLinkedOpenHashMap<BakedQuad>> BAKED_QUAD_COLOR_CACHE = ThreadLocal.withInitial(() -> {
+        Object2IntLinkedOpenHashMap<BakedQuad> initialBakedQuadColorCache = new Object2IntLinkedOpenHashMap<>(256, 0.25F) {
             @Override
             protected void rehash(int newN) {}
         };
-        initialItemColorCache.defaultReturnValue(Integer.MAX_VALUE);
-        return initialItemColorCache;
+        initialBakedQuadColorCache.defaultReturnValue(Integer.MAX_VALUE);
+        return initialBakedQuadColorCache;
     });
 
     @Unique
@@ -79,14 +78,11 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                                  MatrixStack.Entry entry, BakedQuad bakedQuad) {
         int color;
         if (bakedQuad.hasColor()) {
-            Object2IntLinkedOpenHashMap<Item> itemColorCache = ITEM_COLOR_CACHE.get();
-            int cachedColor = itemColorCache.getAndMoveToFirst(stack.getItem());
-            if (cachedColor != Integer.MAX_VALUE) {
-                color = cachedColor;
-            } else {
+            Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = BAKED_QUAD_COLOR_CACHE.get();
+            color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
+            if (color == Integer.MAX_VALUE) {
                 color = this.colors.getColor(stack, bakedQuad.getColorIndex());
-                if (itemColorCache.size() == 256) itemColorCache.removeLastInt();
-                itemColorCache.putAndMoveToFirst(stack.getItem(), color);
+                if (bakedQuadColorCache.size() == 256) bakedQuadColorCache.removeLastInt();
             }
         } else {
             color = -1;
