@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "ca.fxco.moreculling.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "ca.fxco.moreculling.utils.MixinConfigPlugin",
+  "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",

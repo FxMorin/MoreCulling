@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.utils;
+package ca.fxco.moreculling.config;
 
 import me.fallenbreath.conditionalmixin.api.mixin.RestrictiveMixinConfigPlugin;
 
