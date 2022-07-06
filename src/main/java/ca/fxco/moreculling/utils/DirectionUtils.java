@@ -18,19 +18,6 @@ public class DirectionUtils {
         return dir;
     }
 
-    public static Direction changeDirectionUsingRotation(Direction dir, float rotation) {
-        if (rotation == 0) {
-            return dir;
-        } else if (rotation == 90) {
-            return dir.rotateClockwise(Axis.Y);
-        } else if (rotation == 180) {
-            return dir.getOpposite();
-        } else if (rotation == 270) {
-            return dir.rotateCounterclockwise(Axis.Y);
-        }
-        return dir;
-    }
-
     public static Direction magicalRotation(Direction face, int rotation) {
         return switch(rotation) {
             default -> face;

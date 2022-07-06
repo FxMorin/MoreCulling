@@ -10,7 +10,6 @@
     "accessors.AbstractBlockAccessor",
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
-    "blockstates.BlockModelRenderer_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "items.ItemRenderer_bakedModelMixin",

@@ -42,26 +42,6 @@ public class CullingUtils {
     }
 
     /**
-     * Same as above except, this should be used if the model is provided since its faster
-     */
-    public static boolean shouldDrawSideCulling(BlockState thisState,
-                                                BlockView world, BlockPos thisPos, Direction side,
-                                                BlockPos sidePos, boolean hasTransparency) {
-        BlockState sideState = world.getBlockState(sidePos);
-        if (thisState.isSideInvisible(sideState, side)) return false;
-        if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
-            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
-            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
-        }
-        Block block = sideState.getBlock();
-        if (sideState.isOpaque() || (!hasTransparency && ((AbstractBlockAccessor)block).getCollidable() &&
-                !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
-            return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
-        }
-        return true;
-    }
-
-    /**
      * Just the logic used to compare 2 block faces once we know that they are both solid textures
      */
     private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
