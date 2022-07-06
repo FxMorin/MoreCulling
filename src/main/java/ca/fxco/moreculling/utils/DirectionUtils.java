@@ -27,7 +27,7 @@ public class DirectionUtils {
         };
     }
 
-    public static Direction magicalDirection(Direction facing, Direction face, int rotation) {
+    public static Direction shiftDirection(Direction facing, Direction face, int rotation) {
         return switch(facing) {
             case DOWN -> switch(face) {
                 case UP -> SOUTH;

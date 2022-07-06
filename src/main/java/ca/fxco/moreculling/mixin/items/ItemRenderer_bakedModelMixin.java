@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ca.fxco.moreculling.utils.DirectionUtils.magicalDirection;
+import static ca.fxco.moreculling.utils.DirectionUtils.shiftDirection;
 import static net.minecraft.client.render.item.ItemRenderer.*;
 import static net.minecraft.util.math.Direction.*;
 
@@ -249,14 +249,14 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                     int rotation = frame.getRotation() * 45;
                     Direction facing = frame.getHorizontalFacing();
                     Direction dirX = cameraPos.x > framePos.x ?
-                            magicalDirection(facing, Direction.EAST, rotation) :
-                            magicalDirection(facing, Direction.WEST, rotation);
+                            shiftDirection(facing, Direction.EAST, rotation) :
+                            shiftDirection(facing, Direction.WEST, rotation);
                     Direction dirY = cameraPos.y > framePos.y ?
-                            magicalDirection(facing, Direction.UP, rotation) :
-                            magicalDirection(facing, Direction.DOWN, rotation);
+                            shiftDirection(facing, Direction.UP, rotation) :
+                            shiftDirection(facing, Direction.DOWN, rotation);
                     Direction dirZ = cameraPos.z > framePos.z ?
-                            magicalDirection(facing, Direction.SOUTH, rotation) :
-                            magicalDirection(facing, Direction.NORTH, rotation);
+                            shiftDirection(facing, Direction.SOUTH, rotation) :
+                            shiftDirection(facing, Direction.NORTH, rotation);
                     this.renderBakedItemModelOnly3Faces(
                             model,
                             stack,
