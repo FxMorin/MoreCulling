@@ -32,10 +32,23 @@
     "minecraft": "1.19",
     "java": ">=17"
   },
+  "recommends": {
+    "memoryleakfix": "*",
+    "sodium": ">=0.4.2"
+  },
+  "suggests": {
+    "memoryleakfix": "*",
+    "lithium": ">=0.8.0"
+  },
+  "includes": {
+    "conditional-mixin": "0.3.0",
+    "cloth-config": "7.+"
+  },
   "custom": {
     "mc-publish": {
       "curseforge": 630104,
-      "modrinth": "51shyZVL"
+      "modrinth": "51shyZVL",
+      "quilt": true
     }
   }
 }
