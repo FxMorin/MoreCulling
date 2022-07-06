@@ -24,6 +24,7 @@ jobs:
         with:
           files-primary: build/libs/!(*-@(dev|sources|api)).jar
           files-secondary: build/libs/*-@(sources).jar
+          github-files-secondary: build/libs/*-@(dev|sources|api).jar
           version-type: release
           version-resolver: releases
           modrinth-featured: true
