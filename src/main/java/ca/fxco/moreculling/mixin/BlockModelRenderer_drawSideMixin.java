@@ -9,7 +9,6 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Random;
 
 @Mixin(BlockModelRenderer.class)
 public class BlockModelRenderer_drawSideMixin {
@@ -30,7 +31,7 @@ public class BlockModelRenderer_drawSideMixin {
             method = "renderSmooth(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/BlockPos$Mutable;set(" +
@@ -50,7 +51,7 @@ public class BlockModelRenderer_drawSideMixin {
             method = "renderSmooth(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;shouldDrawSide(Lnet/minecraft/block/BlockState;" +
@@ -68,7 +69,7 @@ public class BlockModelRenderer_drawSideMixin {
             method = "renderFlat(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/BlockPos$Mutable;set(" +
@@ -85,10 +86,11 @@ public class BlockModelRenderer_drawSideMixin {
 
 
     @Redirect(
-            method = "renderFlat(Lnet/minecraft/world/BlockRenderView;" +
+            method = "Lnet/minecraft/client/render/block/BlockModelRenderer;" +
+                    "renderFlat(Lnet/minecraft/world/BlockRenderView;" +
                     "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V",
+                    "Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;shouldDrawSide(Lnet/minecraft/block/BlockState;" +
