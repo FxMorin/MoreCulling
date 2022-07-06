@@ -81,6 +81,7 @@ dependencies {
 
     //AutoConfig
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 }
 
 processResources {
