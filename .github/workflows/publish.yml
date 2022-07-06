@@ -20,11 +20,18 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - uses: Kir-Antipov/mc-publish@v2.1
+      - uses: Kir-Antipov/mc-publish@v3.1
         with:
-          files: 'build/libs/*.jar;!build/libs/*-dev.jar;LICENSE'
+          files-primary: build/libs/!(*-@(dev|sources|api)).jar
+          modrinth-files-secondary: build/libs/*-@(sources).jar
+          github-files-secondary: build/libs/*-@(dev|sources|api).jar
+          curseforge-files-secondary: build/libs/*-@(dev|sources|api).jar
           version-type: alpha
           version-resolver: releases
+          modrinth-featured: true
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          retry-attempts: 2
+          retry-delay: 10000
+          fail-mode: skip
