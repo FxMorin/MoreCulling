@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.entities;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -39,14 +40,18 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
     public void render(ItemRenderer renderer, ItemStack stack, ModelTransformation.Mode transformationType, int light,
                        int overlay, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int seed, T frame) {
-        ((ExtendedItemRenderer)renderer).renderItemFrameItem(
-                stack,
-                matrices,
-                vertexConsumers,
-                light,
-                seed,
-                frame,
-                this.dispatcher.camera.getPos()
-        );
+        if (MoreCulling.CONFIG.useCustomItemFrameRenderer) {
+            ((ExtendedItemRenderer) renderer).renderItemFrameItem(
+                    stack,
+                    matrices,
+                    vertexConsumers,
+                    light,
+                    seed,
+                    frame,
+                    this.dispatcher.camera.getPos()
+            );
+        } else {
+            renderer.renderItem(stack, transformationType, light, overlay, matrices, vertexConsumers, seed);
+        }
     }
 }

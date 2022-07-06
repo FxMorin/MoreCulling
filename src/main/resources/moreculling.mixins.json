@@ -12,6 +12,7 @@
     "blockstates.Block_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
+    "gui.SodiumOptionsGUIMixin",
     "items.ItemRenderer_bakedModelMixin",
     "models.BakedModel_extendsMixin",
     "models.BasicBakedModel_cacheMixin",

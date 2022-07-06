@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "ca.fxco.moreculling.MoreCulling"
+    ],
+    "modmenu": [
+      "ca.fxco.moreculling.config.ModMenuConfig"
     ]
   },
   "mixins": [

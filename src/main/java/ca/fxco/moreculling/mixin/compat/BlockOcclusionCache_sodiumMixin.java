@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.compat;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
 import me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache;
 import net.minecraft.block.BlockState;
@@ -35,6 +36,7 @@ public class BlockOcclusionCache_sodiumMixin {
     )
     private void useMoreCulling(BlockState selfState, BlockView view, BlockPos pos,
                                 Direction facing, CallbackInfoReturnable<Boolean> cir, BlockPos.Mutable adjPos) {
-        cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
+        if (MoreCulling.CONFIG.useBlockStateCulling)
+            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
     }
 }

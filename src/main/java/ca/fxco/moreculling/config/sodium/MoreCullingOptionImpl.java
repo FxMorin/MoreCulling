@@ -1,0 +1,240 @@
+package ca.fxco.moreculling.config.sodium;
+
+import me.jellysquid.mods.sodium.client.gui.options.Option;
+import me.jellysquid.mods.sodium.client.gui.options.OptionFlag;
+import me.jellysquid.mods.sodium.client.gui.options.OptionImpact;
+import me.jellysquid.mods.sodium.client.gui.options.binding.GenericBinding;
+import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
+import me.jellysquid.mods.sodium.client.gui.options.control.Control;
+import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
+import net.minecraft.text.Text;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public class MoreCullingOptionImpl<S, T> implements Option<T> {
+
+    /*
+     * All this just because Sodium has to set there damn enabled to be final.
+     * I then also put a couple more things in there ;)
+     */
+
+    protected final OptionStorage<S> storage;
+
+    protected final OptionBinding<S, T> binding;
+    protected final Control<T> control;
+
+    protected Consumer<T> onValueModified;
+
+    protected final EnumSet<OptionFlag> flags;
+
+    protected final Text name;
+    protected final Text tooltip;
+
+    protected final OptionImpact impact;
+
+    protected T value;
+    protected T modifiedValue;
+
+    protected boolean enabled;
+
+    protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
+                                  Function<MoreCullingOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
+                                  OptionImpact impact, Consumer<T> valueModified, boolean enabled) {
+        this.storage = storage;
+        this.name = name;
+        this.tooltip = tooltip;
+        this.binding = binding;
+        this.impact = impact;
+        this.flags = flags;
+        this.control = control.apply(this);
+        this.onValueModified = valueModified;
+        this.enabled = enabled;
+
+        this.reset();
+    }
+
+    @Override
+    public Text getName() {
+        return this.name;
+    }
+
+    @Override
+    public Text getTooltip() {
+        return this.tooltip;
+    }
+
+    @Override
+    public OptionImpact getImpact() {
+        return this.impact;
+    }
+
+    @Override
+    public Control<T> getControl() {
+        return this.control;
+    }
+
+    @Override
+    public T getValue() {
+        return this.modifiedValue;
+    }
+
+    @Override
+    public void setValue(T value) {
+        this.modifiedValue = value;
+        if (this.onValueModified != null) this.onValueModified.accept(value);
+    }
+
+    @Override
+    public void reset() {
+        this.value = this.binding.getValue(this.storage.getData());
+        this.modifiedValue = this.value;
+        if (this.onValueModified != null) this.onValueModified.accept(value);
+    }
+
+    @Override
+    public OptionStorage<?> getStorage() {
+        return this.storage;
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return this.enabled;
+    }
+
+    public void setAvailable(boolean available) {
+        this.enabled = available;
+    }
+
+    @Override
+    public boolean hasChanged() {
+        return !this.value.equals(this.modifiedValue);
+    }
+
+    @Override
+    public void applyChanges() {
+        this.binding.setValue(this.storage.getData(), this.modifiedValue);
+        this.value = this.modifiedValue;
+    }
+
+    @Override
+    public Collection<OptionFlag> getFlags() {
+        return this.flags;
+    }
+
+    public static <S, T> MoreCullingOptionImpl.Builder<S, T> createBuilder(Class<T> type, OptionStorage<S> storage) {
+        return new Builder<>(storage);
+    }
+
+    public static class Builder<S, T> {
+        private final OptionStorage<S> storage;
+        private Text name;
+        private Text tooltip;
+        private String nameIdentifier;
+        private String tooltipIdentifier;
+        private OptionBinding<S, T> binding;
+        private Function<MoreCullingOptionImpl<S, T>, Control<T>> control;
+        private OptionImpact impact;
+        private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
+        private Consumer<T> valueModified;
+        private boolean enabled = true;
+
+        private Builder(OptionStorage<S> storage) {
+            this.storage = storage;
+        }
+
+        public Builder<S, T> setName(@Nullable Text name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder<S, T> setTranslatableNameId(@Nullable String nameIdentifier) {
+            this.nameIdentifier = nameIdentifier;
+            return this;
+        }
+
+        public Builder<S, T> setTooltip(@Nullable Text tooltip) {
+            this.tooltip = tooltip;
+            return this;
+        }
+
+        public Builder<S, T> setTranslatableTooltipId(@Nullable String tooltipIdentifier) {
+            this.tooltipIdentifier = tooltipIdentifier;
+            return this;
+        }
+
+        public Builder<S, T> usesAutoConfigTooltip() {
+            if (this.nameIdentifier == null)
+                throw new IllegalStateException("`setTranslatableNameId` Must be set before using `usesAutoConfigTooltip`");
+            this.tooltipIdentifier = this.nameIdentifier + ".@Tooltip";
+            return this;
+        }
+
+        public Builder<S, T> usesAutoConfigTooltip(int count) {
+            if (count < 0)
+                throw new IllegalArgumentException("AutoConfig tooltip must be a positive number!");
+            if (this.nameIdentifier == null)
+                throw new IllegalStateException("`setTranslatableNameId` Must be set before using `usesAutoConfigTooltip`");
+            this.tooltipIdentifier = this.nameIdentifier + ".@Tooltip" + (count == -1 ? "" : "["+count+"]");
+            return this;
+        }
+
+        public Builder<S, T> setBinding(BiConsumer<S, T> setter, Function<S, T> getter) {
+            Validate.notNull(setter, "Setter must not be null");
+            Validate.notNull(getter, "Getter must not be null");
+            this.binding = new GenericBinding<>(setter, getter);
+            return this;
+        }
+
+        public Builder<S, T> setBinding(OptionBinding<S, T> binding) {
+            Validate.notNull(binding, "Argument must not be null");
+            this.binding = binding;
+            return this;
+        }
+
+        public Builder<S, T> setControl(Function<MoreCullingOptionImpl<S, T>, Control<T>> control) {
+            Validate.notNull(control, "Argument must not be null");
+            this.control = control;
+            return this;
+        }
+
+        public Builder<S, T> setImpact(OptionImpact impact) {
+            this.impact = impact;
+            return this;
+        }
+
+        public Builder<S, T> setValueModified(Consumer<T> consumer) {
+            Validate.notNull(consumer, "Runnable must not be null");
+            this.valueModified = consumer;
+            return this;
+        }
+
+        public Builder<S, T> setEnabled(boolean value) {
+            this.enabled = value;
+            return this;
+        }
+
+        public Builder<S, T> setFlags(OptionFlag... flags) {
+            Collections.addAll(this.flags, flags);
+            return this;
+        }
+
+        public MoreCullingOptionImpl<S, T> build() {
+            if (this.name == null && this.nameIdentifier != null)
+                this.name = Text.translatable(this.nameIdentifier);
+            if (this.tooltip == null && this.tooltipIdentifier != null)
+                this.tooltip = Text.translatable(this.tooltipIdentifier);
+            Validate.notNull(this.name, "Name must be specified");
+            Validate.notNull(this.tooltip, "Tooltip must be specified");
+            Validate.notNull(this.binding, "Option binding must be specified");
+            Validate.notNull(this.control, "Control must be specified");
+            return new MoreCullingOptionImpl<>(this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact, this.valueModified, this.enabled);
+        }
+    }
+}

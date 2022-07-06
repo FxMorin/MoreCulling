@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.items;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
 import ca.fxco.moreculling.utils.DirectionUtils;
@@ -229,7 +230,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
                     canCullTransformation(transformation);
             // If more than 384 (128 blocks) away, only render the front and maybe back if can't cull
-            if (!isBlockItem && dist > 384) { // Make blocks use the experimental culling or normal culling only
+            if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > 384) { // Make blocks use LOD
                 this.renderBakedItemModelForFace(
                         model, stack, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumer, SOUTH
                 );
@@ -242,7 +243,9 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 // EXPERIMENTAL CULLING
                 // Use smart culling to render only 3 face directions.
                 // TODO: Add model rotation logic (items need this!) Currently we only support blocks and some models
-                if (dist > 12 && frame.getRotation() % 2 == 0 && // (12) 4 blocks away
+                if (MoreCulling.CONFIG.useItemFrame3FaceCulling &&
+                        dist > 12 &&
+                        frame.getRotation() % 2 == 0 && // (12) 4 blocks away
                         transformation.rotation.getY() == 0 &&
                         transformation.rotation.getX() == 0 &&
                         transformation.rotation.getZ() == 0

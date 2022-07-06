@@ -1,4 +1,15 @@
 {
+	"text.autoconfig.moreculling.title": "MoreCulling",
+	"text.autoconfig.moreculling.option.useBlockStateCulling": "BlockState Culling",
+	"text.autoconfig.moreculling.option.useBlockStateCulling.@Tooltip": "Enables aggressive blockstate culling",
+	"text.autoconfig.moreculling.option.useCustomItemFrameRenderer": "Custom Item Frame Renderer",
+	"text.autoconfig.moreculling.option.useCustomItemFrameRenderer.@Tooltip": "Enables the custom item frame renderer",
+	"text.autoconfig.moreculling.option.useItemFrameLOD": "Item Frame LOD",
+	"text.autoconfig.moreculling.option.useItemFrameLOD.@Tooltip[0]": "Enables LevelOfDetail for item frames",
+	"text.autoconfig.moreculling.option.useItemFrameLOD.@Tooltip[1]": "Requires `Custom Item Frame Renderer`",
+	"text.autoconfig.moreculling.option.useItemFrame3FaceCulling": "3-Face Item Frame Culling",
+	"text.autoconfig.moreculling.option.useItemFrame3FaceCulling.@Tooltip[0]": "Enables a 3-face culling technique",
+	"text.autoconfig.moreculling.option.useItemFrame3FaceCulling.@Tooltip[1]": "Requires `Custom Item Frame Renderer`",
 	"modmenu.summaryTranslation.moreculling": "A mod that changes how multiple types of culling are handled in order to improve performance",
 	"modmenu.descriptionTranslation.moreculling": "A mod that changes how multiple types of culling are handled in order to improve performance"
 }
