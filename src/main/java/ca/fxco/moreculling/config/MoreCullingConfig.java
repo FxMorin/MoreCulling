@@ -7,6 +7,10 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
 
+    // You can disable the sodium menu in the config
+    @ConfigEntry.Gui.Excluded
+    public boolean enableSodiumMenu = true;
+
     @ConfigEntry.Gui.Tooltip
     public boolean useBlockStateCulling = true;
 

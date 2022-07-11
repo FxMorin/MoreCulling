@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.gui;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.sodium.SodiumOptionPage;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
@@ -29,6 +30,7 @@ public class SodiumOptionsGUIMixin {
             at = @At("RETURN")
     )
     private void addGuiAtInit(Screen prevScreen, CallbackInfo ci) {
-        this.pages.add(SodiumOptionPage.moreCullingPage()); // Inject sodium page for moreCulling
+        if (MoreCulling.CONFIG.enableSodiumMenu)
+            this.pages.add(SodiumOptionPage.moreCullingPage()); // Inject sodium page for moreCulling
     }
 }
