@@ -20,7 +20,7 @@ import java.util.List;
 @Mixin(SodiumOptionsGUI.class)
 public class SodiumOptionsGUIMixin {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private List<OptionPage> pages;
 
