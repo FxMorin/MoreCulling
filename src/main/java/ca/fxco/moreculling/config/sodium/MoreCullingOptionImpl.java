@@ -136,8 +136,6 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private final OptionStorage<S> storage;
         private Text name;
         private Text tooltip;
-        private String nameIdentifier;
-        private String tooltipIdentifier;
         private OptionBinding<S, T> binding;
         private Function<MoreCullingOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
@@ -154,34 +152,8 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> setTranslatableNameId(@Nullable String nameIdentifier) {
-            this.nameIdentifier = nameIdentifier;
-            return this;
-        }
-
         public Builder<S, T> setTooltip(@Nullable Text tooltip) {
             this.tooltip = tooltip;
-            return this;
-        }
-
-        public Builder<S, T> setTranslatableTooltipId(@Nullable String tooltipIdentifier) {
-            this.tooltipIdentifier = tooltipIdentifier;
-            return this;
-        }
-
-        public Builder<S, T> usesAutoConfigTooltip() {
-            if (this.nameIdentifier == null)
-                throw new IllegalStateException("`setTranslatableNameId` Must be set before using `usesAutoConfigTooltip`");
-            this.tooltipIdentifier = this.nameIdentifier + ".@Tooltip";
-            return this;
-        }
-
-        public Builder<S, T> usesAutoConfigTooltip(int count) {
-            if (count < 0)
-                throw new IllegalArgumentException("AutoConfig tooltip must be a positive number!");
-            if (this.nameIdentifier == null)
-                throw new IllegalStateException("`setTranslatableNameId` Must be set before using `usesAutoConfigTooltip`");
-            this.tooltipIdentifier = this.nameIdentifier + ".@Tooltip" + (count == -1 ? "" : "["+count+"]");
             return this;
         }
 
@@ -226,10 +198,6 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         }
 
         public MoreCullingOptionImpl<S, T> build() {
-            if (this.name == null && this.nameIdentifier != null)
-                this.name = Text.translatable(this.nameIdentifier);
-            if (this.tooltip == null && this.tooltipIdentifier != null)
-                this.tooltip = Text.translatable(this.tooltipIdentifier);
             Validate.notNull(this.name, "Name must be specified");
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");

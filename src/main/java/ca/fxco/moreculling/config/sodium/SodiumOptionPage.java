@@ -18,8 +18,8 @@ public class SodiumOptionPage {
 
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                        .setTranslatableNameId("text.autoconfig.moreculling.option.useBlockStateCulling")
-                        .usesAutoConfigTooltip()
+                        .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
+                        .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
@@ -29,16 +29,16 @@ public class SodiumOptionPage {
         );
 
         MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrameLODOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setTranslatableNameId("text.autoconfig.moreculling.option.useItemFrameLOD")
-                .usesAutoConfigTooltip(0)
+                .setName(Text.translatable("moreculling.config.option.itemFrameLOD"))
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
                 .setControl(TickBoxControl::new)
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer)
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.useItemFrameLOD = value, opts -> opts.useItemFrameLOD)
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrame3FaceOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setTranslatableNameId("text.autoconfig.moreculling.option.useItemFrame3FaceCulling")
-                .usesAutoConfigTooltip(0)
+                .setName(Text.translatable("moreculling.config.option.itemFrame3FaceCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                 .setControl(TickBoxControl::new)
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer)
                 .setImpact(OptionImpact.MEDIUM)
@@ -46,12 +46,12 @@ public class SodiumOptionPage {
                 .build();
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                        .setTranslatableNameId("text.autoconfig.moreculling.option.useCustomItemFrameRenderer")
-                        .usesAutoConfigTooltip()
+                        .setName(Text.translatable("moreculling.config.option.customItemFrameRenderer"))
+                        .setTooltip(Text.translatable("moreculling.config.option.customItemFrameRenderer.tooltip"))
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useCustomItemFrameRenderer = value, opts -> opts.useCustomItemFrameRenderer)
-                        .setValueModified((value) -> { //Dynamic ;)
+                        .setValueModified((value) -> { // Dynamic ;)
                             itemFrameLODOption.setAvailable(value);
                             itemFrame3FaceOption.setAvailable(value);
                         })
@@ -61,6 +61,6 @@ public class SodiumOptionPage {
                 .build()
         );
 
-        return new OptionPage(Text.translatable("text.autoconfig.moreculling.title"), ImmutableList.copyOf(groups));
+        return new OptionPage(Text.translatable("moreculling.config.title"), ImmutableList.copyOf(groups));
     }
 }
