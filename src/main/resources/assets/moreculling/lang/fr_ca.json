@@ -1,8 +1,8 @@
 {
   "modmenu.summaryTranslation.moreculling": "Un mod qui change plusieurs types d'abattage visuel pour améliorer les performances",
   "modmenu.descriptionTranslation.moreculling": "Un mod qui change plusieurs types d'abattage visuel pour améliorer les performances",
-  "moreculling.config.title": "MoreCulling",
-  "moreculling.config.category.general": "General Culling",
+  "moreculling.config.title": "Plus d'abattage visuel",
+  "moreculling.config.category.general": "Abattage général",
   "moreculling.config.option.blockStateCulling": "Abattage d'état du bloc",
   "moreculling.config.option.blockStateCulling.tooltip": "Active l'abattage agressive des états de bloc",
   "moreculling.config.option.customItemFrameRenderer": "Visualisation de Cadre personnalisé",
