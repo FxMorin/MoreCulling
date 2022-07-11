@@ -3,8 +3,6 @@
 	"modmenu.descriptionTranslation.moreculling": "A mod that changes how multiple types of culling are handled in order to improve performance",
 	"moreculling.config.title": "MoreCulling",
 	"moreculling.config.category.general": "General Culling",
-	"moreculling.config.category.blockstate": "BlockState Culling",
-	"moreculling.config.category.itemframe": "Item Frame Culling",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",
