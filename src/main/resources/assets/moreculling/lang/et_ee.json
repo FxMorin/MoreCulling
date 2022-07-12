@@ -1,0 +1,13 @@
+{
+	"modmenu.descriptionTranslation.moreculling": "Mod, mis muudab erinevat liiki eralduste toimimist, et parandada jõudlust",
+	"moreculling.config.title": "MoreCulling",
+	"moreculling.config.category.general": "Üldine eraldus",
+	"moreculling.config.option.blockStateCulling": "Plokioleku eraldus",
+	"moreculling.config.option.blockStateCulling.tooltip": "Lubab agressiivse plokioleku eralduse",
+	"moreculling.config.option.customItemFrameRenderer": "Kohandatud esemeraamirenderdaja",
+	"moreculling.config.option.customItemFrameRenderer.tooltip": "Lubab kohandatud esemeraamirenderdaja",
+	"moreculling.config.option.itemFrameLOD": "Esemeraami LOD",
+	"moreculling.config.option.itemFrameLOD.tooltip": "Reguleerib esemeraamide detailsustaset (Level Of Detail)",
+	"moreculling.config.option.itemFrame3FaceCulling": "3-külje esemeraamieraldus",
+	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "Lubab kolme külje eraldustehnika"
+} 
