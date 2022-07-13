@@ -1,0 +1,13 @@
+{
+	"modmenu.descriptionTranslation.moreculling": "一个改变多种类型的剔除方式以提升性能的mod",
+	"moreculling.config.title": "MoreCulling",
+	"moreculling.config.category.general": "全局剔除",
+	"moreculling.config.option.blockStateCulling": "方块状态剔除",
+	"moreculling.config.option.blockStateCulling.tooltip": "启用激进的方块状态剔除",
+	"moreculling.config.option.customItemFrameRenderer": "自定义物品展示框渲染器",
+	"moreculling.config.option.customItemFrameRenderer.tooltip": "启用自定义物品展示框渲染器",
+	"moreculling.config.option.itemFrameLOD": "物品展示框多层次细节",
+	"moreculling.config.option.itemFrameLOD.tooltip": "启用物品展示框多层次细节",
+	"moreculling.config.option.itemFrame3FaceCulling": "三面物品展示框剔除",
+	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "启用三面剔除技术"
+}
