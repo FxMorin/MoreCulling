@@ -25,7 +25,7 @@ jobs:
           files-primary: build/libs/!(*-@(dev|sources|api)).jar
           modrinth-files-secondary: build/libs/*-@(sources).jar
           github-files-secondary: build/libs/*-@(dev|sources|api).jar
-          curseforge-files-secondary: build/libs/*-@(dev|sources|api).jar
+          curseforge-files-secondary: build/libs/*-@(sources|api).jar
           version-type: release
           version-resolver: releases
           modrinth-featured: true
