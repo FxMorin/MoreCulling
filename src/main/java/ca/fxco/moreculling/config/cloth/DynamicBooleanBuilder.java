@@ -54,9 +54,7 @@ public class DynamicBooleanBuilder extends FieldBuilder<Boolean, DynamicBooleanL
     }
 
     public DynamicBooleanBuilder setDefaultValue(boolean defaultValue) {
-        this.defaultValue = () -> {
-            return defaultValue;
-        };
+        this.defaultValue = () -> defaultValue;
         return this;
     }
 
@@ -71,9 +69,7 @@ public class DynamicBooleanBuilder extends FieldBuilder<Boolean, DynamicBooleanL
     }
 
     public DynamicBooleanBuilder setTooltip(@Nullable Text... tooltip) {
-        this.tooltipSupplier = (bool) -> {
-            return Optional.ofNullable(tooltip);
-        };
+        this.tooltipSupplier = (bool) -> Optional.ofNullable(tooltip);
         return this;
     }
 

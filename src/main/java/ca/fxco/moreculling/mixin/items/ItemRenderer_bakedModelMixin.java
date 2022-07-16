@@ -225,8 +225,8 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             double dist = cameraPos.squaredDistanceTo(framePos);
             boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
                     canCullTransformation(transformation);
-            // If more than 384 (128 blocks) away, only render the front and maybe back if can't cull
-            if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > 384) { // Make blocks use LOD
+            // Make blocks use LOD - If more than range, only render the front and maybe back if can't cull
+            if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
                 this.renderBakedItemModelForFace(
                         model, stack, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumer, SOUTH
                 );
@@ -240,8 +240,8 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 // Use smart culling to render only 3 face directions.
                 // TODO: Add model rotation logic (items need this!) Currently we only support blocks and some models
                 if (MoreCulling.CONFIG.useItemFrame3FaceCulling &&
-                        dist > 12 &&
-                        frame.getRotation() % 2 == 0 && // (12) 4 blocks away
+                        dist > MoreCulling.CONFIG.itemFrame3FaceCullingRange &&
+                        frame.getRotation() % 2 == 0 &&
                         transformation.rotation.getY() == 0 &&
                         transformation.rotation.getX() == 0 &&
                         transformation.rotation.getZ() == 0

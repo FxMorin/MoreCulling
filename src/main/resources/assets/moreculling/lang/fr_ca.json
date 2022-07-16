@@ -8,6 +8,10 @@
   "moreculling.config.option.customItemFrameRenderer.tooltip": "Active la visualisation de cadre personnalisé",
   "moreculling.config.option.itemFrameLOD": "Cadre Niveau de détail",
   "moreculling.config.option.itemFrameLOD.tooltip": "Active le niveau de détail pour les cadres",
+  "moreculling.config.option.itemFrameLODRange": "Cadre Niveau de détail distance",
+  "moreculling.config.option.itemFrameLODRange.tooltip": "Modifiez la distance à laquelle commence cet abattage",
   "moreculling.config.option.itemFrame3FaceCulling": "3-faces Abattage des Cadre",
-  "moreculling.config.option.itemFrame3FaceCulling.tooltip": "Active une technique d'abattage à 3 faces"
+  "moreculling.config.option.itemFrame3FaceCulling.tooltip": "Active une technique d'abattage à 3 faces",
+  "moreculling.config.option.itemFrame3FaceCullingRange": "3-faces distance d'abattage des Cadre",
+  "moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Modifiez la distance à laquelle commence cet abattage, peut être visible à de plus petites distances"
 }

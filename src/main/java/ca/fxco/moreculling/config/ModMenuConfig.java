@@ -1,8 +1,7 @@
 package ca.fxco.moreculling.config;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.config.cloth.DynamicBooleanBuilder;
-import ca.fxco.moreculling.config.cloth.DynamicBooleanListEntry;
+import ca.fxco.moreculling.config.cloth.*;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -30,15 +29,27 @@ public class ModMenuConfig implements ModMenuApi {
                 .build());
 
         // Item Frames
+        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrameLODRange"), MoreCulling.CONFIG.itemFrameLODRange, 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
+                .setDefaultValue(384)
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameLODRange = newValue)
+                .build();
         DynamicBooleanListEntry itemFrameLOD = new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrameLOD"), MoreCulling.CONFIG.useItemFrameLOD)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrameLOD = newValue)
+                .setChangeConsumer(itemFrameLODRange::setSliderState) // Dynamic ;)
+                .build();
+        DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"), MoreCulling.CONFIG.itemFrame3FaceCullingRange, 0.0F, 48.0F, 0.5F) // Between 0 & 16 blocks
+                .setDefaultValue(12.0F)
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrame3FaceCullingRange = newValue)
                 .build();
         DynamicBooleanListEntry itemFrame3FaceCulling = new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrame3FaceCulling"), MoreCulling.CONFIG.useItemFrame3FaceCulling)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrame3FaceCulling = newValue)
+                .setChangeConsumer(itemFrame3FaceCullingRange::setSliderState) // Dynamic ;)
                 .build();
         generalCategory.addEntry(new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.customItemFrameRenderer"), MoreCulling.CONFIG.useCustomItemFrameRenderer)
                 .setDefaultValue(true)
@@ -50,8 +61,9 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .build());
         generalCategory.addEntry(itemFrameLOD);
+        generalCategory.addEntry(itemFrameLODRange);
         generalCategory.addEntry(itemFrame3FaceCulling);
-
+        generalCategory.addEntry(itemFrame3FaceCullingRange);
         return builder.build();
     }
 

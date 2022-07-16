@@ -67,15 +67,15 @@ public class DynamicBooleanListEntry extends TooltipListEntry<Boolean> {
         });
         this.resetButton = new ButtonWidget(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20, resetButtonKey, (widget) -> {
             if (this.enabled && this.bool.get() != defaultValue.get()) {
+                this.bool.set(defaultValue.get());
                 if (this.changeConsumer != null)
                     this.changeConsumer.accept(defaultValue.get());
-                this.bool.set(defaultValue.get());
             }
         });
-        if (this.changeConsumer != null) // Run once on load
-            this.changeConsumer.accept(this.bool.get());
         this.saveConsumer = saveConsumer;
         this.widgets = Lists.newArrayList(new ClickableWidget[]{this.buttonWidget, this.resetButton});
+        if (this.changeConsumer != null) // Run once on load
+            this.changeConsumer.accept(this.enabled && this.bool.get());
     }
 
     @Override
@@ -112,6 +112,8 @@ public class DynamicBooleanListEntry extends TooltipListEntry<Boolean> {
         this.enabled = active;
         this.buttonWidget.active = active;
         this.resetButton.active = active;
+        if (this.changeConsumer != null)
+            this.changeConsumer.accept(active);
     }
 
     public Boolean isEnabled() {

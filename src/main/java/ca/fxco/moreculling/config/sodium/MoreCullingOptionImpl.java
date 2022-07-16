@@ -30,7 +30,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     protected final OptionBinding<S, T> binding;
     protected final Control<T> control;
 
-    protected Consumer<T> onValueModified;
+    protected Consumer<Boolean> onEnabledChanged;
 
     protected final EnumSet<OptionFlag> flags;
 
@@ -46,7 +46,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
                                   Function<MoreCullingOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
-                                  OptionImpact impact, Consumer<T> valueModified, boolean enabled) {
+                                  OptionImpact impact, Consumer<Boolean> valueModified, boolean enabled) {
         this.storage = storage;
         this.name = name;
         this.tooltip = tooltip;
@@ -54,7 +54,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         this.impact = impact;
         this.flags = flags;
         this.control = control.apply(this);
-        this.onValueModified = valueModified;
+        this.onEnabledChanged = valueModified;
         this.enabled = enabled;
 
         this.reset();
@@ -88,14 +88,16 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     @Override
     public void setValue(T value) {
         this.modifiedValue = value;
-        if (this.onValueModified != null) this.onValueModified.accept(value);
+        if (this.onEnabledChanged != null && this.modifiedValue instanceof Boolean bool)
+            this.onEnabledChanged.accept(this.enabled && bool);
     }
 
     @Override
     public void reset() {
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
-        if (this.onValueModified != null) this.onValueModified.accept(value);
+        if (this.onEnabledChanged != null && this.modifiedValue instanceof Boolean bool)
+            this.onEnabledChanged.accept(this.enabled && bool);
     }
 
     @Override
@@ -110,6 +112,8 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     public void setAvailable(boolean available) {
         this.enabled = available;
+        if (this.onEnabledChanged != null)
+            this.onEnabledChanged.accept(available);
     }
 
     @Override
@@ -140,7 +144,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private Function<MoreCullingOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
         private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
-        private Consumer<T> valueModified;
+        private Consumer<Boolean> enabledChanged;
         private boolean enabled = true;
 
         private Builder(OptionStorage<S> storage) {
@@ -181,9 +185,9 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> setValueModified(Consumer<T> consumer) {
+        public Builder<S, T> onEnabledChanged(Consumer<Boolean> consumer) {
             Validate.notNull(consumer, "Runnable must not be null");
-            this.valueModified = consumer;
+            this.enabledChanged = consumer;
             return this;
         }
 
@@ -202,7 +206,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
-            return new MoreCullingOptionImpl<>(this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact, this.valueModified, this.enabled);
+            return new MoreCullingOptionImpl<>(this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact, this.enabledChanged, this.enabled);
         }
     }
 }

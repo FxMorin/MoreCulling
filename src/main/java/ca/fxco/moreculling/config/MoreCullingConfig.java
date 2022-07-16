@@ -15,5 +15,9 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean useItemFrameLOD = true;
 
+    public int itemFrameLODRange = 384; // default 384 (128 blocks) away
+
     public boolean useItemFrame3FaceCulling = true;
+
+    public float itemFrame3FaceCullingRange = 12.0F; // default 12 (4 blocks) away
 }

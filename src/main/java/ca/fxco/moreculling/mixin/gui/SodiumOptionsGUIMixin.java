@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin.gui;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.config.sodium.SodiumOptionPage;
+import ca.fxco.moreculling.config.SodiumOptionPage;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
