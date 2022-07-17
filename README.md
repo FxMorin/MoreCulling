@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src=https://github.com/fxmorin/MoreCulling/blob/master/src/main/resources/assets/moreculling/MoreCulling.png>
+<img src="https://github.com/fxmorin/MoreCulling/blob/master/src/main/resources/assets/moreculling/MoreCulling.png?raw=true" alt="MoreCulling Icon"/>
 
 # More Culling
 
@@ -17,28 +17,10 @@
 
 **Make sure to report any bugs [here](https://github.com/fxmorin/moreculling/issues)!**  
 
+**Head over to the [wiki](https://github.com/fxmorin/MoreCulling/wiki) for information on:**  
+What's Culled, Performance, Compatibility, Bug Fixes, and more!
+
 </div>
-  
-## Current Bugs fixed:  
-- [MC-249693](https://bugs.mojang.com/browse/MC-249693) - Chorus plant culling  
-- [MC-238739](https://bugs.mojang.com/browse/MC-238739) - Bamboo culling (without leaves)  
-- [MC-209633](https://bugs.mojang.com/browse/MC-209633) - Glass pane culling  
-- [MC-139620](https://bugs.mojang.com/browse/MC-139620) - Fence culling (some exceptions)  
-- [MC-217653](https://bugs.mojang.com/browse/MC-217653) - End Rod culling (some exceptions)
-
-**Plus a lot more that haven't been reported or tested**  
-
-## Other Features:  
-- Item Frame culling  
-  
-## Comparing Performance  
-**Results may vary drastically!**  
-Without MoreCulling, I get around ~136 frames  
-![Normal - FPS ~136](https://github.com/fxmorin/MoreCulling/blob/master/images/normally.png)  
-With MoreCulling, I get around ~210 frames  
-![MoreCulling - FPS ~210](https://github.com/fxmorin/MoreCulling/blob/master/images/moreculling.png)  
-Don't mind that bar, it was a screenshot.  
-Do not expect these results all the time. Bamboo renders 2 extra faces for each block without MoreCulling, which is why the results are so drastic here!  
   
 ## More Info    
 Feel free to contribute to the project!  
