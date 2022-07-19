@@ -1,3 +1,17 @@
 {
-	"modmenu.descriptionTranslation.moreculling": "Мод, который изменяет способ обработки нескольких типов отбраковки неотрисованных граней объектов (\"culling\") для повышения производительности"
+	"modmenu.descriptionTranslation.moreculling": "Мод, меняющий порядок обработки многих видов отбраковки для улучшения производительности",
+	"moreculling.config.title": "MoreCulling",
+	"moreculling.config.category.general": "Основная отбраковка",
+	"moreculling.config.option.blockStateCulling": "Отбраковка состояний блоков",
+	"moreculling.config.option.blockStateCulling.tooltip": "Активирует агрессивную отбраковку состояний блоков",
+	"moreculling.config.option.customItemFrameRenderer": "Альтернативная визуализация рамок",
+	"moreculling.config.option.customItemFrameRenderer.tooltip": "Активирует альтернативный рендер рамок",
+	"moreculling.config.option.itemFrameLOD": "Уровни детализации для рамок",
+	"moreculling.config.option.itemFrameLOD.tooltip": "Активирует упрощённую детализацию рамок на расстоянии",
+	"moreculling.config.option.itemFrameLODRange": "Расстояние для упрощения рамки",
+	"moreculling.config.option.itemFrameLODRange.tooltip": "Изменяет расстояние, на котором эта оптимизация начинает работать",
+	"moreculling.config.option.itemFrame3FaceCulling": "Трёхсторонняя отбраковка рамок",
+	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "Активирует трёхсторонний метод отбраковки",
+	"moreculling.config.option.itemFrame3FaceCullingRange": "Расстояние для трёхсторонней отбраковки рамок",
+	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Изменяет расстояние, на котором эта оптимизация начинает работать, может бросаться в глаза при низких значениях"
 }
