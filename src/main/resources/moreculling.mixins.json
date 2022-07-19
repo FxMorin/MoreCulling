@@ -8,6 +8,8 @@
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
+    "blocks.LeavesBlock_fastMixin",
+    "blocks.LeavesBlock_typesMixin",
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",

@@ -88,16 +88,16 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     @Override
     public void setValue(T value) {
         this.modifiedValue = value;
-        if (this.onEnabledChanged != null && this.modifiedValue instanceof Boolean bool)
-            this.onEnabledChanged.accept(this.enabled && bool);
+        if (this.onEnabledChanged != null)
+            this.onEnabledChanged.accept(this.enabled && this.modifiedValue instanceof Boolean bool ? bool : true);
     }
 
     @Override
     public void reset() {
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
-        if (this.onEnabledChanged != null && this.modifiedValue instanceof Boolean bool)
-            this.onEnabledChanged.accept(this.enabled && bool);
+        if (this.onEnabledChanged != null)
+            this.onEnabledChanged.accept(this.enabled && this.modifiedValue instanceof Boolean bool ? bool : true);
     }
 
     @Override
@@ -114,6 +114,10 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         this.enabled = available;
         if (this.onEnabledChanged != null)
             this.onEnabledChanged.accept(available);
+    }
+
+    public void setEnabledChanged(Consumer<Boolean> valueModified) {
+        this.onEnabledChanged = valueModified;
     }
 
     @Override

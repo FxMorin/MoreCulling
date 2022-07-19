@@ -157,18 +157,10 @@ public class DynamicFloatSliderEntry extends TooltipListEntry<Float> {
         boolean hasError = this.getConfigError().isPresent();
         boolean isEdited = this.isEdited();
         boolean notEnabled = !isEnabled();
-        if (hasError) {
-            text = text.formatted(Formatting.RED);
-        }
-        if (isEdited) {
-            text = text.formatted(Formatting.ITALIC);
-        }
-        if ((!hasError && !isEdited) || notEnabled) {
-            text = text.formatted(Formatting.GRAY);
-        }
-        if (notEnabled) {
-            text = text.formatted(Formatting.STRIKETHROUGH);
-        }
+        if (hasError) text = text.formatted(Formatting.RED);
+        if (isEdited) text = text.formatted(Formatting.ITALIC);
+        if ((!hasError && !isEdited) || notEnabled) text = text.formatted(Formatting.GRAY);
+        if (notEnabled) text = text.formatted(Formatting.STRIKETHROUGH);
         return text;
     }
 

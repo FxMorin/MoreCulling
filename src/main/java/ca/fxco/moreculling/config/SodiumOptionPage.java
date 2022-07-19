@@ -1,12 +1,14 @@
 package ca.fxco.moreculling.config;
 
-import ca.fxco.moreculling.config.MoreCullingConfig;
+import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.FloatSliderControl;
 import ca.fxco.moreculling.config.sodium.IntSliderControl;
 import ca.fxco.moreculling.config.sodium.MoreCullingOptionImpl;
 import ca.fxco.moreculling.config.sodium.MoreCullingOptionsStorage;
 import com.google.common.collect.ImmutableList;
+import me.jellysquid.mods.sodium.client.gui.SodiumGameOptions;
 import me.jellysquid.mods.sodium.client.gui.options.*;
+import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 import net.minecraft.text.Text;
 
@@ -20,6 +22,29 @@ public class SodiumOptionPage {
     public static OptionPage moreCullingPage() {
         List<OptionGroup> groups = new ArrayList<>();
 
+        // Leaves Culling
+        MoreCullingOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setControl(option -> new IntSliderControl(option, 1, 4, 1, Text.literal("%d")))
+                .setEnabled(morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
+                .setImpact(OptionImpact.MEDIUM)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .setBinding((opts, value) -> opts.leavesCullingDepth = value + 1, opts -> opts.leavesCullingDepth - 1)
+                .build();
+        MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.leavesCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
+                .setControl(option -> new CyclingControl<>(option, LeavesCullingMode.class))
+                .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
+                .setImpact(OptionImpact.MEDIUM)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .build();
+        leavesCullingMode.setEnabledChanged(active -> {
+            leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
+        });
+
+        // BlockStates
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
                         .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
@@ -27,11 +52,13 @@ public class SodiumOptionPage {
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
-                        .setFlags(OptionFlag.REQUIRES_RENDERER_UPDATE)
+                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                        .onEnabledChanged(leavesCullingMode::setAvailable)
                         .build())
                 .build()
         );
 
+        // Item Frames
         MoreCullingOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameLODRange"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
@@ -82,6 +109,12 @@ public class SodiumOptionPage {
                 .add(itemFrameLODRange)
                 .add(itemFrame3FaceOption)
                 .add(itemFrame3FaceRange)
+                .build()
+        );
+
+        groups.add(OptionGroup.createBuilder()
+                .add(leavesCullingMode)
+                .add(leavesCullingDepth)
                 .build()
         );
 

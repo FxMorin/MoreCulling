@@ -1,10 +1,14 @@
 package ca.fxco.moreculling.utils;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
 import ca.fxco.moreculling.patches.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
+import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.block.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GraphicsMode;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -58,5 +62,12 @@ public class CullingUtils {
         if (object2ByteLinkedOpenHashMap.size() == 2048) object2ByteLinkedOpenHashMap.removeLastByte();
         object2ByteLinkedOpenHashMap.putAndMoveToFirst(neighborGroup, (byte)(bl ? 1 : 0));
         return bl;
+    }
+
+    public static boolean areLeavesTranslucent() {
+        GraphicsMode mode = MinecraftClient.getInstance().options.getGraphicsMode().getValue();
+        return MoreCulling.isSodiumLoaded ?
+                SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
+                mode.getId() >= GraphicsMode.FANCY.getId();
     }
 }

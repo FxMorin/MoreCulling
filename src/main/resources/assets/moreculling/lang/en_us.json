@@ -13,5 +13,12 @@
 	"moreculling.config.option.itemFrame3FaceCulling": "3-Face Frame Culling",
 	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "Enables a 3-face culling technique",
 	"moreculling.config.option.itemFrame3FaceCullingRange": "3-Face Frame Culling Range",
-	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Change the distance that this culling starts to work at, may be visible at smaller distances"
+	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Change the distance that this culling starts to work at, may be visible at smaller distances",
+	"moreculling.config.option.leavesCulling": "Leaves Culling",
+	"moreculling.config.option.leavesCulling.tooltip": "Change the type of culling used for leaves. Higher is faster!",
+	"moreculling.config.option.leavesCullingDepth": "Leaves Culling Depth",
+	"moreculling.config.option.leavesCullingDepth.tooltip": "Change how far leaves should check for Depth-based culling",
+	"moreculling.config.options.blockstate": "BlockState",
+	"moreculling.config.options.check": "Check Surrounding",
+	"moreculling.config.options.depth": "Depth"
 }
