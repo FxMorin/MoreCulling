@@ -1,6 +1,6 @@
 {
 	"modmenu.descriptionTranslation.moreculling": "一个改变多种类型的剔除方式以提升性能的mod",
-	"moreculling.config.title": "MoreCulling",
+	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "全局剔除",
 	"moreculling.config.option.blockStateCulling": "方块状态剔除",
 	"moreculling.config.option.blockStateCulling.tooltip": "启用激进的方块状态剔除",

@@ -25,7 +25,7 @@ public class ModMenuConfig implements ModMenuApi {
     private static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.translatable(("moreculling.config.title")));
+                .setTitle(Text.translatable(("moreculling.title")));
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();

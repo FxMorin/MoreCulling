@@ -1,6 +1,6 @@
 {
 	"modmenu.descriptionTranslation.moreculling": "A mod that changes how multiple types of culling are handled in order to improve performance",
-	"moreculling.config.title": "MoreCulling",
+	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "General Culling",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",

@@ -1,6 +1,6 @@
 {
 	"modmenu.descriptionTranslation.moreculling": "Mod, mis muudab erinevat liiki eralduste toimimist, et parandada jõudlust",
-	"moreculling.config.title": "MoreCulling",
+	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "Üldine eraldus",
 	"moreculling.config.option.blockStateCulling": "Plokioleku eraldus",
 	"moreculling.config.option.blockStateCulling.tooltip": "Lubab agressiivse plokioleku eralduse",

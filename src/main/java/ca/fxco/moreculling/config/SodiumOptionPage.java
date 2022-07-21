@@ -131,6 +131,6 @@ public class SodiumOptionPage {
                 .build()
         );
 
-        return new OptionPage(Text.translatable("moreculling.config.title"), ImmutableList.copyOf(groups));
+        return new OptionPage(Text.translatable("moreculling.title"), ImmutableList.copyOf(groups));
     }
 }

@@ -1,6 +1,6 @@
 {
 	"modmenu.descriptionTranslation.moreculling": "Мод, меняющий порядок обработки многих видов отбраковки для улучшения производительности",
-	"moreculling.config.title": "MoreCulling",
+	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "Основная отбраковка",
 	"moreculling.config.option.blockStateCulling": "Отбраковка состояний блоков",
 	"moreculling.config.option.blockStateCulling.tooltip": "Активирует агрессивную отбраковку состояний блоков",
