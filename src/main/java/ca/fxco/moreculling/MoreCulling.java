@@ -16,8 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MoreCulling implements ClientModInitializer {
 
-    public static AtomicInteger countQuads = new AtomicInteger();
-
     public static BlockRenderManager blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
