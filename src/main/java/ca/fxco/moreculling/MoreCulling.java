@@ -1,7 +1,6 @@
 package ca.fxco.moreculling;
 
 import ca.fxco.moreculling.config.MoreCullingConfig;
-import ca.fxco.moreculling.utils.LoaderUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -27,11 +26,8 @@ public class MoreCulling implements ClientModInitializer {
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MoreCullingConfig CONFIG;
 
-    public static boolean isSodiumLoaded;
-
     @Override
     public void onInitializeClient() {
-        isSodiumLoaded = LoaderUtils.isModLoaded("sodium");
         AutoConfig.register(MoreCullingConfig.class, Toml4jConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(MoreCullingConfig.class).getConfig();
     }

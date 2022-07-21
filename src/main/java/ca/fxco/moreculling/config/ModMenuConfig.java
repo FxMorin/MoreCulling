@@ -3,18 +3,24 @@ package ca.fxco.moreculling.config;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
+import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 public class ModMenuConfig implements ModMenuApi {
+
+    /*
+        TODO:
+        - Make all custom Cloth builders & Entry's implement the dynamic options
+        - Add support for mod incompatibility so its not jankly done in the config
+     */
 
     private static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
@@ -27,7 +33,9 @@ public class ModMenuConfig implements ModMenuApi {
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCullingDepth"), MoreCulling.CONFIG.leavesCullingDepth - 1, 1, 4)
                 .setDefaultValue(2)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
+                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingDepth = newValue + 1;
                     MinecraftClient.getInstance().worldRenderer.reload();
@@ -35,13 +43,17 @@ public class ModMenuConfig implements ModMenuApi {
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class, MoreCulling.CONFIG.leavesCullingMode)
                 .setDefaultValue(LeavesCullingMode.DEFAULT)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
+                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
+                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.option.leavesCulling.tooltip")
+                )
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .setChangeConsumer(value -> leavesCullingDepth.setSliderState(value == LeavesCullingMode.DEPTH))
                 .build();
+        if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setButtonState(false);
 
         // BlockStates
         generalCategory.addEntry(new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.blockStateCulling"), MoreCulling.CONFIG.useBlockStateCulling)
@@ -51,7 +63,9 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer(leavesCullingMode::setButtonState)
+                .setChangeConsumer(value -> {
+                    if (!CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setButtonState(value);
+                })
                 .build());
 
         // Item Frames
@@ -93,7 +107,7 @@ public class ModMenuConfig implements ModMenuApi {
 
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingDepth);
-        leavesCullingDepth.setSliderState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
+        leavesCullingDepth.setSliderState(!CompatUtils.IS_CULLLESSLEAVES_LOADED && leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
         return builder.build();
     }
 

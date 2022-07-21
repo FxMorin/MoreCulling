@@ -5,8 +5,8 @@ import ca.fxco.moreculling.config.sodium.FloatSliderControl;
 import ca.fxco.moreculling.config.sodium.IntSliderControl;
 import ca.fxco.moreculling.config.sodium.MoreCullingOptionImpl;
 import ca.fxco.moreculling.config.sodium.MoreCullingOptionsStorage;
+import ca.fxco.moreculling.utils.CompatUtils;
 import com.google.common.collect.ImmutableList;
-import me.jellysquid.mods.sodium.client.gui.SodiumGameOptions;
 import me.jellysquid.mods.sodium.client.gui.options.*;
 import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
@@ -17,6 +17,11 @@ import java.util.List;
 
 public class SodiumOptionPage {
 
+    /*
+        TODO:
+        - Add support to custom sodium builder for mod incompatibility so its not jankly done in here
+     */
+
     private static final MoreCullingOptionsStorage morecullingOpts = new MoreCullingOptionsStorage();
 
     public static OptionPage moreCullingPage() {
@@ -25,23 +30,29 @@ public class SodiumOptionPage {
         // Leaves Culling
         MoreCullingOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
+                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setControl(option -> new IntSliderControl(option, 1, 4, 1, Text.literal("%d")))
-                .setEnabled(morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
+                .setEnabled(!CompatUtils.IS_CULLLESSLEAVES_LOADED && morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value + 1, opts -> opts.leavesCullingDepth - 1)
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
+                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
+                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setControl(option -> new CyclingControl<>(option, LeavesCullingMode.class, LeavesCullingMode.getLocalizedNames()))
                 .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
+                .setEnabled(!CompatUtils.IS_CULLLESSLEAVES_LOADED)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
         leavesCullingMode.setEnabledChanged(active -> {
-            leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
+            if (!CompatUtils.IS_CULLLESSLEAVES_LOADED)
+                leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
         });
 
         // BlockStates
@@ -53,7 +64,9 @@ public class SodiumOptionPage {
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                        .onEnabledChanged(leavesCullingMode::setAvailable)
+                        .onEnabledChanged(value -> {
+                            if (!CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
+                        })
                         .build())
                 .build()
         );
