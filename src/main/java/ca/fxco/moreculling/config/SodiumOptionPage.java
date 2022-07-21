@@ -37,7 +37,7 @@ public class SodiumOptionPage {
                 .setEnabled(!CompatUtils.IS_CULLLESSLEAVES_LOADED && morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .setBinding((opts, value) -> opts.leavesCullingDepth = value + 1, opts -> opts.leavesCullingDepth - 1)
+                .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))

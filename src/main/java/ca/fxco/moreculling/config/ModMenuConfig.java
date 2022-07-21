@@ -31,13 +31,13 @@ public class ModMenuConfig implements ModMenuApi {
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
         // Leaves Culling
-        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCullingDepth"), MoreCulling.CONFIG.leavesCullingDepth - 1, 1, 4)
+        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCullingDepth"), MoreCulling.CONFIG.leavesCullingDepth, 1, 4)
                 .setDefaultValue(2)
                 .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
                         Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
                         Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.leavesCullingDepth = newValue + 1;
+                    MoreCulling.CONFIG.leavesCullingDepth = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .build();

@@ -58,7 +58,7 @@ public class LeavesBlock_typesMixin implements MoreBlockCulling {
 
     private Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState, BlockPos sidePos, Direction side) {
         if (sideState.isOpaque() || sideState.getBlock() instanceof LeavesBlock) {
-            for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth; i++) {
+            for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth + 1; i++) {
                 BlockState state = view.getBlockState(sidePos.offset(side, i));
                 if (state == null || !(state.isOpaque() || state.getBlock() instanceof LeavesBlock))
                     return Optional.of(false);
