@@ -107,7 +107,6 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void reset() {
-        if (this.locked) return;
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
         if (this.onEnabledChanged != null)
@@ -171,6 +170,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private Function<MoreCullingOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
         private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
+        @Nullable
         private Consumer<Boolean> enabledChanged;
         private boolean enabled = true;
         private boolean locked = false;
