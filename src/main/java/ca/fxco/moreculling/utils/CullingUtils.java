@@ -66,7 +66,7 @@ public class CullingUtils {
 
     public static boolean areLeavesTranslucent() {
         GraphicsMode mode = MinecraftClient.getInstance().options.getGraphicsMode().getValue();
-        return MoreCulling.isSodiumLoaded ?
+        return CompatUtils.IS_SODIUM_LOADED ?
                 SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
                 mode.getId() >= GraphicsMode.FANCY.getId();
     }
