@@ -72,7 +72,7 @@ public class DynamicEnumBuilder<T extends Enum<?>> extends FieldBuilder<T, Dynam
     }
 
     public DynamicEnumBuilder<T> setTooltipSupplier(Supplier<Optional<Text[]>> tooltipSupplier) {
-        this.tooltipSupplier = (e) -> (Optional)tooltipSupplier.get();
+        this.tooltipSupplier = (e) -> (Optional<Text[]>)tooltipSupplier.get();
         return this;
     }
 
