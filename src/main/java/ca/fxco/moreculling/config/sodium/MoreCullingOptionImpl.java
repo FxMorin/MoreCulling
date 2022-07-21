@@ -21,8 +21,10 @@ import java.util.function.Function;
 public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     /*
-     * All this just because Sodium has to set there damn enabled to be final.
-     * I then also put a couple more things in there ;)
+     * Custom implementation of Sodium's OptionImpl which allows me to do stuff such as:
+     * - Dynamic state changing (enabled, values, events, etc...)
+     * - Custom text formatter
+     * - Easy Mod compatibility checks
      */
 
     protected final OptionStorage<S> storage;
@@ -43,10 +45,19 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     protected T modifiedValue;
 
     protected boolean enabled;
+    private final boolean locked; // Prevents anything from changing
 
     protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                  Function<MoreCullingOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
-                                  OptionImpact impact, Consumer<Boolean> valueModified, boolean enabled) {
+                                    Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
+                                    EnumSet<OptionFlag> flags, OptionImpact impact, Consumer<Boolean> valueModified,
+                                    boolean enabled) {
+        this(storage, name, tooltip, binding, control, flags, impact, valueModified, enabled, false);
+    }
+
+    protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
+                                    Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
+                                    EnumSet<OptionFlag> flags, OptionImpact impact, Consumer<Boolean> valueModified,
+                                    boolean enabled, boolean locked) {
         this.storage = storage;
         this.name = name;
         this.tooltip = tooltip;
@@ -56,6 +67,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         this.control = control.apply(this);
         this.onEnabledChanged = valueModified;
         this.enabled = enabled;
+        this.locked = locked;
 
         this.reset();
     }
@@ -87,6 +99,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void setValue(T value) {
+        if (this.locked) return;
         this.modifiedValue = value;
         if (this.onEnabledChanged != null)
             this.onEnabledChanged.accept(this.enabled && this.modifiedValue instanceof Boolean bool ? bool : true);
@@ -94,6 +107,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void reset() {
+        if (this.locked) return;
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
         if (this.onEnabledChanged != null)
@@ -111,12 +125,14 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     }
 
     public void setAvailable(boolean available) {
+        if (this.locked) return;
         this.enabled = available;
         if (this.onEnabledChanged != null)
             this.onEnabledChanged.accept(available);
     }
 
     public void setEnabledChanged(Consumer<Boolean> valueModified) {
+        if (this.locked) return;
         this.onEnabledChanged = valueModified;
     }
 
@@ -127,8 +143,11 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void applyChanges() {
-        this.binding.setValue(this.storage.getData(), this.modifiedValue);
-        this.value = this.modifiedValue;
+        if (this.locked) return;
+        if (this.enabled) {
+            this.binding.setValue(this.storage.getData(), this.modifiedValue);
+            this.value = this.modifiedValue;
+        }
     }
 
     @Override
@@ -140,6 +159,10 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         return new Builder<>(storage);
     }
 
+    /*
+     Builder is fully in control of mod compatibility checks
+     */
+
     public static class Builder<S, T> {
         private final OptionStorage<S> storage;
         private Text name;
@@ -150,6 +173,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
         private Consumer<Boolean> enabledChanged;
         private boolean enabled = true;
+        private boolean locked = false;
 
         private Builder(OptionStorage<S> storage) {
             this.storage = storage;
@@ -161,7 +185,8 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         }
 
         public Builder<S, T> setTooltip(@Nullable Text tooltip) {
-            this.tooltip = tooltip;
+            if (!this.locked)
+                this.tooltip = tooltip;
             return this;
         }
 
@@ -191,12 +216,14 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
         public Builder<S, T> onEnabledChanged(Consumer<Boolean> consumer) {
             Validate.notNull(consumer, "Runnable must not be null");
-            this.enabledChanged = consumer;
+            if (!this.locked)
+                this.enabledChanged = consumer;
             return this;
         }
 
         public Builder<S, T> setEnabled(boolean value) {
-            this.enabled = value;
+            if (!this.locked)
+                this.enabled = value;
             return this;
         }
 
@@ -205,12 +232,25 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
+        public Builder<S, T> setModIncompatibility(boolean isLoaded, String modId) {
+            if (isLoaded) {
+                this.locked = true;
+                this.enabled = false;
+                this.tooltip = Text.translatable("moreculling.config.optionDisabled", modId);
+                this.enabledChanged = null;
+            }
+            return this;
+        }
+
         public MoreCullingOptionImpl<S, T> build() {
             Validate.notNull(this.name, "Name must be specified");
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
-            return new MoreCullingOptionImpl<>(this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact, this.enabledChanged, this.enabled);
+            return new MoreCullingOptionImpl<>(
+                    this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
+                    this.enabledChanged, this.enabled, this.locked
+            );
         }
     }
 }

@@ -34,7 +34,7 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCullingDepth"), MoreCulling.CONFIG.leavesCullingDepth, 1, 4)
                 .setDefaultValue(2)
                 .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.optionDisabled", "cull-less-leaves") :
                         Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingDepth = newValue;
@@ -44,7 +44,7 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class, MoreCulling.CONFIG.leavesCullingMode)
                 .setDefaultValue(LeavesCullingMode.DEFAULT)
                 .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
+                        Text.translatable("moreculling.config.optionDisabled", "cull-less-leaves") :
                         Text.translatable("moreculling.config.option.leavesCulling.tooltip")
                 )
                 .setSaveConsumer(newValue -> {

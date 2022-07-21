@@ -17,11 +17,6 @@ import java.util.List;
 
 public class SodiumOptionPage {
 
-    /*
-        TODO:
-        - Add support to custom sodium builder for mod incompatibility so its not jankly done in here
-     */
-
     private static final MoreCullingOptionsStorage morecullingOpts = new MoreCullingOptionsStorage();
 
     public static OptionPage moreCullingPage() {
@@ -30,29 +25,25 @@ public class SodiumOptionPage {
         // Leaves Culling
         MoreCullingOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
-                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
-                        Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setControl(option -> new IntSliderControl(option, 1, 4, 1, Text.literal("%d")))
-                .setEnabled(!CompatUtils.IS_CULLLESSLEAVES_LOADED && morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
+                .setEnabled(morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
-                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.of(Text.translatable("moreculling.config.optionDisabled").getString().formatted("cull-less-leaves")) :
-                        Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setControl(option -> new CyclingControl<>(option, LeavesCullingMode.class, LeavesCullingMode.getLocalizedNames()))
                 .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
-                .setEnabled(!CompatUtils.IS_CULLLESSLEAVES_LOADED)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
         leavesCullingMode.setEnabledChanged(active -> {
-            if (!CompatUtils.IS_CULLLESSLEAVES_LOADED)
-                leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
+            leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
         });
 
         // BlockStates
@@ -64,9 +55,7 @@ public class SodiumOptionPage {
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                        .onEnabledChanged(value -> {
-                            if (!CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
-                        })
+                        .onEnabledChanged(leavesCullingMode::setAvailable)
                         .build())
                 .build()
         );
