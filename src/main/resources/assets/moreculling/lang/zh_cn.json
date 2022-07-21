@@ -15,9 +15,9 @@
 	"moreculling.config.option.itemFrame3FaceCullingRange": "三面展示框剔除范围",
 	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "更改剔除开始运作的距离，在更小的距离上可能可见",
 	"moreculling.config.option.leavesCulling": "树叶剔除",
-	"moreculling.config.option.leavesCulling.tooltip": "更改用于树叶的剔除类型，越高越快！",
+	"moreculling.config.option.leavesCulling.tooltip": "更改用于树叶的剔除类型",
 	"moreculling.config.option.leavesCullingDepth": "树叶剔除深度",
-	"moreculling.config.option.leavesCullingDepth.tooltip": "更改基于深度剔除树叶的检测范围",
+	"moreculling.config.option.leavesCullingDepth.tooltip": "更改基于深度剔除树叶的检测范围，越高越快！",
 	"moreculling.config.options.blockstate": "方块状态",
 	"moreculling.config.options.check": "检测周围环境",
 	"moreculling.config.options.depth": "深度"
