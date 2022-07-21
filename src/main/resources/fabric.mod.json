@@ -40,10 +40,6 @@
     "memoryleakfix": "*",
     "lithium": ">=0.8.0"
   },
-  "includes": {
-    "conditional-mixin": "0.3.0",
-    "cloth-config": "7.+"
-  },
   "custom": {
     "mc-publish": {
       "curseforge": 630104,
