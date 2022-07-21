@@ -9,18 +9,11 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 public class ModMenuConfig implements ModMenuApi {
-
-    /*
-        TODO:
-        - Make all custom Cloth builders & Entry's implement the dynamic options
-        - Add support for mod incompatibility so its not jankly done in the config
-     */
 
     private static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
@@ -28,76 +21,79 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTitle(Text.translatable(("moreculling.title")));
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
-        ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
         // Leaves Culling
-        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCullingDepth"), MoreCulling.CONFIG.leavesCullingDepth, 1, 4)
+        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
+                .setValue(MoreCulling.CONFIG.leavesCullingDepth)
                 .setDefaultValue(2)
-                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.translatable("moreculling.config.optionDisabled", "cull-less-leaves") :
-                        Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingDepth = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
-        DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class, MoreCulling.CONFIG.leavesCullingMode)
+        DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class)
+                .setValue(MoreCulling.CONFIG.leavesCullingMode)
                 .setDefaultValue(LeavesCullingMode.DEFAULT)
-                .setTooltip(CompatUtils.IS_CULLLESSLEAVES_LOADED ?
-                        Text.translatable("moreculling.config.optionDisabled", "cull-less-leaves") :
-                        Text.translatable("moreculling.config.option.leavesCulling.tooltip")
-                )
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer(value -> leavesCullingDepth.setSliderState(value == LeavesCullingMode.DEPTH))
+                .setChangeConsumer((instance,value) ->
+                        leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH)
+                )
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
-        if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setButtonState(false);
 
         // BlockStates
-        generalCategory.addEntry(new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.blockStateCulling"), MoreCulling.CONFIG.useBlockStateCulling)
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.blockStateCulling"))
+                .setValue(MoreCulling.CONFIG.useBlockStateCulling)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer(value -> {
-                    if (!CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setButtonState(value);
-                })
+                .setChangeConsumer((instance, value) -> leavesCullingMode.setEnabledState(value))
                 .build());
 
         // Item Frames
-        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrameLODRange"), MoreCulling.CONFIG.itemFrameLODRange, 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
+        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.itemFrameLODRange"), 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
+                .setValue(MoreCulling.CONFIG.itemFrameLODRange)
                 .setDefaultValue(384)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameLODRange = newValue)
                 .build();
-        DynamicBooleanListEntry itemFrameLOD = new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrameLOD"), MoreCulling.CONFIG.useItemFrameLOD)
+        DynamicBooleanListEntry itemFrameLOD = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.itemFrameLOD"))
+                .setValue(MoreCulling.CONFIG.useItemFrameLOD)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrameLOD = newValue)
-                .setChangeConsumer(itemFrameLODRange::setSliderState) // Dynamic ;)
+                .setChangeConsumer((instance, value) -> itemFrameLODRange.setEnabledState(value))
                 .build();
-        DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"), MoreCulling.CONFIG.itemFrame3FaceCullingRange, 0.0F, 48.0F, 0.5F) // Between 0 & 16 blocks
+        DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"), 0.0F, 48.0F, 0.5F) // Between 0 & 16 blocks
+                .setValue(MoreCulling.CONFIG.itemFrame3FaceCullingRange)
                 .setDefaultValue(12.0F)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrame3FaceCullingRange = newValue)
                 .build();
-        DynamicBooleanListEntry itemFrame3FaceCulling = new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.itemFrame3FaceCulling"), MoreCulling.CONFIG.useItemFrame3FaceCulling)
+        DynamicBooleanListEntry itemFrame3FaceCulling = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.itemFrame3FaceCulling"))
+                .setValue(MoreCulling.CONFIG.useItemFrame3FaceCulling)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrame3FaceCulling = newValue)
-                .setChangeConsumer(itemFrame3FaceCullingRange::setSliderState) // Dynamic ;)
+                .setChangeConsumer((instance, value) -> itemFrame3FaceCullingRange.setEnabledState(value))
                 .build();
-        generalCategory.addEntry(new DynamicBooleanBuilder(entryBuilder.getResetButtonKey(), Text.translatable("moreculling.config.option.customItemFrameRenderer"), MoreCulling.CONFIG.useCustomItemFrameRenderer)
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.customItemFrameRenderer"))
+                .setValue(MoreCulling.CONFIG.useCustomItemFrameRenderer)
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.customItemFrameRenderer.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useCustomItemFrameRenderer = newValue)
-                .setChangeConsumer(newValue -> { // Dynamic ;)
-                    itemFrameLOD.setButtonState(newValue);
-                    itemFrame3FaceCulling.setButtonState(newValue);
+                .setChangeConsumer((instance, value) -> {
+                    itemFrameLOD.setEnabledState(value);
+                    itemFrame3FaceCulling.setEnabledState(value);
                 })
                 .build());
         generalCategory.addEntry(itemFrameLOD);
@@ -107,7 +103,7 @@ public class ModMenuConfig implements ModMenuApi {
 
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingDepth);
-        leavesCullingDepth.setSliderState(!CompatUtils.IS_CULLLESSLEAVES_LOADED && leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
+        leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
         return builder.build();
     }
 
