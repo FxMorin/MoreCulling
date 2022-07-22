@@ -25,4 +25,6 @@ public class MoreCullingConfig implements ConfigData {
     public LeavesCullingMode leavesCullingMode = LeavesCullingMode.DEFAULT;
 
     public int leavesCullingDepth = 2;
+
+    public boolean includeMangroveRoots = false;
 }

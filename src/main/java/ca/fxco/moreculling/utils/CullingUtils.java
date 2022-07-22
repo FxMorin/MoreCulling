@@ -24,6 +24,8 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
 
+    private static final Direction[] DIRECTIONS = Direction.values();
+
     /**
      * Replaces the default vanilla culling with a custom implementation
      */
@@ -69,5 +71,30 @@ public class CullingUtils {
         return CompatUtils.IS_SODIUM_LOADED ?
                 SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
                 mode.getId() >= GraphicsMode.FANCY.getId();
+    }
+
+    public static Optional<Boolean> shouldDrawFaceCheck(BlockView view, BlockState sideState, BlockPos thisPos, Direction side) {
+        if (sideState.isOpaque() || sideState.getBlock() instanceof LeavesBlock) {
+            boolean isSurrounded = true;
+            for (Direction dir : DIRECTIONS) {
+                if (dir != side) {
+                    BlockState state = view.getBlockState(thisPos.offset(dir));
+                    isSurrounded &= state.isOpaque() || state.getBlock() instanceof LeavesBlock;
+                }
+            }
+            return Optional.of(!isSurrounded);
+        }
+        return Optional.of(true);
+    }
+
+    public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState, BlockPos sidePos, Direction side) {
+        if (sideState.isOpaque() || sideState.getBlock() instanceof LeavesBlock) {
+            for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth + 1; i++) {
+                BlockState state = view.getBlockState(sidePos.offset(side, i));
+                if (state == null || !(state.isOpaque() || state.getBlock() instanceof LeavesBlock))
+                    return Optional.of(false);
+            }
+        }
+        return Optional.of(true);
     }
 }

@@ -31,7 +31,8 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.leavesCullingDepth = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                //.setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class)
                 .setValue(MoreCulling.CONFIG.leavesCullingMode)
@@ -41,10 +42,22 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer((instance,value) ->
-                        leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH)
-                )
-                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                .setChangeConsumer((instance,value) -> {
+                    leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH);
+                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED && value == LeavesCullingMode.STATE)
+                        instance.setValue(LeavesCullingMode.CHECK);
+                })
+                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
+                //.setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                .build();
+        DynamicBooleanListEntry includeMangroveRoots = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.includeMangroveRoots"))
+                .setValue(MoreCulling.CONFIG.includeMangroveRoots)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.includeMangroveRoots = newValue)
+                .setChangeConsumer((instance, value) -> {
+                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
+                })
                 .build();
 
         // BlockStates
@@ -56,7 +69,10 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer((instance, value) -> leavesCullingMode.setEnabledState(value))
+                .setChangeConsumer((instance, value) -> {
+                    leavesCullingMode.setEnabledState(value);
+                    includeMangroveRoots.setEnabledState(value);
+                })
                 .build());
 
         // Item Frames
@@ -103,6 +119,7 @@ public class ModMenuConfig implements ModMenuApi {
 
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingDepth);
+        generalCategory.addEntry(includeMangroveRoots);
         leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
         return builder.build();
     }

@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -59,6 +60,22 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
             this.saveConsumer = null;
             this.changeConsumer = null;
             this.requireRestart(false);
+        }
+        return this;
+    }
+
+    public AbstractDynamicBuilder<T,A> setModLimited(boolean isLoaded, Text limitedMessage) {
+        if (isLoaded) {
+            Optional<Text[]> currentTooltips = this.tooltipSupplier.apply(this.value);
+            if (currentTooltips.isEmpty()) {
+                this.setTooltip(limitedMessage);
+            } else {
+                Text[] tooltips = currentTooltips.get();
+                Text[] newArray = new Text[tooltips.length + 1];
+                for (int i = 0; i < tooltips.length; i++) newArray[i] = tooltips[i];
+                newArray[tooltips.length] = limitedMessage;
+                this.setTooltip(newArray);
+            }
         }
         return this;
     }

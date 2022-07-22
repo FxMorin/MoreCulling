@@ -31,7 +31,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
-                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
@@ -40,11 +40,26 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
+                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
+                .onChanged((instance, value) -> {
+                    leavesCullingDepth.setAvailable(instance.isAvailable() && value == LeavesCullingMode.DEPTH);
+                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED && value == LeavesCullingMode.STATE)
+                        instance.setValue(LeavesCullingMode.CHECK);
+                })
                 .build();
-        leavesCullingMode.setEnabledChanged(active -> {
-            leavesCullingDepth.setAvailable(active && leavesCullingMode.getValue() == LeavesCullingMode.DEPTH);
-        });
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> includeMangroveRoots = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.includeMangroveRoots"))
+                .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
+                .setImpact(OptionImpact.LOW)
+                .onChanged((instance, value) -> {
+                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
+                })
+                .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
+                .build();
+        if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
+            leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
 
         // BlockStates
         groups.add(OptionGroup.createBuilder()
@@ -55,7 +70,10 @@ public class SodiumOptionPage {
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                        .onEnabledChanged(leavesCullingMode::setAvailable)
+                        .onChanged((instance,value) -> {
+                            leavesCullingMode.setAvailable(value);
+                            includeMangroveRoots.setAvailable(value);
+                        })
                         .build())
                 .build()
         );
@@ -76,7 +94,7 @@ public class SodiumOptionPage {
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer)
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.useItemFrameLOD = value, opts -> opts.useItemFrameLOD)
-                .onEnabledChanged(itemFrameLODRange::setAvailable) // Dynamic ;)
+                .onChanged((instance, value) -> itemFrameLODRange.setAvailable(instance.isAvailable() && value))
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, Float> itemFrame3FaceRange = MoreCullingOptionImpl.createBuilder(float.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"))
@@ -93,7 +111,7 @@ public class SodiumOptionPage {
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer)
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.useItemFrame3FaceCulling = value, opts -> opts.useItemFrame3FaceCulling)
-                .onEnabledChanged(itemFrame3FaceRange::setAvailable) // Dynamic ;)
+                .onChanged((instance, value) -> itemFrame3FaceRange.setAvailable(instance.isAvailable() && value))
                 .build();
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
@@ -102,7 +120,7 @@ public class SodiumOptionPage {
                         .setControl(TickBoxControl::new)
                         .setImpact(OptionImpact.HIGH)
                         .setBinding((opts, value) -> opts.useCustomItemFrameRenderer = value, opts -> opts.useCustomItemFrameRenderer)
-                        .onEnabledChanged((value) -> { // Dynamic ;)
+                        .onChanged((instance, value) -> {
                             itemFrameLODOption.setAvailable(value);
                             itemFrame3FaceOption.setAvailable(value);
                         })
@@ -117,6 +135,7 @@ public class SodiumOptionPage {
         groups.add(OptionGroup.createBuilder()
                 .add(leavesCullingMode)
                 .add(leavesCullingDepth)
+                .add(includeMangroveRoots)
                 .build()
         );
 

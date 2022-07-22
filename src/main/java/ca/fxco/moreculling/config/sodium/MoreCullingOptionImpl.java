@@ -32,7 +32,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     protected final OptionBinding<S, T> binding;
     protected final Control<T> control;
 
-    protected Consumer<Boolean> onEnabledChanged;
+    protected BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged;
 
     protected final EnumSet<OptionFlag> flags;
 
@@ -49,14 +49,15 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
 
     protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
                                     Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
-                                    EnumSet<OptionFlag> flags, OptionImpact impact, Consumer<Boolean> valueModified,
-                                    boolean enabled) {
-        this(storage, name, tooltip, binding, control, flags, impact, valueModified, enabled, false);
+                                    EnumSet<OptionFlag> flags, OptionImpact impact,
+                                    BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged, boolean enabled) {
+        this(storage, name, tooltip, binding, control, flags, impact, onChanged, enabled, false);
     }
 
     protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
                                     Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
-                                    EnumSet<OptionFlag> flags, OptionImpact impact, Consumer<Boolean> valueModified,
+                                    EnumSet<OptionFlag> flags, OptionImpact impact,
+                                    BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged,
                                     boolean enabled, boolean locked) {
         this.storage = storage;
         this.name = name;
@@ -65,7 +66,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         this.impact = impact;
         this.flags = flags;
         this.control = control.apply(this);
-        this.onEnabledChanged = valueModified;
+        this.onChanged = onChanged;
         this.enabled = enabled;
         this.locked = locked;
 
@@ -101,16 +102,16 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     public void setValue(T value) {
         if (this.locked) return;
         this.modifiedValue = value;
-        if (this.onEnabledChanged != null)
-            this.onEnabledChanged.accept(this.enabled && this.modifiedValue instanceof Boolean bool ? bool : true);
+        if (this.onChanged != null)
+            this.onChanged.accept(this, this.getValue());
     }
 
     @Override
     public void reset() {
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
-        if (this.onEnabledChanged != null)
-            this.onEnabledChanged.accept(this.enabled && this.modifiedValue instanceof Boolean bool ? bool : true);
+        if (this.onChanged != null)
+            this.onChanged.accept(this, this.getValue());
     }
 
     @Override
@@ -126,13 +127,13 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     public void setAvailable(boolean available) {
         if (this.locked) return;
         this.enabled = available;
-        if (this.onEnabledChanged != null)
-            this.onEnabledChanged.accept(available);
+        if (this.onChanged != null)
+            this.onChanged.accept(this, this.getValue());
     }
 
-    public void setEnabledChanged(Consumer<Boolean> valueModified) {
+    public void setOnChanged(BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged) {
         if (this.locked) return;
-        this.onEnabledChanged = valueModified;
+        this.onChanged = onChanged;
     }
 
     @Override
@@ -171,7 +172,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private OptionImpact impact;
         private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
         @Nullable
-        private Consumer<Boolean> enabledChanged;
+        private BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged;
         private boolean enabled = true;
         private boolean locked = false;
 
@@ -214,10 +215,10 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> onEnabledChanged(Consumer<Boolean> consumer) {
-            Validate.notNull(consumer, "Runnable must not be null");
+        public Builder<S, T> onChanged(BiConsumer<MoreCullingOptionImpl<S, T>, T> biconsumer) {
+            Validate.notNull(biconsumer, "BiConsumer must not be null");
             if (!this.locked)
-                this.enabledChanged = consumer;
+                this.onChanged = biconsumer;
             return this;
         }
 
@@ -237,8 +238,14 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
                 this.locked = true;
                 this.enabled = false;
                 this.tooltip = Text.translatable("moreculling.config.optionDisabled", modId);
-                this.enabledChanged = null;
+                this.onChanged = null;
             }
+            return this;
+        }
+
+        public Builder<S, T> setModLimited(boolean isLoaded, Text limitedMessage) {
+            if (isLoaded)
+                this.tooltip = this.tooltip != null ? this.tooltip.copy().append("\n").append(limitedMessage) : limitedMessage;
             return this;
         }
 
@@ -249,7 +256,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             Validate.notNull(this.control, "Control must be specified");
             return new MoreCullingOptionImpl<>(
                     this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
-                    this.enabledChanged, this.enabled, this.locked
+                    this.onChanged, this.enabled, this.locked
             );
         }
     }
