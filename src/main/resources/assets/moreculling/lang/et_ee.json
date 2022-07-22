@@ -1,6 +1,6 @@
 {
 	"modmenu.descriptionTranslation.moreculling": "Mod, mis muudab erinevat liiki eralduste toimimist, et parandada jõudlust",
-	"moreculling.config.title": "MoreCulling",
+	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "Üldine eraldus",
 	"moreculling.config.option.blockStateCulling": "Plokioleku eraldus",
 	"moreculling.config.option.blockStateCulling.tooltip": "Lubab agressiivse plokioleku eralduse",
@@ -17,8 +17,12 @@
 	"moreculling.config.option.leavesCulling": "Lehtede eraldus",
 	"moreculling.config.option.leavesCulling.tooltip": "Muudab lehtedel kasutatavat eralduse tüüpi",
 	"moreculling.config.option.leavesCullingDepth": "Lehtede eralduse sügavus",
-	"moreculling.config.option.leavesCullingDepth.tooltip": "Määrab kauguse, mida lehtede eralduseks kontrollitakse sügavuspõhisel režiimil. Mida suurem, seda kiirem!",
+	"moreculling.config.option.leavesCullingDepth.tooltip": "Määrab kauguse, mida lehtede eralduseks kontrollitakse sügavuspõhisel režiimis. Mida suurem, seda kiirem!",
+	"moreculling.config.option.mangroveOnly": "%s kasutamisel eraldab vaid mangroovijuuri",
+	"moreculling.config.option.includeMangroveRoots": "Kaasa mangroovijuured",
+	"moreculling.config.option.includeMangroveRoots.tooltip": "Määrab, kas ka mangroovijuured peaksid olema samal viisil eraldatud. Ei tööta plokioleku režiimis!",
 	"moreculling.config.options.blockstate": "plokiolek",
 	"moreculling.config.options.check": "kontrolli ümbritsevat",
-	"moreculling.config.options.depth": "sügavus"
+	"moreculling.config.options.depth": "sügavus",
+	"moreculling.config.optionDisabled": "See valik on %s kasutamisel keelatud"
 } 
