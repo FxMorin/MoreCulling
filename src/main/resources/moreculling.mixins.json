@@ -10,6 +10,8 @@
     "accessors.AbstractBlockAccessor",
     "blocks.LeavesBlock_fastMixin",
     "blocks.LeavesBlock_typesMixin",
+    "blocks.MangroveRootsBlock_typesMixin",
+    "blocks.PowderSnowBlock_cullMixin",
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
@@ -25,9 +27,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "blocks.MangroveRootsBlock_typesMixin",
-    "blocks.PowderSnowBlock_cullMixin"
-  ]
+  }
 }
