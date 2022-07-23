@@ -73,13 +73,17 @@ public class CullingUtils {
                 mode.getId() >= GraphicsMode.FANCY.getId();
     }
 
-    public static Optional<Boolean> shouldDrawFaceCheck(BlockView view, BlockState sideState, BlockPos thisPos, Direction side) {
-        if (sideState.isOpaque() || sideState.getBlock() instanceof LeavesBlock) {
+    public static Optional<Boolean> shouldDrawFaceCheck(BlockView view, BlockState sideState,
+                                                        BlockPos thisPos, BlockPos sidePos, Direction side) {
+        if (sideState.getBlock() instanceof LeavesBlock ||
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
             boolean isSurrounded = true;
             for (Direction dir : DIRECTIONS) {
                 if (dir != side) {
-                    BlockState state = view.getBlockState(thisPos.offset(dir));
-                    isSurrounded &= state.isOpaque() || state.getBlock() instanceof LeavesBlock;
+                    BlockPos pos = thisPos.offset(dir);
+                    BlockState state = view.getBlockState(pos);
+                    isSurrounded &= state.getBlock() instanceof LeavesBlock ||
+                            (sideState.isOpaque() && state.isSideSolidFullSquare(view, pos, dir));
                 }
             }
             return Optional.of(!isSurrounded);
@@ -88,10 +92,13 @@ public class CullingUtils {
     }
 
     public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState, BlockPos sidePos, Direction side) {
-        if (sideState.isOpaque() || sideState.getBlock() instanceof LeavesBlock) {
+        if (sideState.getBlock() instanceof LeavesBlock ||
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth + 1; i++) {
-                BlockState state = view.getBlockState(sidePos.offset(side, i));
-                if (state == null || !(state.isOpaque() || state.getBlock() instanceof LeavesBlock))
+                BlockPos pos = sidePos.offset(side, i);
+                BlockState state = view.getBlockState(pos);
+                if (state == null || !(state.getBlock() instanceof LeavesBlock ||
+                        (state.isOpaque() && state.isSideSolidFullSquare(view, pos, side))))
                     return Optional.of(false);
             }
         }

@@ -20,7 +20,7 @@ public class LeavesBlock_fastMixin extends Block {
     @Override
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         if (MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.FAST || !CullingUtils.areLeavesTranslucent())
-            return stateFrom.isOpaque() || stateFrom.getBlock() instanceof LeavesBlock;
+            return stateFrom.getBlock() instanceof LeavesBlock;
         return super.isSideInvisible(state, stateFrom, direction);
     }
 }

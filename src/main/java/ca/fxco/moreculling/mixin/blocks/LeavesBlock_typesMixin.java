@@ -36,7 +36,7 @@ public class LeavesBlock_typesMixin implements MoreBlockCulling {
                                                   BlockPos thisPos, BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) {
             case STATE -> Optional.of(!(sideState.getBlock() instanceof LeavesBlock && sideState.get(DISTANCE) % 3 != 1));
-            case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, thisPos, side);
+            case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, thisPos, sidePos, side);
             case DEPTH -> CullingUtils.shouldDrawFaceDepth(view, sideState, sidePos, side);
             default -> Optional.empty();
         };
