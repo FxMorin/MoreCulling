@@ -27,6 +27,7 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "blocks.MangroveRootsBlock_typesMixin"
+    "blocks.MangroveRootsBlock_typesMixin",
+    "blocks.PowderSnowBlock_cullMixin"
   ]
 }

@@ -31,7 +31,6 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.leavesCullingDepth = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                //.setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class)
@@ -48,7 +47,6 @@ public class ModMenuConfig implements ModMenuApi {
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
                 .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
-                //.setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
         DynamicBooleanListEntry includeMangroveRoots = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.includeMangroveRoots"))
                 .setValue(MoreCulling.CONFIG.includeMangroveRoots)
@@ -58,6 +56,14 @@ public class ModMenuConfig implements ModMenuApi {
                 .setChangeConsumer((instance, value) -> {
                     if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
                 })
+                .build();
+
+        // Powder Snow Culling
+        DynamicBooleanListEntry powderSnowCulling = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.powderSnowCulling"))
+                .setValue(MoreCulling.CONFIG.powderSnowCulling)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.powderSnowCulling = newValue)
                 .build();
 
         // BlockStates
@@ -72,6 +78,7 @@ public class ModMenuConfig implements ModMenuApi {
                 .setChangeConsumer((instance, value) -> {
                     leavesCullingMode.setEnabledState(value);
                     includeMangroveRoots.setEnabledState(value);
+                    powderSnowCulling.setEnabledState(value);
                 })
                 .build());
 
@@ -120,6 +127,8 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingDepth);
         generalCategory.addEntry(includeMangroveRoots);
+
+        generalCategory.addEntry(powderSnowCulling);
         leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
         return builder.build();
     }

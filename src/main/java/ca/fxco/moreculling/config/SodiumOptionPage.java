@@ -61,6 +61,17 @@ public class SodiumOptionPage {
         if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
             leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
 
+        // Powder Snow Culling
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.powderSnowCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
+                .setImpact(OptionImpact.LOW)
+                .setBinding((opts, value) -> opts.powderSnowCulling = value, opts -> opts.powderSnowCulling)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .build();
+
         // BlockStates
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
@@ -73,6 +84,7 @@ public class SodiumOptionPage {
                         .onChanged((instance,value) -> {
                             leavesCullingMode.setAvailable(value);
                             includeMangroveRoots.setAvailable(value);
+                            powderSnowCulling.setAvailable(value);
                         })
                         .build())
                 .build()
@@ -136,6 +148,11 @@ public class SodiumOptionPage {
                 .add(leavesCullingMode)
                 .add(leavesCullingDepth)
                 .add(includeMangroveRoots)
+                .build()
+        );
+
+        groups.add(OptionGroup.createBuilder()
+                .add(powderSnowCulling)
                 .build()
         );
 

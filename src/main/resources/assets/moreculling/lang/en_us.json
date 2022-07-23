@@ -21,6 +21,8 @@
 	"moreculling.config.option.mangroveOnly": "Will only cull Mangrove Roots when using: %s",
 	"moreculling.config.option.includeMangroveRoots": "Include Mangrove Roots",
 	"moreculling.config.option.includeMangroveRoots.tooltip": "If mangrove roots should also be culled using the same way. BlockState does not work!",
+	"moreculling.config.option.powderSnowCulling": "Powder Snow Culling",
+	"moreculling.config.option.powderSnowCulling.tooltip": "Fixes powder snow not culling against solid faces",
 	"moreculling.config.options.blockstate": "BlockState",
 	"moreculling.config.options.check": "Check Surrounding",
 	"moreculling.config.options.depth": "Depth",
