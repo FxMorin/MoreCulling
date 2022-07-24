@@ -21,6 +21,8 @@
 	"moreculling.config.option.mangroveOnly": "%s kasutamisel eraldab vaid mangroovijuuri",
 	"moreculling.config.option.includeMangroveRoots": "Kaasa mangroovijuured",
 	"moreculling.config.option.includeMangroveRoots.tooltip": "Määrab, kas ka mangroovijuured peaksid olema samal viisil eraldatud. Ei tööta plokioleku režiimis!",
+	"moreculling.config.option.powderSnowCulling": "Puuderlume eraldus",
+	"moreculling.config.option.powderSnowCulling.tooltip": "Parandab puuderlume eralduse puudumise tahkete pindade vastas",
 	"moreculling.config.options.blockstate": "plokiolek",
 	"moreculling.config.options.check": "kontrolli ümbritsevat",
 	"moreculling.config.options.depth": "sügavus",
