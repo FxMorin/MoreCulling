@@ -58,9 +58,17 @@ public class CullingUtils {
         Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(neighborGroup);
         if (b != 127) return b != 0;
+        Direction opposite = side.getOpposite();
         VoxelShape thisShape = thisState.getCullingFace(world, thisPos, side);
-        if (thisShape.isEmpty()) return true;
-        VoxelShape sideShape = sideState.getCullingFace(world, sidePos, side.getOpposite());
+        VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
+        if (thisShape.isEmpty()) { // It this shape is empty
+            if (!sideState.isSideSolidFullSquare(world, sidePos, opposite) ||
+                    (sideShape = sideState.getCullingFace(world, sidePos, opposite)).isEmpty()) {
+                return true; // Face should be drawn if the side face is not a full square or its empty
+            }
+        } else {
+            sideShape = sideState.getCullingFace(world, sidePos, opposite);
+        }
         boolean bl = VoxelShapes.matchesAnywhere(thisShape, sideShape, BooleanBiFunction.ONLY_FIRST);
         if (object2ByteLinkedOpenHashMap.size() == 2048) object2ByteLinkedOpenHashMap.removeLastByte();
         object2ByteLinkedOpenHashMap.putAndMoveToFirst(neighborGroup, (byte)(bl ? 1 : 0));
