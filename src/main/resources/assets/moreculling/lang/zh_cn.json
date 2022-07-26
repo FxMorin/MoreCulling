@@ -18,7 +18,13 @@
 	"moreculling.config.option.leavesCulling.tooltip": "更改用于树叶的剔除类型",
 	"moreculling.config.option.leavesCullingDepth": "树叶剔除深度",
 	"moreculling.config.option.leavesCullingDepth.tooltip": "更改基于深度剔除树叶的检测范围，越高越快！",
+	"moreculling.config.option.mangroveOnly": "使用时将只剔除红树根：%s",
+	"moreculling.config.option.includeMangroveRoots": "包括红树根",
+	"moreculling.config.option.includeMangroveRoots.tooltip": "红树根也应该用同样的方式被剔除。方块状态不起作用",
+	"moreculling.config.option.powderSnowCulling": "细雪剔除",
+	"moreculling.config.option.powderSnowCulling.tooltip": "修复细雪不剔除固体方块面的问题",
 	"moreculling.config.options.blockstate": "方块状态",
 	"moreculling.config.options.check": "检测周围环境",
-	"moreculling.config.options.depth": "深度"
+	"moreculling.config.options.depth": "深度",
+	"moreculling.config.optionDisabled": "此选项被禁用，当使用：%s"
 }
