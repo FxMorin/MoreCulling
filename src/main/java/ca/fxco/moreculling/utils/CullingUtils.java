@@ -86,7 +86,7 @@ public class CullingUtils {
                             (sideState.isOpaque() && state.isSideSolidFullSquare(view, pos, dir));
                 }
             }
-            return Optional.of(!isSurrounded);
+            return isSurrounded ? Optional.of(false) : Optional.empty();
         }
         return Optional.of(true);
     }
