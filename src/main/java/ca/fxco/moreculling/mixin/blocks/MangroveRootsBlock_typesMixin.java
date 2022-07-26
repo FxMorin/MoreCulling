@@ -25,7 +25,7 @@ public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCul
     @Override
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         if (!MoreCulling.CONFIG.includeMangroveRoots) return super.isSideInvisible(state, stateFrom, direction);
-        if (MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.FAST || !CullingUtils.areLeavesTranslucent())
+        if (MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.FAST || CullingUtils.areLeavesOpaque())
             return stateFrom.getBlock() instanceof LeavesBlock || super.isSideInvisible(state, stateFrom, direction);
         return super.isSideInvisible(state, stateFrom, direction);
     }

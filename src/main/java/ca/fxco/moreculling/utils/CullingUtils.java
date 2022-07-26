@@ -66,11 +66,11 @@ public class CullingUtils {
         return bl;
     }
 
-    public static boolean areLeavesTranslucent() {
+    public static boolean areLeavesOpaque() {
         GraphicsMode mode = MinecraftClient.getInstance().options.getGraphicsMode().getValue();
         return CompatUtils.IS_SODIUM_LOADED ?
-                SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
-                mode.getId() >= GraphicsMode.FANCY.getId();
+                !SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
+                mode.getId() < GraphicsMode.FANCY.getId();
     }
 
     public static Optional<Boolean> shouldDrawFaceCheck(BlockView view, BlockState sideState,
