@@ -2,8 +2,6 @@ package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import ca.fxco.moreculling.utils.CullingUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PowderSnowBlock;
