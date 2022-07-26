@@ -28,7 +28,7 @@ public class LeavesBlock_typesMixin implements MoreBlockCulling {
 
     @Override
     public boolean usesCustomShouldDrawFace(BlockState state) {
-        return MoreCulling.CONFIG.leavesCullingMode != LeavesCullingMode.DEFAULT; //Fast will skip this call
+        return MoreCulling.CONFIG.leavesCullingMode != LeavesCullingMode.DEFAULT; //Fast & Vertical will skip this call
     }
 
     @Override

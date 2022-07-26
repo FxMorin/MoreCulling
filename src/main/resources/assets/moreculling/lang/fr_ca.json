@@ -26,5 +26,6 @@
   "moreculling.config.options.blockstate": "État du bloc",
   "moreculling.config.options.check": "Vérifier autour",
   "moreculling.config.options.depth": "Distance",
+  "moreculling.config.options.vertical": "Vertical",
   "moreculling.config.optionDisabled": "Cette option est désactivée lors de l'utilisation de : %s"
 }

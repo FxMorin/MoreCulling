@@ -12,7 +12,8 @@ public enum LeavesCullingMode implements SelectionListEntry.Translatable {
     FAST("options.clouds.fast"),
     STATE("moreculling.config.options.blockstate"),
     CHECK("moreculling.config.options.check"),
-    DEPTH("moreculling.config.options.depth");
+    DEPTH("moreculling.config.options.depth"),
+    VERTICAL("moreculling.config.options.vertical");
 
     private final String translationKey;
 

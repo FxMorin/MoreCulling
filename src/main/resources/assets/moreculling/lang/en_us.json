@@ -26,5 +26,6 @@
 	"moreculling.config.options.blockstate": "BlockState",
 	"moreculling.config.options.check": "Check Surrounding",
 	"moreculling.config.options.depth": "Depth",
+	"moreculling.config.options.vertical": "Vertical",
 	"moreculling.config.optionDisabled": "This option is disabled when using: %s"
 }
