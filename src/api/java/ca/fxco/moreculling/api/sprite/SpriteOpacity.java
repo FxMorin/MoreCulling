@@ -1,6 +1,14 @@
 package ca.fxco.moreculling.api.sprite;
 
+import net.minecraft.client.texture.NativeImage;
+
 public interface SpriteOpacity {
+
+    /**
+     * Change the images in a sprite that should be used for culling.
+     * Only use this if you know what you are doing!
+     */
+    NativeImage[] getImages();
 
     /**
      * States if the sprite has any fully transparent pixels.

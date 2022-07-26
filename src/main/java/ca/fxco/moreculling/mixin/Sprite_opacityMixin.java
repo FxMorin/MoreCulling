@@ -16,8 +16,13 @@ public class Sprite_opacityMixin implements SpriteOpacity {
     protected NativeImage[] images;
 
     @Override
+    public NativeImage[] getImages() {
+        return this.images;
+    }
+
+    @Override
     public boolean hasTransparency() {
-        for (NativeImage nativeImage : this.images)
+        for (NativeImage nativeImage : getImages())
             if (SpriteUtils.doesHaveTransparency(nativeImage))
                 return true;
         return false;
@@ -25,7 +30,7 @@ public class Sprite_opacityMixin implements SpriteOpacity {
 
     @Override
     public boolean hasTranslucency() {
-        for (NativeImage nativeImage : this.images)
+        for (NativeImage nativeImage : getImages())
             if (SpriteUtils.doesHaveTranslucency(nativeImage))
                 return true;
         return false;
