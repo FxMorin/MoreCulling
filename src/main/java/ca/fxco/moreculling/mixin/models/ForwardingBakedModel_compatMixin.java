@@ -17,6 +17,11 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
 
     @Override
     public boolean hasTextureTranslucency() {
-        return !(this.wrapped instanceof BakedOpacity bakedOpacity && !bakedOpacity.hasTextureTranslucency());
+        return ((BakedOpacity)this.wrapped).hasTextureTranslucency();
+    }
+
+    @Override
+    public void resetTranslucencyCache() {
+        ((BakedOpacity)this.wrapped).resetTranslucencyCache();
     }
 }

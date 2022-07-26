@@ -9,4 +9,10 @@ public interface BakedOpacity {
     default boolean hasTextureTranslucency() {
         return true;
     }
+
+    /**
+     * When called this method will reset the translucency cache of the model.
+     * This should be called if the texture of the model is ever changed!
+     */
+    default void resetTranslucencyCache() {}
 }

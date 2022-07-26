@@ -22,6 +22,10 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
     @Final
     private BakedModel defaultModel;
 
+    @Shadow
+    @Final
+    private List<Weighted.Present<BakedModel>> models;
+
     @Unique
     private boolean hasTranslucency;
 
@@ -30,15 +34,20 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
         return hasTranslucency;
     }
 
+    @Override
+    public void resetTranslucencyCache() {
+        hasTranslucency = SpriteUtils.doesHaveTransparency(this.defaultModel.getParticleSprite());
+        if (!hasTranslucency)
+            for (Weighted.Present<BakedModel> bakedModelPresent : this.models)
+                hasTranslucency |= ((BakedOpacity)bakedModelPresent.getData()).hasTextureTranslucency();
+    }
+
 
     @Inject(
             method = "<init>",
             at = @At("RETURN")
     )
     private void onInit(List<Weighted.Present<BakedModel>> models, CallbackInfo ci) {
-        hasTranslucency = SpriteUtils.doesHaveTransparency(this.defaultModel.getParticleSprite());
-        if (!hasTranslucency)
-            for (Weighted.Present<BakedModel> bakedModelPresent : models)
-                hasTranslucency |= ((BakedOpacity)bakedModelPresent.getData()).hasTextureTranslucency();
+        resetTranslucencyCache();
     }
 }
