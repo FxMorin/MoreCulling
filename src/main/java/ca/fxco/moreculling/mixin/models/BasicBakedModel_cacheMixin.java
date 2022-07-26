@@ -49,7 +49,7 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
             for (BakedQuad baked : this.quads) {
                 if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
                     hasTranslucency = true;
-                    break;
+                    return;
                 }
             }
         }
@@ -58,10 +58,9 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
                 for (BakedQuad baked : bakedList) {
                     if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
                         hasTranslucency = true;
-                        break;
+                        return;
                     }
                 }
-                if (hasTranslucency) break;
             }
         }
     }
