@@ -55,6 +55,8 @@ public class ModMenuConfig implements ModMenuApi {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.includeMangroveRoots = newValue)
                 .setChangeConsumer((instance, value) -> {
                     if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
+                    if (leavesCullingMode.getValue() == LeavesCullingMode.STATE)
+                        leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
                 .build();
 
