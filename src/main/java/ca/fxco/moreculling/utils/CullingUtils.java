@@ -40,6 +40,7 @@ public class CullingUtils {
         }
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
+                !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency() &&
                 !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
