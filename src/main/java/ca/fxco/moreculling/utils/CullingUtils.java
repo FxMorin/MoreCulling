@@ -3,7 +3,7 @@ package ca.fxco.moreculling.utils;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
-import ca.fxco.moreculling.patches.MoreStateCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.block.*;

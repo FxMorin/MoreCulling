@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import ca.fxco.moreculling.patches.MoreStateCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -22,12 +22,12 @@ public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     protected abstract BlockState asBlockState();
 
     @Override
-    public boolean usesCustomShouldDrawFace() {
+    public final boolean usesCustomShouldDrawFace() {
         return ((MoreBlockCulling)this.getBlock()).usesCustomShouldDrawFace(this.asBlockState());
     }
 
     @Override
-    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public final Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
         return ((MoreBlockCulling)this.getBlock()).customShouldDrawFace(view, this.asBlockState(), sideState, thisPos, sidePos, side);
     }
 }

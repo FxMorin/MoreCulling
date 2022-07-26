@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.patches;
+package ca.fxco.moreculling.api.blockstate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -8,6 +8,15 @@ import net.minecraft.world.BlockView;
 import java.util.Optional;
 
 public interface MoreStateCulling {
+
+    /**
+     * This will allow you to check if the state uses a custom should draw face check
+     */
     boolean usesCustomShouldDrawFace();
+
+    /**
+     * Calling this method will check if the face should be drawn.
+     * Returns an optional boolean, when empty it should run the vanilla block culling checks
+     */
     Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side);
 }
