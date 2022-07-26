@@ -24,7 +24,8 @@ What's Culled, Performance, Compatibility, Bug Fixes, and more!
 </div>
   
 ## More Info    
-Feel free to contribute to the project!  
+Feel free to contribute to the project. Make sure to star the project to help out!  
+
 I'm also fine if you use this mod in your modpacks  
 
 ### My other optimization/bugfix mods:  
