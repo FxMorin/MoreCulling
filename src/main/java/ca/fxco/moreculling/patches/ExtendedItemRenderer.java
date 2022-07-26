@@ -10,6 +10,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
+//TODO: Major Cleanup & put into the public API
+
 public interface ExtendedItemRenderer {
     void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc, int light, int seed, ItemFrameEntity frame, Vec3d cameraPos);
     void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices, VertexConsumer vertices, @Nullable Direction withoutFace);

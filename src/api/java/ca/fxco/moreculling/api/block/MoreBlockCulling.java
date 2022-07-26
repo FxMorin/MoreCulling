@@ -7,6 +7,11 @@ import net.minecraft.world.BlockView;
 
 import java.util.Optional;
 
+/**
+ * MoreBlockCulling is an interface that should be used on classes that extend Block
+ * It allows you to implement custom culling techniques on blocks, while still using MoreCulling's blockstate culling
+ */
+
 public interface MoreBlockCulling {
 
     /**

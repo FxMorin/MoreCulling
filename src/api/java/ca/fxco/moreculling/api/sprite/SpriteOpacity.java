@@ -2,6 +2,11 @@ package ca.fxco.moreculling.api.sprite;
 
 import net.minecraft.client.texture.NativeImage;
 
+/**
+ * SpriteOpacity is an interface that should be used on classes that extend Sprite
+ * It allows your custom sprite to take full advantage of MoreCulling's culling techniques.
+ */
+
 public interface SpriteOpacity {
 
     /**

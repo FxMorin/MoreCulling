@@ -1,5 +1,10 @@
 package ca.fxco.moreculling.api.model;
 
+/**
+ * BakedOpacity is an interface that should be used on classes that extend BakedModel
+ * It allows your custom model to take full advantage of MoreCulling's culling techniques.
+ */
+
 public interface BakedOpacity {
 
     /**
