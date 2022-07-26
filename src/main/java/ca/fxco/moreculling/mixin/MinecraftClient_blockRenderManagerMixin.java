@@ -27,7 +27,7 @@ public class MinecraftClient_blockRenderManagerMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void onBlockRenderManageInitialized(RunArgs args, CallbackInfo ci) {
+    private void onBlockRenderManagerInitialized(RunArgs args, CallbackInfo ci) {
         MoreCulling.blockRenderManager = this.blockRenderManager;
     }
 }

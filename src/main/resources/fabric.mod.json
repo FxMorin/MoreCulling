@@ -46,6 +46,11 @@
       "curseforge": 630104,
       "modrinth": "51shyZVL",
       "quilt": true
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/SGFDrvA"
+      }
     }
   }
 }
