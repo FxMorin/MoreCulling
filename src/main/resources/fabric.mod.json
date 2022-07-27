@@ -29,7 +29,7 @@
   "accessWidener" : "moreculling.accesswidener",
   "depends": {
     "fabricloader": ">=0.11.3",
-    "minecraft": "1.19",
+    "minecraft": "1.19.x",
     "java": ">=17",
     "cloth-config": "7.x.x"
   },
