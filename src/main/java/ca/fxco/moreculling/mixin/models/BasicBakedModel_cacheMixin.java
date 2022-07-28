@@ -2,12 +2,14 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,15 +40,15 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     private boolean hasTranslucency;
 
     @Override
-    public boolean hasTextureTranslucency() {
+    public boolean hasTextureTranslucency(@Nullable BlockState state) {
         return hasTranslucency;
     }
 
     @Override
     public void resetTranslucencyCache() {
-        hasTranslucency = ((SpriteOpacity)this.sprite).hasTranslucency();
+        hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
         if (!hasTranslucency) {
-            for (BakedQuad baked : this.quads) {
+            for (BakedQuad baked : quads) {
                 if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
                     hasTranslucency = true;
                     return;
@@ -54,7 +56,7 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
             }
         }
         if (!hasTranslucency) {
-            for (List<BakedQuad> bakedList : this.faceQuads.values()) {
+            for (List<BakedQuad> bakedList : faceQuads.values()) {
                 for (BakedQuad baked : bakedList) {
                     if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
                         hasTranslucency = true;

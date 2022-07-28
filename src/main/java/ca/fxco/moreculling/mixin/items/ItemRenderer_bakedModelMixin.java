@@ -208,7 +208,9 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         } else {
             boolean isBlockItem = stack.getItem() instanceof BlockItem; //TODO: Do proper checks
             // Use faster cached check for translucency instead of multiple instanceof checks
-            boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency();
+            boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency(
+                    ((BlockItem) stack.getItem()).getBlock().getDefaultState()
+            );
             RenderLayer renderLayer = RenderLayers.getItemLayer(stack, bl2);
             VertexConsumer vertexConsumer;
             if (stack.isIn(ItemTags.COMPASSES) && stack.hasGlint()) {

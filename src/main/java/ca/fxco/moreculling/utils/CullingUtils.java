@@ -35,14 +35,16 @@ public class CullingUtils {
         BlockState sideState = world.getBlockState(sidePos);
         if (thisState.isSideInvisible(sideState, side)) return false;
         if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
-            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(world, sideState, thisPos, sidePos, side);
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(
+                    world, sideState, thisPos, sidePos, side
+            );
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
         Block block = sideState.getBlock();
         if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
                 !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency() &&
-                !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency())) {
+                !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency(thisState) &&
+                !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency(sideState))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
@@ -100,7 +102,8 @@ public class CullingUtils {
         return Optional.of(true);
     }
 
-    public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState, BlockPos sidePos, Direction side) {
+    public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState,
+                                                        BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth + 1; i++) {

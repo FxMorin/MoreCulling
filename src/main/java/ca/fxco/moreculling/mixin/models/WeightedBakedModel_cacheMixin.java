@@ -2,9 +2,11 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.utils.SpriteUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.WeightedBakedModel;
 import net.minecraft.util.collection.Weighted;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +20,13 @@ import java.util.List;
 @Mixin(WeightedBakedModel.class)
 public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
 
+    /*
+    All bakedModels will be merged together for the translucency check since there is no way to tell which models
+    will be used when calling the translucency check. Should be fixed by never calling translucency checks for this
+    model. Check BakedModel_extendsMixin for more info
+     */
+
+
     @Shadow
     @Final
     private BakedModel defaultModel;
@@ -30,16 +39,19 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
     private boolean hasTranslucency;
 
     @Override
-    public boolean hasTextureTranslucency() {
+    public boolean hasTextureTranslucency(@Nullable BlockState state) {
         return hasTranslucency;
     }
 
     @Override
     public void resetTranslucencyCache() {
-        hasTranslucency = SpriteUtils.doesHaveTransparency(this.defaultModel.getParticleSprite());
-        if (!hasTranslucency)
-            for (Weighted.Present<BakedModel> bakedModelPresent : this.models)
-                hasTranslucency |= ((BakedOpacity)bakedModelPresent.getData()).hasTextureTranslucency();
+        hasTranslucency = SpriteUtils.doesHaveTransparency(defaultModel.getParticleSprite());
+        if (!hasTranslucency) {
+            for (Weighted.Present<BakedModel> bakedModelPresent : models) {
+                hasTranslucency = ((BakedOpacity) bakedModelPresent.getData()).hasTextureTranslucency(null);
+                if (hasTranslucency) break;
+            }
+        }
     }
 
 

@@ -2,10 +2,12 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BuiltinBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,13 +27,13 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
     private boolean hasTranslucency;
 
     @Override
-    public boolean hasTextureTranslucency() {
+    public boolean hasTextureTranslucency(@Nullable BlockState state) {
         return hasTranslucency;
     }
 
     @Override
     public void resetTranslucencyCache() {
-        hasTranslucency = ((SpriteOpacity)this.sprite).hasTranslucency();
+        hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
     }
 
 
