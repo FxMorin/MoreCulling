@@ -4,6 +4,7 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.patches.ExtendedItemRenderer;
 import ca.fxco.moreculling.utils.DirectionUtils;
+import ca.fxco.moreculling.utils.TransformationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.color.item.ItemColors;
@@ -174,19 +175,6 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             this.renderBakedItemQuadsForFace(matrices, vertices, bakedQuads, stack, light, overlay, face);
     }
 
-    private boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
-        if (transform.scale.getX() > 1.0F || transform.scale.getY() > 1.0F || transform.scale.getZ() > 1.0F) {
-            return false; //TODO: Maybe Allow Z axis
-        }
-        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0 || transform.rotation.getY() % 90 != 0) {
-            return false; //TODO: Maybe Allow Y axis, see if the face is correct
-        }
-        if (transform.translation.getX() != 0 || transform.translation.getY() != 0 || transform.translation.getZ() != 0) {
-            return false; //TODO: Maybe allow Z axis, although would require checking scale also
-        }
-        return true;
-    }
-
     private boolean shouldCullBack(ItemFrameEntity frame) {
         Direction dir = frame.getHorizontalFacing();
         BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
@@ -226,7 +214,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             Vec3d framePos = frame.getPos();
             double dist = cameraPos.squaredDistanceTo(framePos);
             boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
-                    canCullTransformation(transformation);
+                    TransformationUtils.canCullTransformation(transformation);
             // Make blocks use LOD - If more than range, only render the front and maybe back if can't cull
             if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
                 this.renderBakedItemModelForFace(
