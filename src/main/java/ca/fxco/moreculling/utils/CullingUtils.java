@@ -9,6 +9,7 @@ import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GraphicsMode;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -115,5 +116,12 @@ public class CullingUtils {
             }
         }
         return Optional.of(true);
+    }
+
+    public static boolean shouldCullBack(ItemFrameEntity frame) {
+        Direction dir = frame.getHorizontalFacing();
+        BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
+        BlockState blockState = frame.world.getBlockState(posBehind);
+        return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
     }
 }

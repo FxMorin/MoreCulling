@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin.entities;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.patches.ExtendedItemRenderer;
+import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
