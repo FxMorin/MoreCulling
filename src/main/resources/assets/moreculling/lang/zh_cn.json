@@ -26,5 +26,6 @@
 	"moreculling.config.options.blockstate": "方块状态",
 	"moreculling.config.options.check": "检测周围环境",
 	"moreculling.config.options.depth": "深度",
+	"moreculling.config.options.vertical": "纵向",
 	"moreculling.config.optionDisabled": "此选项被禁用，当使用：%s"
 }
