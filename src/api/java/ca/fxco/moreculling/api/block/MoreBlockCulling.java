@@ -10,12 +10,14 @@ import java.util.Optional;
 /**
  * MoreBlockCulling is an interface that should be used on classes that extend Block
  * It allows you to implement custom culling techniques on blocks, while still using MoreCulling's blockstate culling
+ * @since 0.3.0
  */
 
 public interface MoreBlockCulling {
 
     /**
      * This method needs to return true in order to use custom culling through the API.
+     * @since 0.3.0
      */
     default boolean usesCustomShouldDrawFace(BlockState state) {
         return false;
@@ -24,6 +26,7 @@ public interface MoreBlockCulling {
     /**
      * Use this in order to do custom culling. Returning an empty optional will continue running the draw side checks
      * Returning true will draw the face
+     * @since 0.3.0
      */
     default Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
         return Optional.empty();

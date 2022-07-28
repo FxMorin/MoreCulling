@@ -19,6 +19,7 @@ import java.util.List;
  * Unlike other interfaces provided by MoreCulling, this one is less configurable.
  * It was made public to allow others to modify how the item renderer is used more easily and to allow others to use
  * the faster rendering methods created by MoreCulling
+ * @since 0.8.0
  */
 
 public interface ExtendedItemRenderer {
