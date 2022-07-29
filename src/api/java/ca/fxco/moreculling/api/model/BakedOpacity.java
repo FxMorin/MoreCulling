@@ -1,7 +1,10 @@
 package ca.fxco.moreculling.api.model;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * BakedOpacity is an interface that should be used on classes that extend BakedModel
@@ -40,4 +43,13 @@ public interface BakedOpacity {
      * @since 0.7.0
      */
     default void resetTranslucencyCache() {}
+
+    /**
+     * This method will return a list of all models contained within this model.
+     * Currently, this is only used for debugging and development. Although it may be used in the future!
+     * @since 0.8.0
+     */
+    default @Nullable List<BakedModel> getModels() {
+        return null;
+    }
 }

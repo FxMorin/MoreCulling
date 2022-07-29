@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.List;
+
 @Restriction(require = @Condition("fabric-renderer-api-v1"))
 @Mixin(ForwardingBakedModel.class)
 public class ForwardingBakedModel_compatMixin implements BakedOpacity {
@@ -25,5 +27,10 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
     @Override
     public void resetTranslucencyCache() {
         ((BakedOpacity)wrapped).resetTranslucencyCache();
+    }
+
+    @Override
+    public List<BakedModel> getModels() {
+        return List.of(wrapped);
     }
 }

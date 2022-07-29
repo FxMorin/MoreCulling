@@ -3,6 +3,7 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BuiltinBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(BuiltinBakedModel.class)
 public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
@@ -34,6 +37,11 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void resetTranslucencyCache() {
         hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
+    }
+
+    @Override
+    public List<BakedModel> getModels() {
+        return List.of((BakedModel)this);
     }
 
 
