@@ -43,7 +43,7 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .setChangeConsumer((instance,value) -> {
                     leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH);
-                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED && value == LeavesCullingMode.STATE)
+                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
                 .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
@@ -58,7 +58,7 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .setChangeConsumer((instance, value) -> {
                     if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
-                    if (leavesCullingMode.getValue() == LeavesCullingMode.STATE)
+                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
                 .build();
