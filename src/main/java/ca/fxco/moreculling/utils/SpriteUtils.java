@@ -63,15 +63,31 @@ public class SpriteUtils {
         return MemoryUtil.memGetByte(img.pointer + (long)i);
     }
 
-    public static void printOpacity(NativeImage nativeImage) {
-        if (nativeImage.getFormat().hasOpacityChannel()) {
-            int width = nativeImage.getWidth();
-            for (int y = 0; y < nativeImage.getHeight(); ++y) {
-                StringBuilder line = new StringBuilder();
-                for (int x = 0; x < width; ++x)
-                    line.append(String.format("%4d"+(x != width-1 ? "," : ""),SpriteUtils.getOpacity(nativeImage, x, y)));
-                System.out.println(line);
+    public static void printOpacity(Sprite sprite) {
+        printOpacity(null, sprite);
+    }
+
+    public static void printOpacity(@Nullable String id, Sprite sprite) {
+        int count = 0;
+        for (NativeImage img : ((SpriteOpacity)sprite).getImages()) {
+            if (!img.getFormat().hasOpacityChannel()) continue;
+            if (id == null) {
+                System.out.println(++count + ")");
+            } else {
+                System.out.println(id + " - " + (++count) + ")");
             }
+            printOpacity(img);
+        }
+    }
+
+    public static void printOpacity(NativeImage nativeImage) {
+        if (!nativeImage.getFormat().hasOpacityChannel()) return;
+        int width = nativeImage.getWidth();
+        for (int y = 0; y < nativeImage.getHeight(); ++y) {
+            StringBuilder line = new StringBuilder();
+            for (int x = 0; x < width; ++x)
+                line.append(String.format("%4d"+(x != width-1 ? "," : ""),SpriteUtils.getOpacity(nativeImage, x, y)));
+            System.out.println(line);
         }
     }
 }

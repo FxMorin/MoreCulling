@@ -9,6 +9,7 @@ import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GraphicsMode;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +20,6 @@ import net.minecraft.world.BlockView;
 
 import java.util.Optional;
 
-import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 import static net.minecraft.block.Block.FACE_CULL_MAP;
 
@@ -122,5 +122,13 @@ public class CullingUtils {
         BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
         BlockState blockState = frame.world.getBlockState(posBehind);
         return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
+    }
+
+    public static BakedModel getBakedModel(BlockState state) {
+        return blockRenderManager.getModel(state);
+    }
+
+    public static BakedOpacity getBakedOpacity(BlockState state) {
+        return (BakedOpacity)getBakedModel(state);
     }
 }
