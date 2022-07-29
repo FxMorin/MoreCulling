@@ -52,7 +52,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setValue(MoreCulling.CONFIG.includeMangroveRoots)
                 .setDefaultValue(false)
                 .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
-                .setSaveConsumer(newValue -> MoreCulling.CONFIG.includeMangroveRoots = newValue)
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.includeMangroveRoots = newValue;
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                })
                 .setChangeConsumer((instance, value) -> {
                     if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
                     if (leavesCullingMode.getValue() == LeavesCullingMode.STATE)
@@ -65,7 +68,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setValue(MoreCulling.CONFIG.powderSnowCulling)
                 .setDefaultValue(false)
                 .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
-                .setSaveConsumer(newValue -> MoreCulling.CONFIG.powderSnowCulling = newValue)
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.powderSnowCulling = newValue;
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                })
                 .build();
 
         // BlockStates

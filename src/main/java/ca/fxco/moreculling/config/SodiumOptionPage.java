@@ -59,6 +59,7 @@ public class SodiumOptionPage {
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
                 .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
         if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
             leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
