@@ -1,8 +1,12 @@
 package ca.fxco.moreculling.utils;
 
+import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.MemoryUtil;
+
+import java.util.List;
 
 public class SpriteUtils {
 
@@ -18,7 +22,7 @@ public class SpriteUtils {
     }
 
     public static boolean doesHaveTransparency(NativeImage nativeImage) {
-        if (nativeImage.getFormat().hasOpacityChannel()) {
+        if (nativeImage.getFormat().hasAlpha()) {
             int width = nativeImage.getWidth();
             for (int y = 0; y < nativeImage.getHeight(); ++y)
                 for (int x = 0; x < width; ++x)
@@ -28,20 +32,33 @@ public class SpriteUtils {
         return false;
     }
 
-    public static boolean doesHaveTranslucency(NativeImage nativeImage) {
-        if (nativeImage.getFormat().hasOpacityChannel()) {
-            int width = nativeImage.getWidth();
-            for (int y = 0; y < nativeImage.getHeight(); ++y)
-                for (int x = 0; x < width; ++x)
-                    if (SpriteUtils.getOpacity(nativeImage, x, y) != -1)
-                        return true;
+    public static boolean doesHaveTranslucency(NativeImage image, @Nullable List<NativeImage[]> orMatch) {
+        if (image.getFormat().hasAlpha()) {
+            int width = image.getWidth();
+            for (int y = 0; y < image.getHeight(); ++y) {
+                for (int x = 0; x < width; ++x) {
+                    if (SpriteUtils.getOpacity(image, x, y) != -1) {
+                        if (orMatch != null) {
+                            for (NativeImage[] nativeImages : orMatch) {
+                                for (NativeImage nativeImage : nativeImages) {
+                                    if (SpriteUtils.getOpacity(nativeImage, x, y) != -1) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
 
     // Minecraft's Luminance-Alpha format was screwing some results. We look at alpha directly here instead
     public static byte getOpacity(NativeImage img, int x, int y) {
-        if (!img.getFormat().hasAlpha()) return 0;
+        if (!img.getFormat().hasAlpha()) return -1;
         int i = (x + y * img.getWidth()) * img.getFormat().getChannelCount() + img.getFormat().getAlphaOffset() / 8;
         return MemoryUtil.memGetByte(img.pointer + (long)i);
     }

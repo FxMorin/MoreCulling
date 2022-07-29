@@ -8,6 +8,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mixin(BasicBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
@@ -48,22 +50,20 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void resetTranslucencyCache() {
         hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
-        if (!hasTranslucency) {
-            for (BakedQuad baked : quads) {
-                if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
-                    hasTranslucency = true;
-                    return;
-                }
-            }
-        }
-        if (!hasTranslucency) {
-            for (List<BakedQuad> bakedList : faceQuads.values()) {
-                for (BakedQuad baked : bakedList) {
-                    if (((SpriteOpacity)baked.getSprite()).hasTranslucency()) {
-                        hasTranslucency = true;
-                        return;
+        for (BakedQuad quad : quads) {
+            if (((SpriteOpacity)quad.getSprite()).hasTranslucency()) {
+                List<NativeImage[]> quadNatives = quads.stream().map((q) ->
+                        ((SpriteOpacity)q.getSprite()).getImages()
+                ).collect(Collectors.toList());
+                for (List<BakedQuad> bakedList : faceQuads.values()) {
+                    for (BakedQuad baked : bakedList) {
+                        if (((SpriteOpacity)baked.getSprite()).hasTranslucency(quadNatives)) {
+                            hasTranslucency = true;
+                            return;
+                        }
                     }
                 }
+                return;
             }
         }
     }
