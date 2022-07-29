@@ -41,11 +41,10 @@ public class CullingUtils {
             );
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
-        Block block = sideState.getBlock();
-        if (sideState.isOpaque() || (((AbstractBlockAccessor)block).getCollidable() &&
+        if (sideState.isOpaque() || (((AbstractBlockAccessor)sideState.getBlock()).getCollidable() &&
                 !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                !((BakedOpacity)blockRenderManager.getModel(thisState)).hasTextureTranslucency(thisState) &&
-                !((BakedOpacity)blockRenderManager.getModel(sideState)).hasTextureTranslucency(sideState))) {
+                ((MoreStateCulling) thisState).shouldAttemptToCull() &&
+                ((MoreStateCulling) sideState).shouldAttemptToCull())) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
@@ -56,7 +55,7 @@ public class CullingUtils {
      */
     private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
                                           BlockPos thisPos, BlockPos sidePos, Direction side) {
-        if (sideState.isIn(DONT_CULL)) return true; // Some states are special, so we use the dont_cull blockTag
+        if (((MoreStateCulling)sideState).cantCullAgainst()) return true; // Check if we can cull against this block
         Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);
         Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(neighborGroup);

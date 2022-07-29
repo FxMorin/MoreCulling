@@ -27,7 +27,20 @@ public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     }
 
     @Override
-    public final Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
-        return ((MoreBlockCulling)this.getBlock()).customShouldDrawFace(view, this.asBlockState(), sideState, thisPos, sidePos, side);
+    public final Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState,
+                                                        BlockPos thisPos, BlockPos sidePos, Direction side) {
+        return ((MoreBlockCulling)this.getBlock()).customShouldDrawFace(
+                view, this.asBlockState(), sideState, thisPos, sidePos, side
+        );
+    }
+
+    @Override
+    public boolean shouldAttemptToCull() {
+        return ((MoreBlockCulling)this.getBlock()).shouldAttemptToCull(this.asBlockState());
+    }
+
+    @Override
+    public final boolean cantCullAgainst() {
+        return ((MoreBlockCulling)this.getBlock()).cantCullAgainst(this.asBlockState());
     }
 }

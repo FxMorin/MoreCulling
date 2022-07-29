@@ -31,4 +31,24 @@ public interface MoreBlockCulling {
     default Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState, BlockPos thisPos, BlockPos sidePos, Direction side) {
         return Optional.empty();
     }
+
+    /**
+     * This method allows you to specify if this block should be allowed to cull.
+     * By default, it returns true if the blocks model does not have translucency
+     * @since 0.8.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default boolean shouldAttemptToCull(BlockState state) {
+        return false;
+    }
+
+    /**
+     * This method allows you to specify if this block should be allowed to be culled against.
+     * By default, it returns `state.isIn(DONT_CULL)`
+     * @since 0.8.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default boolean cantCullAgainst(BlockState state) {
+        return false;
+    }
 }

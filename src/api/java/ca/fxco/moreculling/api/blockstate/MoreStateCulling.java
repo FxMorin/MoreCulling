@@ -27,4 +27,19 @@ public interface MoreStateCulling {
      */
     Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos,
                                            BlockPos sidePos, Direction side);
+
+
+    /**
+     * This method allows you to check if a state should be allowed cull
+     * By default, it returns true if the states model does not have translucency
+     * @since 0.8.0
+     */
+    boolean shouldAttemptToCull();
+
+    /**
+     * This method allows you to check if a state should be allowed to be culled against.
+     * By default, it returns `state.isIn(DONT_CULL)`
+     * @since 0.8.0
+     */
+    boolean cantCullAgainst();
 }
