@@ -72,9 +72,11 @@ dependencies {
     modImplementation "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
     include "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
 
+    // Fabric Compat
+    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
     // Sodium Compat
     modImplementation "me.jellysquid.mods:sodium-fabric:${project.sodium_version}"
-    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //ModMenu Compat
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
