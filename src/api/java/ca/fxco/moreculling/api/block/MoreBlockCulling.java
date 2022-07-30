@@ -35,6 +35,7 @@ public interface MoreBlockCulling {
     /**
      * This method allows you to specify if this block should be allowed to cull.
      * By default, it returns true if the blocks model does not have translucency
+     * This is not used if blocks are opaque
      * @since 0.8.0
      */
     // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
