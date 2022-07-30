@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.config;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.FloatSliderControl;
 import ca.fxco.moreculling.config.sodium.IntSliderControl;
@@ -43,7 +44,7 @@ public class SodiumOptionPage {
                 .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .onChanged((instance, value) -> {
                     leavesCullingDepth.setAvailable(instance.isAvailable() && value == LeavesCullingMode.DEPTH);
-                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED && value == LeavesCullingMode.STATE)
+                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
                 .build();
@@ -55,10 +56,11 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.LOW)
                 .onChanged((instance, value) -> {
                     if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
-                    if (leavesCullingMode.getValue() == LeavesCullingMode.STATE)
+                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
                 .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
         if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
             leavesCullingMode.setAvailable(includeMangroveRoots.getValue());

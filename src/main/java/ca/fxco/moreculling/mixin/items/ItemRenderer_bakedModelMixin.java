@@ -2,10 +2,12 @@ package ca.fxco.moreculling.mixin.items;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.patches.ExtendedItemRenderer;
+import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
+import ca.fxco.moreculling.utils.CacheUtils;
+import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
+import ca.fxco.moreculling.utils.TransformationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
@@ -20,7 +22,6 @@ import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -39,15 +40,6 @@ import static net.minecraft.util.math.Direction.*;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
-
-    private static final ThreadLocal<Object2IntLinkedOpenHashMap<BakedQuad>> BAKED_QUAD_COLOR_CACHE = ThreadLocal.withInitial(() -> {
-        Object2IntLinkedOpenHashMap<BakedQuad> initialBakedQuadColorCache = new Object2IntLinkedOpenHashMap<>(256, 0.25F) {
-            @Override
-            protected void rehash(int newN) {}
-        };
-        initialBakedQuadColorCache.defaultReturnValue(Integer.MAX_VALUE);
-        return initialBakedQuadColorCache;
-    });
 
     @Unique
     private final Random rand = Random.create(42L);
@@ -68,17 +60,24 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     @Final
     private ItemColors colors;
 
-    private BakedModel customGetModel(ItemStack stack, int seed) {
+    @Override
+    public final ThreadLocal<Object2IntLinkedOpenHashMap<BakedQuad>> getBakedQuadColorCache() {
+        return CacheUtils.BAKED_QUAD_COLOR_CACHE;
+    }
+
+    @Override
+    public BakedModel customGetModel(ItemStack stack, int seed) {
         BakedModel bakedModel = this.models.getModel(stack);
         BakedModel bakedModel2 = bakedModel.getOverrides().apply(bakedModel, stack, null, null, seed);
         return bakedModel2 == null ? this.models.getModelManager().getMissingModel() : bakedModel2;
     }
 
-    private void renderBakedQuad(VertexConsumer vertices, ItemStack stack, int light, int overlay,
-                                 MatrixStack.Entry entry, BakedQuad bakedQuad) {
+    @Override
+    public void renderBakedItemQuad(VertexConsumer vertices, ItemStack stack, int light, int overlay,
+                                    MatrixStack.Entry entry, BakedQuad bakedQuad) {
         int color;
         if (bakedQuad.hasColor()) {
-            Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = BAKED_QUAD_COLOR_CACHE.get();
+            Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = CacheUtils.BAKED_QUAD_COLOR_CACHE.get();
             color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
             if (color == Integer.MAX_VALUE) {
                 color = this.colors.getColor(stack, bakedQuad.getColorIndex());
@@ -94,32 +93,35 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     }
 
 
-    private void renderBakedItemQuadsWithoutFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
-                                                 ItemStack stack, int light, int overlay, Direction withoutFace) {
+    @Override
+    public void renderBakedItemQuadsWithoutFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
+                                                ItemStack stack, int light, int overlay, Direction withoutFace) {
         MatrixStack.Entry entry = matrices.peek();
         for(BakedQuad bakedQuad : quads) {
             if (bakedQuad.getFace() == withoutFace) continue;
-            renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
+            renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
 
-    private void renderBakedItemQuadsForFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
-                                                 ItemStack stack, int light, int overlay, Direction face) {
+    @Override
+    public void renderBakedItemQuadsForFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
+                                            ItemStack stack, int light, int overlay, Direction face) {
         MatrixStack.Entry entry = matrices.peek();
         for(BakedQuad bakedQuad : quads) {
             if (bakedQuad.getFace() != face) continue;
-            renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
+            renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
 
-    private void renderBakedItemQuadsFor3Faces(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
-                                               ItemStack stack, int light, int overlay,
-                                               Direction faceX, Direction faceY, Direction faceZ) {
+    @Override
+    public void renderBakedItemQuadsFor3Faces(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
+                                              ItemStack stack, int light, int overlay,
+                                              Direction faceX, Direction faceY, Direction faceZ) {
         MatrixStack.Entry entry = matrices.peek();
         for(BakedQuad bakedQuad : quads) {
             Direction face = bakedQuad.getFace();
             if (face == faceX || face == faceY || face == faceZ)
-                renderBakedQuad(vertices, stack, light, overlay, entry, bakedQuad);
+                renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
 
@@ -141,9 +143,10 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             this.renderBakedItemQuadsWithoutFace(matrices, vertices, bakedQuads, stack, light, overlay, withoutFace);
     }
 
+    @Override
     public void renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
-                                                MatrixStack matrices, VertexConsumer vertices,
-                                                Direction faceX, Direction faceY, Direction faceZ) {
+                                               MatrixStack matrices, VertexConsumer vertices,
+                                               Direction faceX, Direction faceY, Direction faceZ) {
         for(Direction direction : Direction.values()) {
             if (direction == faceX || direction == faceY || direction == faceZ) {
                 rand.setSeed(42L);
@@ -174,26 +177,6 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             this.renderBakedItemQuadsForFace(matrices, vertices, bakedQuads, stack, light, overlay, face);
     }
 
-    private boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
-        if (transform.scale.getX() > 1.0F || transform.scale.getY() > 1.0F || transform.scale.getZ() > 1.0F) {
-            return false; //TODO: Maybe Allow Z axis
-        }
-        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0 || transform.rotation.getY() % 90 != 0) {
-            return false; //TODO: Maybe Allow Y axis, see if the face is correct
-        }
-        if (transform.translation.getX() != 0 || transform.translation.getY() != 0 || transform.translation.getZ() != 0) {
-            return false; //TODO: Maybe allow Z axis, although would require checking scale also
-        }
-        return true;
-    }
-
-    private boolean shouldCullBack(ItemFrameEntity frame) {
-        Direction dir = frame.getHorizontalFacing();
-        BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
-        BlockState blockState = frame.world.getBlockState(posBehind);
-        return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
-    }
-
     @Override
     public void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc,
                                     int light, int seed, ItemFrameEntity frame, Vec3d cameraPos) {
@@ -208,7 +191,9 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         } else {
             boolean isBlockItem = stack.getItem() instanceof BlockItem; //TODO: Do proper checks
             // Use faster cached check for translucency instead of multiple instanceof checks
-            boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency();
+            boolean bl2 = !isBlockItem || !((BakedOpacity) model).hasTextureTranslucency(
+                    ((BlockItem) stack.getItem()).getBlock().getDefaultState()
+            );
             RenderLayer renderLayer = RenderLayers.getItemLayer(stack, bl2);
             VertexConsumer vertexConsumer;
             if (stack.isIn(ItemTags.COMPASSES) && stack.hasGlint()) {
@@ -223,8 +208,8 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             }
             Vec3d framePos = frame.getPos();
             double dist = cameraPos.squaredDistanceTo(framePos);
-            boolean canCull = ((!isBlockItem && !frame.isInvisible()) || shouldCullBack(frame)) &&
-                    canCullTransformation(transformation);
+            boolean canCull = ((!isBlockItem && !frame.isInvisible()) || CullingUtils.shouldCullBack(frame)) &&
+                    TransformationUtils.canCullTransformation(transformation);
             // Make blocks use LOD - If more than range, only render the front and maybe back if can't cull
             if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
                 this.renderBakedItemModelForFace(

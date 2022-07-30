@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CullingUtils;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
@@ -17,6 +18,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
+
+import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
+import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
 @Restriction(conflict = @Condition("cull-less-leaves"))
 @Mixin(value = LeavesBlock.class, priority = 1220)
@@ -41,5 +45,16 @@ public class LeavesBlock_typesMixin implements MoreBlockCulling {
             case DEPTH -> CullingUtils.shouldDrawFaceDepth(view, sideState, sidePos, side);
             default -> Optional.empty();
         };
+    }
+
+    @Override
+    public boolean shouldAttemptToCull(BlockState state) {
+        return CullingUtils.areLeavesOpaque() ||
+                !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+    }
+
+    @Override
+    public boolean cantCullAgainst(BlockState state) {
+        return !CullingUtils.areLeavesOpaque() && state.isIn(DONT_CULL);
     }
 }
