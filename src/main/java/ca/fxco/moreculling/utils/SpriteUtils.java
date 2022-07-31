@@ -31,18 +31,16 @@ public class SpriteUtils {
         return false;
     }
 
-    public static boolean doesHaveTranslucency(NativeImage image, @Nullable List<NativeImage[]> orMatch) {
+    public static boolean doesHaveTranslucency(NativeImage image, @Nullable List<NativeImage> orMatch) {
         if (image.getFormat().hasAlpha()) {
             int width = image.getWidth();
             for (int y = 0; y < image.getHeight(); ++y) {
                 for (int x = 0; x < width; ++x) {
                     if (image.getOpacity(x, y) != -1) {
                         if (orMatch != null) {
-                            for (NativeImage[] nativeImages : orMatch) {
-                                for (NativeImage nativeImage : nativeImages) {
-                                    if (nativeImage.getOpacity(x, y) != -1) {
-                                        return true;
-                                    }
+                            for (NativeImage nativeImage : orMatch) {
+                                if (nativeImage.getOpacity(x, y) != -1) {
+                                    return true;
                                 }
                             }
                         } else {
@@ -60,14 +58,8 @@ public class SpriteUtils {
     }
 
     public static void printOpacity(@Nullable String id, Sprite sprite) {
-        int count = 0;
-        for (NativeImage img : ((SpriteOpacity)sprite).getImages()) {
-            if (!img.getFormat().hasOpacityChannel()) continue;
-            if (id == null) {
-                System.out.println(++count + ")");
-            } else {
-                System.out.println(id + " - " + (++count) + ")");
-            }
+        NativeImage img = ((SpriteOpacity) sprite).getUnmipmappedImage();
+        if (img.getFormat().hasOpacityChannel()) {
             printOpacity(img);
         }
     }
