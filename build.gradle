@@ -76,7 +76,7 @@ dependencies {
     modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Sodium Compat
-    modImplementation "me.jellysquid.mods:sodium-fabric:${project.sodium_version}"
+    modImplementation "maven.modrinth:sodium:mc${project.sodium_version}"
 
     //ModMenu Compat
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
