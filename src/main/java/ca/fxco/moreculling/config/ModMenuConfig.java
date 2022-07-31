@@ -16,9 +16,7 @@ import net.minecraft.text.Text;
 public class ModMenuConfig implements ModMenuApi {
 
     private static Screen createConfigScreen(Screen parent) {
-        ConfigBuilder builder = ConfigBuilder.create()
-                .setParentScreen(parent)
-                .setTitle(Text.translatable(("moreculling.title")));
+        ConfigBuilder builder = MoreCullingConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
 

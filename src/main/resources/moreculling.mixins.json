@@ -8,6 +8,7 @@
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
+    "accessors.BlockModelsAccessor",
     "blocks.LeavesBlock_fastMixin",
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
