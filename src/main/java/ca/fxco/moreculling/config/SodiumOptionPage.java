@@ -32,7 +32,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .build();
         MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
@@ -41,29 +41,11 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
+                .setModIncompatibility(CompatUtils.IS_CULLLESSLEAVES_LOADED, "cull-less-leaves")
                 .onChanged((instance, value) -> {
                     leavesCullingDepth.setAvailable(instance.isAvailable() && value == LeavesCullingMode.DEPTH);
-                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
-                        instance.setValue(LeavesCullingMode.CHECK);
                 })
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> includeMangroveRoots = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setName(Text.translatable("moreculling.config.option.includeMangroveRoots"))
-                .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
-                .setControl(TickBoxControl::new)
-                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
-                .setImpact(OptionImpact.LOW)
-                .onChanged((instance, value) -> {
-                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
-                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
-                        leavesCullingMode.setValue(LeavesCullingMode.CHECK);
-                })
-                .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
-                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .build();
-        if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
-            leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
 
         // Powder Snow Culling
         MoreCullingOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
@@ -87,7 +69,6 @@ public class SodiumOptionPage {
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .onChanged((instance,value) -> {
                             leavesCullingMode.setAvailable(value);
-                            includeMangroveRoots.setAvailable(value);
                             powderSnowCulling.setAvailable(value);
                         })
                         .build())
@@ -151,7 +132,6 @@ public class SodiumOptionPage {
         groups.add(OptionGroup.createBuilder()
                 .add(leavesCullingMode)
                 .add(leavesCullingDepth)
-                .add(includeMangroveRoots)
                 .build()
         );
 

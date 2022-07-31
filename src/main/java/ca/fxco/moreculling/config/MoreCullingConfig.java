@@ -26,7 +26,5 @@ public class MoreCullingConfig implements ConfigData {
 
     public int leavesCullingDepth = 2;
 
-    public boolean includeMangroveRoots = false;
-
     public boolean powderSnowCulling = true;
 }
