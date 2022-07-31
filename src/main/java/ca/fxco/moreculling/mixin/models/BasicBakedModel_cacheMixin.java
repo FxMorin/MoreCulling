@@ -52,8 +52,8 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
         hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
         for (BakedQuad quad : quads) {
             if (((SpriteOpacity)quad.getSprite()).hasTranslucency()) {
-                List<NativeImage[]> quadNatives = quads.stream().map((q) ->
-                        ((SpriteOpacity)q.getSprite()).getImages()
+                List<NativeImage> quadNatives = quads.stream().map((q) ->
+                        ((SpriteOpacity)q.getSprite()).getUnmipmappedImage()
                 ).collect(Collectors.toList());
                 for (List<BakedQuad> bakedList : faceQuads.values()) {
                     for (BakedQuad baked : bakedList) {

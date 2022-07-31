@@ -16,9 +16,10 @@ public interface SpriteOpacity {
     /**
      * Change the images in a sprite that should be used for culling.
      * Only use this if you know what you are doing!
+     *
      * @since 0.7.0
      */
-    NativeImage[] getImages();
+    NativeImage getUnmipmappedImage();
 
     /**
      * States if the sprite has any fully transparent pixels.
@@ -46,7 +47,7 @@ public interface SpriteOpacity {
      * MoreCulling will skip optimizations on blocks that use these sprites and match the conditions
      * @since 0.8.0
      */
-    default boolean hasTranslucency(@Nullable List<NativeImage[]> quadNatives) {
+    default boolean hasTranslucency(@Nullable List<NativeImage> quadNatives) {
         return true;
     }
 }
