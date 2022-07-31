@@ -17,7 +17,7 @@ public interface SpriteOpacity {
      * Change the images in a sprite that should be used for culling.
      * Only use this if you know what you are doing!
      *
-     * @since 0.7.0
+     * @since 0.8.2
      */
     NativeImage getUnmipmappedImage();
 
