@@ -7,6 +7,7 @@ import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -55,6 +56,6 @@ public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
     }
 
     public Text getYesNoText(boolean bool) {
-        return Text.translatable("text.cloth-config.boolean.value." + bool);
+        return new TranslatableText("text.cloth-config.boolean.value." + bool);
     }
 }

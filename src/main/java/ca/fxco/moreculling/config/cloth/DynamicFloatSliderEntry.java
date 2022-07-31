@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -19,7 +20,7 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
 
     public DynamicFloatSliderEntry(DynamicFloatSliderBuilder builder, float minimum, float maximum, float step) {
         super(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
-        this.textGetter = (thevalue) -> Text.literal(String.format("Value: %3.1f", thevalue));
+        this.textGetter = (thevalue) -> new LiteralText(String.format("Value: %3.1f", thevalue));
         this.step = step;
         this.maximum = maximum;
         this.minimum = minimum;

@@ -8,6 +8,7 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -237,7 +238,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             if (isLoaded) {
                 this.locked = true;
                 this.enabled = false;
-                this.tooltip = Text.translatable("moreculling.config.optionDisabled", modId);
+                this.tooltip = new TranslatableText("moreculling.config.optionDisabled", modId);
                 this.onChanged = null;
             }
             return this;

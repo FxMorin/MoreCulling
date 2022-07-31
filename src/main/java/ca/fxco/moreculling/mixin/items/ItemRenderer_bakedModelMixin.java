@@ -21,10 +21,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static ca.fxco.moreculling.utils.DirectionUtils.shiftDirection;
 import static net.minecraft.client.render.item.ItemRenderer.*;
@@ -42,7 +43,7 @@ import static net.minecraft.util.math.Direction.*;
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
 
     @Unique
-    private final Random rand = Random.create(42L);
+    private final Random rand = new Random(42L);
 
     @Shadow
     @Final
@@ -196,7 +197,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             );
             RenderLayer renderLayer = RenderLayers.getItemLayer(stack, bl2);
             VertexConsumer vertexConsumer;
-            if (stack.isIn(ItemTags.COMPASSES) && stack.hasGlint()) {
+            if (stack.getItem().equals(Items.COMPASS) && stack.hasGlint()) {
                 matrices.push();
                 MatrixStack.Entry entry = matrices.peek();
                 vertexConsumer = bl2 ? getDirectCompassGlintConsumer(vc, renderLayer, entry) :

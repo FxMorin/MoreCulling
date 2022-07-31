@@ -7,7 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -19,7 +21,7 @@ import java.util.function.Consumer;
 public class MoreCullingConfigBuilder implements ConfigBuilder {
     private Runnable savingRunnable;
     private Screen parent;
-    private Text title = Text.translatable("moreculling.title");
+    private Text title = new TranslatableText("moreculling.title");
     private boolean editable = true;
     private boolean tabsSmoothScroll = true;
     private boolean listSmoothScroll = true;
@@ -27,7 +29,7 @@ public class MoreCullingConfigBuilder implements ConfigBuilder {
     private boolean transparentBackground = false;
     private Identifier defaultBackground;
     private Consumer<Screen> afterInitConsumer;
-    protected final Map<String, ConfigCategory> categoryMap;
+    protected final Map<Text, ConfigCategory> categoryMap;
     private String fallbackCategory;
     private boolean alwaysShowTabs;
 
@@ -113,38 +115,38 @@ public class MoreCullingConfigBuilder implements ConfigBuilder {
     }
 
     public ConfigCategory getOrCreateCategory(Text categoryKey) {
-        if (this.categoryMap.containsKey(categoryKey.getString())) {
-            return this.categoryMap.get(categoryKey.getString());
+        if (this.categoryMap.containsKey(categoryKey)) {
+            return this.categoryMap.get(categoryKey);
         } else {
             if (this.fallbackCategory == null) this.fallbackCategory = categoryKey.getString();
-            return this.categoryMap.computeIfAbsent(categoryKey.getString(), (key) ->
+            return this.categoryMap.computeIfAbsent(categoryKey, (key) ->
                     new MoreCullingConfigCategory(this, categoryKey)
             );
         }
     }
 
     public ConfigBuilder removeCategory(Text category) {
-        if (this.categoryMap.containsKey(category.getString()) &&
+        if (this.categoryMap.containsKey(category) &&
                 Objects.equals(this.fallbackCategory, category.getString()))
             this.fallbackCategory = null;
-        if (!this.categoryMap.containsKey(category.getString())) {
+        if (!this.categoryMap.containsKey(category)) {
             throw new NullPointerException("Category doesn't exist!");
         } else {
-            this.categoryMap.remove(category.getString());
+            this.categoryMap.remove(category);
             return this;
         }
     }
 
     public ConfigBuilder removeCategoryIfExists(Text category) {
-        if (this.categoryMap.containsKey(category.getString()) &&
+        if (this.categoryMap.containsKey(category) &&
                 Objects.equals(this.fallbackCategory, category.getString()))
             this.fallbackCategory = null;
-        this.categoryMap.remove(category.getString());
+        this.categoryMap.remove(category);
         return this;
     }
 
     public boolean hasCategory(Text category) {
-        return this.categoryMap.containsKey(category.getString());
+        return this.categoryMap.containsKey(category);
     }
 
     public ConfigBuilder setShouldTabsSmoothScroll(boolean shouldTabsSmoothScroll) {
@@ -199,7 +201,7 @@ public class MoreCullingConfigBuilder implements ConfigBuilder {
             );
             screen.setSavingRunnable(this.savingRunnable);
             screen.setEditable(this.editable);
-            screen.setFallbackCategory(this.fallbackCategory == null ? null : Text.literal(this.fallbackCategory));
+            screen.setFallbackCategory(this.fallbackCategory == null ? null : new LiteralText(this.fallbackCategory));
             screen.setTransparentBackground(this.transparentBackground);
             screen.setAlwaysShowTabs(this.alwaysShowTabs);
             screen.setConfirmSave(this.doesConfirmSave);

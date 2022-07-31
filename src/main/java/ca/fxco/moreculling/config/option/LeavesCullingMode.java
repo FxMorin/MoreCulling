@@ -4,6 +4,7 @@ import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -22,7 +23,7 @@ public enum LeavesCullingMode implements SelectionListEntry.Translatable {
     }
 
     public Text getText() {
-        return Text.translatable(this.translationKey);
+        return new TranslatableText(this.translationKey);
     }
 
     @Override

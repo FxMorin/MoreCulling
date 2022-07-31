@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -15,8 +16,8 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
 
     private ClickableWidget resetCacheButton;
 
-    public MoreCullingClothConfigScreen(Screen parent, Text title, Map<String,
-                                        ConfigCategory> categoryMap, Identifier backgroundLocation) {
+    public MoreCullingClothConfigScreen(Screen parent, Text title, Map<Text, ConfigCategory> categoryMap,
+                                        Identifier backgroundLocation) {
         super(parent, title, categoryMap, backgroundLocation);
     }
 
@@ -29,7 +30,7 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
                 5,
                 buttonWidths,
                 20,
-                Text.translatable("moreculling.config.resetCache"),
+                new TranslatableText("moreculling.config.resetCache"),
                 (widget) -> {
                     CacheUtils.resetAllCache();
                     this.resetCacheButton.active = false;

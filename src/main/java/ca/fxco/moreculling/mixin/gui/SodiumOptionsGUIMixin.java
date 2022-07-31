@@ -11,6 +11,7 @@ import me.jellysquid.mods.sodium.client.gui.widgets.FlatButtonWidget;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -60,7 +61,7 @@ public class SodiumOptionsGUIMixin extends Screen {
     private void addCacheRefreshButton(CallbackInfo ci) {
         if (MoreCulling.CONFIG.enableSodiumMenu && this.currentPage == this.moreCullingPage) {
             // 325 is the last button (211) + width (100) plus padding (20 + 4)
-            this.addDrawableChild(this.resetCacheButton = new FlatButtonWidget(new Dim2i(this.width - 325, this.height - 30, 100, 20), Text.translatable("moreculling.config.resetCache"), () -> {
+            this.addDrawableChild(this.resetCacheButton = new FlatButtonWidget(new Dim2i(this.width - 325, this.height - 30, 100, 20), new TranslatableText("moreculling.config.resetCache"), () -> {
                 CacheUtils.resetAllCache();
                 this.resetCacheButton.setEnabled(false);
             }));

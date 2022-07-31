@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
@@ -18,7 +19,7 @@ public class DynamicIntSliderEntry extends AbstractDynamicEntry<Integer> {
 
     public DynamicIntSliderEntry(DynamicIntSliderBuilder builder, int minimum, int maximum) {
         super(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
-        this.textGetter = (integer) -> Text.literal(String.format("Value: %d", integer));
+        this.textGetter = (integer) -> new LiteralText(String.format("Value: %d", integer));
         this.maximum = maximum;
         this.minimum = minimum;
         this.mainWidget.setMessage(this.textGetter.apply(this.getValue()));

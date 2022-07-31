@@ -78,7 +78,7 @@ public class CullingUtils {
     }
 
     public static boolean areLeavesOpaque() {
-        GraphicsMode mode = MinecraftClient.getInstance().options.getGraphicsMode().getValue();
+        GraphicsMode mode = MinecraftClient.getInstance().options.graphicsMode;
         return CompatUtils.IS_SODIUM_LOADED ?
                 !SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
                 mode.getId() < GraphicsMode.FANCY.getId();
