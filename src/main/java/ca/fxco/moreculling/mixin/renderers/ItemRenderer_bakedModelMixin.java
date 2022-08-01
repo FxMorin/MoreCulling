@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ca.fxco.moreculling.utils.DirectionUtils.shiftDirection;
@@ -138,7 +137,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
         }
         rand.setSeed(42L);
-        ArrayList<BakedQuad> bakedQuads = new ArrayList<>(model.getQuads(null, null, rand));
+        List<BakedQuad> bakedQuads = model.getQuads(null, null, rand);
         if (!bakedQuads.isEmpty())
             this.renderBakedItemQuadsWithoutFace(matrices, vertices, bakedQuads, stack, light, overlay, withoutFace);
     }
@@ -160,7 +159,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         if (!bakedQuads.isEmpty())
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
         rand.setSeed(42L);
-        bakedQuads = new ArrayList<>(model.getQuads(null, null, rand));
+        bakedQuads = model.getQuads(null, null, rand);
         if (!bakedQuads.isEmpty())
             this.renderBakedItemQuadsFor3Faces(
                     matrices, vertices, bakedQuads, stack, light, overlay, faceX, faceY, faceZ
@@ -176,7 +175,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
         if (!bakedQuads.isEmpty())
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
         rand.setSeed(42L);
-        bakedQuads = new ArrayList<>(model.getQuads(null, null, rand)); // Why is this wrapped?
+        bakedQuads = model.getQuads(null, null, rand);
         if (!bakedQuads.isEmpty())
             this.renderBakedItemQuadsForFace(matrices, vertices, bakedQuads, stack, light, overlay, face);
     }
