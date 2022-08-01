@@ -16,9 +16,9 @@ import java.util.List;
 
 /**
  * This interface allows you to call the MoreCulling methods used for item rendering.
- * Unlike other interfaces provided by MoreCulling, this one is less configurable.
- * It was made public to allow others to modify how the item renderer is used more easily and to allow others to use
- * the faster rendering methods created by MoreCulling
+ * This gives you access to the custom MoreCulling rendering methods, in order to allow everyone to benefit from the
+ * performance boost that MoreCulling can offer.<br/>
+ * Use these methods over ones provided in {@link net.minecraft.client.render.item.ItemRenderer}
  * @since 0.8.0
  */
 
