@@ -1,14 +1,12 @@
 package ca.fxco.moreculling.mixin.entities;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.map.MapOpacity;
 import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderer;
 import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
 import ca.fxco.moreculling.utils.CullingUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -60,7 +58,6 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
         super(ctx);
     }
 
-    // TODO: Clean up this code
 
     @Inject(
             method = "render(Lnet/minecraft/entity/decoration/ItemFrameEntity;" +
@@ -91,39 +88,49 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
         );
         matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(itemFrameEntity.getPitch()));
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0f - itemFrameEntity.getYaw()));
-        boolean bl = itemFrameEntity.isInvisible();
+        boolean isInvisible = itemFrameEntity.isInvisible();
         ItemStack itemStack = itemFrameEntity.getHeldItemStack();
-        boolean renderingMap = false;
+        boolean skipFrontRender = false;
         if (!itemStack.isEmpty()) {
             matrixStack.push();
             OptionalInt optionalInt = itemFrameEntity.getMapId();
-            matrixStack.translate(0.0, 0.0, bl ? 0.5 : 0.4452); // 0.4375 - actually made it flat lmao
-            int j = optionalInt.isPresent() ? itemFrameEntity.getRotation() % 4 * 2 : itemFrameEntity.getRotation();
-            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)j * 360.0f / 8.0f));
             if (optionalInt.isPresent()) {
-                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
-                float h = 0.0078125f;
-                matrixStack.scale(h, h, h);
-                matrixStack.translate(-64.0, -64.0, 0.0);
-                MapState mapState = FilledMapItem.getMapState(optionalInt.getAsInt(), itemFrameEntity.world);
-                matrixStack.translate(0.0, 0.0, -1.0);
-                if (mapState != null) {
-                    int k = this.getLight(
-                            itemFrameEntity,
-                            LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
-                            i
-                    );
+                int mapId = optionalInt.getAsInt();
+                MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.world);
+                if (mapState != null) { // Map is present
+                    skipFrontRender = !((MapOpacity)mapState).hasTransparency();
+                    double di;
+                    double offsetZFighting = isInvisible ? 0.5 :
+                            skipFrontRender ?
+                                    ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
+                                            0.4452 - di : 0.4452) :
+                                    0.4375;
+                    matrixStack.translate(0.0, 0.0, offsetZFighting);
+                    int j = itemFrameEntity.getRotation() % 4 * 2;
+                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)j * 360.0f / 8.0f));
+                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
+                    float h = 0.0078125f;
+                    matrixStack.scale(h, h, h);
+                    matrixStack.translate(-64.0, -64.0, 0.0);
+                    matrixStack.translate(0.0, 0.0, -1.0);
                     MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
                             matrixStack,
                             vertexConsumerProvider,
-                            optionalInt.getAsInt(),
+                            mapId,
                             mapState,
                             true,
-                            k
+                            this.getLight(
+                                    itemFrameEntity,
+                                    LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
+                                    i
+                            )
                     );
-                    renderingMap = true;
                 }
             } else {
+                matrixStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
+                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
+                        (float)itemFrameEntity.getRotation() * 360.0f / 8.0f)
+                );
                 int l = this.getLight(itemFrameEntity, LightmapTextureManager.MAX_LIGHT_COORDINATE, i);
                 matrixStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
@@ -139,13 +146,12 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
             }
             matrixStack.pop();
         }
-        if (!bl) {
+        if (!isInvisible) { // Render Item Frame block model
             BakedModelManager bakedModelManager = this.blockRenderManager.getModels().getModelManager();
             ModelIdentifier modelIdentifier = this.getModelId(itemFrameEntity, itemStack);
-            matrixStack.push();
             matrixStack.translate(-0.5, -0.5, -0.5);
             if (CullingUtils.shouldCullBack(itemFrameEntity)) {
-                if (renderingMap) {
+                if (skipFrontRender) {
                     ((ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer()).renderModelForFaces(
                             matrixStack.peek(),
                             vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
@@ -173,7 +179,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                     );
                 }
             } else {
-                if (renderingMap) {
+                if (skipFrontRender) {
                     ((ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer()).renderModelWithoutFace(
                             matrixStack.peek(),
                             vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
@@ -200,7 +206,6 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                     );
                 }
             }
-            matrixStack.pop();
         }
         matrixStack.pop();
     }

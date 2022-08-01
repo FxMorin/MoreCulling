@@ -16,8 +16,9 @@
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
+    "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
-    "renderers.ItemRenderer_bakedModelMixin",
+    "MapState_cacheMixin",
     "models.BakedModel_extendsMixin",
     "models.BasicBakedModel_cacheMixin",
     "models.BuiltinBakedModel_cacheMixin",
@@ -25,7 +26,7 @@
     "models.MultipartBakedModel_cacheMixin",
     "models.WeightedBakedModel_cacheMixin",
     "renderers.BlockModelRenderer_cullMixin",
-    "entities.ItemFrameEntityRenderer_cullMixin"
+    "renderers.ItemRenderer_bakedModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,3 +2,4 @@ accessWidener	v1	 named
 accessible field net/minecraft/block/Block FACE_CULL_MAP Ljava/lang/ThreadLocal;
 accessible field net/minecraft/client/texture/NativeImage pointer J
 accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
+accessible class net/minecraft/client/render/MapRenderer$MapTexture
