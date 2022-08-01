@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(BlockModelRenderer.class)
-public class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
+public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
 
     @Unique
     private final Random rand = Random.create(42L);
