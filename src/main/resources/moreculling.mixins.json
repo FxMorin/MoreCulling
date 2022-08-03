@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
+    "MapState_cacheMixin",
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
     "accessors.BlockModelsAccessor",
+    "blocks.ChorusFlowerBlock_voxelMixin",
     "blocks.LeavesBlock_fastMixin",
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
@@ -18,13 +20,14 @@
     "compat.BlockOcclusionCache_sodiumMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
-    "items.ItemRenderer_bakedModelMixin",
     "models.BakedModel_extendsMixin",
     "models.BasicBakedModel_cacheMixin",
     "models.BuiltinBakedModel_cacheMixin",
     "models.ForwardingBakedModel_compatMixin",
     "models.MultipartBakedModel_cacheMixin",
-    "models.WeightedBakedModel_cacheMixin"
+    "models.WeightedBakedModel_cacheMixin",
+    "renderers.BlockModelRenderer_cullMixin",
+    "renderers.ItemRenderer_bakedModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
