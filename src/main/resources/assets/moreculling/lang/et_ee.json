@@ -26,5 +26,7 @@
 	"moreculling.config.options.blockstate": "plokiolek",
 	"moreculling.config.options.check": "kontrolli ümbritsevat",
 	"moreculling.config.options.depth": "sügavus",
+	"moreculling.config.options.vertical": "vertikaalne",
+	"moreculling.config.resetCache": "Lähtesta vahemälu",
 	"moreculling.config.optionDisabled": "See valik on %s kasutamisel keelatud"
 } 
