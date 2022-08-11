@@ -15,6 +15,7 @@
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
     "blocks.PowderSnowBlock_cullMixin",
+    "blocks.ShulkerBoxBlock_cullShapeMixin",
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
