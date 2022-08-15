@@ -38,11 +38,10 @@ public class SpriteUtils {
                 for (int x = 0; x < width; ++x) {
                     if (image.getOpacity(x, y) != -1) {
                         if (orMatch != null) {
-                            for (NativeImage nativeImage : orMatch) {
-                                if (nativeImage.getOpacity(x, y) != -1) {
+                            for (NativeImage nativeImage : orMatch)
+                                if (x <= nativeImage.getWidth() && y <= nativeImage.getHeight() &&
+                                        nativeImage.getOpacity(x, y) != -1)
                                     return true;
-                                }
-                            }
                         } else {
                             return true;
                         }
