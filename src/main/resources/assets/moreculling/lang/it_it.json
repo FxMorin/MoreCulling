@@ -26,5 +26,7 @@
 	"moreculling.config.options.blockstate": "Proprietà dei Blocchi",
 	"moreculling.config.options.check": "Controlla i dintorni",
 	"moreculling.config.options.depth": "Profondità",
+	"moreculling.config.options.vertical": "Verticale",
+	"moreculling.config.resetCache": "Ripristina la cache",
 	"moreculling.config.optionDisabled": "Questa opzione è disabilitata quando si usa: %s"
 }

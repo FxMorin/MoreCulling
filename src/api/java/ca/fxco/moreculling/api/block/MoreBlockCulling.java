@@ -52,4 +52,22 @@ public interface MoreBlockCulling {
     default boolean cantCullAgainst(BlockState state) {
         return false;
     }
+
+    /**
+     * This method should not be overriden unless absolutely needed. It will return true if this block can be culled.
+     * This returns true if the mod that the block is from allows culling in the config.
+     * @since 0.10.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default boolean canCull() {
+        return false;
+    }
+
+    /**
+     * This method should not be used unless absolutely needed. It will set the canCull state of the block.
+     * This is used to set the cull state of blocks based on the mods option in the config
+     * @since 0.10.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default void setCanCull(boolean canCull) {}
 }
