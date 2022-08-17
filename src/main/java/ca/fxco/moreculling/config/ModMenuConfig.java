@@ -1,17 +1,28 @@
 package ca.fxco.moreculling.config;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class ModMenuConfig implements ModMenuApi {
 
@@ -19,6 +30,36 @@ public class ModMenuConfig implements ModMenuApi {
         ConfigBuilder builder = MoreCullingConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
+        ConfigCategory compatCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.compat"));
+
+        // Modded Blocks
+        List<DynamicBooleanListEntry> modsOption = new ArrayList<>();
+        DynamicBooleanListEntry useOnModdedBlocks = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.useOnModdedBlocks"))
+                .setValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.useOnModdedBlocks.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.useOnModdedBlocksByDefault = newValue)
+                .requireRestart() //TODO: Just need to reset the gui
+                .build();
+        for (Object2BooleanMap.Entry<String> entry : MoreCulling.CONFIG.modCompatibility.object2BooleanEntrySet()) {
+            String modId = entry.getKey();
+            if (modId.equals("minecraft")) continue;
+            ModContainer con = FabricLoader.getInstance().getModContainer(modId).orElse(null);
+            DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(Text.literal(con == null ? modId : con.getMetadata().getName()))
+                    .setValue(entry.getBooleanValue())
+                    .setDefaultValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)
+                    .setTooltip(Text.literal(modId))
+                    .setSaveConsumer(v -> {
+                        MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
+                        Registry.BLOCK.forEach(block -> { // May be expensive, check on it
+                            if (v != ((MoreBlockCulling)block).canCull())
+                                if (Registry.BLOCK.getId(block).getNamespace().equals(modId))
+                                    ((MoreBlockCulling)block).setCanCull(v);
+                        });
+                    })
+                    .build();
+            modsOption.add(aMod);
+        }
 
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
@@ -85,6 +126,10 @@ public class ModMenuConfig implements ModMenuApi {
                     leavesCullingMode.setEnabledState(value);
                     includeMangroveRoots.setEnabledState(value);
                     powderSnowCulling.setEnabledState(value);
+                    useOnModdedBlocks.setEnabledState(value);
+                    for (DynamicBooleanListEntry entry : modsOption) {
+                        entry.setEnabledState(value);
+                    }
                 })
                 .build());
 
@@ -136,6 +181,11 @@ public class ModMenuConfig implements ModMenuApi {
 
         generalCategory.addEntry(powderSnowCulling);
         leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
+
+        compatCategory.addEntry(useOnModdedBlocks);
+        for (DynamicBooleanListEntry entry : modsOption) {
+            compatCategory.addEntry(entry);
+        }
         return builder.build();
     }
 

@@ -20,6 +20,8 @@ import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 @Mixin(value = Block.class, priority = 2500)
 public class Block_drawSideMixin implements MoreBlockCulling {
 
+    private boolean allowCulling;
+
     @Override
     public boolean cantCullAgainst(BlockState state) {
         return state.isIn(DONT_CULL);
@@ -28,6 +30,16 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
         return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+    }
+
+    @Override
+    public boolean canCull() {
+        return this.allowCulling;
+    }
+
+    @Override
+    public void setCanCull(boolean canCull) {
+        this.allowCulling = canCull;
     }
 
 
@@ -42,7 +54,7 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     )
     private static void customShouldDrawSide(BlockState state, BlockView world, BlockPos pos, Direction side,
                                        BlockPos otherPos, CallbackInfoReturnable<Boolean> cir) {
-        if (MoreCulling.CONFIG.useBlockStateCulling)
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreBlockCulling)state.getBlock()).canCull())
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos));
     }
 }

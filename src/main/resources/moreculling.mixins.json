@@ -18,6 +18,7 @@
     "blocks.ShulkerBoxBlock_cullShapeMixin",
     "blockstates.AbstractBlockState_moreMixin",
     "blockstates.Block_drawSideMixin",
+    "blockstates.MinecraftClient_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",

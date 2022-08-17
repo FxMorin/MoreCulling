@@ -12,6 +12,9 @@ import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MoreCulling implements ClientModInitializer {
 
     //TODO: Add directional translucency checks to models
@@ -25,8 +28,11 @@ public class MoreCulling implements ClientModInitializer {
     public static MoreCullingConfig CONFIG;
 
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient() {}
+
+    static {
         AutoConfig.register(MoreCullingConfig.class, Toml4jConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(MoreCullingConfig.class).getConfig();
+        MoreCulling.CONFIG.modCompatibility.defaultReturnValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault);
     }
 }
