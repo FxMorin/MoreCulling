@@ -16,8 +16,8 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,9 +51,9 @@ public class ModMenuConfig implements ModMenuApi {
                     .setTooltip(Text.literal(modId))
                     .setSaveConsumer(v -> {
                         MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
-                        Registry.BLOCK.forEach(block -> { // May be expensive, check on it
+                        Registries.BLOCK.forEach(block -> { // May be expensive, check on it
                             if (v != ((MoreBlockCulling)block).canCull())
-                                if (Registry.BLOCK.getId(block).getNamespace().equals(modId))
+                                if (Registries.BLOCK.getId(block).getNamespace().equals(modId))
                                     ((MoreBlockCulling)block).setCanCull(v);
                         });
                     })

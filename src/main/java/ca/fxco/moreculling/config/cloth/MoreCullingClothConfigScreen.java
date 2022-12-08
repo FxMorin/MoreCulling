@@ -24,16 +24,15 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
     protected void init() {
         super.init();
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 4);
-        this.addDrawableChild(this.resetCacheButton = new ButtonWidget(
+        this.addDrawableChild(this.resetCacheButton = ButtonWidget.builder(Text.translatable("moreculling.config.resetCache"), (widget) -> {
+            CacheUtils.resetAllCache();
+            this.resetCacheButton.active = false;
+        }).dimensions(
                 10,
                 5,
                 buttonWidths,
-                20,
-                Text.translatable("moreculling.config.resetCache"),
-                (widget) -> {
-                    CacheUtils.resetAllCache();
-                    this.resetCacheButton.active = false;
-                })
+                20
+                ).build()
         );
     }
 }
