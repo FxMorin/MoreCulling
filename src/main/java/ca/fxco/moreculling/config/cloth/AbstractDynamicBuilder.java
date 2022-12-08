@@ -6,7 +6,6 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -14,7 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntry<T>> extends FieldBuilder<T, A> {
+public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntry<T>,SELF extends FieldBuilder<T, A, SELF>> extends FieldBuilder<T, A,SELF> {
     @Nullable
     protected Consumer<T> saveConsumer = null;
     @Nullable
@@ -53,7 +52,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         Builder methods
     */
 
-    public AbstractDynamicBuilder<T,A> setModIncompatibility(boolean isLoaded, String modId) {
+    public AbstractDynamicBuilder<T,A,?> setModIncompatibility(boolean isLoaded, String modId) {
         if (isLoaded) {
             this.setTooltip(Text.translatable("moreculling.config.optionDisabled", modId));
             this.locked = true;
@@ -64,7 +63,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setModLimited(boolean isLoaded, Text limitedMessage) {
+    public AbstractDynamicBuilder<T,A,?> setModLimited(boolean isLoaded, Text limitedMessage) {
         if (isLoaded) {
             Optional<Text[]> currentTooltips = this.tooltipSupplier.apply(this.value);
             if (currentTooltips.isEmpty()) {
@@ -80,58 +79,58 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setValue(T value) {
+    public AbstractDynamicBuilder<T,A,?> setValue(T value) {
         Objects.requireNonNull(value);
         this.value = value;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setErrorSupplier(@Nullable Function<T, Optional<Text>> errorSupplier) {
+    public AbstractDynamicBuilder<T,A,?> setErrorSupplier(@Nullable Function<T, Optional<Text>> errorSupplier) {
         this.errorSupplier = errorSupplier;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> requireRestart() {
+    public AbstractDynamicBuilder<T,A,?> requireRestart() {
         if (!this.locked)
             this.requireRestart(true);
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setSaveConsumer(Consumer<T> saveConsumer) {
+    public AbstractDynamicBuilder<T,A,?> setSaveConsumer(Consumer<T> saveConsumer) {
         if (!this.locked)
             this.saveConsumer = saveConsumer;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setChangeConsumer(BiConsumer<AbstractDynamicEntry<T>, T> changeConsumer) {
+    public AbstractDynamicBuilder<T,A,?> setChangeConsumer(BiConsumer<AbstractDynamicEntry<T>, T> changeConsumer) {
         if (!this.locked)
             this.changeConsumer = changeConsumer;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setDefaultValue(Supplier<T> defaultValue) {
+    public AbstractDynamicBuilder<T,A,?> setDefaultValue(Supplier<T> defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setDefaultValue(T defaultValue) {
+    public AbstractDynamicBuilder<T,A,?> setDefaultValue(T defaultValue) {
         this.defaultValue = () -> defaultValue;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setTooltip(@Nullable Text... tooltip) {
+    public AbstractDynamicBuilder<T,A,?> setTooltip(@Nullable Text... tooltip) {
         if (!this.locked)
             this.tooltipSupplier = (val) -> Optional.ofNullable(tooltip);
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setTooltipSupplier(@NotNull Function<T, Optional<Text[]>> tooltipSupplier) {
+    public AbstractDynamicBuilder<T,A,?> setTooltipSupplier(@NotNull Function<T, Optional<Text[]>> tooltipSupplier) {
         if (!this.locked)
             this.tooltipSupplier = tooltipSupplier;
         return this;
     }
 
-    public AbstractDynamicBuilder<T,A> setTooltipSupplier(@NotNull Supplier<Optional<Text[]>> tooltipSupplier) {
+    public AbstractDynamicBuilder<T,A,?> setTooltipSupplier(@NotNull Supplier<Optional<Text[]>> tooltipSupplier) {
         if (!this.locked)
             this.tooltipSupplier = (val) -> (Optional<Text[]>)tooltipSupplier.get();
         return this;

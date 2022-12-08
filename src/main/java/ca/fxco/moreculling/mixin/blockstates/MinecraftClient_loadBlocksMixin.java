@@ -5,7 +5,6 @@ import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

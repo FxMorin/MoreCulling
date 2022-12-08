@@ -38,7 +38,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     private boolean enabled;
     private final boolean locked;
 
-    public AbstractDynamicEntry(AbstractDynamicBuilder<T, AbstractConfigListEntry<T>> builder) {
+    public AbstractDynamicEntry(AbstractDynamicBuilder<T, AbstractConfigListEntry<T>,?> builder) {
         this(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
     }
 
@@ -57,8 +57,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
                 this.setValue(this.getDefaultValue().get());
                 this.onChange();
             }
-        }).dimensions(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20)
-                .build();
+        }).dimensions(0,0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20).build();
         this.widgets = Lists.newArrayList(this.mainWidget, this.resetButton);
     }
 
