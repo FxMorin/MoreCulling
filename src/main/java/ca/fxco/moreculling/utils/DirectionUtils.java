@@ -8,11 +8,11 @@ import static net.minecraft.util.math.Direction.*;
 public class DirectionUtils {
 
     public static Direction changeDirectionUsingTransformation(Direction dir, Transformation transform) {
-        if (transform.rotation.getY() == 0) {
+        if (transform.rotation.y() == 0) {
             return dir.getOpposite();
-        } else if (transform.rotation.getY() == 90) {
+        } else if (transform.rotation.y() == 90) {
             return dir.rotateYCounterclockwise();
-        } else if (transform.rotation.getY() == 270) {
+        } else if (transform.rotation.y() == 270) {
             return dir.rotateYClockwise();
         }
         return dir;

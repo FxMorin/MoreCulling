@@ -21,7 +21,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.ItemTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -230,9 +230,9 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                 if (MoreCulling.CONFIG.useItemFrame3FaceCulling &&
                         dist > MoreCulling.CONFIG.itemFrame3FaceCullingRange &&
                         frame.getRotation() % 2 == 0 &&
-                        transformation.rotation.getY() == 0 &&
-                        transformation.rotation.getX() == 0 &&
-                        transformation.rotation.getZ() == 0
+                        transformation.rotation.y() == 0 &&
+                        transformation.rotation.x() == 0 &&
+                        transformation.rotation.z() == 0
                 ) {
                     int rotation = frame.getRotation() * 45;
                     Direction facing = frame.getHorizontalFacing();

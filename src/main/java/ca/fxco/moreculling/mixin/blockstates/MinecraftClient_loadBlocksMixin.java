@@ -4,7 +4,8 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,9 +20,9 @@ public class MinecraftClient_loadBlocksMixin {
             at = @At("RETURN")
     )
     private void onInit(RunArgs args, CallbackInfo ci) {
-        Registry.BLOCK.forEach(block -> { // May be expensive, check on it
+        Registries.BLOCK.forEach(block -> { // May be expensive, check on it
             ((MoreBlockCulling)block).setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
-                    Registry.BLOCK.getId(block).getNamespace(),
+                    Registries.BLOCK.getId(block).getNamespace(),
                     MoreCulling.CONFIG.useOnModdedBlocksByDefault
             ));
         });
