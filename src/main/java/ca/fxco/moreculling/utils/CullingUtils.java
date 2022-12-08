@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
@@ -42,6 +43,7 @@ public class CullingUtils {
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
         if (sideState.isOpaque() || (((AbstractBlockAccessor)sideState.getBlock()).getCollidable() &&
+                ((MoreBlockCulling)sideState.getBlock()).canCull() &&
                 !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 ((MoreStateCulling) thisState).shouldAttemptToCull() &&
                 ((MoreStateCulling) sideState).shouldAttemptToCull())) {
