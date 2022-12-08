@@ -52,12 +52,13 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         this.changeConsumer = changeConsumer;
         this.saveConsumer = saveConsumer;
         this.mainWidget = this.createMainWidget();
-        this.resetButton = new ButtonWidget(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20, resetButtonKey, (widget) -> {
+        this.resetButton = ButtonWidget.builder(resetButtonKey, (widget) -> {
             if (this.getDefaultValue().isPresent() && !this.getValue().equals(this.getDefaultValue().get())) {
                 this.setValue(this.getDefaultValue().get());
                 this.onChange();
             }
-        });
+        }).dimensions(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20)
+                .build();
         this.widgets = Lists.newArrayList(this.mainWidget, this.resetButton);
     }
 
@@ -114,9 +115,9 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     public final void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         this.resetButton.active = this.isEnabled() && this.isEditable() && this.getDefaultValue().isPresent() && !this.getDefaultValue().get().equals(this.getValue());
-        this.resetButton.y = y;
+        this.resetButton.setY(y);
         this.mainWidget.active = this.isEnabled() && this.isEditable();
-        this.mainWidget.y = y;
+        this.mainWidget.setY(y);
 
         this.onRender(matrices, y, x, entryWidth, entryHeight);
 

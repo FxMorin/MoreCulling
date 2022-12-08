@@ -10,6 +10,7 @@
     "Sprite_opacityMixin",
     "accessors.AbstractBlockAccessor",
     "accessors.BlockModelsAccessor",
+    "accessors.SpriteContentsAccessor",
     "blocks.ChorusFlowerBlock_voxelMixin",
     "blocks.LeavesBlock_fastMixin",
     "blocks.LeavesBlock_typesMixin",

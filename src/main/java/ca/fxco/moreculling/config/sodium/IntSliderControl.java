@@ -32,7 +32,7 @@ public class IntSliderControl implements Control<Integer> {
 
     @Override
     public ControlElement<Integer> createElement(Dim2i dim) {
-        return new IntSliderControl.Button(this.option, dim, this.min, this.max, this.interval, this.text);
+        return new Button(this.option, dim, this.min, this.max, this.interval, this.text);
     }
 
     @Override

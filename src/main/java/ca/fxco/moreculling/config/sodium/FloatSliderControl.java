@@ -32,7 +32,7 @@ public class FloatSliderControl implements Control<Float> {
 
     @Override
     public ControlElement<Float> createElement(Dim2i dim) {
-        return new FloatSliderControl.Button(this.option, dim, this.min, this.max, this.interval, this.text);
+        return new Button(this.option, dim, this.min, this.max, this.interval, this.text);
     }
 
     @Override

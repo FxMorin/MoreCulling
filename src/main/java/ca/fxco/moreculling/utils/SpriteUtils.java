@@ -10,12 +10,12 @@ import java.util.List;
 public class SpriteUtils {
 
     public static boolean doesHaveTransparency(Sprite sprite) {
-        int width = sprite.getWidth();
-        int height = sprite.getHeight();
-        for (int frame : sprite.getDistinctFrameCount().toArray())
+        int width = sprite.getContents().getWidth();
+        int height = sprite.getContents().getHeight();
+        for (int frame : sprite.getContents().getDistinctFrameCount().toArray())
             for(int y = 0; y < height; ++y)
                 for(int x = 0; x < width; ++x)
-                    if (sprite.isPixelTransparent(frame, x, y))
+                    if (sprite.getContents().isPixelTransparent(frame, x, y))
                         return true;
         return false;
     }
