@@ -48,9 +48,8 @@ public class ModMenuConfig implements ModMenuApi {
                     .setSaveConsumer(v -> {
                         MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
                         Registries.BLOCK.forEach(block -> { // May be expensive, check on it
-                            if (v != ((MoreBlockCulling)block).canCull())
-                                if (Registries.BLOCK.getId(block).getNamespace().equals(modId))
-                                    ((MoreBlockCulling)block).setCanCull(v);
+                            if (v != ((MoreBlockCulling)block).canCull() && Registries.BLOCK.getId(block).getNamespace().equals(modId))
+                                ((MoreBlockCulling)block).setCanCull(v);
                         });
                     })
                     .build();
