@@ -4,7 +4,6 @@ import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
