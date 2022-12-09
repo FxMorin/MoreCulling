@@ -140,6 +140,12 @@ public class ModMenuConfig implements ModMenuApi {
                 .build());
 
         // Item Frames
+        DynamicBooleanListEntry itemFrameMapCulling = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.itemFrameMapCulling"))
+                .setValue(MoreCulling.CONFIG.itemFrameMapCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameMapCulling = newValue)
+                .build();
         DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.itemFrameLODRange"), 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
                 .setValue(MoreCulling.CONFIG.itemFrameLODRange)
                 .setDefaultValue(384)
@@ -174,8 +180,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setChangeConsumer((instance, value) -> {
                     itemFrameLOD.setEnabledState(value);
                     itemFrame3FaceCulling.setEnabledState(value);
+                    itemFrameMapCulling.setEnabledState(value);
                 })
                 .build());
+        generalCategory.addEntry(itemFrameMapCulling);
         generalCategory.addEntry(itemFrameLOD);
         generalCategory.addEntry(itemFrameLODRange);
         generalCategory.addEntry(itemFrame3FaceCulling);

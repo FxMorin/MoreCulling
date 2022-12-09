@@ -102,6 +102,14 @@ public class SodiumOptionPage {
                 .build();
 
         // Item Frames
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrameMapCullingOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.itemFrameMapCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().itemFrameMapCulling)
+                .setImpact(OptionImpact.HIGH)
+                .setBinding((opts, value) -> opts.itemFrameMapCulling = value, opts -> opts.itemFrameMapCulling)
+                .build();
         MoreCullingOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameLODRange"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
@@ -153,8 +161,10 @@ public class SodiumOptionPage {
                         .onChanged((instance, value) -> {
                             itemFrameLODOption.setAvailable(value);
                             itemFrame3FaceOption.setAvailable(value);
+                            itemFrameMapCullingOption.setAvailable(value);
                         })
                         .build())
+                .add(itemFrameMapCullingOption)
                 .add(itemFrameLODOption)
                 .add(itemFrameLODRange)
                 .add(itemFrame3FaceOption)

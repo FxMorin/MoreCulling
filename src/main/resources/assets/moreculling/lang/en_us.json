@@ -9,6 +9,8 @@
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",
 	"moreculling.config.option.customItemFrameRenderer.tooltip": "Enables the custom item frame renderer",
+	"moreculling.config.option.itemFrameMapCulling": "Frame Map Culling",
+	"moreculling.config.option.itemFrameMapCulling.tooltip": "Enables Map culling in item frames",
 	"moreculling.config.option.itemFrameLOD": "Frame LOD",
 	"moreculling.config.option.itemFrameLOD.tooltip": "Enables LevelOfDetail for item frames",
 	"moreculling.config.option.itemFrameLODRange": "Frame LOD Range",
