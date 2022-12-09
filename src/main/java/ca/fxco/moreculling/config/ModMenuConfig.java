@@ -58,6 +58,17 @@ public class ModMenuConfig implements ModMenuApi {
             modsOption.add(aMod);
         }
 
+        // Cloud Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.cloudCulling"))
+                .setValue(MoreCulling.CONFIG.cloudCulling)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.cloudCulling = newValue;
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                })
+                .build());
+
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
                 .setValue(MoreCulling.CONFIG.leavesCullingDepth)

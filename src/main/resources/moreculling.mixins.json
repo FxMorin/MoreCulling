@@ -8,6 +8,7 @@
     "MapState_cacheMixin",
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
+    "WorldRenderer_cloudsMixin",
     "accessors.AbstractBlockAccessor",
     "accessors.BlockModelsAccessor",
     "blocks.ChorusFlowerBlock_voxelMixin",

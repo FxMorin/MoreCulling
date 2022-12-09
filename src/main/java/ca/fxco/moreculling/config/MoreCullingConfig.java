@@ -4,13 +4,14 @@ import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
 
     // You can disable the sodium menu in the config
     public boolean enableSodiumMenu = true;
+
+    public boolean cloudCulling = true;
 
     public boolean useBlockStateCulling = true;
 
