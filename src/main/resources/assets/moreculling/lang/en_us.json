@@ -3,6 +3,8 @@
 	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "General Culling",
 	"moreculling.config.category.compat": "Mod Compatibility",
+	"moreculling.config.option.cloudCulling": "Cloud Culling",
+	"moreculling.config.option.cloudCulling.tooltip": "Changing the opengl winding order to apply face culling",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",
