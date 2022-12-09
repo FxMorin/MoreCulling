@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, DynamicBooleanListEntry> {
+public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, DynamicBooleanListEntry,DynamicBooleanBuilder> {
     @Nullable
     private Function<Boolean, Text> yesNoTextSupplier = null;
 

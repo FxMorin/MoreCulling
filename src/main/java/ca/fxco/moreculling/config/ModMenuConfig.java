@@ -13,16 +13,12 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class ModMenuConfig implements ModMenuApi {
 
@@ -51,15 +47,25 @@ public class ModMenuConfig implements ModMenuApi {
                     .setTooltip(Text.literal(modId))
                     .setSaveConsumer(v -> {
                         MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
-                        Registry.BLOCK.forEach(block -> { // May be expensive, check on it
-                            if (v != ((MoreBlockCulling)block).canCull())
-                                if (Registry.BLOCK.getId(block).getNamespace().equals(modId))
-                                    ((MoreBlockCulling)block).setCanCull(v);
+                        Registries.BLOCK.forEach(block -> { // May be expensive, check on it
+                            if (v != ((MoreBlockCulling)block).canCull() && Registries.BLOCK.getId(block).getNamespace().equals(modId))
+                                ((MoreBlockCulling)block).setCanCull(v);
                         });
                     })
                     .build();
             modsOption.add(aMod);
         }
+
+        // Cloud Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.cloudCulling"))
+                .setValue(MoreCulling.CONFIG.cloudCulling)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.cloudCulling = newValue;
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                })
+                .build());
 
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
@@ -134,6 +140,12 @@ public class ModMenuConfig implements ModMenuApi {
                 .build());
 
         // Item Frames
+        DynamicBooleanListEntry itemFrameMapCulling = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.itemFrameMapCulling"))
+                .setValue(MoreCulling.CONFIG.itemFrameMapCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameMapCulling = newValue)
+                .build();
         DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.itemFrameLODRange"), 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
                 .setValue(MoreCulling.CONFIG.itemFrameLODRange)
                 .setDefaultValue(384)
@@ -168,8 +180,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setChangeConsumer((instance, value) -> {
                     itemFrameLOD.setEnabledState(value);
                     itemFrame3FaceCulling.setEnabledState(value);
+                    itemFrameMapCulling.setEnabledState(value);
                 })
                 .build());
+        generalCategory.addEntry(itemFrameMapCulling);
         generalCategory.addEntry(itemFrameLOD);
         generalCategory.addEntry(itemFrameLODRange);
         generalCategory.addEntry(itemFrame3FaceCulling);

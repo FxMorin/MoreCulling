@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
@@ -14,6 +15,7 @@ import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -42,6 +44,7 @@ public class CullingUtils {
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
         if (sideState.isOpaque() || (((AbstractBlockAccessor)sideState.getBlock()).getCollidable() &&
+                ((MoreBlockCulling)sideState.getBlock()).canCull() &&
                 !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 ((MoreStateCulling) thisState).shouldAttemptToCull() &&
                 ((MoreStateCulling) sideState).shouldAttemptToCull())) {
@@ -122,6 +125,20 @@ public class CullingUtils {
         BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
         BlockState blockState = frame.world.getBlockState(posBehind);
         return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
+    }
+
+    public static boolean shouldShowMapFace(Direction facingDir, Vec3d framePos, Vec3d cameraPos) {
+        if (MoreCulling.CONFIG.itemFrameMapCulling) {
+            return switch (facingDir) {
+                case DOWN -> cameraPos.y <= framePos.y;
+                case UP -> cameraPos.y >= framePos.y;
+                case NORTH -> cameraPos.z <= framePos.z;
+                case SOUTH -> cameraPos.z >= framePos.z;
+                case WEST -> cameraPos.x <= framePos.x;
+                case EAST -> cameraPos.x >= framePos.x;
+            };
+        }
+        return true;
     }
 
     public static BakedModel getBakedModel(BlockState state) {

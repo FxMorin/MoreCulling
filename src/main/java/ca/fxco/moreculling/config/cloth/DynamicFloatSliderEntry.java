@@ -54,7 +54,7 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
 
     @Override
     protected ClickableWidget createMainWidget() {
-        return new DynamicFloatSliderEntry.Slider(0, 0, 152, 20, ((double)this.getValue() - (double)this.minimum) / (double)Math.abs(this.maximum - this.minimum));
+        return new Slider(0, 0, 152, 20, ((double)this.getValue() - (double)this.minimum) / (double)Math.abs(this.maximum - this.minimum));
     }
 
     @Override
@@ -63,12 +63,12 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
         Text displayedFieldName = this.getDisplayedFieldName();
         if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)(window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName)), (float)(y + 6), this.getPreferredTextColor());
-            this.resetButton.x = x;
-            this.mainWidget.x = x + this.resetButton.getWidth() + 1;
+            this.resetButton.setX(x);
+            this.mainWidget.setX(x + this.resetButton.getWidth() + 1);
         } else {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)x, (float)(y + 6), this.getPreferredTextColor());
-            this.resetButton.x = x + entryWidth - this.resetButton.getWidth();
-            this.mainWidget.x = x + entryWidth - 150;
+            this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
+            this.mainWidget.setX(x + entryWidth - 150);
         }
         this.mainWidget.setWidth(150 - this.resetButton.getWidth() - 2);
     }

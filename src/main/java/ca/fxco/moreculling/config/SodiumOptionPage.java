@@ -23,6 +23,16 @@ public class SodiumOptionPage {
     public static OptionPage moreCullingPage() {
         List<OptionGroup> groups = new ArrayList<>();
 
+        // Cloud Culling
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> cloudCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.cloudCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.LOW)
+                .setBinding((opts, value) -> opts.cloudCulling = value, opts -> opts.cloudCulling)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .build();
+
         // Leaves Culling
         MoreCullingOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
@@ -77,24 +87,29 @@ public class SodiumOptionPage {
                 .build();
 
         // BlockStates
-        groups.add(OptionGroup.createBuilder()
-                .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                        .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
-                        .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
-                        .setControl(TickBoxControl::new)
-                        .setImpact(OptionImpact.HIGH)
-                        .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
-                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                        .onChanged((instance,value) -> {
-                            leavesCullingMode.setAvailable(value);
-                            includeMangroveRoots.setAvailable(value);
-                            powderSnowCulling.setAvailable(value);
-                        })
-                        .build())
-                .build()
-        );
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> blockStateCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.HIGH)
+                .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .onChanged((instance,value) -> {
+                    leavesCullingMode.setAvailable(value);
+                    includeMangroveRoots.setAvailable(value);
+                    powderSnowCulling.setAvailable(value);
+                })
+                .build();
 
         // Item Frames
+        MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrameMapCullingOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.itemFrameMapCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().itemFrameMapCulling)
+                .setImpact(OptionImpact.HIGH)
+                .setBinding((opts, value) -> opts.itemFrameMapCulling = value, opts -> opts.itemFrameMapCulling)
+                .build();
         MoreCullingOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameLODRange"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
@@ -129,6 +144,13 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.useItemFrame3FaceCulling = value, opts -> opts.useItemFrame3FaceCulling)
                 .onChanged((instance, value) -> itemFrame3FaceRange.setAvailable(instance.isAvailable() && value))
                 .build();
+
+        groups.add(OptionGroup.createBuilder()
+                .add(cloudCulling)
+                .add(blockStateCulling)
+                .build()
+        );
+
         groups.add(OptionGroup.createBuilder()
                 .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
                         .setName(Text.translatable("moreculling.config.option.customItemFrameRenderer"))
@@ -139,8 +161,10 @@ public class SodiumOptionPage {
                         .onChanged((instance, value) -> {
                             itemFrameLODOption.setAvailable(value);
                             itemFrame3FaceOption.setAvailable(value);
+                            itemFrameMapCullingOption.setAvailable(value);
                         })
                         .build())
+                .add(itemFrameMapCullingOption)
                 .add(itemFrameLODOption)
                 .add(itemFrameLODRange)
                 .add(itemFrame3FaceOption)

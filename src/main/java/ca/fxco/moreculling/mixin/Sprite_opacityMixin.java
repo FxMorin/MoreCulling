@@ -1,9 +1,11 @@
 package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import ca.fxco.moreculling.mixin.accessors.SpriteContentsAccessor;
 import ca.fxco.moreculling.utils.SpriteUtils;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteContents;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,11 +18,11 @@ public class Sprite_opacityMixin implements SpriteOpacity {
 
     @Shadow
     @Final
-    protected NativeImage[] images;
+    private SpriteContents contents;
 
     @Override
     public NativeImage getUnmipmappedImage() {
-        return this.images[0];
+        return ((SpriteContentsAccessor)contents).getImage();
     }
 
     @Override

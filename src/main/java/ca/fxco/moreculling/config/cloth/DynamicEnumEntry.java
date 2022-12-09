@@ -55,13 +55,13 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
 
     @Override
     protected ClickableWidget createMainWidget() {
-        return new ButtonWidget(0, 0, 150, 20, NarratorManager.EMPTY, (widget) -> {
+        return ButtonWidget.builder(NarratorManager.EMPTY, (widget) -> {
             if (!this.isLocked() && this.isEnabled()) {
                 this.index.incrementAndGet();
                 this.index.compareAndSet(this.values.size(), 0);
                 this.onChange();
             }
-        });
+        }).dimensions(0, 0, 150, 20).build();
     }
 
     @Override
@@ -71,12 +71,12 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
         Text displayedFieldName = this.getDisplayedFieldName();
         if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)(window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName)), (float)(y + 6), this.getPreferredTextColor());
-            this.resetButton.x = x;
-            this.mainWidget.x = x + this.resetButton.getWidth() + 2;
+            this.resetButton.setX(x);
+            this.mainWidget.setX(x + this.resetButton.getWidth() + 2);
         } else {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)x, (float)(y + 6), this.getPreferredTextColor());
-            this.resetButton.x = x + entryWidth - this.resetButton.getWidth();
-            this.mainWidget.x = x + entryWidth - 150;
+            this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
+            this.mainWidget.setX(x + entryWidth - 150);
         }
 
         this.mainWidget.setWidth(150 - this.resetButton.getWidth() - 2);

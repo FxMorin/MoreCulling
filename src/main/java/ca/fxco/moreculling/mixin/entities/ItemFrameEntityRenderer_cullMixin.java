@@ -20,8 +20,8 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,6 +31,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.OptionalInt;
+
+import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
 
 @Mixin(value = ItemFrameEntityRenderer.class, priority = 1200)
 public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> extends EntityRenderer<T> {
@@ -86,8 +88,8 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 (double)direction.getOffsetY() * d,
                 (double)direction.getOffsetZ() * d
         );
-        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(itemFrameEntity.getPitch()));
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0f - itemFrameEntity.getYaw()));
+        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(itemFrameEntity.getPitch()));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f - itemFrameEntity.getYaw()));
         boolean isInvisible = itemFrameEntity.isInvisible();
         ItemStack itemStack = itemFrameEntity.getHeldItemStack();
         boolean skipFrontRender = false;
@@ -98,37 +100,39 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 int mapId = optionalInt.getAsInt();
                 MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.world);
                 if (mapState != null) { // Map is present
-                    skipFrontRender = !((MapOpacity)mapState).hasTransparency();
-                    double di;
-                    double offsetZFighting = isInvisible ? 0.5 :
-                            skipFrontRender ?
-                                    ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
-                                            0.4452 - di : 0.4452) :
-                                    0.4375;
-                    matrixStack.translate(0.0, 0.0, offsetZFighting);
-                    int j = itemFrameEntity.getRotation() % 4 * 2;
-                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)j * 360.0f / 8.0f));
-                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
-                    float h = 0.0078125f;
-                    matrixStack.scale(h, h, h);
-                    matrixStack.translate(-64.0, -64.0, 0.0);
-                    matrixStack.translate(0.0, 0.0, -1.0);
-                    MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
-                            matrixStack,
-                            vertexConsumerProvider,
-                            mapId,
-                            mapState,
-                            true,
-                            this.getLight(
-                                    itemFrameEntity,
-                                    LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
-                                    i
-                            )
-                    );
+                    if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
+                        skipFrontRender = !((MapOpacity) mapState).hasTransparency();
+                        double di;
+                        double offsetZFighting = isInvisible ? 0.5 :
+                                skipFrontRender ?
+                                        ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
+                                                0.4452 - di : 0.4452) :
+                                        0.4375;
+                        matrixStack.translate(0.0, 0.0, offsetZFighting);
+                        int j = itemFrameEntity.getRotation() % 4 * 2;
+                        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) j * 360.0f / 8.0f));
+                        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0f));
+                        float h = 0.0078125f;
+                        matrixStack.scale(h, h, h);
+                        matrixStack.translate(-64.0, -64.0, 0.0);
+                        matrixStack.translate(0.0, 0.0, -1.0);
+                        MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
+                                matrixStack,
+                                vertexConsumerProvider,
+                                mapId,
+                                mapState,
+                                true,
+                                this.getLight(
+                                        itemFrameEntity,
+                                        LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
+                                        i
+                                )
+                        );
+                    }
                 }
             } else {
                 matrixStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
-                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
+                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(
                         (float)itemFrameEntity.getRotation() * 360.0f / 8.0f)
                 );
                 int l = this.getLight(itemFrameEntity, LightmapTextureManager.MAX_LIGHT_COORDINATE, i);

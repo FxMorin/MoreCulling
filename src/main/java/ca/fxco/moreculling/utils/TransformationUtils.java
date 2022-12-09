@@ -12,11 +12,11 @@ public class TransformationUtils {
      */
 
     public static boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
-        if (transform.scale.getX() > 1.0F || transform.scale.getY() > 1.0F || transform.scale.getZ() > 1.0F)
+        if (transform.scale.x() > 1.0F || transform.scale.y() > 1.0F || transform.scale.z() > 1.0F)
             return false; //TODO: Maybe Allow Z axis
-        if (transform.rotation.getX() % 90 != 0 || transform.rotation.getZ() % 90 != 0 || transform.rotation.getY() % 90 != 0)
+        if (transform.rotation.x() % 90 != 0 || transform.rotation.z() % 90 != 0 || transform.rotation.y() % 90 != 0)
             return false; //TODO: Maybe Allow Y axis, see if the face is correct
-        if (transform.translation.getX() != 0 || transform.translation.getY() != 0 || transform.translation.getZ() != 0)
+        if (transform.translation.x() != 0 || transform.translation.y() != 0 || transform.translation.z() != 0)
             return false; //TODO: Maybe allow Z axis, although would require checking scale also
         return true;
     }

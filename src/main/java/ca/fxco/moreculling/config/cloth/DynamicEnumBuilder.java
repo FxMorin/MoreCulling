@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilder<T, DynamicEnumEntry<T>> {
+public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilder<T, DynamicEnumEntry<T>,DynamicEnumBuilder<T>> {
     private final Class<T> clazz;
     @Nullable
     private Function<T, Text> enumNameProvider;
