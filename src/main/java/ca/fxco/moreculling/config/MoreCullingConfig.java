@@ -17,6 +17,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean useCustomItemFrameRenderer = true;
 
+    public boolean itemFrameMapCulling = true;
+
     public boolean useItemFrameLOD = true;
 
     public int itemFrameLODRange = 384; // default 384 (128 blocks) away

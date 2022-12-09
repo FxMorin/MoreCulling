@@ -32,6 +32,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.OptionalInt;
 
+import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
+
 @Mixin(value = ItemFrameEntityRenderer.class, priority = 1200)
 public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> extends EntityRenderer<T> {
 
@@ -98,33 +100,35 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 int mapId = optionalInt.getAsInt();
                 MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.world);
                 if (mapState != null) { // Map is present
-                    skipFrontRender = !((MapOpacity)mapState).hasTransparency();
-                    double di;
-                    double offsetZFighting = isInvisible ? 0.5 :
-                            skipFrontRender ?
-                                    ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
-                                            0.4452 - di : 0.4452) :
-                                    0.4375;
-                    matrixStack.translate(0.0, 0.0, offsetZFighting);
-                    int j = itemFrameEntity.getRotation() % 4 * 2;
-                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)j * 360.0f / 8.0f));
-                    matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
-                    float h = 0.0078125f;
-                    matrixStack.scale(h, h, h);
-                    matrixStack.translate(-64.0, -64.0, 0.0);
-                    matrixStack.translate(0.0, 0.0, -1.0);
-                    MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
-                            matrixStack,
-                            vertexConsumerProvider,
-                            mapId,
-                            mapState,
-                            true,
-                            this.getLight(
-                                    itemFrameEntity,
-                                    LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
-                                    i
-                            )
-                    );
+                    if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
+                        skipFrontRender = !((MapOpacity) mapState).hasTransparency();
+                        double di;
+                        double offsetZFighting = isInvisible ? 0.5 :
+                                skipFrontRender ?
+                                        ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
+                                                0.4452 - di : 0.4452) :
+                                        0.4375;
+                        matrixStack.translate(0.0, 0.0, offsetZFighting);
+                        int j = itemFrameEntity.getRotation() % 4 * 2;
+                        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) j * 360.0f / 8.0f));
+                        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
+                        float h = 0.0078125f;
+                        matrixStack.scale(h, h, h);
+                        matrixStack.translate(-64.0, -64.0, 0.0);
+                        matrixStack.translate(0.0, 0.0, -1.0);
+                        MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
+                                matrixStack,
+                                vertexConsumerProvider,
+                                mapId,
+                                mapState,
+                                true,
+                                this.getLight(
+                                        itemFrameEntity,
+                                        LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
+                                        i
+                                )
+                        );
+                    }
                 }
             } else {
                 matrixStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
