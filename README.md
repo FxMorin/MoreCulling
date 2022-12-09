@@ -28,6 +28,8 @@ Feel free to contribute to the project. Make sure to star the project to help ou
 
 I'm also fine if you use this mod in your modpacks  
 
+Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for extra culling features 
+
 ### My other optimization/bugfix mods:  
 * [MemoryLeakFix](https://github.com/fxmorin/memoryLeakFix) - self-explanatory
 * [Carpet-Fixes](https://github.com/fxmorin/carpet-fixes) - Largest Server-Side Bug fixing mod  
