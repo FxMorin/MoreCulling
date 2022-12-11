@@ -36,5 +36,8 @@ Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for ex
 * [Blanket](https://github.com/BlanketMC/blanket-client-tweaks) - Client-side tweaks/fixes  
 
 ---
-  
-I don't give consent to Debugify to use this mod (or any mod) to merge my mod into another mod and [there's a reason for that](https://gist.github.com/fxmorin/9770473614e3e5e0703e44273dab33f7).
+   
+Feel free to contribute to the project!  
+I'm also fine if you use this mod in your modpacks, just make sure to mention it.  
+
+However I don't allow clients or other mods to merge this mod without permission, if you would like to use this mod in your client or another mod please contact me.
