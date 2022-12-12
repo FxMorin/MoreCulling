@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class MoreCullingConfigCategory implements ConfigCategory {
+public class MoreCullingClothConfigCategory implements ConfigCategory {
     private final ConfigBuilder builder;
     private final List<Object> data;
     @Nullable
@@ -22,7 +22,7 @@ public class MoreCullingConfigCategory implements ConfigCategory {
     @Nullable
     private Supplier<Optional<StringVisitable[]>> description = Optional::empty;
 
-    public MoreCullingConfigCategory(ConfigBuilder builder, Text categoryKey) {
+    public MoreCullingClothConfigCategory(ConfigBuilder builder, Text categoryKey) {
         this.builder = builder;
         this.data = Lists.newArrayList();
         this.categoryKey = categoryKey;

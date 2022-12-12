@@ -15,10 +15,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class MoreCullingOptionImpl<S, T> implements Option<T> {
+public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     /*
      * Custom implementation of Sodium's OptionImpl which allows me to do stuff such as:
@@ -32,7 +31,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     protected final OptionBinding<S, T> binding;
     protected final Control<T> control;
 
-    protected BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged;
+    protected BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged;
 
     protected final EnumSet<OptionFlag> flags;
 
@@ -47,18 +46,18 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
     protected boolean enabled;
     private final boolean locked; // Prevents anything from changing
 
-    protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                    Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
-                                    EnumSet<OptionFlag> flags, OptionImpact impact,
-                                    BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged, boolean enabled) {
+    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
+                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
+                                          EnumSet<OptionFlag> flags, OptionImpact impact,
+                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged, boolean enabled) {
         this(storage, name, tooltip, binding, control, flags, impact, onChanged, enabled, false);
     }
 
-    protected MoreCullingOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                    Function<MoreCullingOptionImpl<S, T>, Control<T>> control,
-                                    EnumSet<OptionFlag> flags, OptionImpact impact,
-                                    BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged,
-                                    boolean enabled, boolean locked) {
+    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
+                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
+                                          EnumSet<OptionFlag> flags, OptionImpact impact,
+                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged,
+                                          boolean enabled, boolean locked) {
         this.storage = storage;
         this.name = name;
         this.tooltip = tooltip;
@@ -131,7 +130,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             this.onChanged.accept(this, this.getValue());
     }
 
-    public void setOnChanged(BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged) {
+    public void setOnChanged(BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged) {
         if (this.locked) return;
         this.onChanged = onChanged;
     }
@@ -168,11 +167,11 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
         private Text name;
         private Text tooltip;
         private OptionBinding<S, T> binding;
-        private Function<MoreCullingOptionImpl<S, T>, Control<T>> control;
+        private Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
         private final EnumSet<OptionFlag> flags = EnumSet.noneOf(OptionFlag.class);
         @Nullable
-        private BiConsumer<MoreCullingOptionImpl<S, T>, T> onChanged;
+        private BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged;
         private boolean enabled = true;
         private boolean locked = false;
 
@@ -204,7 +203,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> setControl(Function<MoreCullingOptionImpl<S, T>, Control<T>> control) {
+        public Builder<S, T> setControl(Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control) {
             Validate.notNull(control, "Argument must not be null");
             this.control = control;
             return this;
@@ -215,7 +214,7 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> onChanged(BiConsumer<MoreCullingOptionImpl<S, T>, T> biconsumer) {
+        public Builder<S, T> onChanged(BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> biconsumer) {
             Validate.notNull(biconsumer, "BiConsumer must not be null");
             if (!this.locked)
                 this.onChanged = biconsumer;
@@ -249,12 +248,12 @@ public class MoreCullingOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public MoreCullingOptionImpl<S, T> build() {
+        public MoreCullingSodiumOptionImpl<S, T> build() {
             Validate.notNull(this.name, "Name must be specified");
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
-            return new MoreCullingOptionImpl<>(
+            return new MoreCullingSodiumOptionImpl<>(
                     this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
                     this.onChanged, this.enabled, this.locked
             );

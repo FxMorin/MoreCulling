@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class MoreCullingConfigBuilder implements ConfigBuilder {
+public class MoreCullingClothConfigBuilder implements ConfigBuilder {
     private Runnable savingRunnable;
     private Screen parent;
     private Text title = Text.translatable("moreculling.title");
@@ -32,11 +32,11 @@ public class MoreCullingConfigBuilder implements ConfigBuilder {
     private boolean alwaysShowTabs;
 
     public static ConfigBuilder create() {
-        return new MoreCullingConfigBuilder();
+        return new MoreCullingClothConfigBuilder();
     }
 
     @ApiStatus.Internal
-    public MoreCullingConfigBuilder() {
+    public MoreCullingClothConfigBuilder() {
         this.defaultBackground = DrawableHelper.OPTIONS_BACKGROUND_TEXTURE;
         this.afterInitConsumer = (screen) -> {
         };
@@ -118,7 +118,7 @@ public class MoreCullingConfigBuilder implements ConfigBuilder {
         } else {
             if (this.fallbackCategory == null) this.fallbackCategory = categoryKey.getString();
             return this.categoryMap.computeIfAbsent(categoryKey.getString(), (key) ->
-                    new MoreCullingConfigCategory(this, categoryKey)
+                    new MoreCullingClothConfigCategory(this, categoryKey)
             );
         }
     }
