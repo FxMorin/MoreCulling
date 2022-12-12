@@ -26,8 +26,6 @@ What's Culled, Performance, Compatibility, Bug Fixes, and more!
 ## More Info    
 Feel free to contribute to the project. Make sure to star the project to help out!  
 
-I'm also fine if you use this mod in your modpacks  
-
 Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for extra culling features 
 
 ### My other optimization/bugfix mods:  
