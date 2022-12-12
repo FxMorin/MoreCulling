@@ -23,7 +23,7 @@ import java.util.List;
 public class ModMenuConfig implements ModMenuApi {
 
     private static Screen createConfigScreen(Screen parent) {
-        ConfigBuilder builder = MoreCullingConfigBuilder.create().setParentScreen(parent);
+        ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
         ConfigCategory compatCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.compat"));

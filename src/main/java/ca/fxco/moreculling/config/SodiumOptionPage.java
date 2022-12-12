@@ -4,8 +4,8 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.FloatSliderControl;
 import ca.fxco.moreculling.config.sodium.IntSliderControl;
-import ca.fxco.moreculling.config.sodium.MoreCullingOptionImpl;
-import ca.fxco.moreculling.config.sodium.MoreCullingOptionsStorage;
+import ca.fxco.moreculling.config.sodium.MoreCullingSodiumOptionImpl;
+import ca.fxco.moreculling.config.sodium.MoreCullingSodiumOptionsStorage;
 import ca.fxco.moreculling.utils.CompatUtils;
 import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.options.*;
@@ -18,13 +18,13 @@ import java.util.List;
 
 public class SodiumOptionPage {
 
-    private static final MoreCullingOptionsStorage morecullingOpts = new MoreCullingOptionsStorage();
+    private static final MoreCullingSodiumOptionsStorage morecullingOpts = new MoreCullingSodiumOptionsStorage();
 
     public static OptionPage moreCullingPage() {
         List<OptionGroup> groups = new ArrayList<>();
 
         // Cloud Culling
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> cloudCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> cloudCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.cloudCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -34,7 +34,7 @@ public class SodiumOptionPage {
                 .build();
 
         // Leaves Culling
-        MoreCullingOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
                 .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
                 .setControl(option -> new IntSliderControl(option, 1, 4, 1, Text.literal("%d")))
@@ -44,7 +44,7 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
                 .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingSodiumOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setControl(option -> new CyclingControl<>(option, LeavesCullingMode.class, LeavesCullingMode.getLocalizedNames()))
@@ -58,7 +58,7 @@ public class SodiumOptionPage {
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> includeMangroveRoots = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> includeMangroveRoots = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.includeMangroveRoots"))
                 .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -76,7 +76,7 @@ public class SodiumOptionPage {
             leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
 
         // Powder Snow Culling
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.powderSnowCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -87,7 +87,7 @@ public class SodiumOptionPage {
                 .build();
 
         // BlockStates
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> blockStateCulling = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> blockStateCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -102,7 +102,7 @@ public class SodiumOptionPage {
                 .build();
 
         // Item Frames
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrameMapCullingOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> itemFrameMapCullingOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameMapCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -110,7 +110,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.HIGH)
                 .setBinding((opts, value) -> opts.itemFrameMapCulling = value, opts -> opts.itemFrameMapCulling)
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingOptionImpl.createBuilder(int.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameLODRange"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
                 .setControl(option -> new IntSliderControl(option, 48, 768, 1, Text.literal("%d")))
@@ -118,7 +118,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.itemFrameLODRange = value, opts -> opts.itemFrameLODRange)
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrameLODOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> itemFrameLODOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrameLOD"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -127,7 +127,7 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.useItemFrameLOD = value, opts -> opts.useItemFrameLOD)
                 .onChanged((instance, value) -> itemFrameLODRange.setAvailable(instance.isAvailable() && value))
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Float> itemFrame3FaceRange = MoreCullingOptionImpl.createBuilder(float.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Float> itemFrame3FaceRange = MoreCullingSodiumOptionImpl.createBuilder(float.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
                 .setControl(option -> new FloatSliderControl(option, 0.0F, 48.0F, 0.5F, Text.literal("%2.2f")))
@@ -135,7 +135,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.itemFrame3FaceCullingRange = value, opts -> opts.itemFrame3FaceCullingRange)
                 .build();
-        MoreCullingOptionImpl<MoreCullingConfig, Boolean> itemFrame3FaceOption = MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> itemFrame3FaceOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.itemFrame3FaceCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                 .setControl(TickBoxControl::new)
@@ -152,7 +152,7 @@ public class SodiumOptionPage {
         );
 
         groups.add(OptionGroup.createBuilder()
-                .add(MoreCullingOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .add(MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                         .setName(Text.translatable("moreculling.config.option.customItemFrameRenderer"))
                         .setTooltip(Text.translatable("moreculling.config.option.customItemFrameRenderer.tooltip"))
                         .setControl(TickBoxControl::new)
