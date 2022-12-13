@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mixin(WeightedBakedModel.class)
 public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
@@ -26,7 +25,6 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
     will be used when calling the translucency check. Should be fixed by never calling translucency checks for this
     model. Check BakedModel_extendsMixin for more info
      */
-
 
     @Shadow
     @Final
@@ -54,14 +52,6 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
             }
         }
     }
-
-    @Override
-    public List<BakedModel> getModels() {
-        List<BakedModel> list = this.models.stream().map(Weighted.Present::getData).collect(Collectors.toList());
-        list.add(this.defaultModel);
-        return list;
-    }
-
 
     @Inject(
             method = "<init>",

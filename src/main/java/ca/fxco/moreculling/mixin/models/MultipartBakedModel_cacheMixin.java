@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Mixin(MultipartBakedModel.class)
 public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
@@ -53,10 +52,5 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void resetTranslucencyCache() {
         stateTranslucencyCache.clear(); // Clear cache
-    }
-
-    @Override
-    public List<BakedModel> getModels() {
-        return this.components.stream().map(Pair::getRight).collect(Collectors.toList());
     }
 }
