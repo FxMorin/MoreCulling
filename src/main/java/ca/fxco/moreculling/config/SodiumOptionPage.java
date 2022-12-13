@@ -1,22 +1,26 @@
 package ca.fxco.moreculling.config;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.config.*;
+import ca.fxco.moreculling.api.config.defaults.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import ca.fxco.moreculling.config.sodium.FloatSliderControl;
-import ca.fxco.moreculling.config.sodium.IntSliderControl;
-import ca.fxco.moreculling.config.sodium.MoreCullingSodiumOptionImpl;
-import ca.fxco.moreculling.config.sodium.MoreCullingSodiumOptionsStorage;
+import ca.fxco.moreculling.config.sodium.*;
 import ca.fxco.moreculling.utils.CompatUtils;
 import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.options.*;
 import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SodiumOptionPage {
+
+    //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
 
     private static final MoreCullingSodiumOptionsStorage morecullingOpts = new MoreCullingSodiumOptionsStorage();
 
@@ -184,6 +188,103 @@ public class SodiumOptionPage {
                 .build()
         );
 
+        // Generates all groups created through the API
+        groups.addAll(generateOptionGroups());
+
         return new OptionPage(Text.translatable("moreculling.title"), ImmutableList.copyOf(groups));
+    }
+
+    public static OptionImpact optionImpactBridge(ConfigOptionImpact optionImpact) {
+        if (optionImpact == null) {
+            return OptionImpact.LOW;
+        }
+        return switch(optionImpact) {
+            case LOW -> OptionImpact.LOW;
+            case MEDIUM -> OptionImpact.MEDIUM;
+            case HIGH -> OptionImpact.HIGH;
+            case VARIES -> OptionImpact.VARIES;
+        };
+    }
+
+    public static OptionFlag optionFlagBridge(ConfigOptionFlag optionFlag) {
+        if (optionFlag == null) {
+            return null;
+        }
+        return switch(optionFlag) {
+            case REQUIRES_RENDERER_RELOAD -> OptionFlag.REQUIRES_RENDERER_RELOAD;
+            case REQUIRES_ASSET_RELOAD -> OptionFlag.REQUIRES_ASSET_RELOAD;
+            case REQUIRES_GAME_RESTART -> OptionFlag.REQUIRES_GAME_RESTART;
+            case REQUIRES_RENDERER_UPDATE -> OptionFlag.REQUIRES_RENDERER_UPDATE;
+        };
+    }
+
+    //TODO: Add ModMenu option to the Sodium options
+    @SuppressWarnings("unchecked")
+    public static List<OptionGroup> generateOptionGroups() {
+        Map<String, List<ConfigOption<?>>> groupedOptions = ConfigAdditions.getOptions();
+        List<OptionGroup> optionGroups = new LinkedList<>();
+        for (String group : groupedOptions.keySet()) {
+            OptionGroup.Builder additionsGroupBuilder = OptionGroup.createBuilder();
+            for (ConfigOption option : groupedOptions.get(group)) {
+                MoreCullingSodiumOptionImpl.Builder<?, ?> optionBuilder;
+                if (option instanceof ConfigBooleanOption) {
+                    optionBuilder = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                            .setControl(TickBoxControl::new)
+                            .setBinding((opts, value) -> option.getSetter().accept(value), opts -> (Boolean) option.getGetter().get());
+                } else if (option instanceof ConfigFloatOption floatOption) {
+                    optionBuilder = MoreCullingSodiumOptionImpl.createBuilder(float.class, morecullingOpts)
+                            .setControl(opt -> new FloatSliderControl(opt, floatOption.getMin(), floatOption.getMax(), floatOption.getInterval(), Text.literal(floatOption.getStringFormat())))
+                            .setBinding((opts, value) -> option.getSetter().accept(value), opts -> (Float) option.getGetter().get());
+                } else if (option instanceof ConfigIntOption intOption) {
+                    optionBuilder = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
+                            .setControl(opt -> new IntSliderControl(opt, intOption.getMin(), intOption.getMax(), intOption.getInterval(), Text.literal(intOption.getStringFormat())))
+                            .setBinding((opts, value) -> option.getSetter().accept(value), opts -> (Integer) option.getGetter().get());
+                } else if (option instanceof ConfigEnumOption<?> enumOption) {
+                    optionBuilder = MoreCullingSodiumOptionImpl.createBuilder(Enum.class, morecullingOpts)
+                            .setControl(opt -> new CyclingControl(opt, enumOption.getTypeClass(), enumOption.getLocalizedNames()))
+                            .setBinding((opts, value) -> option.getSetter().accept(value), opts -> (Enum<?>) option.getGetter().get());
+                } else if (option instanceof ConfigSodiumOption objOption) {
+                    optionBuilder = MoreCullingSodiumOptionImpl.createBuilder(objOption.getTypeClass(), morecullingOpts)
+                            .setControl(opt -> objOption.getControl())
+                            .setBinding((opts, value) -> option.getSetter().accept(value), opts -> option.getGetter().get());
+                } else {
+                    optionBuilder = null;
+                }
+                if (optionBuilder != null) {
+                    optionBuilder.setName(Text.translatable(option.getTranslationKey()))
+                            .setTooltip(Text.translatable(option.getTranslationKey() + ".tooltip"))
+                            .setEnabled(option.setEnabled())
+                            .onChanged((instance, value) -> {
+                                if (option.getChanged() != null) {
+                                    option.getChanged().accept(value);
+                                }
+                            });
+                    if (option.getImpact() != null) {
+                        optionBuilder.setImpact(optionImpactBridge(option.getImpact()));
+                    }
+                    if (option.getFlag() != null) {
+                        optionBuilder.setFlags(optionFlagBridge(option.getFlag()));
+                    }
+                    if (option instanceof ConfigModLimit configModLimit) {
+                        optionBuilder.setModLimited(
+                                FabricLoader.getInstance().isModLoaded(configModLimit.getLimitedModId()),
+                                Text.translatable(configModLimit.getTranslationKey())
+                        );
+                    }
+                    if (option instanceof ConfigModIncompatibility configModIncompatibility) {
+                        optionBuilder.setModIncompatibility(
+                                FabricLoader.getInstance().isModLoaded(configModIncompatibility.getIncompatibleModId()),
+                                configModIncompatibility.getMessage()
+                        );
+                    }
+                    additionsGroupBuilder.add(optionBuilder.build());
+                }
+            }
+            OptionGroup additionsGroup = additionsGroupBuilder.build();
+            if (additionsGroup.getOptions().size() > 0) {
+                optionGroups.add(additionsGroup); // Sodium group names don't show up
+            }
+        }
+        return optionGroups;
     }
 }

@@ -2,6 +2,11 @@ package ca.fxco.moreculling.config;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.api.config.*;
+import ca.fxco.moreculling.api.config.defaults.ConfigBooleanOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigEnumOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CompatUtils;
@@ -19,8 +24,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ModMenuConfig implements ModMenuApi {
+
+    //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
 
     private static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
@@ -200,11 +208,70 @@ public class ModMenuConfig implements ModMenuApi {
         for (DynamicBooleanListEntry entry : modsOption) {
             compatCategory.addEntry(entry);
         }
+
+        // Generates all categories created through the API
+        generateConfigCategories(builder, generalCategory);
+
         return builder.build();
     }
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return ModMenuConfig::createConfigScreen;
+    }
+
+    //TODO: Add more Sodium option to the ModMenu options
+    @SuppressWarnings("unchecked")
+    public static void generateConfigCategories(ConfigBuilder builder, ConfigCategory generalCategory) {
+        Map<String, List<ConfigOption<?>>> groupedOptions = ConfigAdditions.getOptions();
+        for (String group : groupedOptions.keySet()) {
+            ConfigCategory category;
+            if (ConfigAdditions.isGroupSeparate(group)) {
+                category = builder.getOrCreateCategory(Text.translatable("moreculling.config.category." + group));
+            } else {
+                category = generalCategory;
+            }
+            for (ConfigOption option : groupedOptions.get(group)) {
+                AbstractDynamicBuilder optionBuilder;
+                if (option instanceof ConfigBooleanOption) {
+                    optionBuilder = new DynamicBooleanBuilder(Text.translatable(option.getTranslationKey()));
+                } else if (option instanceof ConfigFloatOption floatOption) {
+                    optionBuilder = new DynamicFloatSliderBuilder(Text.translatable(option.getTranslationKey()), floatOption.getMin(), floatOption.getMax(), floatOption.getInterval());
+                } else if (option instanceof ConfigIntOption intOption) {
+                    optionBuilder = new DynamicIntSliderBuilder(Text.translatable(option.getTranslationKey()), intOption.getMin(), intOption.getMax());
+                } else if (option instanceof ConfigEnumOption<?> enumOption) {
+                    optionBuilder = new DynamicEnumBuilder<>(Text.translatable(option.getTranslationKey()), enumOption.getTypeClass());
+                } else {
+                    optionBuilder = null;
+                }
+                if (optionBuilder != null) {
+                    optionBuilder.setTooltip(Text.translatable(option.getTranslationKey() + ".tooltip"))
+                            .setValue(option.getGetter().get())
+                            .setDefaultValue(option.getDefaultValue())
+                            .setSaveConsumer(newValue -> option.getSetter().accept(newValue))
+                            .setChangeConsumer((instance, value) -> {
+                                if (option.getChanged() != null) {
+                                    option.getChanged().accept(value);
+                                }
+                            });
+                    if (option instanceof ConfigModLimit configModLimit) {
+                        optionBuilder.setModLimited(
+                                FabricLoader.getInstance().isModLoaded(configModLimit.getLimitedModId()),
+                                Text.translatable(configModLimit.getTranslationKey())
+                        );
+                    }
+                    if (option instanceof ConfigModIncompatibility configModIncompatibility) {
+                        optionBuilder.setModIncompatibility(
+                                FabricLoader.getInstance().isModLoaded(configModIncompatibility.getIncompatibleModId()),
+                                configModIncompatibility.getMessage()
+                        );
+                    }
+                    if (option.getFlag() == ConfigOptionFlag.REQUIRES_GAME_RESTART) {
+                        optionBuilder.requireRestart();
+                    }
+                    category.addEntry(optionBuilder.build());
+                }
+            }
+        }
     }
 }
