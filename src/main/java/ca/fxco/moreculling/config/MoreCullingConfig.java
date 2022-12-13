@@ -1,5 +1,9 @@
 package ca.fxco.moreculling.config;
 
+import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.config.ConfigAdditions;
+import ca.fxco.moreculling.api.config.ConfigOptionImpact;
+import ca.fxco.moreculling.api.config.defaults.ConfigBooleanOption;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import me.shedaniel.autoconfig.ConfigData;
@@ -12,6 +16,8 @@ public class MoreCullingConfig implements ConfigData {
     public boolean enableSodiumMenu = true;
 
     public boolean cloudCulling = true;
+
+    public boolean signTextCulling = true;
 
     public boolean useBlockStateCulling = true;
 
@@ -40,4 +46,18 @@ public class MoreCullingConfig implements ConfigData {
     public Object2BooleanOpenHashMap<String> modCompatibility = new Object2BooleanOpenHashMap<>() {{
         put("minecraft", true);
     }};
+
+    // Example to add rule using the MoreCulling Config API
+    /*static {
+        ConfigAdditions.addOption("general", new ConfigBooleanOption(
+                "moreculling.config.option.signTextCulling",
+                s -> MoreCulling.CONFIG.signTextCulling = s,
+                () -> MoreCulling.CONFIG.signTextCulling,
+                null,
+                true,
+                ConfigOptionImpact.HIGH,
+                null
+                )
+        );
+    }*/
 }
