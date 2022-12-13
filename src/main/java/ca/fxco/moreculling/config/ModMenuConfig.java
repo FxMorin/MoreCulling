@@ -67,12 +67,20 @@ public class ModMenuConfig implements ModMenuApi {
         // Cloud Culling
         generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.cloudCulling"))
                 .setValue(MoreCulling.CONFIG.cloudCulling)
-                .setDefaultValue(false)
+                .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.cloudCulling = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
+                .build());
+
+        // Sign Text Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.signTextCulling"))
+                .setValue(MoreCulling.CONFIG.signTextCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.signTextCulling = newValue)
                 .build());
 
         // Leaves Culling

@@ -141,6 +141,16 @@ public class CullingUtils {
         return true;
     }
 
+    public static boolean shouldHideWallSignText(Direction facingDir, Vec3d framePos, Vec3d cameraPos) {
+        return switch (facingDir) {
+            case NORTH -> cameraPos.z > framePos.z;
+            case SOUTH -> cameraPos.z < framePos.z;
+            case WEST -> cameraPos.x > framePos.x;
+            case EAST -> cameraPos.x < framePos.x;
+            default -> false;
+        };
+    }
+
     public static BakedModel getBakedModel(BlockState state) {
         return blockRenderManager.getModel(state);
     }
