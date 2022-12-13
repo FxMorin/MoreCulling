@@ -3,7 +3,6 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
@@ -67,12 +66,6 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
             }
         }
     }
-
-    @Override
-    public List<BakedModel> getModels() {
-        return List.of((BakedModel)this);
-    }
-
 
     @Inject(
             method = "<init>",

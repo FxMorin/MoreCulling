@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * BakedOpacity is an interface that should be used on classes that extend BakedModel
- * It allows your custom model to take full advantage of MoreCulling's culling techniques.
+ * It allows your custom models to take full advantage of MoreCulling's culling techniques.
  * @since 0.3.0
  */
 
@@ -48,7 +48,9 @@ public interface BakedOpacity {
      * This method will return a list of all models contained within this model.
      * Currently, this is only used for debugging and development. Although it may be used in the future!
      * @since 0.8.0
+     * @deprecated this will be removed in the following versions, and it is no longer supported
      */
+    @Deprecated
     default @Nullable List<BakedModel> getModels() {
         return null;
     }

@@ -1,13 +1,8 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.util.math.Direction;
-
-import java.util.List;
 
 public class TestingUtils {
 
@@ -17,7 +12,7 @@ public class TestingUtils {
         if (!hasTranslucency) return; // Only print if failing to cull due to translucency
         String[] classPackage = model.getClass().getName().split("\\.");
         System.out.println(state.getBlock().getName() + " -> " + classPackage[classPackage.length - 1]);
-        List<BakedModel> models = ((BakedOpacity)model).getModels();
+        /*List<BakedModel> models = ((BakedOpacity)model).getModels(); // removed
         if (models != null) {
             for (BakedModel m : models) {
                 // If BakedModel texture is translucent we figure out why here. Test each one individually
@@ -43,6 +38,6 @@ public class TestingUtils {
                     }
                 }
             }
-        }
+        }*/
     }
 }
