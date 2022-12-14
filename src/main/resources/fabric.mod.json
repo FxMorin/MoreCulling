@@ -34,11 +34,11 @@
     "cloth-config": ">=9.0.94"
   },
   "recommends": {
-    "memoryleakfix": "*",
-    "sodium": ">=0.4.5"
+    "memoryleakfix": "*"
   },
   "suggests": {
     "memoryleakfix": "*",
+    "sodium": ">=0.4.5",
     "lithium": ">=0.8.0"
   },
   "custom": {
