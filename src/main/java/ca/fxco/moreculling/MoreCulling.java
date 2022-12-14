@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class MoreCulling implements ClientModInitializer {
 
-    //TODO: Add directional translucency checks to models
-
     public static BlockRenderManager blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";

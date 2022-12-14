@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
+    "BakedQuad_cacheMixin",
     "MapState_cacheMixin",
     "MinecraftClient_blockRenderManagerMixin",
     "Sprite_opacityMixin",
