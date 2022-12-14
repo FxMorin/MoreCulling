@@ -7,6 +7,7 @@ import net.minecraft.client.render.model.BuiltinBakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +28,7 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
     private boolean hasTranslucency;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state) {
+    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
         return hasTranslucency;
     }
 

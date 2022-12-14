@@ -2,6 +2,7 @@ package ca.fxco.moreculling.api.model;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -21,20 +22,28 @@ public interface BakedOpacity {
      * Some baked models will require a blockstate in order to provide more accurate translucency checks,
      * usually if no blockstate is passed it will work fine, although some baked models will always return true.
      * If possible, the default state of the block will be used.
-     * @since 0.8.0
+     * @since 0.12.0
      */
-    default boolean hasTextureTranslucency(@Nullable BlockState state) {
+    default boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
         return true;
     }
 
     /**
-     * This just acts like hasTextureTranslucency(null)
-     * it should not be used anymore unless you are sure that your model is not a container or wrapper with a container
-     * for multiple block models. Since they will always return true is null is passed.
+     * This just acts like hasTextureTranslucency(state, null)
+     * Using this method is slower than if you also pass the direction
+     * @since 0.8.0
+     */
+    default boolean hasTextureTranslucency(@Nullable BlockState state) {
+        return hasTextureTranslucency(state, null);
+    }
+
+    /**
+     * This just acts like hasTextureTranslucency(null, null)
+     * Using this method is slower than the others
      * @since 0.3.0
      */
     default boolean hasTextureTranslucency() {
-        return hasTextureTranslucency(null);
+        return hasTextureTranslucency(null, null);
     }
 
     /**
