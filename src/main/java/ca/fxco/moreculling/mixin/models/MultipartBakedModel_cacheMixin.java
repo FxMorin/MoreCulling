@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.MultipartBakedModel;
+import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -34,7 +35,7 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
     private final BakedModel self = (BakedModel)this;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState blockState) {
+    public boolean hasTextureTranslucency(@Nullable BlockState blockState, @Nullable Direction direction) {
         if (blockState == null) return true;
         // Don't want to test all possible blockstates so we have it be dynamic with a cache.
         // Which should be better for performance also.
