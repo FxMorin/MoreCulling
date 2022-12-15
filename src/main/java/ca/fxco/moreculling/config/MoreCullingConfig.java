@@ -1,9 +1,5 @@
 package ca.fxco.moreculling.config;
 
-import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.config.ConfigAdditions;
-import ca.fxco.moreculling.api.config.ConfigOptionImpact;
-import ca.fxco.moreculling.api.config.defaults.ConfigBooleanOption;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import me.shedaniel.autoconfig.ConfigData;

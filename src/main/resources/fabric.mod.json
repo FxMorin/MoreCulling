@@ -41,6 +41,9 @@
     "memoryleakfix": "*",
     "lithium": ">=0.8.0"
   },
+  "conflicts": {
+    "cull-less-leaves": "*"
+  },
   "custom": {
     "mc-publish": {
       "curseforge": 630104,
