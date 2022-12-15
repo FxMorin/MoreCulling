@@ -22,7 +22,6 @@ import java.util.Optional;
 import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
-@Restriction(conflict = @Condition("cull-less-leaves"))
 @Mixin(value = LeavesBlock.class, priority = 1220)
 public class LeavesBlock_typesMixin implements MoreBlockCulling {
 

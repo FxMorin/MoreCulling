@@ -41,6 +41,9 @@
     "sodium": ">=0.4.5",
     "lithium": ">=0.8.0"
   },
+  "conflicts": {
+    "cull-less-leaves": "*"
+  },
   "custom": {
     "mc-publish": {
       "curseforge": 630104,

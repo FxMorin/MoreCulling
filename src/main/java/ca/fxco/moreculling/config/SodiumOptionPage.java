@@ -55,7 +55,6 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         MoreCullingSodiumOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingSodiumOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
@@ -64,7 +63,6 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.leavesCullingMode = value, opts -> opts.leavesCullingMode)
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .onChanged((instance, value) -> {
                     leavesCullingDepth.setAvailable(instance.isAvailable() && value == LeavesCullingMode.DEPTH);
                     if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
@@ -78,15 +76,12 @@ public class SodiumOptionPage {
                 .setEnabled(morecullingOpts.getData().useBlockStateCulling)
                 .setImpact(OptionImpact.LOW)
                 .onChanged((instance, value) -> {
-                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setAvailable(value);
                     if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
                 .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
-        if (CompatUtils.IS_CULLLESSLEAVES_LOADED)
-            leavesCullingMode.setAvailable(includeMangroveRoots.getValue());
 
         // Powder Snow Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
