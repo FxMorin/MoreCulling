@@ -3,7 +3,7 @@ package ca.fxco.moreculling.mixin.renderers;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.MathUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SignBlock;
+import net.minecraft.block.HangingSignBlock;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -39,9 +39,9 @@ public class HangingSignBlockEntityRenderer_textMixin {
     private void cullSignText(SignBlockEntity signBlockEntity, float tickDelta, MatrixStack matrixStack,
                               VertexConsumerProvider vertexConsumerProvider, int i, int j, CallbackInfo ci,
                               BlockState blockState) {
-        if (MoreCulling.CONFIG.signTextCulling) {
+        if (MoreCulling.CONFIG.signTextCulling && blockState.contains(HangingSignBlock.ROTATION)) {
             Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-            double angle = blockState.get(SignBlock.ROTATION) * ONE_SIGN_ROTATION;
+            double angle = blockState.get(HangingSignBlock.ROTATION) * ONE_SIGN_ROTATION;
             if (MathUtils.isBehindLine(angle, signBlockEntity.getPos().toCenterPos(), cameraPos)) {
                 matrixStack.pop();
                 ci.cancel();
