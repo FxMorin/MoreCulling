@@ -39,6 +39,7 @@ public class CacheUtils {
         for (BakedModel model : allModels) {
             ((BakedOpacity)model).resetTranslucencyCache();
         }
+        //TODO: Reset quad cache
         MoreCulling.LOGGER.info((allModels.size() + 1) + " cache(s) where cleared!");
     }
 }

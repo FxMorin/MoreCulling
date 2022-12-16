@@ -13,6 +13,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean cloudCulling = true;
 
+    public boolean signTextCulling = true;
+
     public boolean useBlockStateCulling = true;
 
     public boolean useCustomItemFrameRenderer = true;
@@ -29,7 +31,7 @@ public class MoreCullingConfig implements ConfigData {
 
     public LeavesCullingMode leavesCullingMode = LeavesCullingMode.DEFAULT;
 
-    public int leavesCullingDepth = 2;
+    public int leavesCullingAmount = 2;
 
     public boolean includeMangroveRoots = false;
 
@@ -40,4 +42,18 @@ public class MoreCullingConfig implements ConfigData {
     public Object2BooleanOpenHashMap<String> modCompatibility = new Object2BooleanOpenHashMap<>() {{
         put("minecraft", true);
     }};
+
+    // Example to add rule using the MoreCulling Config API
+    /*static {
+        ConfigAdditions.addOption("general", new ConfigBooleanOption(
+                "moreculling.config.option.signTextCulling",
+                s -> MoreCulling.CONFIG.signTextCulling = s,
+                () -> MoreCulling.CONFIG.signTextCulling,
+                null,
+                true,
+                ConfigOptionImpact.HIGH,
+                null
+                )
+        );
+    }*/
 }

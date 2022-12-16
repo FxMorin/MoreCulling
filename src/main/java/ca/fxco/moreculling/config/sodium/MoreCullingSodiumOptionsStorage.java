@@ -5,7 +5,7 @@ import ca.fxco.moreculling.config.MoreCullingConfig;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import me.shedaniel.autoconfig.AutoConfig;
 
-public class MoreCullingOptionsStorage implements OptionStorage<MoreCullingConfig> {
+public class MoreCullingSodiumOptionsStorage implements OptionStorage<MoreCullingConfig> {
 
     @Override
     public MoreCullingConfig getData() {

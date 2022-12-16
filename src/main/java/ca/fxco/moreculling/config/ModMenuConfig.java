@@ -2,9 +2,13 @@ package ca.fxco.moreculling.config;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.api.config.*;
+import ca.fxco.moreculling.api.config.defaults.ConfigBooleanOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigEnumOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
+import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -19,11 +23,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ModMenuConfig implements ModMenuApi {
 
+    //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
+
     private static Screen createConfigScreen(Screen parent) {
-        ConfigBuilder builder = MoreCullingConfigBuilder.create().setParentScreen(parent);
+        ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
         ConfigCategory compatCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.compat"));
@@ -59,7 +66,7 @@ public class ModMenuConfig implements ModMenuApi {
         // Cloud Culling
         generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.cloudCulling"))
                 .setValue(MoreCulling.CONFIG.cloudCulling)
-                .setDefaultValue(false)
+                .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.cloudCulling = newValue;
@@ -67,16 +74,23 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .build());
 
+        // Sign Text Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.signTextCulling"))
+                .setValue(MoreCulling.CONFIG.signTextCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.signTextCulling = newValue)
+                .build());
+
         // Leaves Culling
-        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
-                .setValue(MoreCulling.CONFIG.leavesCullingDepth)
+        DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingAmount"), 1, 4)
+                .setValue(MoreCulling.CONFIG.leavesCullingAmount)
                 .setDefaultValue(2)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.leavesCullingDepth = newValue;
+                    MoreCulling.CONFIG.leavesCullingAmount = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class)
                 .setValue(MoreCulling.CONFIG.leavesCullingMode)
@@ -87,11 +101,10 @@ public class ModMenuConfig implements ModMenuApi {
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .setChangeConsumer((instance,value) -> {
-                    leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH);
+                    leavesCullingAmount.setEnabledState(instance.isEnabled() && value.hasAmount());
                     if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
-                .setModLimited(CompatUtils.IS_CULLLESSLEAVES_LOADED, Text.translatable("moreculling.config.option.mangroveOnly", "cull-less-leaves"))
                 .build();
         DynamicBooleanListEntry includeMangroveRoots = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.includeMangroveRoots"))
                 .setValue(MoreCulling.CONFIG.includeMangroveRoots)
@@ -102,7 +115,6 @@ public class ModMenuConfig implements ModMenuApi {
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .setChangeConsumer((instance, value) -> {
-                    if (CompatUtils.IS_CULLLESSLEAVES_LOADED) leavesCullingMode.setEnabledState(value);
                     if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
                 })
@@ -190,21 +202,80 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(itemFrame3FaceCullingRange);
 
         generalCategory.addEntry(leavesCullingMode);
-        generalCategory.addEntry(leavesCullingDepth);
+        generalCategory.addEntry(leavesCullingAmount);
         generalCategory.addEntry(includeMangroveRoots);
 
         generalCategory.addEntry(powderSnowCulling);
-        leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
+        leavesCullingAmount.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
 
         compatCategory.addEntry(useOnModdedBlocks);
         for (DynamicBooleanListEntry entry : modsOption) {
             compatCategory.addEntry(entry);
         }
+
+        // Generates all categories created through the API
+        generateConfigCategories(builder, generalCategory);
+
         return builder.build();
     }
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return ModMenuConfig::createConfigScreen;
+    }
+
+    //TODO: Add more Sodium option to the ModMenu options
+    @SuppressWarnings("unchecked")
+    public static void generateConfigCategories(ConfigBuilder builder, ConfigCategory generalCategory) {
+        Map<String, List<ConfigOption<?>>> groupedOptions = ConfigAdditions.getOptions();
+        for (String group : groupedOptions.keySet()) {
+            ConfigCategory category;
+            if (ConfigAdditions.isGroupSeparate(group)) {
+                category = builder.getOrCreateCategory(Text.translatable("moreculling.config.category." + group));
+            } else {
+                category = generalCategory;
+            }
+            for (ConfigOption option : groupedOptions.get(group)) {
+                AbstractDynamicBuilder optionBuilder;
+                if (option instanceof ConfigBooleanOption) {
+                    optionBuilder = new DynamicBooleanBuilder(Text.translatable(option.getTranslationKey()));
+                } else if (option instanceof ConfigFloatOption floatOption) {
+                    optionBuilder = new DynamicFloatSliderBuilder(Text.translatable(option.getTranslationKey()), floatOption.getMin(), floatOption.getMax(), floatOption.getInterval());
+                } else if (option instanceof ConfigIntOption intOption) {
+                    optionBuilder = new DynamicIntSliderBuilder(Text.translatable(option.getTranslationKey()), intOption.getMin(), intOption.getMax());
+                } else if (option instanceof ConfigEnumOption<?> enumOption) {
+                    optionBuilder = new DynamicEnumBuilder<>(Text.translatable(option.getTranslationKey()), enumOption.getTypeClass());
+                } else {
+                    optionBuilder = null;
+                }
+                if (optionBuilder != null) {
+                    optionBuilder.setTooltip(Text.translatable(option.getTranslationKey() + ".tooltip"))
+                            .setValue(option.getGetter().get())
+                            .setDefaultValue(option.getDefaultValue())
+                            .setSaveConsumer(newValue -> option.getSetter().accept(newValue))
+                            .setChangeConsumer((instance, value) -> {
+                                if (option.getChanged() != null) {
+                                    option.getChanged().accept(value);
+                                }
+                            });
+                    if (option instanceof ConfigModLimit configModLimit) {
+                        optionBuilder.setModLimited(
+                                FabricLoader.getInstance().isModLoaded(configModLimit.getLimitedModId()),
+                                Text.translatable(configModLimit.getTranslationKey())
+                        );
+                    }
+                    if (option instanceof ConfigModIncompatibility configModIncompatibility) {
+                        optionBuilder.setModIncompatibility(
+                                FabricLoader.getInstance().isModLoaded(configModIncompatibility.getIncompatibleModId()),
+                                configModIncompatibility.getMessage()
+                        );
+                    }
+                    if (option.getFlag() == ConfigOptionFlag.REQUIRES_GAME_RESTART) {
+                        optionBuilder.requireRestart();
+                    }
+                    category.addEntry(optionBuilder.build());
+                }
+            }
+        }
     }
 }

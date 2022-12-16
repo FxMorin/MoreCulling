@@ -16,6 +16,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -27,6 +28,7 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
 
+    private static final Random random = Random.createLocal();
     private static final Direction[] DIRECTIONS = Direction.values();
 
     /**
@@ -105,16 +107,41 @@ public class CullingUtils {
         return Optional.of(true);
     }
 
-    public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState,
-                                                        BlockPos sidePos, Direction side) {
+    public static Optional<Boolean> shouldDrawFaceGap(BlockView view, BlockState sideState,
+                                                      BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
-            for (int i = 1; i < MoreCulling.CONFIG.leavesCullingDepth + 1; i++) {
+            for (int i = 1; i < (5 - MoreCulling.CONFIG.leavesCullingAmount); i++) {
                 BlockPos pos = sidePos.offset(side, i);
                 BlockState state = view.getBlockState(pos);
                 if (state == null || !(state.getBlock() instanceof LeavesBlock ||
                         (state.isOpaque() && state.isSideSolidFullSquare(view, pos, side))))
                     return Optional.of(false);
+            }
+        }
+        return Optional.of(true);
+    }
+
+    public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState,
+                                                        BlockPos sidePos, Direction side) {
+        if (sideState.getBlock() instanceof LeavesBlock ||
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+            for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
+                BlockState state = view.getBlockState(sidePos.offset(side, i));
+                if (state == null || state.isAir())
+                    return Optional.of(true);
+            }
+            return Optional.of(false);
+        }
+        return Optional.of(true);
+    }
+
+    public static Optional<Boolean> shouldDrawFaceRandom(BlockView view, BlockState sideState,
+                                                         BlockPos sidePos, Direction side) {
+        if (sideState.getBlock() instanceof LeavesBlock ||
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+            if (random.nextBetween(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
+                return Optional.of(false);
             }
         }
         return Optional.of(true);
@@ -139,6 +166,16 @@ public class CullingUtils {
             };
         }
         return true;
+    }
+
+    public static boolean shouldHideWallSignText(Direction facingDir, Vec3d framePos, Vec3d cameraPos) {
+        return switch (facingDir) {
+            case NORTH -> cameraPos.z > framePos.z;
+            case SOUTH -> cameraPos.z < framePos.z;
+            case WEST -> cameraPos.x > framePos.x;
+            case EAST -> cameraPos.x < framePos.x;
+            default -> false;
+        };
     }
 
     public static BakedModel getBakedModel(BlockState state) {

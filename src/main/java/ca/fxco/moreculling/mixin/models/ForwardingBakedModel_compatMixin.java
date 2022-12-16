@@ -6,11 +6,10 @@ import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.List;
 
 @Restriction(require = @Condition("fabric-renderer-api-v1"))
 @Mixin(ForwardingBakedModel.class)
@@ -20,17 +19,12 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
     protected BakedModel wrapped;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state) {
-        return ((BakedOpacity)wrapped).hasTextureTranslucency(state);
+    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
+        return ((BakedOpacity)wrapped).hasTextureTranslucency(state, direction);
     }
 
     @Override
     public void resetTranslucencyCache() {
         ((BakedOpacity)wrapped).resetTranslucencyCache();
-    }
-
-    @Override
-    public List<BakedModel> getModels() {
-        return List.of(wrapped);
     }
 }
