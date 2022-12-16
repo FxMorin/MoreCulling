@@ -9,7 +9,6 @@ import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
 import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -84,12 +83,12 @@ public class ModMenuConfig implements ModMenuApi {
                 .build());
 
         // Leaves Culling
-        DynamicIntSliderEntry leavesCullingDepth = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingDepth"), 1, 4)
-                .setValue(MoreCulling.CONFIG.leavesCullingDepth)
+        DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingAmount"), 1, 4)
+                .setValue(MoreCulling.CONFIG.leavesCullingAmount)
                 .setDefaultValue(2)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
                 .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.leavesCullingDepth = newValue;
+                    MoreCulling.CONFIG.leavesCullingAmount = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .build();
@@ -102,7 +101,7 @@ public class ModMenuConfig implements ModMenuApi {
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .setChangeConsumer((instance,value) -> {
-                    leavesCullingDepth.setEnabledState(instance.isEnabled() && value == LeavesCullingMode.DEPTH);
+                    leavesCullingAmount.setEnabledState(instance.isEnabled() && value.hasAmount());
                     if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
@@ -203,11 +202,11 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(itemFrame3FaceCullingRange);
 
         generalCategory.addEntry(leavesCullingMode);
-        generalCategory.addEntry(leavesCullingDepth);
+        generalCategory.addEntry(leavesCullingAmount);
         generalCategory.addEntry(includeMangroveRoots);
 
         generalCategory.addEntry(powderSnowCulling);
-        leavesCullingDepth.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
+        leavesCullingAmount.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
 
         compatCategory.addEntry(useOnModdedBlocks);
         for (DynamicBooleanListEntry entry : modsOption) {

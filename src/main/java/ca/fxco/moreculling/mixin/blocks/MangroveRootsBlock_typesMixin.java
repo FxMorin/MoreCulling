@@ -41,7 +41,9 @@ public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCul
                                                   BlockPos thisPos, BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) { // Can't use state culling here
             case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, sidePos, thisPos, side);
+            case GAP -> CullingUtils.shouldDrawFaceGap(view, sideState, sidePos, side);
             case DEPTH -> CullingUtils.shouldDrawFaceDepth(view, sideState, sidePos, side);
+            case RANDOM -> CullingUtils.shouldDrawFaceRandom(view, sideState, sidePos, side);
             default -> Optional.empty();
         };
     }
