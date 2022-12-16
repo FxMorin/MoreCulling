@@ -5,7 +5,6 @@ import ca.fxco.moreculling.api.config.*;
 import ca.fxco.moreculling.api.config.defaults.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.*;
-import ca.fxco.moreculling.utils.CompatUtils;
 import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.options.*;
 import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
@@ -47,14 +46,14 @@ public class SodiumOptionPage {
                 .build();
 
         // Leaves Culling
-        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingDepth = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
-                .setName(Text.translatable("moreculling.config.option.leavesCullingDepth"))
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingDepth.tooltip"))
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingAmount = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.leavesCullingAmount"))
+                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
                 .setControl(option -> new IntSliderControl(option, 1, 4, 1, Text.literal("%d")))
-                .setEnabled(morecullingOpts.getData().leavesCullingMode == LeavesCullingMode.DEPTH)
+                .setEnabled(morecullingOpts.getData().leavesCullingMode.hasAmount())
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .setBinding((opts, value) -> opts.leavesCullingDepth = value, opts -> opts.leavesCullingDepth)
+                .setBinding((opts, value) -> opts.leavesCullingAmount = value, opts -> opts.leavesCullingAmount)
                 .build();
         MoreCullingSodiumOptionImpl<MoreCullingConfig, LeavesCullingMode> leavesCullingMode = MoreCullingSodiumOptionImpl.createBuilder(LeavesCullingMode.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCulling"))
@@ -64,7 +63,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .onChanged((instance, value) -> {
-                    leavesCullingDepth.setAvailable(instance.isAvailable() && value == LeavesCullingMode.DEPTH);
+                    leavesCullingAmount.setAvailable(instance.isAvailable() && value.hasAmount());
                     if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
                         instance.setValue(LeavesCullingMode.CHECK);
                 })
@@ -183,7 +182,7 @@ public class SodiumOptionPage {
 
         groups.add(OptionGroup.createBuilder()
                 .add(leavesCullingMode)
-                .add(leavesCullingDepth)
+                .add(leavesCullingAmount)
                 .add(includeMangroveRoots)
                 .build()
         );
