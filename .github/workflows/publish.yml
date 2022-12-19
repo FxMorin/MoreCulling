@@ -26,8 +26,11 @@ jobs:
           modrinth-files-secondary: build/libs/*-@(sources).jar
           github-files-secondary: build/libs/*-@(dev|sources|api).jar
           curseforge-files-secondary: build/libs/*-@(sources|api).jar
+          game-versions: |
+            1.19.1
+            1.19.2
           version-type: release
-          version-resolver: releases
+          version-resolver: exact
           modrinth-featured: true
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
