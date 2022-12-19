@@ -3,7 +3,6 @@ package ca.fxco.moreculling.utils;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
@@ -45,9 +44,8 @@ public class CullingUtils {
             );
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
-        if (sideState.isOpaque() || (((AbstractBlockAccessor)sideState.getBlock()).getCollidable() &&
+        if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 ((MoreBlockCulling)sideState.getBlock()).canCull() &&
-                !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 ((MoreStateCulling) thisState).shouldAttemptToCull() &&
                 ((MoreStateCulling) sideState).shouldAttemptToCull())) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
