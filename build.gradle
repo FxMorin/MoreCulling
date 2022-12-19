@@ -73,17 +73,19 @@ dependencies {
     include "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
 
     // Fabric Compat
-    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Sodium Compat
     modImplementation "me.jellysquid.mods:sodium-fabric:${project.sodium_version}"
+    // ^ Change to `modCompileOnly` to test without sodium
 
     //ModMenu Compat
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     //AutoConfig
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
     include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    // ^ Comment out to test without fabric api, this will require you to put the cloth-config in the mods folder
 }
 
 processResources {
