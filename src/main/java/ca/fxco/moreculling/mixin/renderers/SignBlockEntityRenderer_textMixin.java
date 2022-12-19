@@ -32,10 +32,8 @@ public class SignBlockEntityRenderer_textMixin {
             locals = LocalCapture.CAPTURE_FAILSOFT,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/block/entity/SignBlockEntityRenderer;renderText(" +
-                            "Lnet/minecraft/block/entity/SignBlockEntity;" +
-                            "Lnet/minecraft/client/util/math/MatrixStack;" +
-                            "Lnet/minecraft/client/render/VertexConsumerProvider;IF)V"
+                    target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V",
+                    ordinal = 0
             ),
             cancellable = true
     )
@@ -47,7 +45,7 @@ public class SignBlockEntityRenderer_textMixin {
             Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
             if (signModel.stick.visible) {
                 double angle = blockState.get(SignBlock.ROTATION) * ONE_SIGN_ROTATION;
-                if (MathUtils.isBehindLine(angle, signBlockEntity.getPos().toCenterPos(), cameraPos)) {
+                if (MathUtils.isBehindLine(angle, Vec3d.ofCenter(signBlockEntity.getPos()), cameraPos)) {
                     matrixStack.pop();
                     ci.cancel();
                 }
@@ -55,9 +53,7 @@ public class SignBlockEntityRenderer_textMixin {
                 Direction dir = blockState.get(WallSignBlock.FACING);
                 if (shouldHideWallSignText(
                         dir,
-                        signBlockEntity
-                                .getPos()
-                                .toCenterPos()
+                        Vec3d.ofCenter(signBlockEntity.getPos())
                                 .subtract(dir.getOffsetX() * 0.39, 0, dir.getOffsetZ() * 0.39),
                         cameraPos
                 )) {

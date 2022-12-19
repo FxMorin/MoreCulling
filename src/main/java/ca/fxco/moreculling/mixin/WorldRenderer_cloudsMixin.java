@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorldRenderer.class)
 public class WorldRenderer_cloudsMixin {
 
-    @Shadow @Nullable private CloudRenderMode lastCloudRenderMode;
+    @Shadow @Nullable private CloudRenderMode lastCloudsRenderMode;
 
     @Inject(
             method = "renderClouds(Lnet/minecraft/client/render/BufferBuilder;" +
@@ -46,7 +46,7 @@ public class WorldRenderer_cloudsMixin {
         RenderSystem.setShader(GameRenderer::getPositionTexColorNormalShader);
         builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
         float ab = (float)Math.floor(y / 4.0) * 4.0F;
-        if (this.lastCloudRenderMode == CloudRenderMode.FANCY) {
+        if (this.lastCloudsRenderMode == CloudRenderMode.FANCY) {
             RenderSystem.enableCull(); // Enable culling
             for(int ac = -3; ac <= 4; ++ac) {
                 for(int ad = -3; ad <= 4; ++ad) {

@@ -30,7 +30,6 @@
     "models.MultipartBakedModel_cacheMixin",
     "models.WeightedBakedModel_cacheMixin",
     "renderers.BlockModelRenderer_cullMixin",
-    "renderers.HangingSignBlockEntityRenderer_textMixin",
     "renderers.ItemRenderer_bakedModelMixin",
     "renderers.SignBlockEntityRenderer_textMixin"
   ],
