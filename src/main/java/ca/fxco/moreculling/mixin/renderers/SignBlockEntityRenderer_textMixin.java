@@ -33,7 +33,8 @@ public class SignBlockEntityRenderer_textMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V",
-                    ordinal = 0
+                    ordinal = 0,
+                    shift = At.Shift.AFTER
             ),
             cancellable = true
     )
@@ -49,7 +50,7 @@ public class SignBlockEntityRenderer_textMixin {
                     matrixStack.pop();
                     ci.cancel();
                 }
-            } else { // wall mounted, faster but looks trash xD
+            } else { // wall mounted
                 Direction dir = blockState.get(WallSignBlock.FACING);
                 if (shouldHideWallSignText(
                         dir,
