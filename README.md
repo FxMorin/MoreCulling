@@ -34,6 +34,10 @@ Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for ex
 * [Blanket](https://github.com/BlanketMC/blanket-client-tweaks) - Client-side tweaks/fixes  
 
 ---
+
+<a href="https://client.kinetichosting.net/aff.php?aff=42"><img alt="Kinetic Hosting" src="https://fxco.ca/assets/Mod_Banner.png"></a>
+
+---
    
 Feel free to contribute to the project!  
 I'm also fine if you use this mod in your modpacks, just make sure to mention it.  
