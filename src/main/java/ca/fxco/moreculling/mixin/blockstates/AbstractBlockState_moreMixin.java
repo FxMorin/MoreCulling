@@ -40,7 +40,17 @@ public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     }
 
     @Override
+    public boolean shouldAttemptToCull(Direction side) {
+        return ((MoreBlockCulling)this.getBlock()).shouldAttemptToCull(this.asBlockState(), side);
+    }
+
+    @Override
     public final boolean cantCullAgainst() {
         return ((MoreBlockCulling)this.getBlock()).cantCullAgainst(this.asBlockState());
+    }
+
+    @Override
+    public final boolean canCull() {
+        return ((MoreBlockCulling)this.getBlock()).canCull();
     }
 }
