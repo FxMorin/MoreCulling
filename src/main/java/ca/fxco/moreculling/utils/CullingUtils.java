@@ -45,9 +45,9 @@ public class CullingUtils {
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
         if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                ((MoreBlockCulling)sideState.getBlock()).canCull() &&
-                ((MoreStateCulling) thisState).shouldAttemptToCull() &&
-                ((MoreStateCulling) sideState).shouldAttemptToCull())) {
+                ((MoreStateCulling) sideState).canCull() &&
+                ((MoreStateCulling) thisState).shouldAttemptToCull(side) &&
+                ((MoreStateCulling) sideState).shouldAttemptToCull(side.getOpposite()))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
