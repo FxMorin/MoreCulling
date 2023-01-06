@@ -3,6 +3,7 @@ package ca.fxco.moreculling.utils;
 import net.minecraft.util.math.Direction;
 
 // A faster replacement for Set<Direction>
+// TODO: Add static methods to work with containers not using DirectionBits
 public class DirectionBits {
 
     public static final byte ALL_DIRECTIONS = 63;
