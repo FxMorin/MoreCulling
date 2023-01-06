@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import ca.fxco.moreculling.utils.DirectionBits;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
@@ -29,36 +30,32 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     protected Map<Direction, List<BakedQuad>> faceQuads; // cullface quads
 
     @Unique
-    private final Set<Direction> translucentFaces = new HashSet<>(); //TODO: Make bitset
+    private final DirectionBits solidFaces = new DirectionBits();
 
     @Override
     public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        if (translucentFaces.size() > 0) {
-            return direction == null || translucentFaces.contains(direction);
+        if (direction == null) {
+            return solidFaces.notFull();
         }
-        return false;
+        return !solidFaces.contains(direction);
     }
 
     @Override
     public void resetTranslucencyCache() {
-        translucentFaces.clear();
+        solidFaces.clear();
         for (Map.Entry<Direction, List<BakedQuad>> entry : faceQuads.entrySet()) {
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
             if (layeredQuads.size() > 0) {
                 SpriteOpacity opacity = ((SpriteOpacity) layeredQuads.remove(0).getSprite());
-                if (opacity.hasTranslucency()) {
-                    translucentFaces.add(entry.getKey());
-                } else {
+                if (!opacity.hasTranslucency()) {
                     List<NativeImage> overlappingImages = new ArrayList<>();
                     for (BakedQuad quad : layeredQuads) {
                         overlappingImages.add(((SpriteOpacity) quad.getSprite()).getUnmipmappedImage());
                     }
-                    if (opacity.hasTranslucency(overlappingImages)) {
-                        translucentFaces.add(entry.getKey());
+                    if (!opacity.hasTranslucency(overlappingImages)) {
+                        solidFaces.add(entry.getKey());
                     }
                 }
-            } else {
-                translucentFaces.add(entry.getKey());
             }
         }
     }
