@@ -1,7 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
@@ -20,61 +19,46 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(BasicBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final
-    protected Sprite sprite;
-
-    @Shadow
-    @Final
-    protected List<BakedQuad> quads;
-
-    @Shadow
-    @Final
-    protected Map<Direction, List<BakedQuad>> faceQuads;
+    protected Map<Direction, List<BakedQuad>> faceQuads; // cullface quads
 
     @Unique
-    private boolean hasTranslucency;
+    private final Set<Direction> translucentFaces = new HashSet<>(); //TODO: Make bitset
 
     @Override
     public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        if (hasTranslucency) {
-            if (direction != null) {
-                return ((QuadOpacity)this.faceQuads.get(direction)).getTextureTranslucency();
-            }
-            return true;
+        if (translucentFaces.size() > 0) {
+            return direction == null || translucentFaces.contains(direction);
         }
         return false;
     }
 
     @Override
     public void resetTranslucencyCache() {
-        hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
-        if (!hasTranslucency) {
-            List<NativeImage> quadNatives = null;
-            for (BakedQuad quad : quads) {
-                if (((QuadOpacity)quad).getTextureTranslucency()) {
-                    if (quadNatives == null) { // make list of all faces sprites that could be overlapped
-                        quadNatives = new ArrayList<>();
-                        for (BakedQuad quad2 : quads) {
-                            quadNatives.add(((SpriteOpacity) quad2.getSprite()).getUnmipmappedImage());
-                        }
+        translucentFaces.clear();
+        for (Map.Entry<Direction, List<BakedQuad>> entry : faceQuads.entrySet()) {
+            List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
+            if (layeredQuads.size() > 0) {
+                SpriteOpacity opacity = ((SpriteOpacity) layeredQuads.remove(0).getSprite());
+                if (opacity.hasTranslucency()) {
+                    translucentFaces.add(entry.getKey());
+                } else {
+                    List<NativeImage> overlappingImages = new ArrayList<>();
+                    for (BakedQuad quad : layeredQuads) {
+                        overlappingImages.add(((SpriteOpacity) quad.getSprite()).getUnmipmappedImage());
                     }
-                    for (List<BakedQuad> bakedList : faceQuads.values()) { // Test
-                        for (BakedQuad baked : bakedList) {
-                            if (((SpriteOpacity)baked.getSprite()).hasTranslucency(quadNatives)) {
-                                hasTranslucency = true;
-                                return;
-                            }
-                        }
+                    if (opacity.hasTranslucency(overlappingImages)) {
+                        translucentFaces.add(entry.getKey());
                     }
                 }
+            } else {
+                translucentFaces.add(entry.getKey());
             }
         }
     }
