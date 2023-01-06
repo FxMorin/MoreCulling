@@ -107,14 +107,16 @@ public class CullingUtils {
 
     public static Optional<Boolean> shouldDrawFaceGap(BlockView view, BlockState sideState,
                                                       BlockPos sidePos, Direction side) {
+        Direction oppositeSide = side.getOpposite();
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, oppositeSide))) {
             for (int i = 1; i < (5 - MoreCulling.CONFIG.leavesCullingAmount); i++) {
                 BlockPos pos = sidePos.offset(side, i);
                 BlockState state = view.getBlockState(pos);
                 if (state == null || !(state.getBlock() instanceof LeavesBlock ||
-                        (state.isOpaque() && state.isSideSolidFullSquare(view, pos, side))))
+                        (state.isOpaque() && state.isSideSolidFullSquare(view, pos, oppositeSide)))) {
                     return Optional.of(false);
+                }
             }
         }
         return Optional.of(true);
@@ -123,7 +125,7 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState,
                                                         BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
                 BlockState state = view.getBlockState(sidePos.offset(side, i));
                 if (state == null || state.isAir())
@@ -137,7 +139,7 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceRandom(BlockView view, BlockState sideState,
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
             if (random.nextBetween(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }
