@@ -37,9 +37,25 @@ public interface MoreStateCulling {
     boolean shouldAttemptToCull();
 
     /**
+     * This method allows you to check if a state should be allowed cull
+     * By default, it returns true if the states model does not have translucency.
+     * Allows you to pass the side to check against
+     * @since 0.13.0
+     */
+    boolean shouldAttemptToCull(Direction side);
+
+    /**
      * This method allows you to check if a state should be allowed to be culled against.
      * By default, it returns `state.isIn(DONT_CULL)`
      * @since 0.8.0
      */
     boolean cantCullAgainst();
+
+    /**
+     * This returns true if the mod that the block is from allows culling in the config.
+     * @since 0.13.0
+     */
+    default boolean canCull() {
+        return false;
+    }
 }
