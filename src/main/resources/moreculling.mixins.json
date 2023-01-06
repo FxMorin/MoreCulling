@@ -14,6 +14,7 @@
     "accessors.BlockModelsAccessor",
     "accessors.SpriteContentsAccessor",
     "blocks.ChorusFlowerBlock_voxelMixin",
+    "blocks.FletchingTableBlock_devMixin",
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
     "blocks.PowderSnowBlock_cullMixin",
