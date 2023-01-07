@@ -26,21 +26,19 @@ public class PowderSnowBlock_cullMixin extends Block implements MoreBlockCulling
 
     @Override
     public boolean usesCustomShouldDrawFace(BlockState state) {
-        return true; //Normal powered snow culling will skip this check
+        return MoreCulling.CONFIG.powderSnowCulling; //Normal powered snow culling will skip this check
     }
 
     @Override
     public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
                                                   BlockPos thisPos, BlockPos sidePos, Direction side) {
-        return MoreCulling.CONFIG.powderSnowCulling ?
-                Optional.of(!(sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) :
-                Optional.of(true);
+        return Optional.of(!(sideState.isOpaque() &&
+                sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite())));
     }
 
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
-        return MoreCulling.CONFIG.powderSnowCulling &&
-                !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+        return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
 
     @Override

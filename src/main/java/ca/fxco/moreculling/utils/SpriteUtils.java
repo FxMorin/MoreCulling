@@ -36,12 +36,20 @@ public class SpriteUtils {
             int width = image.getWidth();
             for (int y = 0; y < image.getHeight(); ++y) {
                 for (int x = 0; x < width; ++x) {
-                    if (image.getOpacity(x, y) != -1) {
+                    if (image.getOpacity(x, y) != -1) { //translucent
                         if (orMatch != null) {
-                            for (NativeImage nativeImage : orMatch)
+                            boolean success = false;
+                            for (NativeImage nativeImage : orMatch) {
                                 if (x <= nativeImage.getWidth() && y <= nativeImage.getHeight() &&
-                                        nativeImage.getOpacity(x, y) != -1)
-                                    return true;
+                                        nativeImage.getOpacity(x, y) == -1) { // not translucent
+                                    success = true;
+                                    break;
+                                }
+                            }
+                            if (success) {
+                                continue; // Found a none translucent pixel
+                            }
+                            return true;
                         } else {
                             return true;
                         }

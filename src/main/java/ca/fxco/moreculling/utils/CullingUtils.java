@@ -3,7 +3,6 @@ package ca.fxco.moreculling.utils;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.mixin.accessors.AbstractBlockAccessor;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
@@ -45,11 +44,10 @@ public class CullingUtils {
             );
             if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
         }
-        if (sideState.isOpaque() || (((AbstractBlockAccessor)sideState.getBlock()).getCollidable() &&
-                ((MoreBlockCulling)sideState.getBlock()).canCull() &&
-                !sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                ((MoreStateCulling) thisState).shouldAttemptToCull() &&
-                ((MoreStateCulling) sideState).shouldAttemptToCull())) {
+        if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
+                ((MoreStateCulling) sideState).canCull() &&
+                ((MoreStateCulling) thisState).shouldAttemptToCull(side) &&
+                ((MoreStateCulling) sideState).shouldAttemptToCull(side.getOpposite()))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
@@ -109,14 +107,16 @@ public class CullingUtils {
 
     public static Optional<Boolean> shouldDrawFaceGap(BlockView view, BlockState sideState,
                                                       BlockPos sidePos, Direction side) {
+        Direction oppositeSide = side.getOpposite();
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, oppositeSide))) {
             for (int i = 1; i < (5 - MoreCulling.CONFIG.leavesCullingAmount); i++) {
                 BlockPos pos = sidePos.offset(side, i);
                 BlockState state = view.getBlockState(pos);
                 if (state == null || !(state.getBlock() instanceof LeavesBlock ||
-                        (state.isOpaque() && state.isSideSolidFullSquare(view, pos, side))))
+                        (state.isOpaque() && state.isSideSolidFullSquare(view, pos, oppositeSide)))) {
                     return Optional.of(false);
+                }
             }
         }
         return Optional.of(true);
@@ -125,7 +125,7 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceDepth(BlockView view, BlockState sideState,
                                                         BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
                 BlockState state = view.getBlockState(sidePos.offset(side, i));
                 if (state == null || state.isAir())
@@ -139,7 +139,7 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceRandom(BlockView view, BlockState sideState,
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
+                (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
             if (random.nextBetween(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }

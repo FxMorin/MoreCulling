@@ -44,6 +44,18 @@ public interface MoreBlockCulling {
     }
 
     /**
+     * This method allows you to specify if this block should be allowed to cull.
+     * By default, it returns true if the blocks model does not have translucency
+     * This is not used if blocks are opaque.
+     * Allows you to pass the side to check against
+     * @since 0.13.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default boolean shouldAttemptToCull(BlockState stat, Direction side) {
+        return false;
+    }
+
+    /**
      * This method allows you to specify if this block should be allowed to be culled against.
      * By default, it returns `state.isIn(DONT_CULL)`
      * @since 0.8.0
@@ -54,7 +66,7 @@ public interface MoreBlockCulling {
     }
 
     /**
-     * This method should not be overriden unless absolutely needed. It will return true if this block can be culled.
+     * This method should not be overridden unless absolutely needed. It will return true if this block can be culled.
      * This returns true if the mod that the block is from allows culling in the config.
      * @since 0.10.0
      */
