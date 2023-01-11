@@ -34,6 +34,7 @@ public interface MoreStateCulling {
      * By default, it returns true if the states model does not have translucency
      * @since 0.8.0
      */
+    @Deprecated
     boolean shouldAttemptToCull();
 
     /**
@@ -49,7 +50,15 @@ public interface MoreStateCulling {
      * By default, it returns `state.isIn(DONT_CULL)`
      * @since 0.8.0
      */
+    @Deprecated
     boolean cantCullAgainst();
+
+    /**
+     * This method allows you to check if a state should be allowed to be culled against.
+     * By default, it returns `state.isIn(DONT_CULL)`
+     * @since 0.14.0
+     */
+    boolean cantCullAgainst(Direction side);
 
     /**
      * This returns true if the mod that the block is from allows culling in the config.
