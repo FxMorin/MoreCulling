@@ -7,6 +7,8 @@
 	"moreculling.config.option.cloudCulling.tooltip": "Changing the opengl winding order to apply face culling",
 	"moreculling.config.option.signTextCulling": "Sign Text Culling",
 	"moreculling.config.option.signTextCulling.tooltip": "Culls sign text so that it wont render when you can't see it in some cases",
+	"moreculling.config.option.entityModelCulling": "Entity Model Culling",
+	"moreculling.config.option.entityModelCulling.tooltip": "This only helps if your gpu is the bottleneck and your cpu has some performance to spare!",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",
