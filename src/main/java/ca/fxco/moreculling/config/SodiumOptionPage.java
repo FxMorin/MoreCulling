@@ -45,6 +45,15 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.signTextCulling = value, opts -> opts.signTextCulling)
                 .build();
 
+        // Entity Model Culling - Does not work with sodium (sodium is faster)
+        /*MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> entityModelCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.entityModelCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.entityModelCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.VARIES)
+                .setBinding((opts, value) -> opts.entityModelCulling = value, opts -> opts.entityModelCulling)
+                .build();*/
+
         // Leaves Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingAmount = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingAmount"))

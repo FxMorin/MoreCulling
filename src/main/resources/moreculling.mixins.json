@@ -23,6 +23,7 @@
     "blockstates.Block_drawSideMixin",
     "blockstates.MinecraftClient_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
+    "entities.Cuboid_cullMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
