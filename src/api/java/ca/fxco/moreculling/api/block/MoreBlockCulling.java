@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -38,6 +39,7 @@ public interface MoreBlockCulling {
      * This is not used if blocks are opaque
      * @since 0.8.0
      */
+    @Deprecated
     // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
     default boolean shouldAttemptToCull(BlockState state) {
         return false;
@@ -51,7 +53,7 @@ public interface MoreBlockCulling {
      * @since 0.13.0
      */
     // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
-    default boolean shouldAttemptToCull(BlockState stat, Direction side) {
+    default boolean shouldAttemptToCull(BlockState state, @Nullable Direction side) {
         return false;
     }
 
@@ -60,8 +62,20 @@ public interface MoreBlockCulling {
      * By default, it returns `state.isIn(DONT_CULL)`
      * @since 0.8.0
      */
+    @Deprecated
     // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
     default boolean cantCullAgainst(BlockState state) {
+        return false;
+    }
+
+    /**
+     * This method allows you to specify if this block should be allowed to be culled against.
+     * By default, it returns `state.isIn(DONT_CULL)`
+     * Allows you to pass the side to check against
+     * @since 0.14.0
+     */
+    // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
+    default boolean cantCullAgainst(BlockState state, @Nullable Direction side) {
         return false;
     }
 
