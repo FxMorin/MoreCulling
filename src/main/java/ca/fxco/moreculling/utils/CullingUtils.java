@@ -58,7 +58,7 @@ public class CullingUtils {
      */
     private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
                                           BlockPos thisPos, BlockPos sidePos, Direction side) {
-        if (((MoreStateCulling)sideState).cantCullAgainst()) return true; // Check if we can cull against this block
+        if (((MoreStateCulling)sideState).cantCullAgainst(side)) return true; // Check if we can cull against this block
         Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);
         Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(neighborGroup);

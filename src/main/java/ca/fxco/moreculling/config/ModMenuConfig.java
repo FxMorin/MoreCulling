@@ -9,6 +9,7 @@ import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
 import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
+import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -80,6 +81,15 @@ public class ModMenuConfig implements ModMenuApi {
                 .setDefaultValue(true)
                 .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.signTextCulling = newValue)
+                .build());
+
+        // Entity Model Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.entityModelCulling"))
+                .setValue(MoreCulling.CONFIG.entityModelCulling)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.entityModelCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.entityModelCulling = newValue)
+                .setModIncompatibility(CompatUtils.IS_SODIUM_LOADED, "sodium")
                 .build());
 
         // Leaves Culling

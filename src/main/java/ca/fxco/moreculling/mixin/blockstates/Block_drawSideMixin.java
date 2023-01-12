@@ -29,6 +29,11 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     }
 
     @Override
+    public boolean cantCullAgainst(BlockState state, Direction side) {
+        return state.isIn(DONT_CULL);
+    }
+
+    @Override
     public boolean shouldAttemptToCull(BlockState state) {
         return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
