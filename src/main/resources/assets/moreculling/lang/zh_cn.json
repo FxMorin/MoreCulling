@@ -7,6 +7,8 @@
 	"moreculling.config.option.cloudCulling.tooltip": "更改opengl环绕顺序以应用面剔除",
 	"moreculling.config.option.signTextCulling": "告示牌文字剔除",
 	"moreculling.config.option.signTextCulling.tooltip": "剔除告示牌文本，在某些情况下当你看不到它时，它就不会渲染",
+	"moreculling.config.option.entityModelCulling": "实体模型剔除",
+	"moreculling.config.option.entityModelCulling.tooltip": "这只有在你的gpu是瓶颈并且你的cpu有剩余性能的情况下才有帮助！",
 	"moreculling.config.option.blockStateCulling": "方块状态剔除",
 	"moreculling.config.option.blockStateCulling.tooltip": "启用激进的方块状态剔除",
 	"moreculling.config.option.customItemFrameRenderer": "自定义物品展示框渲染器",
