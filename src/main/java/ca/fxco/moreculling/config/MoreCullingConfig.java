@@ -37,8 +37,6 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean powderSnowCulling = true;
 
-    public boolean entityModelCulling = false;
-
     public boolean useOnModdedBlocksByDefault = true;
 
     public Object2BooleanOpenHashMap<String> modCompatibility = new Object2BooleanOpenHashMap<>() {{
