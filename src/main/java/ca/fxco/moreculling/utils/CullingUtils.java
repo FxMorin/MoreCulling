@@ -1,7 +1,6 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
@@ -22,10 +21,12 @@ import net.minecraft.world.BlockView;
 
 import java.util.Optional;
 
-import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
+import static ca.fxco.moreculling.MoreCulling.bakedModelManager;
 import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
+
+    public static ThreadLocal<VoxelShape> VOXEL_SHAPE_STORE = ThreadLocal.withInitial(() -> null);
 
     private static final Random random = Random.createLocal();
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -179,7 +180,7 @@ public class CullingUtils {
     }
 
     public static BakedModel getBakedModel(BlockState state) {
-        return blockRenderManager.getModel(state);
+        return bakedModelManager.getBlockModels().getModel(state);
     }
 
     public static BakedOpacity getBakedOpacity(BlockState state) {
