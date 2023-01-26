@@ -3,6 +3,7 @@ package ca.fxco.moreculling.api.model;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -61,6 +62,16 @@ public interface BakedOpacity {
      */
     @Deprecated
     default @Nullable List<BakedModel> getModels() {
+        return null;
+    }
+
+    /**
+     * Gets the VoxelShape culling shape for the baked model.
+     * Returns null unless its set within the model json `cullshapes`
+     * WeightedBakedModels cannot use this as we cannot determine which model will be used
+     * @since 0.15.0
+     */
+    default @Nullable VoxelShape getCullingShape(BlockState state) {
         return null;
     }
 }

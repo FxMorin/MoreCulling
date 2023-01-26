@@ -7,7 +7,7 @@
   "client": [
     "BakedQuad_cacheMixin",
     "MapState_cacheMixin",
-    "MinecraftClient_blockRenderManagerMixin",
+    "MinecraftClient_managersMixin",
     "Sprite_opacityMixin",
     "WorldRenderer_cloudsMixin",
     "accessors.AbstractBlockAccessor",
@@ -30,6 +30,9 @@
     "models.ForwardingBakedModel_compatMixin",
     "models.MultipartBakedModel_cacheMixin",
     "models.WeightedBakedModel_cacheMixin",
+    "models.cullshape.Deserializer_cullShapeMixin",
+    "models.cullshape.JsonUnbakedModel_cullShapeMixin",
+    "models.cullshape.ShapeCache_cullShapeMixin",
     "renderers.BlockModelRenderer_cullMixin",
     "renderers.ItemRenderer_bakedModelMixin",
     "renderers.SignBlockEntityRenderer_textMixin"

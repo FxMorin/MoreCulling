@@ -11,6 +11,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static ca.fxco.moreculling.utils.CullingUtils.VOXEL_SHAPE_STORE;
+
 @Mixin(BasicBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
@@ -31,13 +34,12 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
     @Unique
     private final DirectionBits solidFaces = new DirectionBits();
+    @Unique
+    private @Nullable VoxelShape cullVoxelShape;
 
     @Override
     public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        if (direction == null) {
-            return solidFaces.notFull();
-        }
-        return !solidFaces.contains(direction);
+        return direction == null ? solidFaces.notFull() : !solidFaces.contains(direction);
     }
 
     @Override
@@ -60,6 +62,11 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
         }
     }
 
+    @Override
+    public @Nullable VoxelShape getCullingShape(BlockState state) {
+        return this.cullVoxelShape;
+    }
+
     @Inject(
             method = "<init>",
             at = @At("RETURN")
@@ -67,6 +74,8 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     private void onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
                         boolean isSideLit, boolean hasDepth, Sprite sprite, ModelTransformation transformation,
                         ModelOverrideList itemPropertyOverrides, CallbackInfo ci) {
+        this.cullVoxelShape = VOXEL_SHAPE_STORE.get();
+        VOXEL_SHAPE_STORE.set(null);
         resetTranslucencyCache();
     }
 }

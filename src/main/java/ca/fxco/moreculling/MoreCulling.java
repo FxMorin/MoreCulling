@@ -6,17 +6,16 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MoreCulling implements ClientModInitializer {
 
+    public static BakedModelManager bakedModelManager = null;
     public static BlockRenderManager blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
