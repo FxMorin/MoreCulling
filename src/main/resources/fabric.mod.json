@@ -33,13 +33,9 @@
     "java": ">=17",
     "cloth-config": ">=9.0.94"
   },
-  "recommends": {
-    "memoryleakfix": "*"
-  },
   "suggests": {
     "memoryleakfix": "*",
-    "sodium": ">=0.4.5",
-    "lithium": ">=0.8.0"
+    "morecullingextra": ">=0.4.5"
   },
   "conflicts": {
     "cull-less-leaves": "*"
