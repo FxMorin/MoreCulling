@@ -10,9 +10,11 @@ import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.render.model.json.ModelElement;
+import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import static ca.fxco.moreculling.utils.CullingUtils.VOXEL_SHAPE_STORE;
@@ -67,6 +70,11 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         return this.useModelShape;
     }
 
+    @Override
+    public ModelElementFace modifyElementFace(ModelElementFace elementFace) {
+        return elementFace;
+    }
+
     @Redirect(
             method = "<clinit>",
             at = @At(
@@ -76,6 +84,20 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     )
     private static Gson registerCustomTypeAdapter(GsonBuilder builder) {
         return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
+    }
+
+    @Redirect(
+            method = "bake(Lnet/minecraft/client/render/model/Baker;" +
+                    "Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;" +
+                    "Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)" +
+                    "Lnet/minecraft/client/render/model/BakedModel;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
+            )
+    )
+    private Object overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
+        return modifyElementFace(map.get((Direction)direction));
     }
 
     @Inject(

@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.api.model;
 
+import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -34,4 +35,11 @@ public interface ExtendedUnbakedModel {
      * @since 0.15.0
      */
     boolean getUseModelShape(Identifier id);
+
+    /**
+     * ModelElementFace is just final's, that should not change. However you can create a new ModelElementFace or wrap
+     * it. Do this to modify the element face data.
+     * @since 0.15.0
+     */
+    ModelElementFace modifyElementFace(ModelElementFace elementFace);
 }
