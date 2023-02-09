@@ -10,6 +10,7 @@
     "MinecraftClient_managersMixin",
     "Sprite_opacityMixin",
     "WorldRenderer_cloudsMixin",
+    "WorldRenderer_rainMixin",
     "accessors.AbstractBlockAccessor",
     "accessors.BlockModelsAccessor",
     "accessors.SpriteContentsAccessor",

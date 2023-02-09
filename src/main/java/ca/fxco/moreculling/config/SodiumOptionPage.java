@@ -36,7 +36,7 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
 
-        //Sign Text Culling
+        // Sign Text Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> signTextCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.signTextCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
@@ -53,6 +53,15 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.VARIES)
                 .setBinding((opts, value) -> opts.entityModelCulling = value, opts -> opts.entityModelCulling)
                 .build();*/
+
+        // Rain/Snow Culling
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> rainCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.rainCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.rainCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.rainCulling = value, opts -> opts.rainCulling)
+                .build();
 
         // Leaves Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingAmount = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)

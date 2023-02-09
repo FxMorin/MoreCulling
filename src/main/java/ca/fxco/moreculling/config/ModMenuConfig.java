@@ -92,6 +92,14 @@ public class ModMenuConfig implements ModMenuApi {
                 .setModIncompatibility(CompatUtils.IS_SODIUM_LOADED, "sodium")
                 .build());
 
+        // Rain/Snow Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.rainCulling"))
+                .setValue(MoreCulling.CONFIG.rainCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.rainCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.rainCulling = newValue)
+                .build());
+
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingAmount"), 1, 4)
                 .setValue(MoreCulling.CONFIG.leavesCullingAmount)
