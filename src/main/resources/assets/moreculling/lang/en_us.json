@@ -7,6 +7,8 @@
 	"moreculling.config.option.cloudCulling.tooltip": "Changing the opengl winding order to apply face culling",
 	"moreculling.config.option.signTextCulling": "Sign Text Culling",
 	"moreculling.config.option.signTextCulling.tooltip": "Culls sign text so that it wont render when you can't see it in some cases",
+	"moreculling.config.option.rainCulling": "Rain/Snow Culling",
+	"moreculling.config.option.rainCulling.tooltip": "Does frustum culling on Rain/Snow",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",

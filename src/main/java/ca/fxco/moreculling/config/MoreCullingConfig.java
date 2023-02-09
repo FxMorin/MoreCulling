@@ -15,6 +15,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean signTextCulling = true;
 
+    public boolean rainCulling = true;
+
     public boolean useBlockStateCulling = true;
 
     public boolean useCustomItemFrameRenderer = true;

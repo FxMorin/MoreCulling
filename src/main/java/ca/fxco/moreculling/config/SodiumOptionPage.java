@@ -36,13 +36,22 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
 
-        //Sign Text Culling
+        // Sign Text Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> signTextCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.signTextCulling"))
                 .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
                 .setControl(TickBoxControl::new)
                 .setImpact(OptionImpact.HIGH)
                 .setBinding((opts, value) -> opts.signTextCulling = value, opts -> opts.signTextCulling)
+                .build();
+
+        // Rain/Snow Culling
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> rainCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.rainCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.rainCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.rainCulling = value, opts -> opts.rainCulling)
                 .build();
 
         // Leaves Culling
@@ -155,6 +164,7 @@ public class SodiumOptionPage {
         groups.add(OptionGroup.createBuilder()
                 .add(cloudCulling)
                 .add(signTextCulling)
+                .add(rainCulling)
                 .add(blockStateCulling)
                 .build()
         );
