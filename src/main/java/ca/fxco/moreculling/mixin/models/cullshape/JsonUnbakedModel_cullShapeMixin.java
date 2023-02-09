@@ -107,7 +107,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
             if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
-                    VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                    VoxelShape shape = Block.createCuboidShape(e.from.getX(), e.from.getY(), e.from.getZ(), e.to.getX(), e.to.getY(), e.to.getZ());
                     voxelShape = VoxelShapes.union(voxelShape, shape);
                 }
                 VOXEL_SHAPE_STORE.set(voxelShape);

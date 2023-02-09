@@ -4,17 +4,17 @@ import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.JsonHelper;
-import org.joml.Vector3f;
+import net.minecraft.util.math.Vec3f;
 
 import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
 public class CullShapeElement {
 
-    public final Vector3f from;
-    public final Vector3f to;
+    public final Vec3f from;
+    public final Vec3f to;
 
-    public CullShapeElement(Vector3f from, Vector3f to) {
+    public CullShapeElement(Vec3f from, Vec3f to) {
         this.from = from;
         this.to = to;
     }
@@ -27,32 +27,32 @@ public class CullShapeElement {
         public CullShapeElement deserialize(JsonElement jsonElement, Type type,
                                             JsonDeserializationContext jsonContext) throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            Vector3f vector3f = this.deserializeFrom(jsonObject);
-            Vector3f vector3f2 = this.deserializeTo(jsonObject);
+            Vec3f vector3f = this.deserializeFrom(jsonObject);
+            Vec3f vector3f2 = this.deserializeTo(jsonObject);
             return new CullShapeElement(vector3f, vector3f2);
         }
 
-        private Vector3f deserializeTo(JsonObject object) {
-            Vector3f vec3f = this.deserializeVec3f(object, "to");
-            if (!(vec3f.x() < -16.0F) && !(vec3f.y() < -16.0F) && !(vec3f.z() < -16.0F) &&
-                    !(vec3f.x() > 32.0F) && !(vec3f.y() > 32.0F) && !(vec3f.z() > 32.0F)) {
+        private Vec3f deserializeTo(JsonObject object) {
+            Vec3f vec3f = this.deserializeVec3f(object, "to");
+            if (!(vec3f.getX() < -16.0F) && !(vec3f.getY() < -16.0F) && !(vec3f.getZ() < -16.0F) &&
+                    !(vec3f.getX() > 32.0F) && !(vec3f.getY() > 32.0F) && !(vec3f.getZ() > 32.0F)) {
                 return vec3f;
             } else {
                 throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vec3f);
             }
         }
 
-        private Vector3f deserializeFrom(JsonObject object) {
-            Vector3f vec3f = this.deserializeVec3f(object, "from");
-            if (!(vec3f.x() < -16.0F) && !(vec3f.y() < -16.0F) && !(vec3f.z() < -16.0F) &&
-                    !(vec3f.x() > 32.0F) && !(vec3f.y() > 32.0F) && !(vec3f.z() > 32.0F)) {
+        private Vec3f deserializeFrom(JsonObject object) {
+            Vec3f vec3f = this.deserializeVec3f(object, "from");
+            if (!(vec3f.getX() < -16.0F) && !(vec3f.getY() < -16.0F) && !(vec3f.getZ() < -16.0F) &&
+                    !(vec3f.getX() > 32.0F) && !(vec3f.getY() > 32.0F) && !(vec3f.getZ() > 32.0F)) {
                 return vec3f;
             } else {
                 throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vec3f);
             }
         }
 
-        private Vector3f deserializeVec3f(JsonObject object, String name) {
+        private Vec3f deserializeVec3f(JsonObject object, String name) {
             JsonArray jsonArray = JsonHelper.getArray(object, name);
             if (jsonArray.size() != 3) {
                 throw new JsonParseException("Expected 3 " + name + " values, found: " + jsonArray.size());
@@ -63,7 +63,7 @@ public class CullShapeElement {
                     fs[i] = JsonHelper.asFloat(jsonArray.get(i), name + "[" + i + "]");
                 }
 
-                return new Vector3f(fs[0], fs[1], fs[2]);
+                return new Vec3f(fs[0], fs[1], fs[2]);
             }
         }
     }
