@@ -173,6 +173,7 @@ public class SodiumOptionPage {
         groups.add(OptionGroup.createBuilder()
                 .add(cloudCulling)
                 .add(signTextCulling)
+                .add(rainCulling)
                 .add(blockStateCulling)
                 .build()
         );
