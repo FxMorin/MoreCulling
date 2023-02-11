@@ -8,7 +8,7 @@
 	"moreculling.config.option.signTextCulling": "告示牌文字剔除",
 	"moreculling.config.option.signTextCulling.tooltip": "剔除告示牌文本，在某些情况下当你看不到它时，它就不会渲染",
 	"moreculling.config.option.rainCulling": "雨雪剔除",
-	"moreculling.config.option.rainCulling.tooltip": "启用视景外的雨雪剔除",
+	"moreculling.config.option.rainCulling.tooltip": "启用视景内的雨雪剔除",
 	"moreculling.config.option.entityModelCulling": "实体模型剔除",
 	"moreculling.config.option.entityModelCulling.tooltip": "这只有在GPU瓶颈并且CPU有剩余性能的情况下才有帮助！",
 	"moreculling.config.option.blockStateCulling": "方块状态剔除",
