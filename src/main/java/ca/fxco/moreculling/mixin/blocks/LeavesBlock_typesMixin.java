@@ -66,4 +66,9 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
         return CullingUtils.areLeavesOpaque() &&
                 !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
+
+    @Override
+    public boolean cantCullAgainst(BlockState state, Direction side) {
+        return false;
+    }
 }
