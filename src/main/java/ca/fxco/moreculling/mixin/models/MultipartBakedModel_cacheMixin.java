@@ -56,9 +56,10 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
                 VoxelShape shape = ((BakedOpacity)pair.getRight()).getCullingShape(state);
                 if (shape != null) {
                     if (cachedShape == null) {
-                        cachedShape = VoxelShapes.empty();
+                        cachedShape = shape;
+                    } else {
+                        cachedShape = VoxelShapes.union(cachedShape, shape);
                     }
-                    cachedShape = VoxelShapes.union(cachedShape, shape);
                 }
             }
         }
