@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.models.cullshape;
 
+import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
@@ -40,7 +41,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     private List<CullShapeElement> cullShapeElements = null;
 
     @Unique
-    private boolean useModelShape = false;
+    private boolean useModelShape = true;
 
     @Override
     public void setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
@@ -89,7 +90,11 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     private void onBake(ModelLoader loader, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter,
                         ModelBakeSettings settings, Identifier id, boolean hasDepth,
                         CallbackInfoReturnable<BakedModel> cir) {
-        BakedOpacity bakedOpacity = (BakedOpacity)cir.getReturnValue();
+        BakedModel bakedModel = cir.getReturnValue();
+        if (bakedModel == null) {
+            return;
+        }
+        BakedOpacity bakedOpacity = (BakedOpacity) bakedModel;
         if (!bakedOpacity.canSetCullingShape()) {
             return;
         }
