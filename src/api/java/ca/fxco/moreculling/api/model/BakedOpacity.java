@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -73,5 +74,21 @@ public interface BakedOpacity {
      */
     default @Nullable VoxelShape getCullingShape(BlockState state) {
         return null;
+    }
+
+    /**
+     * Used to set the culling shape of the baked model
+     * @since 0.17.0
+     */
+    @ApiStatus.Internal
+    default void setCullingShape(@Nullable VoxelShape cullingShape) {}
+
+    /**
+     * Tells you if this model supports setting the culling shape
+     * @since 0.17.0
+     */
+    @ApiStatus.Internal
+    default boolean canSetCullingShape() {
+        return false;
     }
 }

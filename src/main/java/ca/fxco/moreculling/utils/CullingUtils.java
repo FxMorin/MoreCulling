@@ -26,8 +26,6 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
 
-    public static ThreadLocal<VoxelShape> VOXEL_SHAPE_STORE = ThreadLocal.withInitial(() -> null);
-
     private static final Random random = Random.createLocal();
     private static final Direction[] DIRECTIONS = Direction.values();
 
