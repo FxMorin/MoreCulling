@@ -1,7 +1,4 @@
 {
   "replace": false,
-  "values": [
-    "#minecraft:leaves",
-    "#minecraft:doors"
-  ]
+  "values": []
 }
