@@ -23,8 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-import static ca.fxco.moreculling.utils.CullingUtils.VOXEL_SHAPE_STORE;
-
 @Mixin(BasicBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
@@ -67,6 +65,16 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
         return this.cullVoxelShape;
     }
 
+    @Override
+    public void setCullingShape(VoxelShape cullingShape) {
+        this.cullVoxelShape = cullingShape;
+    }
+
+    @Override
+    public boolean canSetCullingShape() {
+        return true;
+    }
+
     @Inject(
             method = "<init>",
             at = @At("RETURN")
@@ -74,8 +82,6 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     private void onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
                         boolean isSideLit, boolean hasDepth, Sprite sprite, ModelTransformation transformation,
                         ModelOverrideList itemPropertyOverrides, CallbackInfo ci) {
-        this.cullVoxelShape = VOXEL_SHAPE_STORE.get();
-        VOXEL_SHAPE_STORE.set(null);
         resetTranslucencyCache();
     }
 }

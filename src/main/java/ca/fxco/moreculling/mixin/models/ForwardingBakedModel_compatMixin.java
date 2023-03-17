@@ -33,4 +33,14 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
     public @Nullable VoxelShape getCullingShape(BlockState state) {
         return ((BakedOpacity)wrapped).getCullingShape(state);
     }
+
+    @Override
+    public void setCullingShape(VoxelShape cullingShape) {
+        ((BakedOpacity)wrapped).setCullingShape(cullingShape);
+    }
+
+    @Override
+    public boolean canSetCullingShape() {
+        return ((BakedOpacity)wrapped).canSetCullingShape();
+    }
 }
