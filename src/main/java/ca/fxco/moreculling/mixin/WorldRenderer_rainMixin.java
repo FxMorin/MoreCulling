@@ -49,11 +49,10 @@ public class WorldRenderer_rainMixin {
             method = "renderWeather",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/biome/Biome;" +
-                            "getPrecipitation()Lnet/minecraft/world/biome/Biome$Precipitation;"
+                    target = "Lnet/minecraft/world/biome/Biome;hasPrecipitation()Z"
             )
     )
-    private Biome.Precipitation skipRainLoop(Biome instance) {
-        return shouldSkipLoop ? Biome.Precipitation.NONE : instance.getPrecipitation();
+    private boolean skipRainLoop(Biome instance) {
+        return !shouldSkipLoop && instance.hasPrecipitation();
     }
 }

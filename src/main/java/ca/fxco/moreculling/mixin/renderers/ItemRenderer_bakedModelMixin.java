@@ -15,7 +15,7 @@ import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -185,7 +185,7 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                                     int light, int seed, ItemFrameEntity frame, Vec3d cameraPos) {
         BakedModel model = this.customGetModel(stack, seed);
         matrices.push();
-        ModelTransformation.Mode fixedMode = ModelTransformation.Mode.FIXED;
+        ModelTransformationMode fixedMode = ModelTransformationMode.FIXED;
         Transformation transformation = model.getTransformation().getTransformation(fixedMode);
         transformation.apply(false, matrices);
         matrices.translate(-0.5, -0.5, -0.5);

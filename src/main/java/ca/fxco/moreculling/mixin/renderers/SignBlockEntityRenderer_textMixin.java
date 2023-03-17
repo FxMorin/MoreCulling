@@ -5,12 +5,12 @@ import ca.fxco.moreculling.utils.MathUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SignBlock;
 import net.minecraft.block.WallSignBlock;
+import net.minecraft.block.WoodType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.SignType;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,7 +41,7 @@ public class SignBlockEntityRenderer_textMixin {
     )
     private void cullSignText(SignBlockEntity signBlockEntity, float tickDelta, MatrixStack matrixStack,
                               VertexConsumerProvider vertexConsumerProvider, int i, int j, CallbackInfo ci,
-                              BlockState blockState, float g, SignType signType,
+                              BlockState blockState, float g, WoodType signType,
                               SignBlockEntityRenderer.SignModel signModel) {
         if (MoreCulling.CONFIG.signTextCulling) {
             Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
