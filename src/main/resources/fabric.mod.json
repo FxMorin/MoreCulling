@@ -30,7 +30,9 @@
   "depends": {
     "fabricloader": ">=0.14.10",
     "minecraft": ">=1.19.3",
-    "java": ">=17",
+    "java": ">=17"
+  },
+  "embedded": {
     "cloth-config": ">=9.0.94"
   },
   "suggests": {
