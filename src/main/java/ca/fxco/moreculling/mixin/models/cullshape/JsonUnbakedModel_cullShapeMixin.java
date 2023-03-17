@@ -27,8 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Function;
 
-import static ca.fxco.moreculling.utils.CullingUtils.VOXEL_SHAPE_STORE;
-
 @Mixin(JsonUnbakedModel.class)
 public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbakedModel {
 
@@ -91,6 +89,10 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     private void onBake(ModelLoader loader, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter,
                         ModelBakeSettings settings, Identifier id, boolean hasDepth,
                         CallbackInfoReturnable<BakedModel> cir) {
+        BakedOpacity bakedOpacity = (BakedOpacity)cir.getReturnValue();
+        if (!bakedOpacity.canSetCullingShape()) {
+            return;
+        }
         if (getUseModelShape(id)) {
             List<ModelElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
@@ -99,7 +101,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     VoxelShape shape = Block.createCuboidShape(e.from.getX(), e.from.getY(), e.from.getZ(), e.to.getX(), e.to.getY(), e.to.getZ());
                     voxelShape = VoxelShapes.union(voxelShape, shape);
                 }
-                VOXEL_SHAPE_STORE.set(voxelShape);
+                bakedOpacity.setCullingShape(voxelShape);
                 return;
             }
         } else {
@@ -110,10 +112,10 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     VoxelShape shape = Block.createCuboidShape(e.from.getX(), e.from.getY(), e.from.getZ(), e.to.getX(), e.to.getY(), e.to.getZ());
                     voxelShape = VoxelShapes.union(voxelShape, shape);
                 }
-                VOXEL_SHAPE_STORE.set(voxelShape);
+                bakedOpacity.setCullingShape(voxelShape);
                 return;
             }
         }
-        VOXEL_SHAPE_STORE.set(null);
+        bakedOpacity.setCullingShape(null);
     }
 }
