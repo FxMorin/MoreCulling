@@ -69,6 +69,6 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
 
     @Override
     public boolean cantCullAgainst(BlockState state, Direction side) {
-        return false;
+        return true;
     }
 }
