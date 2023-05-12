@@ -84,7 +84,7 @@ dependencies {
 
     //AutoConfig
     modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-    include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
     // ^ Comment out to test without fabric api, this will require you to put the cloth-config in the mods folder
 }
 
