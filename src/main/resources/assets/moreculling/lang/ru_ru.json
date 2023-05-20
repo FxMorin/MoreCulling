@@ -39,7 +39,7 @@
 	"moreculling.config.option.useOnModdedBlocks.tooltip": "Отбраковка по состоянию блока работает с модифицированными блоками по умолчанию.",
 	"moreculling.config.options.blockstate": "По состоянию",
 	"moreculling.config.options.check": "По окружению",
-	"moreculling.config.options.gap": "По расстоянию",
+	"moreculling.config.options.gap": "По промежутку",
 	"moreculling.config.options.depth": "По глубине",
 	"moreculling.config.options.random": "Случайно",
 	"moreculling.config.options.vertical": "По вертикали",
