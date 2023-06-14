@@ -40,7 +40,6 @@
     "models.cullshape.JsonUnbakedModel_cullShapeMixin",
     "models.cullshape.ShapeCache_cullShapeMixin",
     "renderers.BlockModelRenderer_cullMixin",
-    "renderers.HangingSignBlockEntityRenderer_textMixin",
     "renderers.ItemRenderer_bakedModelMixin",
     "renderers.SignBlockEntityRenderer_textMixin"
   ],
