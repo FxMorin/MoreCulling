@@ -42,7 +42,6 @@
   },
   "custom": {
     "mc-publish": {
-      "curseforge": 630104,
       "modrinth": "51shyZVL",
       "loaders": ["fabric", "quilt"]
     },
