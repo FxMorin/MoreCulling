@@ -4,7 +4,7 @@ import me.jellysquid.mods.sodium.client.gui.options.Option;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.control.ControlElement;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -70,17 +70,17 @@ public class IntSliderControl implements Control<Integer> {
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-            super.render(matrixStack, mouseX, mouseY, delta);
+        public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+            super.render(drawContext, mouseX, mouseY, delta);
 
             if (this.option.isAvailable() && this.hovered) {
-                this.renderSlider(matrixStack);
+                this.renderSlider(drawContext);
             } else {
-                this.renderStandaloneValue(matrixStack);
+                this.renderStandaloneValue(drawContext);
             }
         }
 
-        private void renderStandaloneValue(MatrixStack matrixStack) {
+        private void renderStandaloneValue(DrawContext drawContext) {
             int sliderX = this.sliderBounds.getX();
             int sliderY = this.sliderBounds.getY();
             int sliderWidth = this.sliderBounds.getWidth();
@@ -89,10 +89,10 @@ public class IntSliderControl implements Control<Integer> {
             String label = this.text.formatted(this.option.getValue());
             int labelWidth = this.font.getWidth(label);
 
-            this.drawString(matrixStack, label, sliderX + sliderWidth - labelWidth, sliderY + (sliderHeight / 2) - 4, 0xFFFFFFFF);
+            this.drawString(drawContext, label, sliderX + sliderWidth - labelWidth, sliderY + (sliderHeight / 2) - 4, 0xFFFFFFFF);
         }
 
-        private void renderSlider(MatrixStack matrixStack) {
+        private void renderSlider(DrawContext drawContext) {
             int sliderX = this.sliderBounds.getX();
             int sliderY = this.sliderBounds.getY();
             int sliderWidth = this.sliderBounds.getWidth();
@@ -112,7 +112,7 @@ public class IntSliderControl implements Control<Integer> {
 
             int labelWidth = this.font.getWidth(label);
 
-            this.drawString(matrixStack, label, sliderX - labelWidth - 6, sliderY + (sliderHeight / 2) - 4, 0xFFFFFFFF);
+            this.drawString(drawContext, label, sliderX - labelWidth - 6, sliderY + (sliderHeight / 2) - 4, 0xFFFFFFFF);
         }
 
         public int getIntValue() {

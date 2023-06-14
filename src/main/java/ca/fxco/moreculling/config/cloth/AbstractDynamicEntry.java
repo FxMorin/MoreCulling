@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -111,24 +112,25 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         return this.defaultValue == null ? Optional.empty() : Optional.ofNullable(this.defaultValue.get());
     }
 
-    public final void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
-        super.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
+    @Override
+    public final void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+        super.render(drawContext, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         this.resetButton.active = this.isEnabled() && this.isEditable() && this.getDefaultValue().isPresent() && !this.getDefaultValue().get().equals(this.getValue());
         this.resetButton.setY(y);
         this.mainWidget.active = this.isEnabled() && this.isEditable();
         this.mainWidget.setY(y);
 
-        this.onRender(matrices, y, x, entryWidth, entryHeight);
+        this.onRender(drawContext, y, x, entryWidth, entryHeight);
 
-        this.resetButton.render(matrices, mouseX, mouseY, delta);
-        this.mainWidget.render(matrices, mouseX, mouseY, delta);
+        this.resetButton.render(drawContext, mouseX, mouseY, delta);
+        this.mainWidget.render(drawContext, mouseX, mouseY, delta);
     }
 
     // Create the main widget to use for this entry
     abstract ClickableWidget createMainWidget();
 
     // This is where you render your widgets & text
-    abstract void onRender(MatrixStack matrices, int y, int x, int entryWidth, int entryHeight);
+    abstract void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight);
 
     @Override
     public Text getDisplayedFieldName() {

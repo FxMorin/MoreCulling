@@ -28,12 +28,10 @@
   ],
   "accessWidener" : "moreculling.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.10",
-    "minecraft": ">=1.19.4",
-    "java": ">=17"
-  },
-  "embedded": {
-    "cloth-config": ">=9.0.94"
+    "fabricloader": ">=0.14.18",
+    "minecraft": ">=1.20",
+    "java": ">=17",
+    "cloth-config": ">=11.0.99"
   },
   "suggests": {
     "memoryleakfix": "*",
@@ -46,7 +44,7 @@
     "mc-publish": {
       "curseforge": 630104,
       "modrinth": "51shyZVL",
-      "quilt": true
+      "loaders": ["fabric", "quilt"]
     },
     "modmenu": {
       "links": {

@@ -98,7 +98,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
             OptionalInt optionalInt = itemFrameEntity.getMapId();
             if (optionalInt.isPresent()) {
                 int mapId = optionalInt.getAsInt();
-                MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.world);
+                MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.getWorld());
                 if (mapState != null) { // Map is present
                     if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
                         skipFrontRender = !((MapOpacity) mapState).hasTransparency();

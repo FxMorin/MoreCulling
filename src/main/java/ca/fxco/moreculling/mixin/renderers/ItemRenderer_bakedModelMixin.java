@@ -202,8 +202,8 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             if (stack.isIn(ItemTags.COMPASSES) && stack.hasGlint()) {
                 matrices.push();
                 MatrixStack.Entry entry = matrices.peek();
-                vertexConsumer = bl2 ? getDirectCompassGlintConsumer(vc, renderLayer, entry) :
-                        getCompassGlintConsumer(vc, renderLayer, entry);
+                vertexConsumer = bl2 ? getDirectDynamicDisplayGlintConsumer(vc, renderLayer, entry) :
+                        getDynamicDisplayGlintConsumer(vc, renderLayer, entry);
                 matrices.pop();
             } else {
                 vertexConsumer = bl2 ? getDirectItemGlintConsumer(vc, renderLayer, true, stack.hasGlint()) :

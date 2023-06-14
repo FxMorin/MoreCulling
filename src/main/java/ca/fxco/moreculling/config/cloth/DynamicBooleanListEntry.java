@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.config.cloth;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.NarratorManager;
@@ -38,16 +39,16 @@ public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
     }
 
     @Override
-    protected void onRender(MatrixStack matrices, int y, int x, int entryWidth, int entryHeight) {
+    protected void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight) {
         Window window = MinecraftClient.getInstance().getWindow();
         this.mainWidget.setMessage(this.getYesNoText(this.getValue()));
         Text displayedFieldName = this.getDisplayedFieldName();
         if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)(window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName)), (float)(y + 6), 16777215);
+            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName), y + 6, 16777215);
             this.resetButton.setX(x);
             this.mainWidget.setX(x + this.resetButton.getWidth() + 2);
         } else {
-            MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)x, (float)(y + 6), this.getPreferredTextColor());
+            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), x, y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
             this.mainWidget.setX(x + entryWidth - 150);
         }

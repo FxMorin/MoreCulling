@@ -149,8 +149,8 @@ public class CullingUtils {
     public static boolean shouldCullBack(ItemFrameEntity frame) {
         Direction dir = frame.getHorizontalFacing();
         BlockPos posBehind = frame.getDecorationBlockPos().offset(dir.getOpposite());
-        BlockState blockState = frame.world.getBlockState(posBehind);
-        return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.world, posBehind, dir);
+        BlockState blockState = frame.getWorld().getBlockState(posBehind);
+        return blockState.isOpaque() && blockState.isSideSolidFullSquare(frame.getWorld(), posBehind, dir);
     }
 
     public static boolean shouldShowMapFace(Direction facingDir, Vec3d framePos, Vec3d cameraPos) {

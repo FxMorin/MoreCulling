@@ -5,8 +5,10 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -37,7 +39,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
 
     @ApiStatus.Internal
     public MoreCullingClothConfigBuilder() {
-        this.defaultBackground = DrawableHelper.OPTIONS_BACKGROUND_TEXTURE;
+        this.defaultBackground = TextureMap.getId(Blocks.DIRT);
         this.afterInitConsumer = (screen) -> {
         };
         this.categoryMap = Maps.newLinkedHashMap();
