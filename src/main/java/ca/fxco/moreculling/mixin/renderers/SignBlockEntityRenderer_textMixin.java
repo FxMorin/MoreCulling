@@ -68,13 +68,16 @@ public class SignBlockEntityRenderer_textMixin {
     private boolean cullSignText(BlockPos pos, BlockState state, Model model, boolean front) {
         if (MoreCulling.CONFIG.signTextCulling) {
             Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-            if (model instanceof SignBlockEntityRenderer.SignModel signModel && !signModel.stick.visible) {
+            if (state.contains(WallSignBlock.FACING)) {
                 Direction dir = state.get(WallSignBlock.FACING);
-                return front == !shouldHideWallSignText(
-                        dir,
-                        pos.toCenterPos().subtract(dir.getOffsetX() * 0.39, 0, dir.getOffsetZ() * 0.39),
-                        cameraPos
-                );
+                if (model instanceof SignBlockEntityRenderer.SignModel) {
+                    return front == !shouldHideWallSignText(
+                            dir,
+                            pos.toCenterPos().subtract(dir.getOffsetX() * 0.39, 0, dir.getOffsetZ() * 0.39),
+                            cameraPos
+                    );
+                }
+                return front == !shouldHideWallSignText(dir, pos.toCenterPos(), cameraPos);
             } else {
                 double angle = state.get(SignBlock.ROTATION) * ONE_SIGN_ROTATION;
                 if (front) { // Switch line orientation xD
