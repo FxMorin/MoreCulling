@@ -10,11 +10,11 @@
 	"moreculling.config.option.rainCulling": "雨／雪剃除",
 	"moreculling.config.option.rainCulling.tooltip": "是否在雨／雪上進行視錐體剔除",
 	"moreculling.config.option.entityModelCulling": "實體模型剃除",
-	"moreculling.config.option.entityModelCulling.tooltip": "這僅在您的圖形處理器瓶頸並且您的中央處理器有一些剩餘效能時才有用！",
+	"moreculling.config.option.entityModelCulling.tooltip": "這僅在您的顯示卡瓶頸並且您的 CPU 有一些剩餘效能時才有用！",
 	"moreculling.config.option.blockStateCulling": "方塊狀態剃除",
 	"moreculling.config.option.blockStateCulling.tooltip": "啟用積極的方塊狀態剔除",
-	"moreculling.config.option.customItemFrameRenderer": "自定義展示框剃除",
-	"moreculling.config.option.customItemFrameRenderer.tooltip": "啟用自定義展示框繪製",
+	"moreculling.config.option.customItemFrameRenderer": "自訂展示框剃除",
+	"moreculling.config.option.customItemFrameRenderer.tooltip": "啟用自訂展示框繪製",
 	"moreculling.config.option.itemFrameMapCulling": "展示框地圖剃除",
 	"moreculling.config.option.itemFrameMapCulling.tooltip": "在展示框中啟用地圖剔除",
 	"moreculling.config.option.itemFrameLOD": "展示框多層細節",
@@ -43,5 +43,5 @@
 	"moreculling.config.options.random": "隨機",
 	"moreculling.config.options.vertical": "縱向",
 	"moreculling.config.resetCache": "重設快取",
-	"moreculling.config.optionDisabled": "在用：%s 時，此選項被禁用"
+	"moreculling.config.optionDisabled": "在用：%s 時，此選項被停用"
 }
