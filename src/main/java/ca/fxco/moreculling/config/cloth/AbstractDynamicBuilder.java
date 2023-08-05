@@ -55,6 +55,9 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
     public AbstractDynamicBuilder<T, A, ?> setModIncompatibility(boolean isLoaded, String modId) {
         if (isLoaded) {
             this.setTooltip(Text.translatable("moreculling.config.optionDisabled", modId));
+            if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {
+                this.value = this.defaultValue.get();
+            }
             this.locked = true;
             this.saveConsumer = null;
             this.changeConsumer = null;
