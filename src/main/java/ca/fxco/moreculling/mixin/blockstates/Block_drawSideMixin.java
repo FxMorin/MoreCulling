@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -21,6 +22,7 @@ import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 @Mixin(value = Block.class, priority = 2500)
 public class Block_drawSideMixin implements MoreBlockCulling {
 
+    @Unique
     private boolean allowCulling;
 
     @Override

@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -41,7 +42,7 @@ import static net.minecraft.util.math.Direction.*;
 public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRenderer {
 
     @Unique
-    private final Random rand = Random.create(42L);
+    private final Random rand = new LocalRandom(42L);
 
     @Shadow
     @Final

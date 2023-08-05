@@ -9,6 +9,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -23,7 +24,7 @@ import java.util.List;
 public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
 
     @Unique
-    private final Random rand = Random.create(42L);
+    private final Random rand = new LocalRandom(42L);
 
     @Shadow
     @Final

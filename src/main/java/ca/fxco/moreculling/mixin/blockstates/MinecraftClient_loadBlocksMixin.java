@@ -19,7 +19,7 @@ public class MinecraftClient_loadBlocksMixin {
             at = @At("RETURN")
     )
     private void onInit(RunArgs args, CallbackInfo ci) {
-        Registries.BLOCK.forEach(block -> { // May be expensive, check on it
+        Registries.BLOCK.forEach(block -> {
             ((MoreBlockCulling) block).setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
                     Registries.BLOCK.getId(block).getNamespace(),
                     MoreCulling.CONFIG.useOnModdedBlocksByDefault
