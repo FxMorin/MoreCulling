@@ -38,7 +38,7 @@ import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
 public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> extends EntityRenderer<T> {
 
     @Unique
-    private static final Direction[] MAP_RENDER_SIDES = new Direction[] {
+    private static final Direction[] MAP_RENDER_SIDES = new Direction[]{
             Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST
     };
 
@@ -76,7 +76,9 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
     )
     public void optimizedRender(T itemFrameEntity, float f, float g, MatrixStack matrixStack,
                                 VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-        if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) return;
+        if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) {
+            return;
+        }
         ci.cancel();
         matrixStack.push();
         Direction direction = itemFrameEntity.getHorizontalFacing();
@@ -84,9 +86,9 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
         matrixStack.translate(-vec3d.getX(), -vec3d.getY(), -vec3d.getZ());
         double d = 0.46875;
         matrixStack.translate(
-                (double)direction.getOffsetX() * d,
-                (double)direction.getOffsetY() * d,
-                (double)direction.getOffsetZ() * d
+                (double) direction.getOffsetX() * d,
+                (double) direction.getOffsetY() * d,
+                (double) direction.getOffsetZ() * d
         );
         matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(itemFrameEntity.getPitch()));
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f - itemFrameEntity.getYaw()));
@@ -133,7 +135,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
             } else {
                 matrixStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
                 matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(
-                        (float)itemFrameEntity.getRotation() * 360.0f / 8.0f)
+                        (float) itemFrameEntity.getRotation() * 360.0f / 8.0f)
                 );
                 int l = this.getLight(itemFrameEntity, LightmapTextureManager.MAX_LIGHT_COORDINATE, i);
                 matrixStack.scale(0.5f, 0.5f, 0.5f);

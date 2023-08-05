@@ -24,8 +24,9 @@ public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
 
     @Override
     public void onChange() {
-        if (this.getChangeConsumer() != null)
+        if (this.getChangeConsumer() != null) {
             this.getChangeConsumer().accept(this, this.isEnabled() && this.getValue());
+        }
     }
 
     @Override

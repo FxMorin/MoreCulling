@@ -8,11 +8,11 @@ import java.util.WeakHashMap;
 
 /**
  * @author Srdjan Mitrovic
- *
- *         This is improved ThreadLocal class that is completely non-blocking
- *         for all operations. This is a big improvement over regular
- *         ThreadLocal because this class will not leak class loaders when you
- *         redeploy your web application.
+ * <p>
+ * This is improved ThreadLocal class that is completely non-blocking
+ * for all operations. This is a big improvement over regular
+ * ThreadLocal because this class will not leak class loaders when you
+ * redeploy your web application.
  */
 public class ImprovedThreadLocal<T> extends ThreadLocal<T> {
 

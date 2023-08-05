@@ -19,6 +19,7 @@ import java.util.List;
  * This gives you access to the custom MoreCulling rendering methods, in order to allow everyone to benefit from the
  * performance boost that MoreCulling can offer.<br/>
  * Use these methods over ones provided in {@link net.minecraft.client.render.item.ItemRenderer}
+ *
  * @since 0.8.0
  */
 
@@ -29,6 +30,7 @@ public interface ExtendedItemRenderer {
      * Should only be used for item frame baked quad colors!
      * The size of this map is 256, since it is very unlikely that there are more than 256 custom quad colors used in
      * a single frame.
+     *
      * @return Baked Quad Color Cache
      * @since 0.8.0
      */
@@ -38,6 +40,7 @@ public interface ExtendedItemRenderer {
      * Works the same as {@link net.minecraft.client.render.item.ItemRenderer#getModel} except it skips all the mojank
      * checks for tridents and spyglass since they are not require for item frame rendering and just a
      * waste of performance.
+     *
      * @return BakedModel of item stack
      * @since 0.8.0
      */
@@ -47,6 +50,7 @@ public interface ExtendedItemRenderer {
      * This will render a single quad. In vanilla this is mostly done all at once, although we call each quad to be
      * rendered separately, this is done since we don't render all quads like vanilla. Also this method is drastically
      * faster than the vanilla quad renderer, since we use quad color caching. (Item Frame)
+     *
      * @since 0.8.0
      */
     void renderBakedItemQuad(VertexConsumer vertices, ItemStack stack, int light, int overlay,
@@ -55,6 +59,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render a baked items quads without a specific face. (Item Frame)
      * This can be used to skip the face of an item that cannot be seen
+     *
      * @since 0.8.0
      */
     void renderBakedItemQuadsWithoutFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
@@ -63,6 +68,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render a baked item model without a specific face. (Item Frame)
      * This can be used to skip the face of an item that cannot be seen
+     *
      * @since 0.8.0
      */
     void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
@@ -72,6 +78,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render a single face of a baked items quads. (Item Frame)
      * This is used for LOD rendering at far distances.
+     *
      * @since 0.8.0
      */
     void renderBakedItemQuadsForFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
@@ -80,6 +87,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render a single face of a baked item model. (Item Frame)
      * This is used for LOD rendering at far distances.
+     *
      * @since 0.8.0
      */
     void renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices,
@@ -88,6 +96,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render 3 sides of a baked items quads. (Item Frame)
      * This is part of the 3-face rendering technique.
+     *
      * @since 0.8.0
      */
     void renderBakedItemQuadsFor3Faces(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
@@ -97,6 +106,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render 3 sides of a baked item model. (Item Frame)
      * This is part of the 3-face rendering technique.
+     *
      * @since 0.8.0
      */
     void renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
@@ -106,6 +116,7 @@ public interface ExtendedItemRenderer {
     /**
      * This will render an item in an item frame like MoreCulling, it will automatically include all of MoreCulling's
      * optimizations.
+     *
      * @since 0.8.0
      */
     void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vc, int light, int seed,

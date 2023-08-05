@@ -23,6 +23,8 @@ public class MapState_cacheMixin implements MapOpacity {
             at = @At("HEAD")
     )
     private void onSetColor(int x, int z, byte color, CallbackInfo ci) {
-        if (color == 0) this.hasTransparency = true;
+        if (color == 0) {
+            this.hasTransparency = true;
+        }
     }
 }

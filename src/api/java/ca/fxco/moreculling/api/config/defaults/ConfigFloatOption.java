@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 /**
  * Float option that can be used through the API
  * This is a pre-made basic float option that simply stores all the values to be used by the MoreCulling Config API
+ *
  * @since 0.12.0
  */
 public class ConfigFloatOption implements ConfigOption<Float>, ConfigSliderOption<Float> {
@@ -26,6 +27,7 @@ public class ConfigFloatOption implements ConfigOption<Float>, ConfigSliderOptio
     private final float max;
     private final float interval;
     private final String stringFormat;
+
     public ConfigFloatOption(String translationKey, Consumer<Float> setter, Supplier<Float> getter,
                              Consumer<Float> changed, Float defaultValue, ConfigOptionImpact impact,
                              ConfigOptionFlag flag, float min, float max, float interval, String stringFormat) {

@@ -29,7 +29,8 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
 
-    @Shadow @Final
+    @Shadow
+    @Final
     private List<Pair<Predicate<BlockState>, BakedModel>> components;
 
     @Unique // Only works on chunk update, so the best performance is after placing a block
@@ -51,9 +52,9 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public @Nullable VoxelShape getCullingShape(BlockState state) {
         VoxelShape cachedShape = null;
-        for(Pair<Predicate<BlockState>, BakedModel> pair : this.components) {
+        for (Pair<Predicate<BlockState>, BakedModel> pair : this.components) {
             if ((pair.getLeft()).test(state)) {
-                VoxelShape shape = ((BakedOpacity)pair.getRight()).getCullingShape(state);
+                VoxelShape shape = ((BakedOpacity) pair.getRight()).getCullingShape(state);
                 if (shape != null) {
                     if (cachedShape == null) {
                         cachedShape = shape;

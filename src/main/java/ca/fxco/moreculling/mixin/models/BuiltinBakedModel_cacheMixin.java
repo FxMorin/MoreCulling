@@ -37,7 +37,7 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
 
     @Override
     public void resetTranslucencyCache() {
-        hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency();
+        hasTranslucency = ((SpriteOpacity) sprite).hasTranslucency();
     }
 
     @Override

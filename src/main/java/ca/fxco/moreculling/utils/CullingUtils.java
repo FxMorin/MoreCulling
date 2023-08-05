@@ -36,12 +36,16 @@ public class CullingUtils {
                                                 BlockView world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos) {
         BlockState sideState = world.getBlockState(sidePos);
-        if (thisState.isSideInvisible(sideState, side)) return false;
-        if (((MoreStateCulling)thisState).usesCustomShouldDrawFace()) {
+        if (thisState.isSideInvisible(sideState, side)) {
+            return false;
+        }
+        if (((MoreStateCulling) thisState).usesCustomShouldDrawFace()) {
             Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(
                     world, sideState, thisPos, sidePos, side
             );
-            if (shouldDrawFace.isPresent()) return shouldDrawFace.get();
+            if (shouldDrawFace.isPresent()) {
+                return shouldDrawFace.get();
+            }
         }
         if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
                 ((MoreStateCulling) sideState).canCull() &&
@@ -57,11 +61,15 @@ public class CullingUtils {
      */
     private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
                                           BlockPos thisPos, BlockPos sidePos, Direction side) {
-        if (((MoreStateCulling)sideState).cantCullAgainst(side)) return true; // Check if we can cull against this block
+        if (((MoreStateCulling) sideState).cantCullAgainst(side)) {
+            return true; // Check if we can cull against this block
+        }
         Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);
         Object2ByteLinkedOpenHashMap<Block.NeighborGroup> object2ByteLinkedOpenHashMap = FACE_CULL_MAP.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(neighborGroup);
-        if (b != 127) return b != 0;
+        if (b != 127) {
+            return b != 0;
+        }
         Direction opposite = side.getOpposite();
         VoxelShape thisShape = thisState.getCullingFace(world, thisPos, side);
         VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
@@ -74,8 +82,10 @@ public class CullingUtils {
             sideShape = sideState.getCullingFace(world, sidePos, opposite);
         }
         boolean bl = VoxelShapes.matchesAnywhere(thisShape, sideShape, BooleanBiFunction.ONLY_FIRST);
-        if (object2ByteLinkedOpenHashMap.size() == 2048) object2ByteLinkedOpenHashMap.removeLastByte();
-        object2ByteLinkedOpenHashMap.putAndMoveToFirst(neighborGroup, (byte)(bl ? 1 : 0));
+        if (object2ByteLinkedOpenHashMap.size() == 2048) {
+            object2ByteLinkedOpenHashMap.removeLastByte();
+        }
+        object2ByteLinkedOpenHashMap.putAndMoveToFirst(neighborGroup, (byte) (bl ? 1 : 0));
         return bl;
     }
 
@@ -127,8 +137,9 @@ public class CullingUtils {
                 (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
                 BlockState state = view.getBlockState(sidePos.offset(side, i));
-                if (state == null || state.isAir())
+                if (state == null || state.isAir()) {
                     return Optional.of(true);
+                }
             }
             return Optional.of(false);
         }
@@ -182,6 +193,6 @@ public class CullingUtils {
     }
 
     public static BakedOpacity getBakedOpacity(BlockState state) {
-        return (BakedOpacity)getBakedModel(state);
+        return (BakedOpacity) getBakedModel(state);
     }
 }

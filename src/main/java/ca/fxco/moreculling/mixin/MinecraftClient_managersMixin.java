@@ -22,9 +22,13 @@ public class MinecraftClient_managersMixin {
     @Final
     private BlockRenderManager blockRenderManager;
 
-    @Shadow @Final private BakedModelManager bakedModelManager;
+    @Shadow
+    @Final
+    private BakedModelManager bakedModelManager;
 
-    @Shadow @Final private ReloadableResourceManagerImpl resourceManager;
+    @Shadow
+    @Final
+    private ReloadableResourceManagerImpl resourceManager;
 
     @Inject(
             method = "<init>",

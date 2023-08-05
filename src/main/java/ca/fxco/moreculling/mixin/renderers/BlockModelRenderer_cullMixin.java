@@ -52,16 +52,20 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                        BakedModel model, float red, float green, float blue,
                                        int light, int overlay, Direction withoutFace) {
         for (Direction direction : DIRECTIONS) {
-            if (direction == withoutFace) continue;
+            if (direction == withoutFace) {
+                continue;
+            }
             rand.setSeed(42L);
             List<BakedQuad> bakedQuads = model.getQuads(state, direction, rand);
-            if (!bakedQuads.isEmpty())
+            if (!bakedQuads.isEmpty()) {
                 renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+            }
         }
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuadsWithoutFace(entry, vertices, red, green, blue, bakedQuads, light, overlay, withoutFace);
+        }
     }
 
     @Override
@@ -69,7 +73,9 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                        float red, float green, float blue, List<BakedQuad> quads,
                                        int light, int overlay, Direction withoutFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() == withoutFace) continue;
+            if (bakedQuad.getFace() == withoutFace) {
+                continue;
+            }
             renderQuad(entry, vertices, red, green, blue, bakedQuad, light, overlay);
         }
     }
@@ -80,12 +86,14 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                    int light, int overlay, Direction forFace) {
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, forFace, rand);
-            if (!bakedQuads.isEmpty())
-                renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+        if (!bakedQuads.isEmpty()) {
+            renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(state, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuadsForFace(entry, vertices, red, green, blue, bakedQuads, light, overlay, forFace);
+        }
     }
 
     @Override
@@ -93,7 +101,9 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                    float red, float green, float blue, List<BakedQuad> quads,
                                    int light, int overlay, Direction forFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() != forFace) continue;
+            if (bakedQuad.getFace() != forFace) {
+                continue;
+            }
             renderQuad(entry, vertices, red, green, blue, bakedQuad, light, overlay);
         }
     }
@@ -104,20 +114,24 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                      int light, int overlay, Direction faceX, Direction faceY, Direction faceZ) {
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, faceX, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(state, faceY, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(state, faceZ, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(state, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuadsFor3Faces(entry, vertices, red, green, blue, bakedQuads, light, overlay, faceX, faceY, faceZ);
+        }
     }
 
     @Override
@@ -126,8 +140,9 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                      Direction faceX, Direction faceY, Direction faceZ) {
         for (BakedQuad bakedQuad : quads) {
             Direction face = bakedQuad.getFace();
-            if (face == faceX || face == faceY || face == faceZ)
+            if (face == faceX || face == faceY || face == faceZ) {
                 renderQuad(entry, vertices, red, green, blue, bakedQuad, light, overlay);
+            }
         }
     }
 
@@ -138,13 +153,15 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
         for (Direction direction : faces) {
             rand.setSeed(42L);
             List<BakedQuad> bakedQuads = model.getQuads(state, direction, rand);
-            if (!bakedQuads.isEmpty())
+            if (!bakedQuads.isEmpty()) {
                 renderQuads(entry, vertices, red, green, blue, bakedQuads, light, overlay);
+            }
         }
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             renderQuadsForFaces(entry, vertices, red, green, blue, bakedQuads, light, overlay, faces);
+        }
     }
 
     @Override
@@ -153,13 +170,14 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                     int light, int overlay, Direction[] faces) {
         for (BakedQuad bakedQuad : quads) {
             Direction face = bakedQuad.getFace();
-            if (Arrays.stream(faces).anyMatch((f) -> f == face))
+            if (Arrays.stream(faces).anyMatch((f) -> f == face)) {
                 renderQuad(entry, vertices, red, green, blue, bakedQuad, light, overlay);
+            }
         }
     }
 
     private void renderQuads(MatrixStack.Entry entry, VertexConsumer vertices,
-                           float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
+                             float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedQuad : quads)
             renderQuad(entry, vertices, red, green, blue, bakedQuad, light, overlay);
     }

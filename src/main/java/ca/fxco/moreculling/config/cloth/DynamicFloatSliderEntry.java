@@ -46,16 +46,16 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
     public void setValue(Float value) {
         if (!this.isLocked() && this.isEnabled()) {
             value = roundStep(value, this.step);
-            ((Slider)this.mainWidget).setValue((double) (MathHelper.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
+            ((Slider) this.mainWidget).setValue((double) (MathHelper.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
             value = Math.min(Math.max(value, this.minimum), this.maximum);
             super.setValue(value);
-            ((Slider)this.mainWidget).updateMessage();
+            ((Slider) this.mainWidget).updateMessage();
         }
     }
 
     @Override
     protected ClickableWidget createMainWidget() {
-        return new Slider(0, 0, 152, 20, ((double)this.getValue() - (double)this.minimum) / (double)Math.abs(this.maximum - this.minimum));
+        return new Slider(0, 0, 152, 20, ((double) this.getValue() - (double) this.minimum) / (double) Math.abs(this.maximum - this.minimum));
     }
 
     @Override

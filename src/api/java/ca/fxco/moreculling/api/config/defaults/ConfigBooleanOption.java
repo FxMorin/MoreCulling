@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 /**
  * Boolean option that can be used through the API.
  * This is a pre-made basic boolean option that simply stores all the values to be used by the MoreCulling Config API
+ *
  * @since 0.12.0
  */
 public class ConfigBooleanOption implements ConfigOption<Boolean> {

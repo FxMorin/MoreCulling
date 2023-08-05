@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, DynamicFloatSliderEntry,DynamicFloatSliderBuilder> {
+public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, DynamicFloatSliderEntry, DynamicFloatSliderBuilder> {
     private float max;
     private float min;
     private float step;
@@ -58,9 +58,13 @@ public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, Dyn
     @NotNull
     public DynamicFloatSliderEntry runBuild() {
         DynamicFloatSliderEntry entry = new DynamicFloatSliderEntry(this, this.min, this.max, this.step);
-        if (this.textGetter != null) entry.setTextGetter(this.textGetter);
+        if (this.textGetter != null) {
+            entry.setTextGetter(this.textGetter);
+        }
         entry.setTooltipSupplier(() -> this.tooltipSupplier.apply(entry.getValue()));
-        if (this.errorSupplier != null) entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        if (this.errorSupplier != null) {
+            entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        }
         return entry;
     }
 }

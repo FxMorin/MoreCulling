@@ -37,7 +37,8 @@ public class BlockOcclusionCache_sodiumMixin {
     )
     private void useMoreCulling(BlockState selfState, BlockView view, BlockPos pos,
                                 Direction facing, CallbackInfoReturnable<Boolean> cir, BlockPos.Mutable adjPos) {
-        if (MoreCulling.CONFIG.useBlockStateCulling)
+        if (MoreCulling.CONFIG.useBlockStateCulling) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
+        }
     }
 }

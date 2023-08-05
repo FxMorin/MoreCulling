@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 /**
  * Enum option that can be used through the API
  * This is a pre-made basic enum option that simply stores all the values to be used by the MoreCulling Config API
+ *
  * @since 0.12.0
  */
 public class ConfigEnumOption<T extends Enum<?>> implements ConfigOption<T> {
@@ -26,8 +27,8 @@ public class ConfigEnumOption<T extends Enum<?>> implements ConfigOption<T> {
     private final Text[] localizedNames;
 
     public ConfigEnumOption(String translationKey, Consumer<T> setter, Supplier<T> getter, Consumer<T> changed,
-                               T defaultValue, ConfigOptionImpact impact, ConfigOptionFlag flag, Class<T> typeClass,
-                               Text[] localizedNames) {
+                            T defaultValue, ConfigOptionImpact impact, ConfigOptionFlag flag, Class<T> typeClass,
+                            Text[] localizedNames) {
         this.translationKey = translationKey;
         this.setter = setter;
         this.getter = getter;

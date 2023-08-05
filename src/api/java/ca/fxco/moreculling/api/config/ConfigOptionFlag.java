@@ -2,6 +2,7 @@ package ca.fxco.moreculling.api.config;
 
 /**
  * Bridge for Sodium OptionFlag - ConfigOption Flag
+ *
  * @since 0.12.0
  */
 public enum ConfigOptionFlag {

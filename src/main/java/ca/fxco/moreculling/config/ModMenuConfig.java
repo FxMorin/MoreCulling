@@ -22,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,9 @@ public class ModMenuConfig implements ModMenuApi {
                 .build();
         for (Object2BooleanMap.Entry<String> entry : MoreCulling.CONFIG.modCompatibility.object2BooleanEntrySet()) {
             String modId = entry.getKey();
-            if (modId.equals("minecraft")) continue;
+            if (modId.equals("minecraft")) {
+                continue;
+            }
             ModContainer con = FabricLoader.getInstance().getModContainer(modId).orElse(null);
             DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(Text.literal(con == null ? modId : con.getMetadata().getName()))
                     .setValue(entry.getBooleanValue())
@@ -56,8 +59,9 @@ public class ModMenuConfig implements ModMenuApi {
                     .setSaveConsumer(v -> {
                         MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
                         Registries.BLOCK.forEach(block -> { // May be expensive, check on it
-                            if (v != ((MoreBlockCulling)block).canCull() && Registries.BLOCK.getId(block).getNamespace().equals(modId))
-                                ((MoreBlockCulling)block).setCanCull(v);
+                            if (v != ((MoreBlockCulling) block).canCull() && Registries.BLOCK.getId(block).getNamespace().equals(modId)) {
+                                ((MoreBlockCulling) block).setCanCull(v);
+                            }
                         });
                     })
                     .build();
@@ -118,10 +122,11 @@ public class ModMenuConfig implements ModMenuApi {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
-                .setChangeConsumer((instance,value) -> {
+                .setChangeConsumer((instance, value) -> {
                     leavesCullingAmount.setEnabledState(instance.isEnabled() && value.hasAmount());
-                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
+                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE) {
                         instance.setValue(LeavesCullingMode.CHECK);
+                    }
                 })
                 .build();
         DynamicBooleanListEntry includeMangroveRoots = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.includeMangroveRoots"))
@@ -133,8 +138,9 @@ public class ModMenuConfig implements ModMenuApi {
                     MinecraftClient.getInstance().worldRenderer.reload();
                 })
                 .setChangeConsumer((instance, value) -> {
-                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
+                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE) {
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
+                    }
                 })
                 .build();
 

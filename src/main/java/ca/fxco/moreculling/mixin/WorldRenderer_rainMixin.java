@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(WorldRenderer.class)
 public class WorldRenderer_rainMixin {
 
-    @Shadow private Frustum frustum;
+    @Shadow
+    private Frustum frustum;
     private boolean shouldSkipLoop = false;
 
     @Inject(

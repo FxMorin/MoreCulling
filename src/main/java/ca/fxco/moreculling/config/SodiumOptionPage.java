@@ -82,8 +82,9 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .onChanged((instance, value) -> {
                     leavesCullingAmount.setAvailable(instance.isAvailable() && value.hasAmount());
-                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE)
+                    if (MoreCulling.CONFIG.includeMangroveRoots && value == LeavesCullingMode.STATE) {
                         instance.setValue(LeavesCullingMode.CHECK);
+                    }
                 })
                 .build();
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> includeMangroveRoots = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
@@ -93,8 +94,9 @@ public class SodiumOptionPage {
                 .setEnabled(morecullingOpts.getData().useBlockStateCulling)
                 .setImpact(OptionImpact.LOW)
                 .onChanged((instance, value) -> {
-                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE)
+                    if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE) {
                         leavesCullingMode.setValue(LeavesCullingMode.CHECK);
+                    }
                 })
                 .setBinding((opts, value) -> opts.includeMangroveRoots = value, opts -> opts.includeMangroveRoots)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
@@ -119,7 +121,7 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.HIGH)
                 .setBinding((opts, value) -> opts.useBlockStateCulling = value, opts -> opts.useBlockStateCulling)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .onChanged((instance,value) -> {
+                .onChanged((instance, value) -> {
                     leavesCullingMode.setAvailable(value);
                     includeMangroveRoots.setAvailable(value);
                     powderSnowCulling.setAvailable(value);
@@ -220,7 +222,7 @@ public class SodiumOptionPage {
         if (optionImpact == null) {
             return OptionImpact.LOW;
         }
-        return switch(optionImpact) {
+        return switch (optionImpact) {
             case LOW -> OptionImpact.LOW;
             case MEDIUM -> OptionImpact.MEDIUM;
             case HIGH -> OptionImpact.HIGH;
@@ -232,7 +234,7 @@ public class SodiumOptionPage {
         if (optionFlag == null) {
             return null;
         }
-        return switch(optionFlag) {
+        return switch (optionFlag) {
             case REQUIRES_RENDERER_RELOAD -> OptionFlag.REQUIRES_RENDERER_RELOAD;
             case REQUIRES_ASSET_RELOAD -> OptionFlag.REQUIRES_ASSET_RELOAD;
             case REQUIRES_GAME_RESTART -> OptionFlag.REQUIRES_GAME_RESTART;

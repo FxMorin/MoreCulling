@@ -21,7 +21,7 @@ public class BakedQuad_cacheMixin implements QuadOpacity {
 
     @Override
     public boolean getTextureTranslucency() {
-        return hasTranslucency == null ? hasTranslucency = ((SpriteOpacity)sprite).hasTranslucency() : hasTranslucency;
+        return hasTranslucency == null ? hasTranslucency = ((SpriteOpacity) sprite).hasTranslucency() : hasTranslucency;
     }
 
     @Override

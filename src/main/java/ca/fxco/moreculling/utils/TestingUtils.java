@@ -8,8 +8,10 @@ public class TestingUtils {
 
     public static void testBlockStateTranslucency(BlockState state, boolean passState) {
         BakedModel model = CullingUtils.getBakedModel(state);
-        boolean hasTranslucency = ((BakedOpacity)model).hasTextureTranslucency(state);
-        if (!hasTranslucency) return; // Only print if failing to cull due to translucency
+        boolean hasTranslucency = ((BakedOpacity) model).hasTextureTranslucency(state);
+        if (!hasTranslucency) {
+            return; // Only print if failing to cull due to translucency
+        }
         String[] classPackage = model.getClass().getName().split("\\.");
         System.out.println(state.getBlock().getName() + " -> " + classPackage[classPackage.length - 1]);
         /*List<BakedModel> models = ((BakedOpacity)model).getModels(); // removed

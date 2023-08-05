@@ -35,12 +35,12 @@ public class Block_drawSideMixin implements MoreBlockCulling {
 
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
-        return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+        return !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
 
     @Override
     public boolean shouldAttemptToCull(BlockState state, Direction side) {
-        return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state, side);
+        return !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state, side);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class Block_drawSideMixin implements MoreBlockCulling {
             cancellable = true
     )
     private static void customShouldDrawSide(BlockState state, BlockView world, BlockPos pos, Direction side,
-                                       BlockPos otherPos, CallbackInfoReturnable<Boolean> cir) {
-        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling)state).canCull()) {
+                                             BlockPos otherPos, CallbackInfoReturnable<Boolean> cir) {
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) state).canCull()) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos));
         }
     }

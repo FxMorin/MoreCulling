@@ -80,7 +80,9 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
             color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
             if (color == Integer.MAX_VALUE) {
                 color = this.colors.getColor(stack, bakedQuad.getColorIndex());
-                if (bakedQuadColorCache.size() == 256) bakedQuadColorCache.removeLastInt();
+                if (bakedQuadColorCache.size() == 256) {
+                    bakedQuadColorCache.removeLastInt();
+                }
             }
         } else {
             color = -1;
@@ -96,8 +98,10 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     public void renderBakedItemQuadsWithoutFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
                                                 ItemStack stack, int light, int overlay, Direction withoutFace) {
         MatrixStack.Entry entry = matrices.peek();
-        for(BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() == withoutFace) continue;
+        for (BakedQuad bakedQuad : quads) {
+            if (bakedQuad.getFace() == withoutFace) {
+                continue;
+            }
             renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
@@ -106,8 +110,10 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
     public void renderBakedItemQuadsForFace(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads,
                                             ItemStack stack, int light, int overlay, Direction face) {
         MatrixStack.Entry entry = matrices.peek();
-        for(BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() != face) continue;
+        for (BakedQuad bakedQuad : quads) {
+            if (bakedQuad.getFace() != face) {
+                continue;
+            }
             renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
         }
     }
@@ -117,29 +123,35 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                                               ItemStack stack, int light, int overlay,
                                               Direction faceX, Direction faceY, Direction faceZ) {
         MatrixStack.Entry entry = matrices.peek();
-        for(BakedQuad bakedQuad : quads) {
+        for (BakedQuad bakedQuad : quads) {
             Direction face = bakedQuad.getFace();
-            if (face == faceX || face == faceY || face == faceZ)
+            if (face == faceX || face == faceY || face == faceZ) {
                 renderBakedItemQuad(vertices, stack, light, overlay, entry, bakedQuad);
+            }
         }
     }
 
 
     @Override
     public void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                 MatrixStack matrices, VertexConsumer vertices,
+                                                MatrixStack matrices, VertexConsumer vertices,
                                                 @Nullable Direction withoutFace) {
-        for(Direction direction : Direction.values()) {
-            if (direction == withoutFace) continue;
+        for (Direction direction : Direction.values()) {
+            if (direction == withoutFace) {
+                continue;
+            }
             rand.setSeed(42L);
             List<BakedQuad> bakedQuads = model.getQuads(null, direction, rand);
             if (!bakedQuads.isEmpty()) // TODO: should I render without a face here also
+            {
                 this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+            }
         }
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(null, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuadsWithoutFace(matrices, vertices, bakedQuads, stack, light, overlay, withoutFace);
+        }
     }
 
     @Override
@@ -148,36 +160,42 @@ public abstract class ItemRenderer_bakedModelMixin implements ExtendedItemRender
                                                Direction faceX, Direction faceY, Direction faceZ) {
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(null, faceX, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(null, faceY, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(null, faceZ, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(null, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuadsFor3Faces(
                     matrices, vertices, bakedQuads, stack, light, overlay, faceX, faceY, faceZ
             );
+        }
     }
 
     @Override
     public void renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                MatrixStack matrices, VertexConsumer vertices,
-                                                Direction face) {
+                                            MatrixStack matrices, VertexConsumer vertices,
+                                            Direction face) {
         rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(null, face, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuads(matrices, vertices, bakedQuads, stack, light, overlay);
+        }
         rand.setSeed(42L);
         bakedQuads = model.getQuads(null, null, rand);
-        if (!bakedQuads.isEmpty())
+        if (!bakedQuads.isEmpty()) {
             this.renderBakedItemQuadsForFace(matrices, vertices, bakedQuads, stack, light, overlay, face);
+        }
     }
 
     @Override

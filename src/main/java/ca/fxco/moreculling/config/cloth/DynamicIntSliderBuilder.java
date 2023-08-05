@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, DynamicIntSliderEntry,DynamicIntSliderBuilder> {
+public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, DynamicIntSliderEntry, DynamicIntSliderBuilder> {
     private int max;
     private int min;
     private Function<Integer, Text> textGetter = null;
@@ -40,9 +40,13 @@ public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, Dyn
     @NotNull
     public DynamicIntSliderEntry runBuild() {
         DynamicIntSliderEntry entry = new DynamicIntSliderEntry(this, this.min, this.max);
-        if (this.textGetter != null) entry.setTextGetter(this.textGetter);
+        if (this.textGetter != null) {
+            entry.setTextGetter(this.textGetter);
+        }
         entry.setTooltipSupplier(() -> this.tooltipSupplier.apply(entry.getValue()));
-        if (this.errorSupplier != null) entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        if (this.errorSupplier != null) {
+            entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        }
         return entry;
     }
 }

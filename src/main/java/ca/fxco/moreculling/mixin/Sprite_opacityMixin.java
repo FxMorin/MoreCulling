@@ -22,7 +22,7 @@ public class Sprite_opacityMixin implements SpriteOpacity {
 
     @Override
     public NativeImage getUnmipmappedImage() {
-        return ((SpriteContentsAccessor)contents).getImage();
+        return ((SpriteContentsAccessor) contents).getImage();
     }
 
     @Override

@@ -37,8 +37,9 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     @Override
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         if (MoreCulling.CONFIG.leavesCullingMode == FAST || CullingUtils.areLeavesOpaque() ||
-                (MoreCulling.CONFIG.leavesCullingMode == VERTICAL && direction.getAxis() == Direction.Axis.Y))
+                (MoreCulling.CONFIG.leavesCullingMode == VERTICAL && direction.getAxis() == Direction.Axis.Y)) {
             return stateFrom.getBlock() instanceof LeavesBlock || super.isSideInvisible(state, stateFrom, direction);
+        }
         return super.isSideInvisible(state, stateFrom, direction);
     }
 
@@ -64,7 +65,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
         return CullingUtils.areLeavesOpaque() &&
-                !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+                !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
 
     @Override

@@ -34,10 +34,12 @@ import java.util.function.Function;
 @Mixin(JsonUnbakedModel.class)
 public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbakedModel {
 
-    @Shadow @Nullable
+    @Shadow
+    @Nullable
     protected JsonUnbakedModel parent;
 
-    @Shadow public abstract List<ModelElement> getElements();
+    @Shadow
+    public abstract List<ModelElement> getElements();
 
     @Unique
     @Nullable
@@ -54,7 +56,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     @Override
     public @Nullable List<CullShapeElement> getCullShapeElements(Identifier id) {
         if (this.cullShapeElements == null) {
-            return this.parent != null ? ((ExtendedUnbakedModel)this.parent).getCullShapeElements(id) : null;
+            return this.parent != null ? ((ExtendedUnbakedModel) this.parent).getCullShapeElements(id) : null;
         }
         return cullShapeElements;
     }
@@ -96,7 +98,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
             )
     )
     private Object overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
-        return modifyElementFace(map.get((Direction)direction));
+        return modifyElementFace(map.get((Direction) direction));
     }
 
     @Inject(

@@ -17,7 +17,9 @@ public class CacheUtils {
 
     private final static @NotNull Supplier<Object2IntLinkedOpenHashMap<BakedQuad>> BakedQuadColorCacheSupplier = () -> {
         Object2IntLinkedOpenHashMap<BakedQuad> initialBakedQuadColorCache = new Object2IntLinkedOpenHashMap<>(256, 0.25F) {
-            @Override protected void rehash(int newN) {}
+            @Override
+            protected void rehash(int newN) {
+            }
         };
         initialBakedQuadColorCache.defaultReturnValue(Integer.MAX_VALUE);
         return initialBakedQuadColorCache;
@@ -35,9 +37,9 @@ public class CacheUtils {
         // ThreadLocal needs to be reset to clear all threads correctly
         BAKED_QUAD_COLOR_CACHE = ImprovedThreadLocal.withInitial(BakedQuadColorCacheSupplier);
         // Reset all model translucency cache
-        Collection<BakedModel> allModels = ((BlockModelsAccessor)blockRenderManager.getModels()).getModels().values();
+        Collection<BakedModel> allModels = ((BlockModelsAccessor) blockRenderManager.getModels()).getModels().values();
         for (BakedModel model : allModels) {
-            ((BakedOpacity)model).resetTranslucencyCache();
+            ((BakedOpacity) model).resetTranslucencyCache();
         }
         //TODO: Reset quad cache
         MoreCulling.LOGGER.info((allModels.size() + 1) + " cache(s) where cleared!");

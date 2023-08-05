@@ -99,18 +99,22 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void setValue(T value) {
-        if (this.locked) return;
+        if (this.locked) {
+            return;
+        }
         this.modifiedValue = value;
-        if (this.onChanged != null)
+        if (this.onChanged != null) {
             this.onChanged.accept(this, this.getValue());
+        }
     }
 
     @Override
     public void reset() {
         this.value = this.binding.getValue(this.storage.getData());
         this.modifiedValue = this.value;
-        if (this.onChanged != null)
+        if (this.onChanged != null) {
             this.onChanged.accept(this, this.getValue());
+        }
     }
 
     @Override
@@ -124,14 +128,19 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     }
 
     public void setAvailable(boolean available) {
-        if (this.locked) return;
+        if (this.locked) {
+            return;
+        }
         this.enabled = available;
-        if (this.onChanged != null)
+        if (this.onChanged != null) {
             this.onChanged.accept(this, this.getValue());
+        }
     }
 
     public void setOnChanged(BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged) {
-        if (this.locked) return;
+        if (this.locked) {
+            return;
+        }
         this.onChanged = onChanged;
     }
 
@@ -142,7 +151,9 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     @Override
     public void applyChanges() {
-        if (this.locked) return;
+        if (this.locked) {
+            return;
+        }
         if (this.enabled) {
             this.binding.setValue(this.storage.getData(), this.modifiedValue);
             this.value = this.modifiedValue;
@@ -185,8 +196,9 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
         }
 
         public Builder<S, T> setTooltip(@Nullable Text tooltip) {
-            if (!this.locked)
+            if (!this.locked) {
                 this.tooltip = tooltip;
+            }
             return this;
         }
 
@@ -216,14 +228,16 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
         public Builder<S, T> onChanged(BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> biconsumer) {
             Validate.notNull(biconsumer, "BiConsumer must not be null");
-            if (!this.locked)
+            if (!this.locked) {
                 this.onChanged = biconsumer;
+            }
             return this;
         }
 
         public Builder<S, T> setEnabled(boolean value) {
-            if (!this.locked)
+            if (!this.locked) {
                 this.enabled = value;
+            }
             return this;
         }
 
@@ -243,8 +257,9 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
         }
 
         public Builder<S, T> setModLimited(boolean isLoaded, Text limitedMessage) {
-            if (isLoaded)
+            if (isLoaded) {
                 this.tooltip = this.tooltip != null ? this.tooltip.copy().append("\n").append(limitedMessage) : limitedMessage;
+            }
             return this;
         }
 

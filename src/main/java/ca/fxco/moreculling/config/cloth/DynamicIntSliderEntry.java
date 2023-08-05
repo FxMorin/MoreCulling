@@ -39,16 +39,16 @@ public class DynamicIntSliderEntry extends AbstractDynamicEntry<Integer> {
     @Override
     public void setValue(Integer value) {
         if (!this.isLocked() && this.isEnabled()) {
-            ((Slider)this.mainWidget).setValue((double) (MathHelper.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
+            ((Slider) this.mainWidget).setValue((double) (MathHelper.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
             value = Math.min(Math.max(value, this.minimum), this.maximum);
             super.setValue(value);
-            ((Slider)this.mainWidget).updateMessage();
+            ((Slider) this.mainWidget).updateMessage();
         }
     }
 
     @Override
     protected ClickableWidget createMainWidget() {
-        return new Slider(0, 0, 152, 20, ((double)this.getValue() - (double)this.minimum) / (double)Math.abs(this.maximum - this.minimum));
+        return new Slider(0, 0, 152, 20, ((double) this.getValue() - (double) this.minimum) / (double) Math.abs(this.maximum - this.minimum));
     }
 
     @Override

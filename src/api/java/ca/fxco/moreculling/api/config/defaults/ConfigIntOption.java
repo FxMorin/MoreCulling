@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 /**
  * Int option that can be used through the API
  * This is a pre-made basic int option that simply stores all the values to be used by the MoreCulling Config API
+ *
  * @since 0.12.0
  */
 public class ConfigIntOption implements ConfigOption<Integer>, ConfigSliderOption<Integer> {

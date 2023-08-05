@@ -10,6 +10,7 @@ import java.util.Map;
 
 @Mixin(BlockModels.class)
 public interface BlockModelsAccessor {
+
     @Accessor
     Map<BlockState, BakedModel> getModels();
 }

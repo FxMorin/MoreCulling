@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, DynamicBooleanListEntry,DynamicBooleanBuilder> {
+public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, DynamicBooleanListEntry, DynamicBooleanBuilder> {
     @Nullable
     private Function<Boolean, Text> yesNoTextSupplier = null;
 
@@ -36,8 +36,9 @@ public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, Dynam
             }
         };
         entry.setTooltipSupplier(() -> this.tooltipSupplier.apply(entry.getValue()));
-        if (this.errorSupplier != null)
+        if (this.errorSupplier != null) {
             entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        }
         return entry;
     }
 }

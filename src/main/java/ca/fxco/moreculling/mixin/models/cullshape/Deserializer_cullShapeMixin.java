@@ -27,7 +27,7 @@ public class Deserializer_cullShapeMixin {
     )
     private void onDeserialize(JsonElement jsonElement, Type type,
                                JsonDeserializationContext jsonContext, CallbackInfoReturnable<JsonUnbakedModel> cir) {
-        ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel)cir.getReturnValue();
+        ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel) cir.getReturnValue();
         JsonObject jsonObj = jsonElement.getAsJsonObject();
         List<CullShapeElement> list = this.cullshapesFromJson(jsonContext, jsonObj);
         unbakedModel.setCullShapeElements(list);

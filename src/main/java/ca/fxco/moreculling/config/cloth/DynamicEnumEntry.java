@@ -35,7 +35,7 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
         }
         this.nameProvider = nameProvider == null ? (t) -> {
             return Text.translatable(t instanceof SelectionListEntry.Translatable ?
-                    ((SelectionListEntry.Translatable)t).getKey() : t.toString());
+                    ((SelectionListEntry.Translatable) t).getKey() : t.toString());
         } : nameProvider;
         this.setValue(builder.getValue());
         this.onChange(); // Run once on load
@@ -46,8 +46,9 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
     }
 
     public void setValue(T value) {
-        if (!this.isLocked() && this.isEnabled())
+        if (!this.isLocked() && this.isEnabled()) {
             this.index.set(this.values.indexOf(value));
+        }
     }
 
     public T getValue() {

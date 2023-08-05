@@ -74,13 +74,15 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
      * MoreCulling config currently does not support globalized
      */
     @Override
-    public void setGlobalized(boolean b) {}
+    public void setGlobalized(boolean b) {
+    }
 
     /**
      * MoreCulling config currently does not support globalized
      */
     @Override
-    public void setGlobalizedExpanded(boolean b) {}
+    public void setGlobalizedExpanded(boolean b) {
+    }
 
     public ConfigBuilder setFallbackCategory(ConfigCategory fallbackCategory) {
         this.fallbackCategory = Objects.requireNonNull(fallbackCategory).getCategoryKey().getString();
@@ -118,7 +120,9 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         if (this.categoryMap.containsKey(categoryKey.getString())) {
             return this.categoryMap.get(categoryKey.getString());
         } else {
-            if (this.fallbackCategory == null) this.fallbackCategory = categoryKey.getString();
+            if (this.fallbackCategory == null) {
+                this.fallbackCategory = categoryKey.getString();
+            }
             return this.categoryMap.computeIfAbsent(categoryKey.getString(), (key) ->
                     new MoreCullingClothConfigCategory(this, categoryKey)
             );
@@ -127,8 +131,9 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
 
     public ConfigBuilder removeCategory(Text category) {
         if (this.categoryMap.containsKey(category.getString()) &&
-                Objects.equals(this.fallbackCategory, category.getString()))
+                Objects.equals(this.fallbackCategory, category.getString())) {
             this.fallbackCategory = null;
+        }
         if (!this.categoryMap.containsKey(category.getString())) {
             throw new NullPointerException("Category doesn't exist!");
         } else {
@@ -139,8 +144,9 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
 
     public ConfigBuilder removeCategoryIfExists(Text category) {
         if (this.categoryMap.containsKey(category.getString()) &&
-                Objects.equals(this.fallbackCategory, category.getString()))
+                Objects.equals(this.fallbackCategory, category.getString())) {
             this.fallbackCategory = null;
+        }
         this.categoryMap.remove(category.getString());
         return this;
     }

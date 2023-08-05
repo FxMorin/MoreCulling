@@ -6,6 +6,7 @@ import java.util.*;
 
 /**
  * Add your config options to this class to add them to the MoreCulling config
+ *
  * @since 0.12.0
  */
 
@@ -16,6 +17,7 @@ public class ConfigAdditions {
 
     /**
      * Use this method to add option to the MoreCulling config
+     *
      * @since 0.12.0
      */
     public static void addOption(String group, ConfigOption<?> option) {
@@ -25,6 +27,7 @@ public class ConfigAdditions {
     /**
      * Allows you to set if a group should be separated into its own tab.
      * This only works in mod menu
+     *
      * @since 0.12.0
      */
     public static void useSeparateTab(String group) {
@@ -33,6 +36,7 @@ public class ConfigAdditions {
 
     /**
      * Makes a group not use a separate tab
+     *
      * @since 0.12.0
      */
     public static void disableSeparateTab(String group) {
@@ -41,6 +45,7 @@ public class ConfigAdditions {
 
     /**
      * Returns if this group will be separated into its own tab
+     *
      * @since 0.12.0
      */
     public static boolean isGroupSeparate(String group) {
@@ -49,6 +54,7 @@ public class ConfigAdditions {
 
     /**
      * This is for internal use only
+     *
      * @since 0.12.0
      */
     @ApiStatus.Internal

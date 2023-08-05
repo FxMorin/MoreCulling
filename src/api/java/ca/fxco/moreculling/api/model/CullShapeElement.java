@@ -37,9 +37,8 @@ public class CullShapeElement {
             if (!(vec3f.x() < -16.0F) && !(vec3f.y() < -16.0F) && !(vec3f.z() < -16.0F) &&
                     !(vec3f.x() > 32.0F) && !(vec3f.y() > 32.0F) && !(vec3f.z() > 32.0F)) {
                 return vec3f;
-            } else {
-                throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vec3f);
             }
+            throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vec3f);
         }
 
         private Vector3f deserializeFrom(JsonObject object) {
@@ -47,24 +46,22 @@ public class CullShapeElement {
             if (!(vec3f.x() < -16.0F) && !(vec3f.y() < -16.0F) && !(vec3f.z() < -16.0F) &&
                     !(vec3f.x() > 32.0F) && !(vec3f.y() > 32.0F) && !(vec3f.z() > 32.0F)) {
                 return vec3f;
-            } else {
-                throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vec3f);
             }
+            throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vec3f);
         }
 
         private Vector3f deserializeVec3f(JsonObject object, String name) {
             JsonArray jsonArray = JsonHelper.getArray(object, name);
             if (jsonArray.size() != 3) {
                 throw new JsonParseException("Expected 3 " + name + " values, found: " + jsonArray.size());
-            } else {
-                float[] fs = new float[3];
-
-                for(int i = 0; i < fs.length; ++i) {
-                    fs[i] = JsonHelper.asFloat(jsonArray.get(i), name + "[" + i + "]");
-                }
-
-                return new Vector3f(fs[0], fs[1], fs[2]);
             }
+            float[] fs = new float[3];
+
+            for (int i = 0; i < fs.length; ++i) {
+                fs[i] = JsonHelper.asFloat(jsonArray.get(i), name + "[" + i + "]");
+            }
+
+            return new Vector3f(fs[0], fs[1], fs[2]);
         }
     }
 }

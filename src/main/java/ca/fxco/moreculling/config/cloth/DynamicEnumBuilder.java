@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilder<T, DynamicEnumEntry<T>,DynamicEnumBuilder<T>> {
+public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilder<T, DynamicEnumEntry<T>, DynamicEnumBuilder<T>> {
     private final Class<T> clazz;
     @Nullable
     private Function<T, Text> enumNameProvider;
@@ -36,8 +36,9 @@ public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilde
     public DynamicEnumEntry<T> runBuild() {
         DynamicEnumEntry<T> entry = new DynamicEnumEntry<>(this, this.clazz, this.enumNameProvider);
         entry.setTooltipSupplier(() -> this.tooltipSupplier.apply(entry.getValue()));
-        if (this.errorSupplier != null)
+        if (this.errorSupplier != null) {
             entry.setErrorSupplier(() -> this.errorSupplier.apply(entry.getValue()));
+        }
         return entry;
     }
 }

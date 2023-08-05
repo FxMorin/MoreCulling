@@ -8,10 +8,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ChorusFlowerBlock.class)
 public class ChorusFlowerBlock_voxelMixin extends Block {
 
+    @Unique
     private static final VoxelShape CULL_SHAPE = VoxelShapes.union(
             Block.createCuboidShape(0.0, 2.0, 2.0, 16.0, 14.0, 14.0),
             Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 16.0, 14.0),

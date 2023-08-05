@@ -38,7 +38,7 @@ public class PowderSnowBlock_cullMixin extends Block implements MoreBlockCulling
 
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
-        return !((BakedOpacity)blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+        return !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
     }
 
     @Override

@@ -39,7 +39,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     private boolean enabled;
     private final boolean locked;
 
-    public AbstractDynamicEntry(AbstractDynamicBuilder<T, AbstractConfigListEntry<T>,?> builder) {
+    public AbstractDynamicEntry(AbstractDynamicBuilder<T, AbstractConfigListEntry<T>, ?> builder) {
         this(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
     }
 
@@ -58,16 +58,20 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
                 this.setValue(this.getDefaultValue().get());
                 this.onChange();
             }
-        }).dimensions(0,0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20).build();
+        }).dimensions(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20).build();
         this.widgets = Lists.newArrayList(this.mainWidget, this.resetButton);
     }
 
     public void onChange() {
-        if (this.changeConsumer != null) this.changeConsumer.accept(this, this.getValue());
+        if (this.changeConsumer != null) {
+            this.changeConsumer.accept(this, this.getValue());
+        }
     }
 
     public final void save() {
-        if (this.saveConsumer != null) this.saveConsumer.accept(this.getValue());
+        if (this.saveConsumer != null) {
+            this.saveConsumer.accept(this.getValue());
+        }
     }
 
     public final boolean isEnabled() {
@@ -100,8 +104,9 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     }
 
     public void setValue(T value) {
-        if (!this.locked && this.enabled)
+        if (!this.locked && this.enabled) {
             this.value.set(value);
+        }
     }
 
     public T getOriginal() {
@@ -138,10 +143,18 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         boolean hasError = this.getConfigError().isPresent();
         boolean isEdited = this.isEdited();
         boolean notEnabled = !isEnabled();
-        if (hasError) text = text.formatted(Formatting.RED);
-        if (isEdited) text = text.formatted(Formatting.ITALIC);
-        if ((!hasError && !isEdited) || notEnabled) text = text.formatted(Formatting.GRAY);
-        if (notEnabled) text = text.formatted(Formatting.STRIKETHROUGH);
+        if (hasError) {
+            text = text.formatted(Formatting.RED);
+        }
+        if (isEdited) {
+            text = text.formatted(Formatting.ITALIC);
+        }
+        if ((!hasError && !isEdited) || notEnabled) {
+            text = text.formatted(Formatting.GRAY);
+        }
+        if (notEnabled) {
+            text = text.formatted(Formatting.STRIKETHROUGH);
+        }
         return text;
     }
 

@@ -45,7 +45,9 @@ public enum LeavesCullingMode implements SelectionListEntry.Translatable {
     public static Text[] getLocalizedNames() {
         LeavesCullingMode[] values = values();
         Text[] names = new Text[values.length];
-        for (int i = 0; i < values.length; i++) names[i] = values[i].getText();
+        for (int i = 0; i < values.length; i++) {
+            names[i] = values[i].getText();
+        }
         return names;
     }
 }
