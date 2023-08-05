@@ -5,7 +5,6 @@ import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.control.ControlElement;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -106,10 +105,10 @@ public class FloatSliderControl implements Control<Float> {
             double thumbOffset = MathHelper.clamp((double) (this.getFloatValue() - this.min) / this.range * sliderWidth, 0, sliderWidth);
 
             double thumbX = sliderX + thumbOffset - THUMB_WIDTH;
-            double trackY = sliderY + (sliderHeight / 2.0) - ((double) TRACK_HEIGHT / 2);
+            double trackY = (float) sliderY + ((float) sliderHeight / 2) - ((double) TRACK_HEIGHT / 2);
 
-            this.drawRect(thumbX, sliderY, thumbX + (THUMB_WIDTH * 2), sliderY + sliderHeight, 0xFFFFFFFF);
-            this.drawRect(sliderX, trackY, sliderX + sliderWidth, trackY + TRACK_HEIGHT, 0xFFFFFFFF);
+            drawContext.fill((int) thumbX, sliderY, (int) thumbX + (THUMB_WIDTH * 2), sliderY + sliderHeight, 0xFFFFFFFF);
+            drawContext.fill(sliderX, (int) trackY, sliderX + sliderWidth, (int) trackY + TRACK_HEIGHT, 0xFFFFFFFF);
 
             String label = String.valueOf(this.getFloatValue());
 

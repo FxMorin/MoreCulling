@@ -103,10 +103,10 @@ public class IntSliderControl implements Control<Integer> {
             double thumbOffset = MathHelper.clamp((double) (this.getIntValue() - this.min) / this.range * sliderWidth, 0, sliderWidth);
 
             double thumbX = sliderX + thumbOffset - THUMB_WIDTH;
-            double trackY = sliderY + (sliderHeight / 2) - ((double) TRACK_HEIGHT / 2);
+            double trackY = (float) sliderY + ((float) sliderHeight / 2) - ((double) TRACK_HEIGHT / 2);
 
-            this.drawRect(thumbX, sliderY, thumbX + (THUMB_WIDTH * 2), sliderY + sliderHeight, 0xFFFFFFFF);
-            this.drawRect(sliderX, trackY, sliderX + sliderWidth, trackY + TRACK_HEIGHT, 0xFFFFFFFF);
+            drawContext.fill((int) thumbX, sliderY, (int) thumbX + (THUMB_WIDTH * 2), sliderY + sliderHeight, 0xFFFFFFFF);
+            drawContext.fill(sliderX, (int) trackY, sliderX + sliderWidth, (int) trackY + TRACK_HEIGHT, 0xFFFFFFFF);
 
             String label = String.valueOf(this.getIntValue());
 

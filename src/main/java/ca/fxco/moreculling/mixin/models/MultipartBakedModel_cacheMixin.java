@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Mixin(MultipartBakedModel.class)
+@Mixin(value = MultipartBakedModel.class, priority = 1010)
 public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`

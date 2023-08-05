@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(WeightedBakedModel.class)
+@Mixin(value = WeightedBakedModel.class, priority = 1010)
 public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Weighted Caches on game load instead of using `getQuads`

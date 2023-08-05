@@ -2,27 +2,26 @@ package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
-import me.fallenbreath.conditionalmixin.api.annotation.Condition;
-import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Restriction(require = @Condition("sodium"))
-@Mixin(BlockOcclusionCache.class)
+/**
+ * Sodium Support
+ */
+@Pseudo
+@Mixin(targets = {
+        "me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache", // <0.5.0
+        "me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockOcclusionCache" // >=0.5.0
+})
 public class BlockOcclusionCache_sodiumMixin {
-
-    /*
-     * Sodium support
-     */
-
 
     @Inject(
             method = "shouldDrawSide",
