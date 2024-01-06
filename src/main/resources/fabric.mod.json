@@ -28,7 +28,7 @@
   ],
   "accessWidener" : "moreculling.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.18",
+    "fabricloader": ">=0.15.3",
     "minecraft": ">=1.20",
     "java": ">=17",
     "cloth-config": ">=11.0.99"
