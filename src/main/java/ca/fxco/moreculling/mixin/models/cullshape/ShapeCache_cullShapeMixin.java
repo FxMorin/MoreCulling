@@ -3,6 +3,7 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -23,9 +24,11 @@ public class ShapeCache_cullShapeMixin {
             )
     )
     private boolean shouldDoShapeCache(BlockState state) {
-        if (blockRenderManager != null && blockRenderManager.getModel(state) != null &&
-                ((BakedOpacity) blockRenderManager.getModel(state)).getCullingShape(state) != null) {
-            return true;
+        if (blockRenderManager != null) {
+            BakedModel model = blockRenderManager.getModel(state);
+            if (model != null && ((BakedOpacity) model).getCullingShape(state) != null) {
+                return true;
+            }
         }
         return state.isOpaque();
     }
@@ -40,8 +43,15 @@ public class ShapeCache_cullShapeMixin {
             )
     )
     private VoxelShape customCullingShape(Block instance, BlockState state, BlockView blockView, BlockPos blockPos) {
-        VoxelShape shape = blockRenderManager != null ?
-                ((BakedOpacity) blockRenderManager.getModel(state)).getCullingShape(state) : null;
-        return shape == null ? instance.getCullingShape(state, blockView, blockPos) : shape;
+        if (blockRenderManager != null) {
+            BakedModel model = blockRenderManager.getModel(state);
+            if (model != null) {
+                VoxelShape voxelShape = ((BakedOpacity) model).getCullingShape(state);
+                if (voxelShape != null) {
+                    return voxelShape;
+                }
+            }
+        }
+        return instance.getCullingShape(state, blockView, blockPos);
     }
 }
