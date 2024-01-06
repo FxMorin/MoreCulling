@@ -27,7 +27,6 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 public class CullingUtils {
 
     private static final Random random = Random.createLocal();
-    private static final Direction[] DIRECTIONS = Direction.values();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -101,7 +100,7 @@ public class CullingUtils {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side))) {
             boolean isSurrounded = true;
-            for (Direction dir : DIRECTIONS) {
+            for (Direction dir : DirectionUtils.DIRECTIONS) {
                 if (dir != side) {
                     BlockPos pos = thisPos.offset(dir);
                     BlockState state = view.getBlockState(pos);

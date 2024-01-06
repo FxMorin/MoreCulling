@@ -1,0 +1,113 @@
+package ca.fxco.moreculling.mixin.compat;
+
+import ca.fxco.moreculling.states.ItemRendererStates;
+import ca.fxco.moreculling.utils.CacheUtils;
+import ca.fxco.moreculling.utils.DirectionUtils;
+import com.bawnorton.mixinsquared.TargetHandler;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
+import me.fallenbreath.conditionalmixin.api.annotation.Condition;
+import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.color.item.ItemColorProvider;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+@Restriction(require = @Condition("sodium"))
+@Mixin(value = ItemRenderer.class, priority = 1200)
+public class ItemRenderer_sodiumMixin {
+
+    // Sodium cancels the entire method... again
+
+    @TargetHandler(
+            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
+            name = "renderModelFast"
+    )
+    @Redirect(
+            method = "@MixinSquared:Handler",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lme/jellysquid/mods/sodium/client/util/DirectionUtil;" +
+                            "ALL_DIRECTIONS:[Lnet/minecraft/util/math/Direction;",
+                    opcode = Opcodes.GETSTATIC
+            )
+    )
+    private Direction[] moreculling$modifyDirections$Sodium() {
+        return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
+    }
+
+    @TargetHandler(
+            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
+            name = "renderModelFast"
+    )
+    @WrapOperation(
+            method = "@MixinSquared:Handler",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/model/BakedModel;getQuads(" +
+                            "Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/Direction;" +
+                            "Lnet/minecraft/util/math/random/Random;)Ljava/util/List;"
+            )
+    )
+    private List<BakedQuad> moreculling$onlySomeFaces$Sodium(BakedModel instance, BlockState blockState,
+                                                             Direction direction, Random random,
+                                                             Operation<List<BakedQuad>> original) {
+        if (ItemRendererStates.DIRECTIONS != null) {
+            List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
+            Iterator<BakedQuad> iterator = bakedQuads.iterator();
+            quads:
+            while (iterator.hasNext()) {
+                BakedQuad bakedQuad = iterator.next();
+                Direction face = bakedQuad.getFace();
+                for (Direction dir : ItemRendererStates.DIRECTIONS) {
+                    if (face == dir) {
+                        continue quads;
+                    }
+                }
+                iterator.remove();
+            }
+            return bakedQuads;
+        }
+        return original.call(instance, blockState, direction, random);
+    }
+
+    @TargetHandler(
+            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
+            name = "renderBakedItemQuads"
+    )
+    @Redirect(
+            method = "@MixinSquared:Handler",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/color/item/ItemColorProvider;" +
+                            "getColor(Lnet/minecraft/item/ItemStack;I)I"
+            )
+    )
+    private int moreculling$cachedColorLookup$Sodium(ItemColorProvider instance, ItemStack stack, int tintIndex,
+                                                     @Local BakedQuad bakedQuad) {
+        Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = CacheUtils.BAKED_QUAD_COLOR_CACHE.get();
+        int color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
+        if (color == Integer.MAX_VALUE) {
+            color = instance.getColor(stack, tintIndex);
+            bakedQuadColorCache.put(bakedQuad, color);
+            if (bakedQuadColorCache.size() == 256) {
+                bakedQuadColorCache.removeLastInt();
+            }
+        }
+        return color;
+    }
+}

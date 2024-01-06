@@ -4,9 +4,26 @@ import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
+import java.util.Map;
+
 import static net.minecraft.util.math.Direction.*;
 
 public class DirectionUtils {
+
+    public static final Direction[] DIRECTIONS = Direction.values();
+
+    private static final Map<Direction, Direction[]> DIRECTIONS_EXCLUDING_DIRECTION_MAP = Map.of( // Cached
+            DOWN, new Direction[] { UP, NORTH, SOUTH, WEST, EAST },
+            UP, new Direction[] { DOWN, NORTH, SOUTH, WEST, EAST },
+            NORTH, new Direction[] { DOWN, UP, SOUTH, WEST, EAST },
+            SOUTH, new Direction[] { DOWN, UP, NORTH, WEST, EAST },
+            WEST, new Direction[] { DOWN, UP, NORTH, SOUTH, EAST },
+            EAST, new Direction[] { DOWN, UP, NORTH, SOUTH, WEST }
+    );
+
+    public static Direction[] getAllDirectionsExcluding(Direction excluding) {
+        return DIRECTIONS_EXCLUDING_DIRECTION_MAP.get(excluding);
+    }
 
     public static Direction changeDirectionUsingTransformation(Direction dir, Transformation transform) {
         if (transform.rotation.y() == 0) {

@@ -74,8 +74,8 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
             ),
             cancellable = true
     )
-    public void optimizedRender(T itemFrameEntity, float f, float g, MatrixStack matrixStack,
-                                VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+    private void moreculling$optimizedRender(T itemFrameEntity, float f, float g, MatrixStack matrixStack,
+                                             VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) {
             return;
         }
@@ -145,9 +145,8 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                         matrixStack,
                         vertexConsumerProvider,
                         l,
-                        itemFrameEntity.getId(),
                         itemFrameEntity,
-                        this.dispatcher.camera.getPos()
+                        this.dispatcher.camera
                 );
             }
             matrixStack.pop();

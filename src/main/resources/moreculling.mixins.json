@@ -27,6 +27,7 @@
     "blockstates.Block_drawSideMixin",
     "blockstates.MinecraftClient_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
+    "compat.ItemRenderer_sodiumMixin",
     "entities.Cuboid_cullMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
@@ -40,7 +41,8 @@
     "models.cullshape.JsonUnbakedModel_cullShapeMixin",
     "models.cullshape.ShapeCache_cullShapeMixin",
     "renderers.BlockModelRenderer_cullMixin",
-    "renderers.ItemRenderer_bakedModelMixin",
+    "renderers.ItemRenderer_apiMixin",
+    "renderers.ItemRenderer_faceCullingMixin",
     "renderers.SignBlockEntityRenderer_textMixin"
   ],
   "injectors": {
