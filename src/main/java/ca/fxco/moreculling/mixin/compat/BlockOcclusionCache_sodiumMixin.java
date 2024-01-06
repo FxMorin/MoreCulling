@@ -2,6 +2,8 @@ package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
+import me.fallenbreath.conditionalmixin.api.annotation.Condition;
+import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 /**
  * Sodium Support
  */
+@Restriction(require = @Condition("sodium"))
 @Pseudo
 @Mixin(targets = {
         "me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache", // <0.5.0

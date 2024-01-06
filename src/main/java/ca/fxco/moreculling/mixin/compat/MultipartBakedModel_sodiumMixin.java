@@ -1,8 +1,9 @@
-package ca.fxco.moreculling.mixin.models;
+package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
+import com.bawnorton.mixinsquared.TargetHandler;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.block.BlockState;
@@ -26,9 +27,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Restriction(conflict = @Condition("sodium"))
+@Restriction(require = @Condition("sodium"))
 @Mixin(value = MultipartBakedModel.class, priority = 1010)
-public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
+public class MultipartBakedModel_sodiumMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
 
@@ -70,9 +71,12 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
         return cachedShape;
     }
 
-
+    @TargetHandler(
+            mixin = "me.jellysquid.mods.sodium.mixin.features.model.MultipartBakedModelMixin",
+            name = "getQuads"
+    )
     @Inject(
-            method = "getQuads",
+            method = "@MixinSquared:Handler",
             at = @At("RETURN")
     )
     private void onGetQuads(@Nullable BlockState state, @Nullable Direction face, Random random,

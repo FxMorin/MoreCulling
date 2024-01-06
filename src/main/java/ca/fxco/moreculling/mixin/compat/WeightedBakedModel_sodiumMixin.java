@@ -1,40 +1,30 @@
-package ca.fxco.moreculling.mixin.models;
+package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
+import com.bawnorton.mixinsquared.TargetHandler;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.MultipartBakedModel;
+import net.minecraft.client.render.model.WeightedBakedModel;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
-@Restriction(conflict = @Condition("sodium"))
-@Mixin(value = MultipartBakedModel.class, priority = 1010)
-public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
+@Restriction(require = @Condition("sodium"))
+@Mixin(value = WeightedBakedModel.class, priority = 1010)
+public abstract class WeightedBakedModel_sodiumMixin implements BakedOpacity {
 
-    //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
-
-    @Shadow
-    @Final
-    private List<Pair<Predicate<BlockState>, BakedModel>> components;
+    //TODO: Find a proper way to declare all Weighted Caches on game load instead of using `getQuads`
 
     @Unique // Only works on chunk update, so the best performance is after placing a block
     private byte solidFaces = 0; // 0 = all sides translucent
@@ -52,27 +42,13 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
         solidFaces = 0;
     }
 
-    @Override
-    public @Nullable VoxelShape getCullingShape(BlockState state) {
-        VoxelShape cachedShape = null;
-        for (Pair<Predicate<BlockState>, BakedModel> pair : this.components) {
-            if ((pair.getLeft()).test(state)) {
-                VoxelShape shape = ((BakedOpacity) pair.getRight()).getCullingShape(state);
-                if (shape != null) {
-                    if (cachedShape == null) {
-                        cachedShape = shape;
-                    } else {
-                        cachedShape = VoxelShapes.union(cachedShape, shape);
-                    }
-                }
-            }
-        }
-        return cachedShape;
-    }
 
-
+    @TargetHandler(
+            mixin = "me.jellysquid.mods.sodium.mixin.features.model.WeightedBakedModelMixin",
+            name = "getQuads"
+    )
     @Inject(
-            method = "getQuads",
+            method = "@MixinSquared:Handler",
             at = @At("RETURN")
     )
     private void onGetQuads(@Nullable BlockState state, @Nullable Direction face, Random random,
