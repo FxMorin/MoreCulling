@@ -107,8 +107,8 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                         double di;
                         double offsetZFighting = isInvisible ? 0.5 :
                                 skipFrontRender ?
-                                        ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 6000) > 6 ?
-                                                0.4452 - di : 0.4452) :
+                                        ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 5000) > 6 ?
+                                                Math.max(0.4452 - di, 0.4) : 0.4452) :
                                         0.4375;
                         matrixStack.translate(0.0, 0.0, offsetZFighting);
                         int j = itemFrameEntity.getRotation() % 4 * 2;
