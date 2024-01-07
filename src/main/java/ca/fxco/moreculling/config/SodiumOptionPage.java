@@ -63,6 +63,16 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.rainCulling = value, opts -> opts.rainCulling)
                 .build();
 
+        // Beacon Beam Culling
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> beaconBeamCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.beaconBeamCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.beaconBeamCulling = value, opts -> opts.beaconBeamCulling)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .build();
+
         // Leaves Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> leavesCullingAmount = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.leavesCullingAmount"))
@@ -188,6 +198,7 @@ public class SodiumOptionPage {
                 .add(rainCulling)
                 .add(cloudCulling)
                 .add(signTextCulling)
+                .add(beaconBeamCulling)
                 .add(blockStateCulling)
                 .build()
         );

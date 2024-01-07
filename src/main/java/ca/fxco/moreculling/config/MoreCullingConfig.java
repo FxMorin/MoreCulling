@@ -45,6 +45,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean endGatewayCulling = false;
 
+    public boolean beaconBeamCulling = true;
+
     public boolean entityModelCulling = false;
 
     public boolean useOnModdedBlocksByDefault = true;

@@ -104,6 +104,14 @@ public class ModMenuConfig implements ModMenuApi {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.rainCulling = newValue)
                 .build());
 
+        // Beacon Beam Culling
+        generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.beaconBeamCulling"))
+                .setValue(MoreCulling.CONFIG.beaconBeamCulling)
+                .setDefaultValue(true)
+                .setTooltip(Text.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.beaconBeamCulling = newValue)
+                .build());
+
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.leavesCullingAmount"), 1, 4)
                 .setValue(MoreCulling.CONFIG.leavesCullingAmount)

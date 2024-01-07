@@ -9,6 +9,8 @@
 	"moreculling.config.option.signTextCulling.tooltip": "Culls sign text so that it wont render when you can't see it in some cases",
 	"moreculling.config.option.rainCulling": "Rain/Snow Culling",
 	"moreculling.config.option.rainCulling.tooltip": "Does frustum culling on Rain/Snow",
+	"moreculling.config.option.beaconBeamCulling": "Beacon Beam Culling",
+	"moreculling.config.option.beaconBeamCulling.tooltip": "Does frustum culling on beacon beams",
 	"moreculling.config.option.entityModelCulling": "Entity Model Culling",
 	"moreculling.config.option.entityModelCulling.tooltip": "This only helps if your gpu is the bottleneck and your cpu has some performance to spare!",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",

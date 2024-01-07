@@ -13,6 +13,7 @@
     "WorldRenderer_rainMixin",
     "accessors.BlockModelsAccessor",
     "accessors.SpriteContentsAccessor",
+    "accessors.WorldRendererAccessor",
     "blocks.AbstractRailBlock_cullAgainstMixin",
     "blocks.ChorusFlowerBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
@@ -40,7 +41,9 @@
     "models.cullshape.Deserializer_cullShapeMixin",
     "models.cullshape.JsonUnbakedModel_cullShapeMixin",
     "models.cullshape.ShapeCache_cullShapeMixin",
+    "renderers.BeaconBlockEntityRenderer_frustumMixin",
     "renderers.BlockModelRenderer_cullMixin",
+    "renderers.EndGatewayBlockEntityRenderer_beamMixin",
     "renderers.ItemRenderer_apiMixin",
     "renderers.ItemRenderer_faceCullingMixin",
     "renderers.SignBlockEntityRenderer_textMixin"
