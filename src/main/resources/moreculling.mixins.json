@@ -27,8 +27,6 @@
     "blockstates.MinecraftClient_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "compat.ItemRenderer_sodiumMixin",
-    "compat.MultipartBakedModel_sodiumMixin",
-    "compat.WeightedBakedModel_sodiumMixin",
     "entities.Cuboid_cullMixin",
     "entities.ItemFrameEntityRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
