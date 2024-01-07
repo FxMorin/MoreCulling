@@ -43,6 +43,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean powderSnowCulling = true;
 
+    public boolean endGatewayCulling = false;
+
     public boolean entityModelCulling = false;
 
     public boolean useOnModdedBlocksByDefault = true;

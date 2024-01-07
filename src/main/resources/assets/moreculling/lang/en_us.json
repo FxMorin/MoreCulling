@@ -34,6 +34,8 @@
 	"moreculling.config.option.includeMangroveRoots.tooltip": "If mangrove roots should also be culled using the same way. BlockState does not work!",
 	"moreculling.config.option.powderSnowCulling": "Powder Snow Culling",
 	"moreculling.config.option.powderSnowCulling.tooltip": "Fixes powder snow not culling against solid faces",
+	"moreculling.config.option.endGatewayCulling": "End Gateway Culling",
+	"moreculling.config.option.endGatewayCulling.tooltip": "Makes it possible for other blocks to cull against end gateways",
 	"moreculling.config.option.useOnModdedBlocks": "Modded BlockState Culling",
 	"moreculling.config.option.useOnModdedBlocks.tooltip": "If blockstate culling should work on modded blocks by default",
 	"moreculling.config.options.blockstate": "BlockState",

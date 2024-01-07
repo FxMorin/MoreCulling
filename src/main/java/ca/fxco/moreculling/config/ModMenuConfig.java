@@ -155,6 +155,17 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .build();
 
+        // End Gateway Culling
+        DynamicBooleanListEntry endGatewayCulling = new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.endGatewayCulling"))
+                .setValue(MoreCulling.CONFIG.endGatewayCulling)
+                .setDefaultValue(false)
+                .setTooltip(Text.translatable("moreculling.config.option.endGatewayCulling.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.endGatewayCulling = newValue;
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                })
+                .build();
+
         // BlockStates
         generalCategory.addEntry(new DynamicBooleanBuilder(Text.translatable("moreculling.config.option.blockStateCulling"))
                 .setValue(MoreCulling.CONFIG.useBlockStateCulling)
@@ -230,6 +241,7 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(includeMangroveRoots);
 
         generalCategory.addEntry(powderSnowCulling);
+        generalCategory.addEntry(endGatewayCulling);
         leavesCullingAmount.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
 
         compatCategory.addEntry(useOnModdedBlocks);

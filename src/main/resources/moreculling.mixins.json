@@ -16,6 +16,7 @@
     "blocks.AbstractRailBlock_cullAgainstMixin",
     "blocks.ChorusFlowerBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
+    "blocks.EndGatewayBlock_cullMixin",
     "blocks.FletchingTableBlock_devMixin",
     "blocks.LadderBlock_cullAgainstMixin",
     "blocks.LeavesBlock_typesMixin",

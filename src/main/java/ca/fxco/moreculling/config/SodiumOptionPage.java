@@ -113,6 +113,17 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
 
+        // End Gateway Culling
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> endGatewayCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setName(Text.translatable("moreculling.config.option.endGatewayCulling"))
+                .setTooltip(Text.translatable("moreculling.config.option.endGatewayCulling.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
+                .setImpact(OptionImpact.LOW)
+                .setBinding((opts, value) -> opts.endGatewayCulling = value, opts -> opts.endGatewayCulling)
+                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
+                .build();
+
         // BlockStates
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> blockStateCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setName(Text.translatable("moreculling.config.option.blockStateCulling"))
@@ -125,6 +136,7 @@ public class SodiumOptionPage {
                     leavesCullingMode.setAvailable(value);
                     includeMangroveRoots.setAvailable(value);
                     powderSnowCulling.setAvailable(value);
+                    endGatewayCulling.setAvailable(value);
                 })
                 .build();
 
@@ -210,6 +222,7 @@ public class SodiumOptionPage {
 
         groups.add(OptionGroup.createBuilder()
                 .add(powderSnowCulling)
+                .add(endGatewayCulling)
                 .build()
         );
 
