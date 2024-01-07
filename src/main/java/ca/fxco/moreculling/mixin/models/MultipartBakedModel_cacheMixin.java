@@ -3,8 +3,6 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
-import me.fallenbreath.conditionalmixin.api.annotation.Condition;
-import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -26,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Restriction(conflict = @Condition("sodium"))
 @Mixin(value = MultipartBakedModel.class, priority = 1010)
 public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
 
