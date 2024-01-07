@@ -145,7 +145,9 @@ public class ItemRenderer_faceCullingMixin {
                 TransformationUtils.canCullTransformation(transformation);
         double dist = ItemRendererStates.CAMERA.getPos().distanceTo(framePos);
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
-        if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
+        if (isBlockItem && dist <= 3) { // 3 Blocks away
+            ItemRendererStates.DIRECTIONS = null;
+        } else if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
             if (!canCull) {
                 ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH, NORTH };
             } else {
