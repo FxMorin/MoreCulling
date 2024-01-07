@@ -20,4 +20,12 @@ public class MathUtils {
         angle -= start;
         return (angle + PI2) % PI2 > (end + PI2) % PI2;
     }
+
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    public static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
+    }
 }

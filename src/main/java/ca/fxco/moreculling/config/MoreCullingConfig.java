@@ -4,9 +4,13 @@ import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
+
+    @ConfigEntry.Gui.Excluded
+    public int version = 0;
 
     // You can disable the sodium menu in the config
     public boolean enableSodiumMenu = true;
@@ -25,11 +29,11 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean useItemFrameLOD = true;
 
-    public int itemFrameLODRange = 384; // default 384 (128 blocks) away
+    public int itemFrameLODRange = 128; // default 128 blocks away
 
     public boolean useItemFrame3FaceCulling = true;
 
-    public float itemFrame3FaceCullingRange = 12.0F; // default 12 (4 blocks) away
+    public float itemFrame3FaceCullingRange = 4F; // default 4 blocks away
 
     public LeavesCullingMode leavesCullingMode = LeavesCullingMode.DEFAULT;
 

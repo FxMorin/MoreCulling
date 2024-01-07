@@ -20,7 +20,7 @@ public class FloatSliderControl implements Control<Float> {
     public FloatSliderControl(Option<Float> option, float min, float max, float interval, Text text) {
         Validate.isTrue(max > min, "The maximum value must be greater than the minimum value");
         Validate.isTrue(interval > 0, "The slider interval must be greater than zero");
-        Validate.isTrue(((max - min) % interval) == 0, "The maximum value must be divisable by the interval");
+        Validate.isTrue(((max - min) / interval) % 1 == 0, "The maximum value must be divisable by the interval");
         Validate.notNull(text, "The slider mode must not be null");
 
         this.option = option;

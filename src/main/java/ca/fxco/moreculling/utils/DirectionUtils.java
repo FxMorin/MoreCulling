@@ -26,11 +26,12 @@ public class DirectionUtils {
     }
 
     public static Direction changeDirectionUsingTransformation(Direction dir, Transformation transform) {
-        if (transform.rotation.y() == 0) {
+        float yRot = transform.rotation.y();
+        if (yRot == 0) {
             return dir.getOpposite();
-        } else if (transform.rotation.y() == 90) {
+        } else if (yRot == 90) {
             return dir.rotateYCounterclockwise();
-        } else if (transform.rotation.y() == 270) {
+        } else if (yRot == 270) {
             return dir.rotateYClockwise();
         }
         return dir;

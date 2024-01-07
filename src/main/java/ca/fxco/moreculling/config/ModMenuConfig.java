@@ -182,9 +182,9 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameMapCulling = newValue)
                 .build();
-        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.itemFrameLODRange"), 48, 768) // Between 16 & 256 blocks - 1 & 16 chunks
+        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder(Text.translatable("moreculling.config.option.itemFrameLODRange"), 16, 256) // Between 16 & 256 blocks - 1 & 16 chunks
                 .setValue(MoreCulling.CONFIG.itemFrameLODRange)
-                .setDefaultValue(384)
+                .setDefaultValue(128)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameLODRange = newValue)
                 .build();
@@ -195,9 +195,9 @@ public class ModMenuConfig implements ModMenuApi {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrameLOD = newValue)
                 .setChangeConsumer((instance, value) -> itemFrameLODRange.setEnabledState(value))
                 .build();
-        DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"), 0.0F, 48.0F, 0.5F) // Between 0 & 16 blocks
+        DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange"), 2F, 16F, 0.2F) // Between 0 & 16 blocks
                 .setValue(MoreCulling.CONFIG.itemFrame3FaceCullingRange)
-                .setDefaultValue(12.0F)
+                .setDefaultValue(4F)
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrame3FaceCullingRange = newValue)
                 .build();

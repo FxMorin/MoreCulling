@@ -143,7 +143,7 @@ public class ItemRenderer_faceCullingMixin {
         Transformation transformation = transformationRef.get();
         boolean canCull = ((!isBlockItem && !frame.isInvisible()) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
-        double dist = ItemRendererStates.CAMERA.getPos().squaredDistanceTo(framePos);
+        double dist = ItemRendererStates.CAMERA.getPos().distanceTo(framePos);
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
         if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
             if (!canCull) {
