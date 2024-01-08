@@ -1,8 +1,12 @@
 package ca.fxco.moreculling.utils;
 
+import ca.fxco.moreculling.api.data.QuadBounds;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.util.math.Direction;
+import org.joml.*;
 import org.joml.Math;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+
+import static net.fabricmc.fabric.impl.client.indigo.renderer.mesh.EncodingFormat.*;
 
 public class VertexUtils {
 
@@ -21,5 +25,42 @@ public class VertexUtils {
                 Math.fma(matrix.m01(), x2, Math.fma(matrix.m11(), y2, Math.fma(matrix.m21(), z2, matrix.m31()))),
                 Math.fma(matrix.m02(), x2, Math.fma(matrix.m12(), y2, Math.fma(matrix.m22(), z2, matrix.m32())))
         );
+    }
+
+    private static Vector3f getPos(int[] data, int vertexIndex) {
+        final int index = vertexIndex * VERTEX_STRIDE;
+        return new Vector3f(
+                Float.intBitsToFloat(data[index]),
+                Float.intBitsToFloat(data[index + 1]),
+                Float.intBitsToFloat(data[index + 2])
+        );
+    }
+
+    private static Vector2f getPos(int[] data, int vertexIndex, Direction.Axis axis) {
+        final int index = vertexIndex * VERTEX_STRIDE;
+        if (axis.isVertical()) {
+            return new Vector2f(
+                    Float.intBitsToFloat(data[index]),    // x
+                    Float.intBitsToFloat(data[index + 2]) // z
+            );
+        } else {
+            return new Vector2f(
+                    (float) axis.choose(Float.intBitsToFloat(data[index + 2]), 0, Float.intBitsToFloat(data[index])),
+                    Float.intBitsToFloat(data[index + 1])
+            );
+        }
+    }
+
+    public static QuadBounds getQuadBounds(BakedQuad quad, Direction.Axis axis) {
+        Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
+        Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
+        int[] vertexData = quad.getVertexData();
+        for (int i = 0; i < 4; i++) {
+            Vector2f tmpPos = getPos(vertexData, i, axis).mul(16, 16);
+            Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
+            minPos.min(pos);
+            maxPos.max(pos);
+        }
+        return new QuadBounds(minPos.x, minPos.y, maxPos.x, maxPos.y);
     }
 }

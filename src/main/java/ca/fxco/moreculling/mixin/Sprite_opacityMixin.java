@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin;
 
+import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.mixin.accessors.SpriteContentsAccessor;
 import ca.fxco.moreculling.utils.SpriteUtils;
@@ -31,12 +32,27 @@ public class Sprite_opacityMixin implements SpriteOpacity {
     }
 
     @Override
+    public boolean hasTransparency(QuadBounds bounds) {
+        return SpriteUtils.doesHaveTransparency(getUnmipmappedImage());
+    }
+
+    @Override
     public boolean hasTranslucency() {
-        return hasTranslucency(null);
+        return hasTranslucency((List<NativeImage>)null);
+    }
+
+    @Override
+    public boolean hasTranslucency(QuadBounds bounds) {
+        return hasTranslucency(bounds, null);
     }
 
     @Override
     public boolean hasTranslucency(@Nullable List<NativeImage> quadNatives) {
         return SpriteUtils.doesHaveTranslucency(getUnmipmappedImage(), quadNatives);
+    }
+
+    @Override
+    public boolean hasTranslucency(QuadBounds bounds, @Nullable List<NativeImage> quadNatives) {
+        return SpriteUtils.doesHaveTranslucency(getUnmipmappedImage(), bounds, quadNatives);
     }
 }

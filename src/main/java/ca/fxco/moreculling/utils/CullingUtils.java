@@ -1,14 +1,12 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GraphicsMode;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +19,6 @@ import net.minecraft.world.BlockView;
 
 import java.util.Optional;
 
-import static ca.fxco.moreculling.MoreCulling.bakedModelManager;
 import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
@@ -184,13 +181,5 @@ public class CullingUtils {
             case EAST -> cameraPos.x < framePos.x;
             default -> false;
         };
-    }
-
-    public static BakedModel getBakedModel(BlockState state) {
-        return bakedModelManager.getBlockModels().getModel(state);
-    }
-
-    public static BakedOpacity getBakedOpacity(BlockState state) {
-        return (BakedOpacity) getBakedModel(state);
     }
 }

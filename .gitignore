@@ -128,3 +128,4 @@ bin/
 # Don't show my terrible icon design
 MoreCullingLarge.png
 FixingBlockStateCulling.txt
+.profileconfig.json

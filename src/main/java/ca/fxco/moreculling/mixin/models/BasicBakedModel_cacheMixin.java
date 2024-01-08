@@ -1,8 +1,10 @@
 package ca.fxco.moreculling.mixin.models;
 
+import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.utils.DirectionBits;
+import ca.fxco.moreculling.utils.VertexUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BasicBakedModel;
@@ -44,16 +46,23 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     public void resetTranslucencyCache() {
         solidFaces.clear();
         for (Map.Entry<Direction, List<BakedQuad>> entry : faceQuads.entrySet()) {
+            Direction direction = entry.getKey();
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
-            if (layeredQuads.size() > 0) {
-                SpriteOpacity opacity = ((SpriteOpacity) layeredQuads.remove(0).getSprite());
-                if (!opacity.hasTranslucency()) {
-                    List<NativeImage> overlappingImages = new ArrayList<>();
-                    for (BakedQuad quad : layeredQuads) {
-                        overlappingImages.add(((SpriteOpacity) quad.getSprite()).getUnmipmappedImage());
-                    }
-                    if (!opacity.hasTranslucency(overlappingImages)) {
-                        solidFaces.add(entry.getKey());
+            if (!layeredQuads.isEmpty()) {
+                BakedQuad initialQuad = layeredQuads.remove(0);
+                SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
+                QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis());
+                if (!opacity.hasTranslucency(bounds)) {
+                    if (!layeredQuads.isEmpty()) {
+                        List<NativeImage> overlappingImages = new ArrayList<>();
+                        for (BakedQuad quad : layeredQuads) {
+                            overlappingImages.add(((SpriteOpacity) quad.getSprite()).getUnmipmappedImage());
+                        }
+                        if (!opacity.hasTranslucency(bounds, overlappingImages)) {
+                            solidFaces.add(direction);
+                        }
+                    } else {
+                        solidFaces.add(direction);
                     }
                 }
             }
