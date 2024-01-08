@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin.renderers;
+package ca.fxco.moreculling.mixin.blockentity;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.MathUtils;
