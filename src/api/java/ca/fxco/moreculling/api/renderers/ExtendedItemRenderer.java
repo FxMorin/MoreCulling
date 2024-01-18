@@ -1,11 +1,9 @@
 package ca.fxco.moreculling.api.renderers;
 
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
@@ -22,17 +20,6 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public interface ExtendedItemRenderer {
-
-    /**
-     * This will return the baked quad color cache used for item rendering by MoreCulling.
-     * Should only be used for item frame baked quad colors!
-     * The size of this map is 256, since it is very unlikely that there are more than 256 custom quad colors used in
-     * a single frame.
-     *
-     * @return Baked Quad Color Cache
-     * @since 0.8.0
-     */
-    ThreadLocal<Object2IntLinkedOpenHashMap<BakedQuad>> getBakedQuadColorCache();
 
     /**
      * This will render a baked item model without a specific face. (Item Frame)

@@ -2,13 +2,10 @@ package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
 import ca.fxco.moreculling.states.ItemRendererStates;
-import ca.fxco.moreculling.utils.CacheUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -28,11 +25,6 @@ public abstract class ItemRenderer_apiMixin implements ExtendedItemRenderer {
     @Shadow public abstract void renderItem(ItemStack stack, ModelTransformationMode transformationType, int light,
                                             int overlay, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                                             @Nullable World world, int seed);
-
-    @Override
-    public final ThreadLocal<Object2IntLinkedOpenHashMap<BakedQuad>> getBakedQuadColorCache() {
-        return CacheUtils.BAKED_QUAD_COLOR_CACHE;
-    }
 
     @Override
     public void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,

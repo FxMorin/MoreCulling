@@ -3,7 +3,6 @@ package ca.fxco.moreculling.mixin.renderers;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.states.ItemRendererStates;
-import ca.fxco.moreculling.utils.CacheUtils;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.TransformationUtils;
@@ -13,9 +12,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -225,26 +222,5 @@ public class ItemRenderer_faceCullingMixin {
             return bakedQuads;
         }
         return original.call(instance, blockState, direction, random);
-    }
-
-    @Redirect(
-            method = "renderBakedItemQuads",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/color/item/ItemColors;getColor(Lnet/minecraft/item/ItemStack;I)I"
-            )
-    )
-    private int moreculling$cachedColorLookup(ItemColors instance, ItemStack stack, int tintIndex,
-                                              @Local BakedQuad bakedQuad) {
-        Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = CacheUtils.BAKED_QUAD_COLOR_CACHE.get();
-        int color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
-        if (color == Integer.MAX_VALUE) {
-            color = instance.getColor(stack, tintIndex);
-            bakedQuadColorCache.put(bakedQuad, color);
-            if (bakedQuadColorCache.size() == 256) {
-                bakedQuadColorCache.removeLastInt();
-            }
-        }
-        return color;
     }
 }

@@ -1,21 +1,16 @@
 package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.states.ItemRendererStates;
-import ca.fxco.moreculling.utils.CacheUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import org.objectweb.asm.Opcodes;
@@ -83,31 +78,5 @@ public class ItemRenderer_sodiumMixin {
             return bakedQuads;
         }
         return original.call(instance, blockState, direction, random);
-    }
-
-    @TargetHandler(
-            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
-            name = "renderBakedItemQuads"
-    )
-    @Redirect(
-            method = "@MixinSquared:Handler",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/color/item/ItemColorProvider;" +
-                            "getColor(Lnet/minecraft/item/ItemStack;I)I"
-            )
-    )
-    private int moreculling$cachedColorLookup$Sodium(ItemColorProvider instance, ItemStack stack, int tintIndex,
-                                                     @Local BakedQuad bakedQuad) {
-        Object2IntLinkedOpenHashMap<BakedQuad> bakedQuadColorCache = CacheUtils.BAKED_QUAD_COLOR_CACHE.get();
-        int color = bakedQuadColorCache.getAndMoveToFirst(bakedQuad);
-        if (color == Integer.MAX_VALUE) {
-            color = instance.getColor(stack, tintIndex);
-            bakedQuadColorCache.put(bakedQuad, color);
-            if (bakedQuadColorCache.size() == 256) {
-                bakedQuadColorCache.removeLastInt();
-            }
-        }
-        return color;
     }
 }
