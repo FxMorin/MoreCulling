@@ -20,10 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Restriction(require = @Condition("sodium"))
 @Pseudo
-@Mixin(targets = {
-        "me.jellysquid.mods.sodium.client.render.occlusion.BlockOcclusionCache", // <0.5.0
-        "me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockOcclusionCache" // >=0.5.0
-})
+@Mixin(targets = "me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.BlockOcclusionCache")
 public class BlockOcclusionCache_sodiumMixin {
 
     @Inject(
