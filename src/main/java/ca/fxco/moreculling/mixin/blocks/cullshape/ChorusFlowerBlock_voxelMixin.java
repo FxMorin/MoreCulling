@@ -1,4 +1,4 @@
-package ca.fxco.moreculling.mixin.blocks;
+package ca.fxco.moreculling.mixin.blocks.cullshape;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

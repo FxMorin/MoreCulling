@@ -14,9 +14,9 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ShulkerBoxBlock.class)
-public class ShulkerBoxBlock_cullShapeMixin extends Block implements MoreBlockCulling {
+public class ShulkerBoxBlock_cullMixin extends Block implements MoreBlockCulling {
 
-    public ShulkerBoxBlock_cullShapeMixin(Settings settings) {
+    public ShulkerBoxBlock_cullMixin(Settings settings) {
         super(settings);
     }
 
