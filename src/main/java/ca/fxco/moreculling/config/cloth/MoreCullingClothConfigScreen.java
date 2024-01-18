@@ -11,6 +11,8 @@ import net.minecraft.util.Identifier;
 
 import java.util.Map;
 
+import static ca.fxco.moreculling.utils.CompatUtils.IS_MODERNFIX_LOADED;
+
 public class MoreCullingClothConfigScreen extends ClothConfigScreen {
 
     private ClickableWidget resetCacheButton;
@@ -23,6 +25,9 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
     @Override
     protected void init() {
         super.init();
+        if (IS_MODERNFIX_LOADED) {
+            return;
+        }
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 4);
         this.addDrawableChild(this.resetCacheButton = ButtonWidget.builder(
                 Text.translatable("moreculling.config.resetCache"),

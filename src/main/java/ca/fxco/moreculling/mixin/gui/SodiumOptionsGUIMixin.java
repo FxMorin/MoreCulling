@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import static ca.fxco.moreculling.utils.CompatUtils.IS_MODERNFIX_LOADED;
+
 @Restriction(require = @Condition("sodium"))
 @Mixin(SodiumOptionsGUI.class)
 public class SodiumOptionsGUIMixin extends Screen {
@@ -58,6 +60,9 @@ public class SodiumOptionsGUIMixin extends Screen {
             require = 0
     )
     private void addCacheRefreshButton(CallbackInfo ci) {
+        if (IS_MODERNFIX_LOADED) {
+            return;
+        }
         if (MoreCulling.CONFIG.enableSodiumMenu && this.currentPage == this.moreCullingPage) {
             // 325 is the last button (211) + width (100) plus padding (20 + 4)
             this.addDrawableChild(this.resetCacheButton = new FlatButtonWidget(new Dim2i(this.width - 325, this.height - 30, 100, 20), Text.translatable("moreculling.config.resetCache"), () -> {

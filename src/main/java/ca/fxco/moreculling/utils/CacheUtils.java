@@ -8,6 +8,7 @@ import net.minecraft.client.render.model.BakedModel;
 import java.util.Collection;
 
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
+import static ca.fxco.moreculling.utils.CompatUtils.IS_MODERNFIX_LOADED;
 
 public class CacheUtils {
 
@@ -15,6 +16,10 @@ public class CacheUtils {
      * Resets all cache used for MoreCulling
      */
     public static void resetAllCache() {
+        // Not really needed as ModernFix automatically caches and releases models, which is good enough.
+        if (IS_MODERNFIX_LOADED) {
+            return;
+        }
         // Reset all model translucency cache
         Collection<BakedModel> allModels = ((BlockModelsAccessor) blockRenderManager.getModels()).getModels().values();
         for (BakedModel model : allModels) {
