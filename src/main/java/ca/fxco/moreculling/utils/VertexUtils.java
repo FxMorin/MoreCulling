@@ -56,11 +56,23 @@ public class VertexUtils {
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
         int[] vertexData = quad.getVertexData();
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getPos(vertexData, i, axis).mul(16, 16);
+            Vector2f tmpPos = getPos(vertexData, i, axis).mul(16);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);
         }
         return new QuadBounds(minPos.x, minPos.y, maxPos.x, maxPos.y);
+    }
+
+    public static boolean isAxisAligned(BakedQuad quad) {
+        int[] vertexData = quad.getVertexData();
+        Vector3f p1 = getPos(vertexData, 0);
+        Vector3f p4 = getPos(vertexData, 3);
+        if (p1.y == p4.y) {
+            Vector3f p2 = getPos(vertexData, 1);
+            Vector3f p3 = getPos(vertexData, 2);
+            return p2.y == p3.y && !(p1.y != p2.y && (p1.x != p3.x && p1.z != p3.z));
+        }
+        return false;
     }
 }

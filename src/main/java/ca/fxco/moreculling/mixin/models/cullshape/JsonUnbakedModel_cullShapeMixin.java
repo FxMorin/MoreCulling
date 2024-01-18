@@ -15,6 +15,7 @@ import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.AffineTransformation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -122,13 +123,15 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         if (!bakedOpacity.canSetCullingShape()) {
             return;
         }
-        if (getUseModelShape(id)) {
+        if (getUseModelShape(id) && settings.getRotation() == AffineTransformation.identity()) {
             List<ModelElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (ModelElement e : modelElementList) {
-                    VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = VoxelShapes.union(voxelShape, shape);
+                    if (e.rotation == null || e.rotation.angle() == 0) {
+                        VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                        voxelShape = VoxelShapes.union(voxelShape, shape);
+                    }
                 }
                 bakedOpacity.setCullingShape(voxelShape);
                 return;
