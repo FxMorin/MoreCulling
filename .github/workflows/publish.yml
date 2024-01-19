@@ -22,11 +22,10 @@ jobs:
         run: ./gradlew build
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          files-primary: build/libs/!(*-@(dev|sources|api)).jar
-          modrinth-files-secondary: build/libs/*-@(sources).jar
-          github-files-secondary: build/libs/*-@(dev|sources|api).jar
+          files: /build/libs/!(*-@(dev|sources|api)).jar
+          github-files: build/libs/*-@(dev|sources|api).jar
           version-type: release
-          version-resolver: releases
+          game-version-filter: releases
           modrinth-featured: true
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
