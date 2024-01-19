@@ -22,7 +22,7 @@ jobs:
         run: ./gradlew build
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          files: /build/libs/!(*-@(dev|sources|api)).jar
+          files: build/libs/!(*-@(dev|sources|api)).jar
           github-files: build/libs/*-@(dev|sources|api).jar
           version-type: release
           game-version-filter: releases
