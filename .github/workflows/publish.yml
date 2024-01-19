@@ -20,7 +20,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - uses: Kir-Antipov/mc-publish@v3.1
+      - uses: Kir-Antipov/mc-publish@v3.3
         with:
           files-primary: build/libs/!(*-@(dev|sources|api)).jar
           modrinth-files-secondary: build/libs/*-@(sources).jar
