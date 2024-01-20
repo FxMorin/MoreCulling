@@ -10,7 +10,7 @@
 	"moreculling.config.option.rainCulling": "雨雪剔除",
 	"moreculling.config.option.rainCulling.tooltip": "启用视景内的雨雪剔除",
 	"moreculling.config.option.beaconBeamCulling": "信标光柱剔除",
-	"moreculling.config.option.beaconBeamCulling.tooltip": "对信标光柱进行视锥体剔除",
+	"moreculling.config.option.beaconBeamCulling.tooltip": "对信标光柱使用视锥剔除",
 	"moreculling.config.option.entityModelCulling": "实体模型剔除",
 	"moreculling.config.option.entityModelCulling.tooltip": "这只有在GPU瓶颈并且CPU有剩余性能的情况下才有帮助！",
 	"moreculling.config.option.blockStateCulling": "方块状态剔除",
