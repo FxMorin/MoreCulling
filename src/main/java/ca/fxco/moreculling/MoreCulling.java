@@ -28,10 +28,16 @@ public class MoreCulling implements ClientModInitializer {
     public static MoreCullingConfig CONFIG;
 
     @Override
-    public void onInitializeClient() {}
-
-    static {
-        AutoConfig.register(MoreCullingConfig.class, Toml4jConfigSerializer::new);
+    public void onInitializeClient() {
+        AutoConfig.register(MoreCullingConfig.class, (conf, clazz) -> new Toml4jConfigSerializer<>(conf, clazz) {
+            public MoreCullingConfig deserialize() {
+                try {
+                    return super.deserialize();
+                } catch(Exception e) {
+                    return this.createDefault();
+                }
+            }
+        });
         CONFIG = AutoConfig.getConfigHolder(MoreCullingConfig.class).getConfig();
         ConfigUpdater.updateConfig(CONFIG);
         MoreCulling.CONFIG.modCompatibility.defaultReturnValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault);
