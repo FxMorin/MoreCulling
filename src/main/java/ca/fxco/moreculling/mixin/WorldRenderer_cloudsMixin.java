@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Restriction(conflict = {
         @Condition("cullclouds"),
-        @Condition("extended-clouds")
+        @Condition("extended-clouds"),
+        @Condition("extendedclouds")
 })
 @Mixin(WorldRenderer.class)
 public class WorldRenderer_cloudsMixin {
