@@ -75,7 +75,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.cloudCulling = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .build());
 
@@ -119,7 +122,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingAmount = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>(Text.translatable("moreculling.config.option.leavesCulling"), LeavesCullingMode.class)
@@ -128,7 +134,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .setChangeConsumer((instance, value) -> {
                     leavesCullingAmount.setEnabledState(instance.isEnabled() && value.hasAmount());
@@ -143,7 +152,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.includeMangroveRoots = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .setChangeConsumer((instance, value) -> {
                     if (value && leavesCullingMode.getValue() == LeavesCullingMode.STATE) {
@@ -159,7 +171,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.powderSnowCulling = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .build();
 
@@ -170,7 +185,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.endGatewayCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.endGatewayCulling = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .build();
 
@@ -181,7 +199,10 @@ public class ModMenuConfig implements ModMenuApi {
                 .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
-                    MinecraftClient.getInstance().worldRenderer.reload();
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc != null && mc.worldRenderer != null) {
+                        mc.worldRenderer.reload();
+                    }
                 })
                 .setChangeConsumer((instance, value) -> {
                     leavesCullingMode.setEnabledState(value);

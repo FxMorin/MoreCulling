@@ -330,7 +330,7 @@ public class SodiumOptionPage {
                 }
             }
             OptionGroup additionsGroup = additionsGroupBuilder.build();
-            if (additionsGroup.getOptions().size() > 0) {
+            if (!additionsGroup.getOptions().isEmpty()) {
                 optionGroups.add(additionsGroup); // Sodium group names don't show up
             }
         }

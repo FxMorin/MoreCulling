@@ -1,5 +1,7 @@
 package ca.fxco.moreculling.config.sodium;
 
+import ca.fxco.moreculling.api.config.ConfigAdditions;
+import com.mojang.datafixers.util.Pair;
 import me.jellysquid.mods.sodium.client.gui.options.Option;
 import me.jellysquid.mods.sodium.client.gui.options.OptionFlag;
 import me.jellysquid.mods.sodium.client.gui.options.OptionImpact;
@@ -8,6 +10,7 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -268,6 +271,23 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
+            String id = this.name instanceof TranslatableTextContent translatable ?
+                    translatable.getKey() : this.name.getLiteralString();
+            Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(id);
+            if (pair != null) {
+                this.locked = true;
+                this.enabled = false;
+                this.tooltip = Text.literal(pair.getFirst());
+                this.onChanged = null;
+                Function<?, ?> func1 = pair.getSecond();
+                if (func1 != null) {
+                    Function<T, T> func2 = (Function<T, T>)func1;
+                    this.binding.setValue(
+                            this.storage.getData(),
+                            func2.apply(this.binding.getValue(this.storage.getData()))
+                    );
+                }
+            }
             return new MoreCullingSodiumOptionImpl<>(
                     this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
                     this.onChanged, this.enabled, this.locked
