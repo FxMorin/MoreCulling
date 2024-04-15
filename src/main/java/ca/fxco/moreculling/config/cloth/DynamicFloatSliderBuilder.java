@@ -13,23 +13,23 @@ public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, Dyn
     @Nullable
     private Function<Float, Text> textGetter = null;
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, float min, float max) {
-        this(fieldNameKey, min, max, 0.5F);
+    public DynamicFloatSliderBuilder(String translationKey, float min, float max) {
+        this(translationKey, min, max, 0.5F);
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, Text resetButtonKey, float min, float max) {
-        this(fieldNameKey, resetButtonKey, min, max, 0.5F);
+    public DynamicFloatSliderBuilder(String translationKey, Text resetButtonKey, float min, float max) {
+        this(translationKey, resetButtonKey, min, max, 0.5F);
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, float min, float max, float step) {
-        super(fieldNameKey);
+    public DynamicFloatSliderBuilder(String translationKey, float min, float max, float step) {
+        super(translationKey);
         this.max = max;
         this.min = min;
         this.step = step;
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, Text resetButtonKey, float min, float max, float step) {
-        super(fieldNameKey, resetButtonKey);
+    public DynamicFloatSliderBuilder(String translationKey, Text resetButtonKey, float min, float max, float step) {
+        super(translationKey, resetButtonKey);
         this.max = max;
         this.min = min;
         this.step = step;

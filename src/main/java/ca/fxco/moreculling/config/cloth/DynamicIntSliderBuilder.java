@@ -10,14 +10,14 @@ public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, Dyn
     private int min;
     private Function<Integer, Text> textGetter = null;
 
-    public DynamicIntSliderBuilder(Text fieldNameKey, int min, int max) {
-        super(fieldNameKey);
+    public DynamicIntSliderBuilder(String translationKey, int min, int max) {
+        super(translationKey);
         this.max = max;
         this.min = min;
     }
 
-    public DynamicIntSliderBuilder(Text fieldNameKey, Text resetButtonKey, int min, int max) {
-        super(fieldNameKey, resetButtonKey);
+    public DynamicIntSliderBuilder(String translationKey, Text resetButtonKey, int min, int max) {
+        super(translationKey, resetButtonKey);
         this.max = max;
         this.min = min;
     }

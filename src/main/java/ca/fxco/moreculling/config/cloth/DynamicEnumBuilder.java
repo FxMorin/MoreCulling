@@ -15,14 +15,14 @@ public class DynamicEnumBuilder<T extends Enum<?>> extends AbstractDynamicBuilde
     @Nullable
     private Function<T, Text> enumNameProvider;
 
-    public DynamicEnumBuilder(Text fieldNameKey, Class<T> clazz) {
-        super(fieldNameKey);
+    public DynamicEnumBuilder(String translationKey, Class<T> clazz) {
+        super(translationKey);
         Objects.requireNonNull(clazz);
         this.clazz = clazz;
     }
 
-    public DynamicEnumBuilder(Text fieldNameKey, Text resetButtonKey, Class<T> clazz) {
-        super(fieldNameKey, resetButtonKey);
+    public DynamicEnumBuilder(String translationKey, Text resetButtonKey, Class<T> clazz) {
+        super(translationKey, resetButtonKey);
         Objects.requireNonNull(clazz);
         this.clazz = clazz;
     }

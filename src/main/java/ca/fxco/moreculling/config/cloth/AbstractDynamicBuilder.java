@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Pair;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,13 +25,15 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
 
     private T value = null;
     private boolean locked = false;
+    private final String translationKey;
 
-    protected AbstractDynamicBuilder(Text fieldNameKey) {
-        this(fieldNameKey, Text.translatable("text.cloth-config.reset_value"));
+    protected AbstractDynamicBuilder(String translationKey) {
+        this(translationKey, Text.translatable("text.cloth-config.reset_value"));
     }
 
-    protected AbstractDynamicBuilder(Text fieldNameKey, Text resetButtonKey) {
-        super(resetButtonKey, fieldNameKey);
+    protected AbstractDynamicBuilder(String translationKey, Text resetButtonKey) {
+        super(resetButtonKey, Text.translatable(translationKey));
+        this.translationKey = translationKey;
     }
 
     /*
@@ -151,9 +152,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
     @Override
     public final @NotNull A build() {
         Objects.requireNonNull(this.value);
-        String id = this.getFieldNameKey() instanceof TranslatableTextContent translatable ?
-                translatable.getKey() : this.getFieldNameKey().getLiteralString();
-        Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(id);
+        Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(this.translationKey);
         if (pair != null) {
             this.setTooltip(Text.literal(pair.getFirst()));
             if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {

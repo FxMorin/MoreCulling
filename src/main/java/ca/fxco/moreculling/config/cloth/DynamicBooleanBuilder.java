@@ -10,12 +10,12 @@ public class DynamicBooleanBuilder extends AbstractDynamicBuilder<Boolean, Dynam
     @Nullable
     private Function<Boolean, Text> yesNoTextSupplier = null;
 
-    public DynamicBooleanBuilder(Text fieldNameKey) {
-        super(fieldNameKey);
+    public DynamicBooleanBuilder(String translationKey) {
+        super(translationKey);
     }
 
-    public DynamicBooleanBuilder(Text fieldNameKey, Text resetButtonKey) {
-        super(fieldNameKey, resetButtonKey);
+    public DynamicBooleanBuilder(String translationKey, Text resetButtonKey) {
+        super(translationKey, resetButtonKey);
     }
 
     @Nullable

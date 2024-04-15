@@ -10,7 +10,6 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -178,7 +177,7 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     public static class Builder<S, T> {
         private final OptionStorage<S> storage;
-        private Text name;
+        private String nameTranslationKey;
         private Text tooltip;
         private OptionBinding<S, T> binding;
         private Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control;
@@ -193,8 +192,8 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             this.storage = storage;
         }
 
-        public Builder<S, T> setName(@Nullable Text name) {
-            this.name = name;
+        public Builder<S, T> setNameTranslation(String translationKey) {
+            this.nameTranslationKey = translationKey;
             return this;
         }
 
@@ -267,13 +266,11 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
         }
 
         public MoreCullingSodiumOptionImpl<S, T> build() {
-            Validate.notNull(this.name, "Name must be specified");
+            Validate.notNull(this.nameTranslationKey, "Name must be specified");
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
-            String id = this.name instanceof TranslatableTextContent translatable ?
-                    translatable.getKey() : this.name.getLiteralString();
-            Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(id);
+            Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(this.nameTranslationKey);
             if (pair != null) {
                 this.locked = true;
                 this.enabled = false;
@@ -289,8 +286,8 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
                 }
             }
             return new MoreCullingSodiumOptionImpl<>(
-                    this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
-                    this.onChanged, this.enabled, this.locked
+                    this.storage, Text.translatable(this.nameTranslationKey), this.tooltip, this.binding, this.control,
+                    this.flags, this.impact, this.onChanged, this.enabled, this.locked
             );
         }
     }
