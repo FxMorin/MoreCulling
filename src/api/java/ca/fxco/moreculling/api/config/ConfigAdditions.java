@@ -1,11 +1,9 @@
 package ca.fxco.moreculling.api.config;
 
-import com.mojang.datafixers.util.Pair;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.BooleanSupplier;
 
 /**
  * Add your config options to this class to add them to the MoreCulling config
@@ -16,7 +14,7 @@ import java.util.function.Function;
 public class ConfigAdditions {
 
     private static final Map<String, List<ConfigOption<?>>> additionOptions = new LinkedHashMap<>();
-    private static final Map<String, Pair<String, Function<?, ?>>> disabledOptions = new HashMap<>();
+    private static final Map<String, OptionOverride> disabledOptions = new HashMap<>();
     private static final HashSet<String> separateGroupTabs = new HashSet<>();
 
     /**
@@ -33,12 +31,12 @@ public class ConfigAdditions {
      * @param id        The option to be disabled. This will attempt to match against the option name, if the option
      *                  uses a translation key, it will attempt to match the translation key.
      * @param reason    The reason why this option was disabled.
-     * @param setOption A function that can be used to set the options value.
+     * @param canChange A supplier that returns if the option can be changed.
      *
-     * @since 0.23.0
+     * @since 0.24.0
      */
-    public static <T> void disableOption(String id, String reason, @Nullable Function<T, T> setOption) {
-        ConfigAdditions.disabledOptions.put(id, Pair.of(reason, setOption));
+    public static void disableOption(String id, String reason, BooleanSupplier canChange) {
+        ConfigAdditions.disabledOptions.put(id, new OptionOverride(reason, canChange));
     }
 
     /**
@@ -82,10 +80,10 @@ public class ConfigAdditions {
     /**
      * This is for internal use only
      *
-     * @since 0.23.0
+     * @since 0.24.0
      */
     @ApiStatus.Internal
-    public static Map<String, Pair<String, Function<?, ?>>> getDisabledOptions() {
+    public static Map<String, OptionOverride> getDisabledOptions() {
         return ConfigAdditions.disabledOptions;
     }
 }

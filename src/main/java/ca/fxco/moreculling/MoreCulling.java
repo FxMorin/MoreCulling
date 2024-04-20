@@ -42,4 +42,8 @@ public class MoreCulling implements ClientModInitializer {
         ConfigUpdater.updateConfig(CONFIG);
         MoreCulling.CONFIG.modCompatibility.defaultReturnValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault);
     }
+
+    public void saveConfig() {
+        AutoConfig.getConfigHolder(MoreCullingConfig.class).save();
+    }
 }

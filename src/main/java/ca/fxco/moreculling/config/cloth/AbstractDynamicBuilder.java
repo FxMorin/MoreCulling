@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.config.cloth;
 
 import ca.fxco.moreculling.api.config.ConfigAdditions;
-import com.mojang.datafixers.util.Pair;
+import ca.fxco.moreculling.api.config.OptionOverride;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.minecraft.text.Text;
@@ -152,24 +152,14 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
     @Override
     public final @NotNull A build() {
         Objects.requireNonNull(this.value);
-        Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(this.translationKey);
-        if (pair != null) {
-            this.setTooltip(Text.literal(pair.getFirst()));
+        OptionOverride optionOverride = ConfigAdditions.getDisabledOptions().get(this.translationKey);
+        if (optionOverride != null && !optionOverride.canChange().getAsBoolean()) {
+            this.setTooltip(Text.literal(optionOverride.reason()));
             if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {
                 this.value = this.defaultValue.get();
             }
             this.locked = true;
-            this.changeConsumer = null;
             this.requireRestart(false);
-            Function<?, ?> func1 = pair.getSecond();
-            if (func1 != null) {
-                Function<T, T> func2 = (Function<T, T>)func1;
-                this.value = func2.apply(this.value);
-                if (this.saveConsumer != null) {
-                    this.saveConsumer.accept(this.value);
-                }
-            }
-            this.saveConsumer = null;
         }
         return this.runBuild();
     }

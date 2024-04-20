@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.config.sodium;
 
 import ca.fxco.moreculling.api.config.ConfigAdditions;
-import com.mojang.datafixers.util.Pair;
+import ca.fxco.moreculling.api.config.OptionOverride;
 import me.jellysquid.mods.sodium.client.gui.options.Option;
 import me.jellysquid.mods.sodium.client.gui.options.OptionFlag;
 import me.jellysquid.mods.sodium.client.gui.options.OptionImpact;
@@ -270,20 +270,10 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
-            Pair<String, Function<?, ?>> pair = ConfigAdditions.getDisabledOptions().get(this.nameTranslationKey);
-            if (pair != null) {
+            OptionOverride optionOverride = ConfigAdditions.getDisabledOptions().get(this.nameTranslationKey);
+            if (optionOverride != null && !optionOverride.canChange().getAsBoolean()) {
                 this.locked = true;
-                this.enabled = false;
-                this.tooltip = Text.literal(pair.getFirst());
-                this.onChanged = null;
-                Function<?, ?> func1 = pair.getSecond();
-                if (func1 != null) {
-                    Function<T, T> func2 = (Function<T, T>)func1;
-                    this.binding.setValue(
-                            this.storage.getData(),
-                            func2.apply(this.binding.getValue(this.storage.getData()))
-                    );
-                }
+                this.tooltip = Text.literal(optionOverride.reason());
             }
             return new MoreCullingSodiumOptionImpl<>(
                     this.storage, Text.translatable(this.nameTranslationKey), this.tooltip, this.binding, this.control,
