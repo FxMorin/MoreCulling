@@ -26,32 +26,22 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     private boolean allowCulling;
 
     @Override
-    public boolean cantCullAgainst(BlockState state) {
+    public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
         return state.isIn(DONT_CULL);
     }
 
     @Override
-    public boolean cantCullAgainst(BlockState state, Direction side) {
-        return state.isIn(DONT_CULL);
+    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side) {
+        return !((BakedOpacity) blockRenderManager.getModel(state)).moreculling$hasTextureTranslucency(state, side);
     }
 
     @Override
-    public boolean shouldAttemptToCull(BlockState state) {
-        return !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
-    }
-
-    @Override
-    public boolean shouldAttemptToCull(BlockState state, Direction side) {
-        return !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state, side);
-    }
-
-    @Override
-    public boolean canCull() {
+    public boolean moreculling$canCull() {
         return this.allowCulling;
     }
 
     @Override
-    public void setCanCull(boolean canCull) {
+    public void moreculling$setCanCull(boolean canCull) {
         this.allowCulling = canCull;
     }
 
@@ -65,9 +55,10 @@ public class Block_drawSideMixin implements MoreBlockCulling {
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void customShouldDrawSide(BlockState state, BlockView world, BlockPos pos, Direction side,
-                                             BlockPos otherPos, CallbackInfoReturnable<Boolean> cir) {
-        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) state).canCull()) {
+    private static void moreculling$customShouldDrawSide(BlockState state, BlockView world, BlockPos pos,
+                                                         Direction side, BlockPos otherPos,
+                                                         CallbackInfoReturnable<Boolean> cir) {
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) state).moreculling$canCull()) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos));
         }
     }

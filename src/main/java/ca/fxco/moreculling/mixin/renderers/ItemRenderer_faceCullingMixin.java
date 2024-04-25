@@ -79,7 +79,7 @@ public class ItemRenderer_faceCullingMixin {
         // Use faster cached check for translucency instead of multiple instanceof checks
         if (ItemRendererStates.ITEM_FRAME != null && stack.getItem() instanceof BlockItem blockItem) {
             isBlockItemRef.set(true);
-            useDirectConsumer.set(!((BakedOpacity) model).hasTextureTranslucency(
+            useDirectConsumer.set(!((BakedOpacity) model).moreculling$hasTextureTranslucency(
                     blockItem.getBlock().getDefaultState()
             ));
         }

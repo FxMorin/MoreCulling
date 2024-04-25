@@ -26,15 +26,15 @@ public class Deserializer_cullShapeMixin {
                     "Lnet/minecraft/client/render/model/json/JsonUnbakedModel;",
             at = @At("RETURN")
     )
-    private void onDeserialize(JsonElement jsonElement, Type type,
-                               JsonDeserializationContext jsonContext, CallbackInfoReturnable<JsonUnbakedModel> cir) {
+    private void moreculling$onDeserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonContext,
+                                           CallbackInfoReturnable<JsonUnbakedModel> cir) {
         ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel) cir.getReturnValue();
         JsonObject jsonObj = jsonElement.getAsJsonObject();
         List<CullShapeElement> list = this.moreculling$cullshapesFromJson(jsonContext, jsonObj);
-        unbakedModel.setCullShapeElements(list);
+        unbakedModel.moreculling$setCullShapeElements(list);
 
         if (jsonObj.has("useModelShape")) {
-            unbakedModel.setUseModelShape(jsonObj.get("useModelShape").getAsBoolean());
+            unbakedModel.moreculling$setUseModelShape(jsonObj.get("useModelShape").getAsBoolean());
         }
     }
 

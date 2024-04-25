@@ -2,7 +2,7 @@ package ca.fxco.moreculling.mixin.blockentity;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.mixin.accessors.WorldRendererAccessor;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.block.entity.EndGatewayBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;

@@ -34,14 +34,15 @@ public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCul
     }
 
     @Override
-    public boolean usesCustomShouldDrawFace(BlockState state) {
+    public boolean moreculling$usesCustomShouldDrawFace(BlockState state) {
         return MoreCulling.CONFIG.includeMangroveRoots &&
                 MoreCulling.CONFIG.leavesCullingMode != LeavesCullingMode.DEFAULT; //Fast will skip this call
     }
 
     @Override
-    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
-                                                  BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState thisState,
+                                                              BlockState sideState, BlockPos thisPos,
+                                                              BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) { // Can't use state culling here
             case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, sidePos, thisPos, side);
             case GAP -> CullingUtils.shouldDrawFaceGap(view, sideState, sidePos, side);

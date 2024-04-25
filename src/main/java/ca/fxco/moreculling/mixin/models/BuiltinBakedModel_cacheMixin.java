@@ -26,32 +26,32 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
     private Sprite sprite;
 
     @Unique
-    private boolean hasTranslucency;
+    private boolean moreculling$hasTranslucency;
     @Unique
-    private @Nullable VoxelShape cullVoxelShape;
+    private @Nullable VoxelShape moreculling$cullVoxelShape;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return hasTranslucency;
+    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
+        return moreculling$hasTranslucency;
     }
 
     @Override
-    public void resetTranslucencyCache() {
-        hasTranslucency = ((SpriteOpacity) sprite).hasTranslucency();
+    public void moreculling$resetTranslucencyCache() {
+        moreculling$hasTranslucency = ((SpriteOpacity) sprite).moreculling$hasTranslucency();
     }
 
     @Override
-    public @Nullable VoxelShape getCullingShape(BlockState state) {
-        return this.cullVoxelShape;
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        return this.moreculling$cullVoxelShape;
     }
 
     @Override
-    public void setCullingShape(VoxelShape cullingShape) {
-        this.cullVoxelShape = cullingShape;
+    public void moreculling$setCullingShape(VoxelShape cullingShape) {
+        this.moreculling$cullVoxelShape = cullingShape;
     }
 
     @Override
-    public boolean canSetCullingShape() {
+    public boolean moreculling$canSetCullingShape() {
         return true;
     }
 
@@ -59,8 +59,8 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
             method = "<init>",
             at = @At("RETURN")
     )
-    private void onInit(ModelTransformation transformation, ModelOverrideList itemPropertyOverrides,
-                        Sprite sprite, boolean sideLit, CallbackInfo ci) {
-        resetTranslucencyCache();
+    private void moreculling$onInit(ModelTransformation transformation, ModelOverrideList itemPropertyOverrides,
+                                    Sprite sprite, boolean sideLit, CallbackInfo ci) {
+        moreculling$resetTranslucencyCache();
     }
 }

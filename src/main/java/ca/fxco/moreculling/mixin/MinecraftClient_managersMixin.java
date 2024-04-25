@@ -38,7 +38,7 @@ public class MinecraftClient_managersMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void onBakedModelManagerInitialized(RunArgs args, CallbackInfo ci) {
+    private void moreculling$onBakedModelManagerInitialized(RunArgs args, CallbackInfo ci) {
         MoreCulling.bakedModelManager = this.bakedModelManager;
     }
 
@@ -51,7 +51,7 @@ public class MinecraftClient_managersMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void onBlockRenderManagerInitialized(RunArgs args, CallbackInfo ci) {
+    private void moreculling$onBlockRenderManagerInitialized(RunArgs args, CallbackInfo ci) {
         MoreCulling.blockRenderManager = this.blockRenderManager;
 
         // Make sure to reload block states on resource reload

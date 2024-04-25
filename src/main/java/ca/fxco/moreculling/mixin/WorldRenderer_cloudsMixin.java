@@ -37,7 +37,8 @@ public class WorldRenderer_cloudsMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void renderClouds(BufferBuilder builder, double x, double y, double z, Vec3d color, CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
+    private void moreculling$renderClouds(BufferBuilder builder, double x, double y, double z, Vec3d color,
+                                          CallbackInfoReturnable<BufferBuilder.BuiltBuffer> cir) {
         if (!MoreCulling.CONFIG.cloudCulling) {
             return;
         }

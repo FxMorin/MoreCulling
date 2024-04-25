@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 public class ChorusFlowerBlock_voxelMixin extends Block {
 
     @Unique
-    private static final VoxelShape CULL_SHAPE = VoxelShapes.union(
+    private static final VoxelShape moreculling$CULL_SHAPE = VoxelShapes.union(
             Block.createCuboidShape(0.0, 2.0, 2.0, 16.0, 14.0, 14.0),
             Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 16.0, 14.0),
             Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 16.0)
@@ -26,6 +26,6 @@ public class ChorusFlowerBlock_voxelMixin extends Block {
 
     @Override
     public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return CULL_SHAPE;
+        return moreculling$CULL_SHAPE;
     }
 }

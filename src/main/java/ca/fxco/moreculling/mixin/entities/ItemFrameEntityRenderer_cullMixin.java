@@ -101,7 +101,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 MapState mapState = FilledMapItem.getMapState(mapIdComponent, itemFrameEntity.getWorld());
                 if (mapState != null) { // Map is present
                     if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
-                        skipFrontRender = !((MapOpacity) mapState).hasTransparency();
+                        skipFrontRender = !((MapOpacity) mapState).moreculling$hasTransparency();
                         double di;
                         double offsetZFighting = isInvisible ? 0.5 :
                                 skipFrontRender ?
@@ -138,7 +138,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 int l = this.getLight(itemFrameEntity, LightmapTextureManager.MAX_LIGHT_COORDINATE, i);
                 matrixStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
-                ((ExtendedItemRenderer) this.itemRenderer).renderItemFrameItem(
+                ((ExtendedItemRenderer) this.itemRenderer).moreculling$renderItemFrameItem(
                         itemStack,
                         matrixStack,
                         vertexConsumerProvider,

@@ -28,8 +28,9 @@ public class Cuboid_cullMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderCuboid(MatrixStack.Entry entry, VertexConsumer vertexConsumer, int light, int overlay,
-                             float red, float green, float blue, float alpha, CallbackInfo ci) {
+    private void moreculling$renderCuboid(MatrixStack.Entry entry, VertexConsumer vertexConsumer, int light,
+                                          int overlay, float red, float green, float blue, float alpha,
+                                          CallbackInfo ci) {
         if (!MoreCulling.CONFIG.entityModelCulling) {
             return;
         }

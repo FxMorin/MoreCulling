@@ -20,27 +20,27 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
     protected BakedModel wrapped;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return ((BakedOpacity) wrapped).hasTextureTranslucency(state, direction);
+    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
+        return ((BakedOpacity) wrapped).moreculling$hasTextureTranslucency(state, direction);
     }
 
     @Override
-    public void resetTranslucencyCache() {
-        ((BakedOpacity) wrapped).resetTranslucencyCache();
+    public void moreculling$resetTranslucencyCache() {
+        ((BakedOpacity) wrapped).moreculling$resetTranslucencyCache();
     }
 
     @Override
-    public @Nullable VoxelShape getCullingShape(BlockState state) {
-        return ((BakedOpacity) wrapped).getCullingShape(state);
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        return ((BakedOpacity) wrapped).moreculling$getCullingShape(state);
     }
 
     @Override
-    public void setCullingShape(VoxelShape cullingShape) {
-        ((BakedOpacity) wrapped).setCullingShape(cullingShape);
+    public void moreculling$setCullingShape(VoxelShape cullingShape) {
+        ((BakedOpacity) wrapped).moreculling$setCullingShape(cullingShape);
     }
 
     @Override
-    public boolean canSetCullingShape() {
-        return ((BakedOpacity) wrapped).canSetCullingShape();
+    public boolean moreculling$canSetCullingShape() {
+        return ((BakedOpacity) wrapped).moreculling$canSetCullingShape();
     }
 }

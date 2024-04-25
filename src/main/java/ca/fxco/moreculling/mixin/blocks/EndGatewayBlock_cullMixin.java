@@ -26,12 +26,7 @@ public abstract class EndGatewayBlock_cullMixin extends BlockWithEntity implemen
     }
 
     @Override
-    public boolean shouldAttemptToCull(BlockState state) {
-        return MoreCulling.CONFIG.endGatewayCulling;
-    }
-
-    @Override
-    public boolean shouldAttemptToCull(BlockState state, Direction side) {
+    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side) {
         return MoreCulling.CONFIG.endGatewayCulling;
     }
 

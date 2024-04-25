@@ -17,14 +17,14 @@ public class FletchingTableBlock_devMixin implements MoreBlockCulling {
     //Place fletching tables against blocks to see if other blocks cull correctly against full blocks
 
     @Override
-    public boolean usesCustomShouldDrawFace(BlockState state) {
+    public boolean moreculling$usesCustomShouldDrawFace(BlockState state) {
         return FabricLoader.getInstance().isDevelopmentEnvironment(); // Dev enviroment only
     }
 
     @Override
-    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
-                                                  BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState thisState,
+                                                              BlockState sideState, BlockPos thisPos,
+                                                              BlockPos sidePos, Direction side) {
         return Optional.of(false);
     }
-
 }

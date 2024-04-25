@@ -17,15 +17,17 @@ public class BakedQuad_cacheMixin implements QuadOpacity {
     protected Sprite sprite;
 
     @Unique
-    private Boolean hasTranslucency;
+    private Boolean moreculling$hasTranslucency;
 
     @Override
-    public boolean getTextureTranslucency() {
-        return hasTranslucency == null ? hasTranslucency = ((SpriteOpacity) sprite).hasTranslucency() : hasTranslucency;
+    public boolean moreculling$getTextureTranslucency() {
+        return moreculling$hasTranslucency == null ?
+                moreculling$hasTranslucency = ((SpriteOpacity) sprite).moreculling$hasTranslucency() :
+                moreculling$hasTranslucency;
     }
 
     @Override
-    public void resetTranslucencyCache() {
-        hasTranslucency = null;
+    public void moreculling$resetTranslucencyCache() {
+        moreculling$hasTranslucency = null;
     }
 }

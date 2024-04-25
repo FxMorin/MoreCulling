@@ -119,7 +119,7 @@ public class SpriteUtils {
     }
 
     public static void printOpacity(Sprite sprite, @Nullable QuadBounds bounds) {
-        NativeImage img = ((SpriteOpacity) sprite).getUnmipmappedImage();
+        NativeImage img = ((SpriteOpacity) sprite).moreculling$getUnmipmappedImage();
         if (img.getFormat().hasOpacityChannel()) {
             printOpacity(img, bounds);
         }

@@ -22,37 +22,37 @@ public class Sprite_opacityMixin implements SpriteOpacity {
     private SpriteContents contents;
 
     @Override
-    public NativeImage getUnmipmappedImage() {
+    public NativeImage moreculling$getUnmipmappedImage() {
         return ((SpriteContentsAccessor) contents).getImage();
     }
 
     @Override
-    public boolean hasTransparency() {
-        return SpriteUtils.doesHaveTransparency(getUnmipmappedImage());
+    public boolean moreculling$hasTransparency() {
+        return SpriteUtils.doesHaveTransparency(moreculling$getUnmipmappedImage());
     }
 
     @Override
-    public boolean hasTransparency(QuadBounds bounds) {
-        return SpriteUtils.doesHaveTransparency(getUnmipmappedImage());
+    public boolean moreculling$hasTransparency(QuadBounds bounds) {
+        return SpriteUtils.doesHaveTransparency(moreculling$getUnmipmappedImage());
     }
 
     @Override
-    public boolean hasTranslucency() {
-        return hasTranslucency((List<NativeImage>)null);
+    public boolean moreculling$hasTranslucency() {
+        return moreculling$hasTranslucency((List<NativeImage>)null);
     }
 
     @Override
-    public boolean hasTranslucency(QuadBounds bounds) {
-        return hasTranslucency(bounds, null);
+    public boolean moreculling$hasTranslucency(QuadBounds bounds) {
+        return moreculling$hasTranslucency(bounds, null);
     }
 
     @Override
-    public boolean hasTranslucency(@Nullable List<NativeImage> quadNatives) {
-        return SpriteUtils.doesHaveTranslucency(getUnmipmappedImage(), quadNatives);
+    public boolean moreculling$hasTranslucency(@Nullable List<NativeImage> quadNatives) {
+        return SpriteUtils.doesHaveTranslucency(moreculling$getUnmipmappedImage(), quadNatives);
     }
 
     @Override
-    public boolean hasTranslucency(QuadBounds bounds, @Nullable List<NativeImage> quadNatives) {
-        return SpriteUtils.doesHaveTranslucency(getUnmipmappedImage(), bounds, quadNatives);
+    public boolean moreculling$hasTranslucency(QuadBounds bounds, @Nullable List<NativeImage> quadNatives) {
+        return SpriteUtils.doesHaveTranslucency(moreculling$getUnmipmappedImage(), bounds, quadNatives);
     }
 }

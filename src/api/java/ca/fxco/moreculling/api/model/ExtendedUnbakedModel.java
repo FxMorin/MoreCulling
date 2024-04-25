@@ -17,35 +17,91 @@ public interface ExtendedUnbakedModel {
      * Sets the CullShapeElement for the extended unbaked model
      *
      * @since 0.15.0
+     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$setCullShapeElements}
      */
-    void setCullShapeElements(List<CullShapeElement> cullShapeElements);
+    @Deprecated(forRemoval = true)
+    default void setCullShapeElements(List<CullShapeElement> cullShapeElements) {
+        moreculling$setCullShapeElements(cullShapeElements);
+    }
+
+    /**
+     * Sets the CullShapeElement for the extended unbaked model
+     *
+     * @since 0.25.0
+     */
+    void moreculling$setCullShapeElements(List<CullShapeElement> cullShapeElements);
 
     /**
      * Gets the CullShapeElement for the extended unbaked model
      *
      * @since 0.15.0
+     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$getCullShapeElements}
      */
-    List<CullShapeElement> getCullShapeElements(Identifier id);
+    @Deprecated(forRemoval = true)
+    default List<CullShapeElement> getCullShapeElements(Identifier id) {
+        return moreculling$getCullShapeElements(id);
+    }
+
+    /**
+     * Gets the CullShapeElement for the extended unbaked model
+     *
+     * @since 0.25.0
+     */
+    List<CullShapeElement> moreculling$getCullShapeElements(Identifier id);
 
     /**
      * When set to true, the cull shape is completely ignored and instead the model will be used as the cull shape
      *
      * @since 0.15.0
+     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$setUseModelShape}
      */
-    void setUseModelShape(boolean useModelShape);
+    @Deprecated(forRemoval = true)
+    default void setUseModelShape(boolean useModelShape) {
+        moreculling$setUseModelShape(useModelShape);
+    }
+
+    /**
+     * When set to true, the cull shape is completely ignored and instead the model will be used as the cull shape
+     *
+     * @since 0.25.0
+     */
+    void moreculling$setUseModelShape(boolean useModelShape);
 
     /**
      * Returns if it should use the model shape instead of the cull shape
      *
      * @since 0.15.0
+     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$getUseModelShape}
      */
-    boolean getUseModelShape(Identifier id);
+    @Deprecated(forRemoval = true)
+    default boolean getUseModelShape(Identifier id) {
+        return moreculling$getUseModelShape(id);
+    }
 
     /**
-     * ModelElementFace is just final's, that should not change. However you can create a new ModelElementFace or wrap
+     * Returns if it should use the model shape instead of the cull shape
+     *
+     * @since 0.25.0
+     */
+    boolean moreculling$getUseModelShape(Identifier id);
+
+    /**
+     * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
      * it. Do this to modify the element face data.
      *
      * @since 0.15.0
+     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$modifyElementFace}
      */
-    ModelElementFace modifyElementFace(ModelElementFace elementFace);
+    @Deprecated(forRemoval = true)
+    default ModelElementFace modifyElementFace(ModelElementFace elementFace) {
+        return moreculling$modifyElementFace(elementFace);
+    }
+
+    /**
+     * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
+     * it. Do this to modify the element face data.
+     *
+     * @since 0.25.0
+     */
+    ModelElementFace moreculling$modifyElementFace(ModelElementFace elementFace);
 }

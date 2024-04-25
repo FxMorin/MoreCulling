@@ -24,7 +24,7 @@ import java.util.List;
 public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
 
     @Unique
-    private final Random rand = new LocalRandom(42L);
+    private final Random moreculling$rand = new LocalRandom(42L);
 
     @Shadow
     @Final
@@ -58,14 +58,14 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
             if (direction == withoutFace) {
                 continue;
             }
-            rand.setSeed(42L);
-            List<BakedQuad> bakedQuads = model.getQuads(state, direction, rand);
+            this.moreculling$rand.setSeed(42L);
+            List<BakedQuad> bakedQuads = model.getQuads(state, direction, this.moreculling$rand);
             if (!bakedQuads.isEmpty()) {
                 moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
             }
         }
-        rand.setSeed(42L);
-        List<BakedQuad> bakedQuads = model.getQuads(state, null, rand);
+        this.moreculling$rand.setSeed(42L);
+        List<BakedQuad> bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuadsWithoutFace(entry, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, withoutFace);
@@ -89,13 +89,13 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
     public void moreculling$renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices,
                                                @Nullable BlockState state, BakedModel model, float red, float green,
                                                float blue, float alpha, int light, int overlay, Direction forFace) {
-        rand.setSeed(42L);
-        List<BakedQuad> bakedQuads = model.getQuads(state, forFace, rand);
+        this.moreculling$rand.setSeed(42L);
+        List<BakedQuad> bakedQuads = model.getQuads(state, forFace, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
-        rand.setSeed(42L);
-        bakedQuads = model.getQuads(state, null, rand);
+        this.moreculling$rand.setSeed(42L);
+        bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuadsForFace(entry, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, forFace);
@@ -119,23 +119,23 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                                  @Nullable BlockState state, BakedModel model, float red, float green,
                                                  float blue, float alpha, int light, int overlay, Direction faceX,
                                                  Direction faceY, Direction faceZ) {
-        rand.setSeed(42L);
-        List<BakedQuad> bakedQuads = model.getQuads(state, faceX, rand);
+        this.moreculling$rand.setSeed(42L);
+        List<BakedQuad> bakedQuads = model.getQuads(state, faceX, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
-        rand.setSeed(42L);
-        bakedQuads = model.getQuads(state, faceY, rand);
+        this.moreculling$rand.setSeed(42L);
+        bakedQuads = model.getQuads(state, faceY, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
-        rand.setSeed(42L);
-        bakedQuads = model.getQuads(state, faceZ, rand);
+        this.moreculling$rand.setSeed(42L);
+        bakedQuads = model.getQuads(state, faceZ, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
-        rand.setSeed(42L);
-        bakedQuads = model.getQuads(state, null, rand);
+        this.moreculling$rand.setSeed(42L);
+        bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuadsFor3Faces(entry, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, faceX, faceY, faceZ);
@@ -160,14 +160,14 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
                                                 @Nullable BlockState state, BakedModel model, float red, float green,
                                                 float blue, float alpha, int light, int overlay, Direction[] faces) {
         for (Direction direction : faces) {
-            rand.setSeed(42L);
-            List<BakedQuad> bakedQuads = model.getQuads(state, direction, rand);
+            this.moreculling$rand.setSeed(42L);
+            List<BakedQuad> bakedQuads = model.getQuads(state, direction, this.moreculling$rand);
             if (!bakedQuads.isEmpty()) {
                 moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
             }
         }
-        rand.setSeed(42L);
-        List<BakedQuad> bakedQuads = model.getQuads(state, null, rand);
+        this.moreculling$rand.setSeed(42L);
+        List<BakedQuad> bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
             moreculling$renderQuadsForFaces(entry, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, faces);

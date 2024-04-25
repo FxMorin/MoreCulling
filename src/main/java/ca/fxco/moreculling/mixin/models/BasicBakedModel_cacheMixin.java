@@ -33,18 +33,18 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     protected Map<Direction, List<BakedQuad>> faceQuads; // cullface quads
 
     @Unique
-    private final DirectionBits solidFaces = new DirectionBits();
+    private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
-    private @Nullable VoxelShape cullVoxelShape;
+    private @Nullable VoxelShape moreculling$cullVoxelShape;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return direction == null ? solidFaces.notFull() : !solidFaces.contains(direction);
+    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
+        return direction == null ? moreculling$solidFaces.notFull() : !moreculling$solidFaces.contains(direction);
     }
 
     @Override
-    public void resetTranslucencyCache() {
-        solidFaces.clear();
+    public void moreculling$resetTranslucencyCache() {
+        moreculling$solidFaces.clear();
         for (Map.Entry<Direction, List<BakedQuad>> entry : faceQuads.entrySet()) {
             Direction direction = entry.getKey();
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
@@ -52,17 +52,18 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
                 BakedQuad initialQuad = layeredQuads.remove(0);
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
                 QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis());
-                if (!opacity.hasTranslucency(bounds)) {
+                if (!opacity.moreculling$hasTranslucency(bounds)) {
                     if (!layeredQuads.isEmpty()) {
                         List<NativeImage> overlappingImages = new ArrayList<>();
                         for (BakedQuad quad : layeredQuads) {
-                            overlappingImages.add(((SpriteOpacity) quad.getSprite()).getUnmipmappedImage());
+                            overlappingImages.add(((SpriteOpacity) quad.getSprite())
+                                    .moreculling$getUnmipmappedImage());
                         }
-                        if (!opacity.hasTranslucency(bounds, overlappingImages)) {
-                            solidFaces.add(direction);
+                        if (!opacity.moreculling$hasTranslucency(bounds, overlappingImages)) {
+                            moreculling$solidFaces.add(direction);
                         }
                     } else {
-                        solidFaces.add(direction);
+                        moreculling$solidFaces.add(direction);
                     }
                 }
             }
@@ -70,17 +71,17 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     }
 
     @Override
-    public @Nullable VoxelShape getCullingShape(BlockState state) {
-        return this.cullVoxelShape;
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        return this.moreculling$cullVoxelShape;
     }
 
     @Override
-    public void setCullingShape(VoxelShape cullingShape) {
-        this.cullVoxelShape = cullingShape;
+    public void moreculling$setCullingShape(VoxelShape cullingShape) {
+        this.moreculling$cullVoxelShape = cullingShape;
     }
 
     @Override
-    public boolean canSetCullingShape() {
+    public boolean moreculling$canSetCullingShape() {
         return true;
     }
 
@@ -88,9 +89,10 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
             method = "<init>",
             at = @At("RETURN")
     )
-    private void onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
-                        boolean isSideLit, boolean hasDepth, Sprite sprite, ModelTransformation transformation,
-                        ModelOverrideList itemPropertyOverrides, CallbackInfo ci) {
-        resetTranslucencyCache();
+    private void moreculling$onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
+                                    boolean isSideLit, boolean hasDepth, Sprite sprite,
+                                    ModelTransformation transformation, ModelOverrideList itemPropertyOverrides,
+                                    CallbackInfo ci) {
+        moreculling$resetTranslucencyCache();
     }
 }

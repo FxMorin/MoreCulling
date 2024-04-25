@@ -26,8 +26,7 @@ public interface ExtendedBlockModelRenderer {
      * rendered separately, this is done since we don't render all quads like vanilla
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderQuad(MatrixStack.Entry, VertexConsumer, float, float, float, float, BakedQuad, int, int)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderQuad}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -50,8 +49,7 @@ public interface ExtendedBlockModelRenderer {
      * This can be used to skip the face of a block model that cannot be seen
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderModelWithoutFace(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderModelWithoutFace}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -78,8 +76,7 @@ public interface ExtendedBlockModelRenderer {
      * This can be used to skip the face of quads that cannot be seen
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderQuadsWithoutFace(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderQuadsWithoutFace}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -103,8 +100,7 @@ public interface ExtendedBlockModelRenderer {
      * This will render a single face of a model.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderModelForFace(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderModelForFace}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -128,8 +124,7 @@ public interface ExtendedBlockModelRenderer {
      * This will render a single face of quads.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderQuadsForFace(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderQuadsForFace}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -152,8 +147,7 @@ public interface ExtendedBlockModelRenderer {
      * This is part of the 3-face rendering technique.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderModelFor3Faces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction, Direction, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderModelFor3Faces}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -179,8 +173,7 @@ public interface ExtendedBlockModelRenderer {
      * This is part of the 3-face rendering technique.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderModelFor3Faces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction, Direction, Direction)}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderQuadsFor3Faces}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -205,8 +198,7 @@ public interface ExtendedBlockModelRenderer {
      * This will render a list of faces for a model.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderModelForFaces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction[])}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderModelForFaces}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
@@ -230,8 +222,7 @@ public interface ExtendedBlockModelRenderer {
      * This will render all quads for a list of faces.
      *
      * @since 0.9.0
-     * @deprecated As of MC 1.20.5, you should now be using
-     * {@link #moreculling$renderQuadsForFaces(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction[])}
+     * @deprecated As of MC 1.20.5, you should now be using {@link #moreculling$renderQuadsForFaces}
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)

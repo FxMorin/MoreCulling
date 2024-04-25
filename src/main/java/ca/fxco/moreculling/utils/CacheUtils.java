@@ -23,7 +23,7 @@ public class CacheUtils {
         // Reset all model translucency cache
         Collection<BakedModel> allModels = ((BlockModelsAccessor) blockRenderManager.getModels()).getModels().values();
         for (BakedModel model : allModels) {
-            ((BakedOpacity) model).resetTranslucencyCache();
+            ((BakedOpacity) model).moreculling$resetTranslucencyCache();
         }
         //TODO: Reset quad cache
         MoreCulling.LOGGER.info(allModels.size() + " cache(s) where cleared!");

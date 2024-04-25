@@ -47,33 +47,34 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     private List<CullShapeElement> cullShapeElements = null;
 
     @Unique
-    private boolean useModelShape = true;
+    private boolean moreculling$useModelShape = true;
 
     @Override
-    public void setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
+    public void moreculling$setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
         this.cullShapeElements = cullShapeElements;
     }
 
     @Override
-    public @Nullable List<CullShapeElement> getCullShapeElements(Identifier id) {
+    public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(Identifier id) {
         if (this.cullShapeElements == null) {
-            return this.parent != null ? ((ExtendedUnbakedModel) this.parent).getCullShapeElements(id) : null;
+            return this.parent != null ?
+                    ((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
         }
         return cullShapeElements;
     }
 
     @Override
-    public void setUseModelShape(boolean useModelShape) {
-        this.useModelShape = useModelShape;
+    public void moreculling$setUseModelShape(boolean useModelShape) {
+        this.moreculling$useModelShape = useModelShape;
     }
 
     @Override
-    public boolean getUseModelShape(Identifier id) {
-        return this.useModelShape;
+    public boolean moreculling$getUseModelShape(Identifier id) {
+        return this.moreculling$useModelShape;
     }
 
     @Override
-    public ModelElementFace modifyElementFace(ModelElementFace elementFace) {
+    public ModelElementFace moreculling$modifyElementFace(ModelElementFace elementFace) {
         return elementFace;
     }
 
@@ -84,7 +85,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"
             )
     )
-    private static Gson registerCustomTypeAdapter(GsonBuilder builder) {
+    private static Gson moreculling$registerCustomTypeAdapter(GsonBuilder builder) {
         return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
     }
 
@@ -98,8 +99,8 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
             )
     )
-    private Object overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
-        return modifyElementFace(map.get((Direction) direction));
+    private Object moreculling$overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
+        return moreculling$modifyElementFace(map.get((Direction) direction));
     }
 
     @Inject(
@@ -112,42 +113,44 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     shift = At.Shift.BEFORE
             )
     )
-    private void onBake(Baker baker, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter,
-                        ModelBakeSettings settings, Identifier id, boolean hasDepth,
-                        CallbackInfoReturnable<BakedModel> cir) {
+    private void moreculling$onBake(Baker baker, JsonUnbakedModel parent,
+                                    Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings,
+                                    Identifier id, boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
             return;
         }
         BakedOpacity bakedOpacity = (BakedOpacity) bakedModel;
-        if (!bakedOpacity.canSetCullingShape()) {
+        if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        if (getUseModelShape(id) && settings.getRotation() == AffineTransformation.identity()) {
+        if (moreculling$getUseModelShape(id) && settings.getRotation() == AffineTransformation.identity()) {
             List<ModelElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (ModelElement e : modelElementList) {
                     if (e.rotation == null || e.rotation.angle() == 0) {
-                        VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                        VoxelShape shape = Block.createCuboidShape(
+                                e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z
+                        );
                         voxelShape = VoxelShapes.union(voxelShape, shape);
                     }
                 }
-                bakedOpacity.setCullingShape(voxelShape);
+                bakedOpacity.moreculling$setCullingShape(voxelShape);
                 return;
             }
         } else {
-            List<CullShapeElement> cullShapeElementList = getCullShapeElements(id);
+            List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
             if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
                     VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
                     voxelShape = VoxelShapes.union(voxelShape, shape);
                 }
-                bakedOpacity.setCullingShape(voxelShape);
+                bakedOpacity.moreculling$setCullingShape(voxelShape);
                 return;
             }
         }
-        bakedOpacity.setCullingShape(null);
+        bakedOpacity.moreculling$setCullingShape(null);
     }
 }

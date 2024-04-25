@@ -37,7 +37,7 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
     private byte solidFaces = 0; // 0 = all sides translucent
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState blockState, @Nullable Direction direction) {
+    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState blockState, @Nullable Direction direction) {
         if (direction == null) {
             return solidFaces != BitUtils.ALL_DIRECTIONS; // If any translucency, returns true
         }
@@ -45,16 +45,16 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
     }
 
     @Override
-    public void resetTranslucencyCache() {
+    public void moreculling$resetTranslucencyCache() {
         solidFaces = 0;
     }
 
     @Override
-    public @Nullable VoxelShape getCullingShape(BlockState state) {
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
         VoxelShape cachedShape = null;
         for (Pair<Predicate<BlockState>, BakedModel> pair : this.components) {
             if ((pair.getLeft()).test(state)) {
-                VoxelShape shape = ((BakedOpacity) pair.getRight()).getCullingShape(state);
+                VoxelShape shape = ((BakedOpacity) pair.getRight()).moreculling$getCullingShape(state);
                 if (shape != null) {
                     if (cachedShape == null) {
                         cachedShape = shape;
@@ -72,8 +72,8 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
             method = "getQuads",
             at = @At("RETURN")
     )
-    private void onGetQuads(@Nullable BlockState state, @Nullable Direction face, Random random,
-                            CallbackInfoReturnable<List<BakedQuad>> cir) {
+    private void moreculling$onGetQuads(@Nullable BlockState state, @Nullable Direction face, Random random,
+                                        CallbackInfoReturnable<List<BakedQuad>> cir) {
         if (face != null) { // Must be quads that have cullface
             List<BakedQuad> quads = cir.getReturnValue();
             if (quads.isEmpty()) { // no faces = translucent
@@ -81,7 +81,7 @@ public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
             } else {
                 solidFaces = BitUtils.set(solidFaces, face.ordinal());
                 for (BakedQuad quad : quads) {
-                    if (((QuadOpacity) quad).getTextureTranslucency()) {
+                    if (((QuadOpacity) quad).moreculling$getTextureTranslucency()) {
                         solidFaces = BitUtils.unset(solidFaces, face.ordinal());
                         break;
                     }

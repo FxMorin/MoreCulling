@@ -27,35 +27,36 @@ public abstract class ItemRenderer_apiMixin implements ExtendedItemRenderer {
                                             @Nullable World world, int seed);
 
     @Override
-    public void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                MatrixStack matrices, VertexConsumer vertices,
-                                                @Nullable Direction withoutFace) {
+    public void moreculling$renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
+                                                            MatrixStack matrices, VertexConsumer vertices,
+                                                            @Nullable Direction withoutFace) {
         ItemRendererStates.DIRECTIONS = DirectionUtils.getAllDirectionsExcluding(withoutFace);
         this.renderBakedItemModel(model, stack, light, overlay, matrices, vertices);
         ItemRendererStates.DIRECTIONS = null;
     }
 
     @Override
-    public void renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
-                                               MatrixStack matrices, VertexConsumer vertices,
-                                               Direction faceX, Direction faceY, Direction faceZ) {
+    public void moreculling$renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
+                                                           MatrixStack matrices, VertexConsumer vertices,
+                                                           Direction faceX, Direction faceY, Direction faceZ) {
         ItemRendererStates.DIRECTIONS = new Direction[] { faceX, faceY, faceZ };
         this.renderBakedItemModel(model, stack, light, overlay, matrices, vertices);
         ItemRendererStates.DIRECTIONS = null;
     }
 
     @Override
-    public void renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                            MatrixStack matrices, VertexConsumer vertices,
-                                            Direction face) {
+    public void moreculling$renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
+                                                        MatrixStack matrices, VertexConsumer vertices,
+                                                        Direction face) {
         ItemRendererStates.DIRECTIONS = new Direction[] { face };
         this.renderBakedItemModel(model, stack, light, overlay, matrices, vertices);
         ItemRendererStates.DIRECTIONS = null;
     }
 
     @Override
-    public void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                                    int light, ItemFrameEntity frame, Camera camera) {
+    public void moreculling$renderItemFrameItem(ItemStack stack, MatrixStack matrices,
+                                                VertexConsumerProvider vertexConsumers,
+                                                int light, ItemFrameEntity frame, Camera camera) {
         ItemRendererStates.ITEM_FRAME = frame;
         ItemRendererStates.CAMERA = camera;
         this.renderItem(stack, ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices,

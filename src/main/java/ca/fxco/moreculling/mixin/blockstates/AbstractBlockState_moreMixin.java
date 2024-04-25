@@ -22,40 +22,31 @@ public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
     protected abstract BlockState asBlockState();
 
     @Override
-    public final boolean usesCustomShouldDrawFace() {
-        return ((MoreBlockCulling) this.getBlock()).usesCustomShouldDrawFace(this.asBlockState());
+    public final boolean moreculling$usesCustomShouldDrawFace() {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$usesCustomShouldDrawFace(this.asBlockState());
     }
 
     @Override
-    public final Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState,
-                                                        BlockPos thisPos, BlockPos sidePos, Direction side) {
-        return ((MoreBlockCulling) this.getBlock()).customShouldDrawFace(
+    public final Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState sideState,
+                                                                    BlockPos thisPos, BlockPos sidePos,
+                                                                    Direction side) {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$customShouldDrawFace(
                 view, this.asBlockState(), sideState, thisPos, sidePos, side
         );
     }
 
     @Override
-    public boolean shouldAttemptToCull() {
-        return ((MoreBlockCulling) this.getBlock()).shouldAttemptToCull(this.asBlockState());
+    public boolean moreculling$shouldAttemptToCull(Direction side) {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$shouldAttemptToCull(this.asBlockState(), side);
     }
 
     @Override
-    public boolean shouldAttemptToCull(Direction side) {
-        return ((MoreBlockCulling) this.getBlock()).shouldAttemptToCull(this.asBlockState(), side);
+    public final boolean moreculling$cantCullAgainst(Direction side) {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$cantCullAgainst(this.asBlockState(), side);
     }
 
     @Override
-    public final boolean cantCullAgainst() {
-        return ((MoreBlockCulling) this.getBlock()).cantCullAgainst(this.asBlockState());
-    }
-
-    @Override
-    public final boolean cantCullAgainst(Direction side) {
-        return ((MoreBlockCulling) this.getBlock()).cantCullAgainst(this.asBlockState(), side);
-    }
-
-    @Override
-    public final boolean canCull() {
-        return ((MoreBlockCulling) this.getBlock()).canCull();
+    public final boolean moreculling$canCull() {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$canCull();
     }
 }

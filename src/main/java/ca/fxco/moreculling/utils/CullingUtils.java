@@ -35,8 +35,8 @@ public class CullingUtils {
         if (thisState.isSideInvisible(sideState, side)) {
             return false;
         }
-        if (((MoreStateCulling) thisState).usesCustomShouldDrawFace()) {
-            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).customShouldDrawFace(
+        if (((MoreStateCulling) thisState).moreculling$usesCustomShouldDrawFace()) {
+            Optional<Boolean> shouldDrawFace = ((MoreStateCulling) thisState).moreculling$customShouldDrawFace(
                     world, sideState, thisPos, sidePos, side
             );
             if (shouldDrawFace.isPresent()) {
@@ -44,9 +44,9 @@ public class CullingUtils {
             }
         }
         if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                ((MoreStateCulling) sideState).canCull() &&
-                ((MoreStateCulling) thisState).shouldAttemptToCull(side) &&
-                ((MoreStateCulling) sideState).shouldAttemptToCull(side.getOpposite()))) {
+                ((MoreStateCulling) sideState).moreculling$canCull() &&
+                ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side) &&
+                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite()))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
@@ -57,7 +57,7 @@ public class CullingUtils {
      */
     private static boolean shouldDrawFace(BlockView world, BlockState thisState, BlockState sideState,
                                           BlockPos thisPos, BlockPos sidePos, Direction side) {
-        if (((MoreStateCulling) sideState).cantCullAgainst(side)) {
+        if (((MoreStateCulling) sideState).moreculling$cantCullAgainst(side)) {
             return true; // Check if we can cull against this block
         }
         Block.NeighborGroup neighborGroup = new Block.NeighborGroup(thisState, sideState, side);

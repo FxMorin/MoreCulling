@@ -12,11 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MapState_cacheMixin implements MapOpacity {
 
     @Unique
-    private boolean hasTransparency = false;
+    private boolean moreculling$hasTransparency = false;
 
     @Override
-    public boolean hasTransparency() {
-        return this.hasTransparency;
+    public boolean moreculling$hasTransparency() {
+        return this.moreculling$hasTransparency;
     }
 
 
@@ -24,9 +24,9 @@ public class MapState_cacheMixin implements MapOpacity {
             method = "setColor",
             at = @At("HEAD")
     )
-    private void onSetColor(int x, int z, byte color, CallbackInfo ci) {
+    private void moreculling$onSetColor(int x, int z, byte color, CallbackInfo ci) {
         if (color == 0) {
-            this.hasTransparency = true;
+            this.moreculling$hasTransparency = true;
         }
     }
 }

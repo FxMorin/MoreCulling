@@ -22,13 +22,14 @@ public abstract class PowderSnowBlock_cullMixin extends Block implements MoreBlo
     }
 
     @Override
-    public boolean usesCustomShouldDrawFace(BlockState state) {
+    public boolean moreculling$usesCustomShouldDrawFace(BlockState state) {
         return true; //Normal powered snow culling will skip this check
     }
 
     @Override
-    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
-                                                  BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState thisState,
+                                                              BlockState sideState, BlockPos thisPos,
+                                                              BlockPos sidePos, Direction side) {
         return Optional.of(!sideState.isOf(this));
     }
 

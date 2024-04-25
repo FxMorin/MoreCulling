@@ -26,7 +26,7 @@ public class ShulkerBoxBlock_cullMixin extends Block implements MoreBlockCulling
     }
 
     @Override
-    public boolean cantCullAgainst(BlockState state, @Nullable Direction side) {
+    public boolean moreculling$cantCullAgainst(BlockState state, @Nullable Direction side) {
         return side != state.get(FacingBlock.FACING).getOpposite();
     }
 }

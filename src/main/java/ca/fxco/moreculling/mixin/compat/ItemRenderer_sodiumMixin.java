@@ -29,14 +29,14 @@ public class ItemRenderer_sodiumMixin {
     // Sodium cancels the entire method... again
 
     @TargetHandler(
-            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
+            mixin = "net.caffeinemc.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
             name = "renderModelFast"
     )
     @Redirect(
             method = "@MixinSquared:Handler",
             at = @At(
                     value = "FIELD",
-                    target = "Lme/jellysquid/mods/sodium/client/util/DirectionUtil;" +
+                    target = "Lnet/caffeinemc/mods/sodium/client/util/DirectionUtil;" +
                             "ALL_DIRECTIONS:[Lnet/minecraft/util/math/Direction;",
                     opcode = Opcodes.GETSTATIC
             )
@@ -46,7 +46,7 @@ public class ItemRenderer_sodiumMixin {
     }
 
     @TargetHandler(
-            mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
+            mixin = "net.caffeinemc.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
             name = "renderModelFast"
     )
     @WrapOperation(

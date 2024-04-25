@@ -23,10 +23,10 @@ public class ShapeCache_cullShapeMixin {
                     target = "Lnet/minecraft/block/BlockState;isOpaque()Z"
             )
     )
-    private boolean shouldDoShapeCache(BlockState state) {
+    private boolean moreculling$shouldDoShapeCache(BlockState state) {
         if (blockRenderManager != null) {
             BakedModel model = blockRenderManager.getModel(state);
-            if (model != null && ((BakedOpacity) model).getCullingShape(state) != null) {
+            if (model != null && ((BakedOpacity) model).moreculling$getCullingShape(state) != null) {
                 return true;
             }
         }
@@ -42,11 +42,12 @@ public class ShapeCache_cullShapeMixin {
                             "Lnet/minecraft/util/shape/VoxelShape;"
             )
     )
-    private VoxelShape customCullingShape(Block instance, BlockState state, BlockView blockView, BlockPos blockPos) {
+    private VoxelShape moreculling$customCullingShape(Block instance, BlockState state, BlockView blockView,
+                                                      BlockPos blockPos) {
         if (blockRenderManager != null) {
             BakedModel model = blockRenderManager.getModel(state);
             if (model != null) {
-                VoxelShape voxelShape = ((BakedOpacity) model).getCullingShape(state);
+                VoxelShape voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(state);
                 if (voxelShape != null) {
                     return voxelShape;
                 }

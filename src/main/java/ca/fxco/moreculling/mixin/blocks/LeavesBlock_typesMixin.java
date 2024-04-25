@@ -43,13 +43,14 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     }
 
     @Override
-    public boolean usesCustomShouldDrawFace(BlockState state) {
+    public boolean moreculling$usesCustomShouldDrawFace(BlockState state) {
         return MoreCulling.CONFIG.leavesCullingMode != LeavesCullingMode.DEFAULT; //Fast & Vertical will skip this call
     }
 
     @Override
-    public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
-                                                  BlockPos thisPos, BlockPos sidePos, Direction side) {
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState thisState,
+                                                              BlockState sideState, BlockPos thisPos,
+                                                              BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) {
             case STATE -> sideState.getBlock() instanceof LeavesBlock && sideState.get(DISTANCE) % 3 != 1 ?
                     Optional.of(false) : Optional.empty();
@@ -62,13 +63,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     }
 
     @Override
-    public boolean shouldAttemptToCull(BlockState state) {
-        return CullingUtils.areLeavesOpaque() &&
-                !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
-    }
-
-    @Override
-    public boolean cantCullAgainst(BlockState state, Direction side) {
+    public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
         return true;
     }
 }

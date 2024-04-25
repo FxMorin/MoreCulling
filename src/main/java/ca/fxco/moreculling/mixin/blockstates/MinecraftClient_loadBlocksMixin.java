@@ -18,9 +18,9 @@ public class MinecraftClient_loadBlocksMixin {
             method = "<init>(Lnet/minecraft/client/RunArgs;)V",
             at = @At("RETURN")
     )
-    private void onInit(RunArgs args, CallbackInfo ci) {
+    private void moreculling$onInit(RunArgs args, CallbackInfo ci) {
         Registries.BLOCK.forEach(block -> {
-            ((MoreBlockCulling) block).setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
+            ((MoreBlockCulling) block).moreculling$setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
                     Registries.BLOCK.getId(block).getNamespace(),
                     MoreCulling.CONFIG.useOnModdedBlocksByDefault
             ));

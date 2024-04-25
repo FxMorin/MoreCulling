@@ -15,7 +15,7 @@ import static net.minecraft.block.CampfireBlock.FACING;
 public abstract class CampfireBlock_voxelMixin extends Block {
 
     @Unique
-    private static final VoxelShape CULL_SHAPE_X = VoxelShapes.union(
+    private static final VoxelShape moreculling$CULL_SHAPE_X = VoxelShapes.union(
             Block.createCuboidShape(0, 0, 1, 16, 4, 5),
             Block.createCuboidShape(11, 3, 0, 15, 7, 16),
             Block.createCuboidShape(0, 0, 11, 16, 4, 15),
@@ -24,7 +24,7 @@ public abstract class CampfireBlock_voxelMixin extends Block {
     );
 
     @Unique
-    private static final VoxelShape CULL_SHAPE_Z = VoxelShapes.union(
+    private static final VoxelShape moreculling$CULL_SHAPE_Z = VoxelShapes.union(
             Block.createCuboidShape(1, 0, 0, 5, 4, 16),
             Block.createCuboidShape(0, 3, 11, 16, 7, 15),
             Block.createCuboidShape(11, 0, 0, 15, 4, 16),
@@ -38,6 +38,6 @@ public abstract class CampfireBlock_voxelMixin extends Block {
 
     @Override
     public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return state.get(FACING).getAxis() == Direction.Axis.X ? CULL_SHAPE_X : CULL_SHAPE_Z;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? moreculling$CULL_SHAPE_X : moreculling$CULL_SHAPE_Z;
     }
 }

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class DoorBlock_cullAgainstMixin implements MoreBlockCulling {
 
     @Override
-    public boolean cantCullAgainst(BlockState state, Direction side) {
+    public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
         return true;
     }
 }
