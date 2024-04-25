@@ -11,7 +11,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.minecraft_version+'-'+project.mod_version
+version = project.minecraft_version + '-' + project.mod_version
 group = project.maven_group
 
 sourceSets {
@@ -88,7 +88,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.mod_version
     }
 }
 
