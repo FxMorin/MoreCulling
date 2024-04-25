@@ -4,13 +4,14 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CullingUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.MangroveRootsBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.MangroveRootsBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Optional;
@@ -18,19 +19,19 @@ import java.util.Optional;
 @Mixin(value = MangroveRootsBlock.class, priority = 1220)
 public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCulling {
 
-    public MangroveRootsBlock_typesMixin(Settings settings) {
+    public MangroveRootsBlock_typesMixin(BlockBehaviour.Properties settings) {
         super(settings);
     }
 
     @Override
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
         if (!MoreCulling.CONFIG.includeMangroveRoots) {
-            return super.isSideInvisible(state, stateFrom, direction);
+            return super.skipRendering(state, stateFrom, direction);
         }
         if (MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.FAST || CullingUtils.areLeavesOpaque()) {
-            return stateFrom.getBlock() instanceof LeavesBlock || super.isSideInvisible(state, stateFrom, direction);
+            return stateFrom.getBlock() instanceof LeavesBlock || super.skipRendering(state, stateFrom, direction);
         }
-        return super.isSideInvisible(state, stateFrom, direction);
+        return super.skipRendering(state, stateFrom, direction);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCul
     }
 
     @Override
-    public Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState thisState,
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockGetter view, BlockState thisState,
                                                               BlockState sideState, BlockPos thisPos,
                                                               BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) { // Can't use state culling here

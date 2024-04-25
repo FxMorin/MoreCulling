@@ -18,10 +18,10 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +34,15 @@ public class ModMenuConfig implements ModMenuApi {
     private static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
-        ConfigCategory generalCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.general"));
-        ConfigCategory compatCategory = builder.getOrCreateCategory(Text.translatable("moreculling.config.category.compat"));
+        ConfigCategory generalCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.general"));
+        ConfigCategory compatCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.compat"));
 
         // Modded Blocks
         List<DynamicBooleanListEntry> modsOption = new ArrayList<>();
         DynamicBooleanListEntry useOnModdedBlocks = new DynamicBooleanBuilder("moreculling.config.option.useOnModdedBlocks")
                 .setValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.useOnModdedBlocks.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.useOnModdedBlocks.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useOnModdedBlocksByDefault = newValue)
                 .requireRestart() //TODO: Just need to reset the gui
                 .build();
@@ -55,12 +55,12 @@ public class ModMenuConfig implements ModMenuApi {
             DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(con == null ? modId : con.getMetadata().getName())
                     .setValue(entry.getBooleanValue())
                     .setDefaultValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)
-                    .setTooltip(Text.literal(modId))
+                    .setTooltip(Component.literal(modId))
                     .setSaveConsumer(v -> {
                         MoreCulling.CONFIG.modCompatibility.put(modId, v.booleanValue());
-                        Registries.BLOCK.forEach(block -> { // May be expensive, check on it
-                            if (v != ((MoreBlockCulling) block).canCull() && Registries.BLOCK.getId(block).getNamespace().equals(modId)) {
-                                ((MoreBlockCulling) block).setCanCull(v);
+                        BuiltInRegistries.BLOCK.forEach(block -> {
+                            if (v != ((MoreBlockCulling) block).moreculling$canCull() && BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(modId)) {
+                                ((MoreBlockCulling) block).moreculling$setCanCull(v);
                             }
                         });
                     })
@@ -72,12 +72,12 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.cloudCulling")
                 .setValue(MoreCulling.CONFIG.cloudCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.cloudCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.cloudCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.cloudCulling = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .build());
@@ -86,7 +86,7 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.signTextCulling")
                 .setValue(MoreCulling.CONFIG.signTextCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.signTextCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.signTextCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.signTextCulling = newValue)
                 .build());
 
@@ -94,7 +94,7 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.entityModelCulling")
                 .setValue(MoreCulling.CONFIG.entityModelCulling)
                 .setDefaultValue(false)
-                .setTooltip(Text.translatable("moreculling.config.option.entityModelCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.entityModelCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.entityModelCulling = newValue)
                 .setModIncompatibility(CompatUtils.IS_SODIUM_LOADED, "sodium")
                 .build());
@@ -103,7 +103,7 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.rainCulling")
                 .setValue(MoreCulling.CONFIG.rainCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.rainCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.rainCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.rainCulling = newValue)
                 .build());
 
@@ -111,7 +111,7 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.beaconBeamCulling")
                 .setValue(MoreCulling.CONFIG.beaconBeamCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.beaconBeamCulling = newValue)
                 .build());
 
@@ -119,24 +119,24 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder("moreculling.config.option.leavesCullingAmount", 1, 4)
                 .setValue(MoreCulling.CONFIG.leavesCullingAmount)
                 .setDefaultValue(2)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.leavesCullingAmount.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingAmount = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .build();
         DynamicEnumEntry<LeavesCullingMode> leavesCullingMode = new DynamicEnumBuilder<>("moreculling.config.option.leavesCulling", LeavesCullingMode.class)
                 .setValue(MoreCulling.CONFIG.leavesCullingMode)
                 .setDefaultValue(LeavesCullingMode.DEFAULT)
-                .setTooltip(Text.translatable("moreculling.config.option.leavesCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.leavesCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -149,12 +149,12 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicBooleanListEntry includeMangroveRoots = new DynamicBooleanBuilder("moreculling.config.option.includeMangroveRoots")
                 .setValue(MoreCulling.CONFIG.includeMangroveRoots)
                 .setDefaultValue(false)
-                .setTooltip(Text.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.includeMangroveRoots.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.includeMangroveRoots = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -168,12 +168,12 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicBooleanListEntry powderSnowCulling = new DynamicBooleanBuilder("moreculling.config.option.powderSnowCulling")
                 .setValue(MoreCulling.CONFIG.powderSnowCulling)
                 .setDefaultValue(false)
-                .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.powderSnowCulling = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .build();
@@ -182,12 +182,12 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicBooleanListEntry endGatewayCulling = new DynamicBooleanBuilder("moreculling.config.option.endGatewayCulling")
                 .setValue(MoreCulling.CONFIG.endGatewayCulling)
                 .setDefaultValue(false)
-                .setTooltip(Text.translatable("moreculling.config.option.endGatewayCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.endGatewayCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.endGatewayCulling = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .build();
@@ -196,12 +196,12 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.blockStateCulling")
                 .setValue(MoreCulling.CONFIG.useBlockStateCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.blockStateCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.blockStateCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc != null && mc.worldRenderer != null) {
-                        mc.worldRenderer.reload();
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc != null && mc.levelRenderer != null) {
+                        mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -219,39 +219,39 @@ public class ModMenuConfig implements ModMenuApi {
         DynamicBooleanListEntry itemFrameMapCulling = new DynamicBooleanBuilder("moreculling.config.option.itemFrameMapCulling")
                 .setValue(MoreCulling.CONFIG.itemFrameMapCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameMapCulling = newValue)
                 .build();
         DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder("moreculling.config.option.itemFrameLODRange", 16, 256) // Between 16 & 256 blocks - 1 & 16 chunks
                 .setValue(MoreCulling.CONFIG.itemFrameLODRange)
                 .setDefaultValue(128)
-                .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameLODRange = newValue)
                 .build();
         DynamicBooleanListEntry itemFrameLOD = new DynamicBooleanBuilder("moreculling.config.option.itemFrameLOD")
                 .setValue(MoreCulling.CONFIG.useItemFrameLOD)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.itemFrameLOD.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrameLOD = newValue)
                 .setChangeConsumer((instance, value) -> itemFrameLODRange.setEnabledState(value))
                 .build();
         DynamicFloatSliderEntry itemFrame3FaceCullingRange = new DynamicFloatSliderBuilder("moreculling.config.option.itemFrame3FaceCullingRange", 2F, 16F, 0.2F) // Between 0 & 16 blocks
                 .setValue(MoreCulling.CONFIG.itemFrame3FaceCullingRange)
                 .setDefaultValue(4F)
-                .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrame3FaceCullingRange = newValue)
                 .build();
         DynamicBooleanListEntry itemFrame3FaceCulling = new DynamicBooleanBuilder("moreculling.config.option.itemFrame3FaceCulling")
                 .setValue(MoreCulling.CONFIG.useItemFrame3FaceCulling)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useItemFrame3FaceCulling = newValue)
                 .setChangeConsumer((instance, value) -> itemFrame3FaceCullingRange.setEnabledState(value))
                 .build();
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.customItemFrameRenderer")
                 .setValue(MoreCulling.CONFIG.useCustomItemFrameRenderer)
                 .setDefaultValue(true)
-                .setTooltip(Text.translatable("moreculling.config.option.customItemFrameRenderer.tooltip"))
+                .setTooltip(Component.translatable("moreculling.config.option.customItemFrameRenderer.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.useCustomItemFrameRenderer = newValue)
                 .setChangeConsumer((instance, value) -> {
                     itemFrameLOD.setEnabledState(value);
@@ -296,7 +296,7 @@ public class ModMenuConfig implements ModMenuApi {
         for (String group : groupedOptions.keySet()) {
             ConfigCategory category;
             if (ConfigAdditions.isGroupSeparate(group)) {
-                category = builder.getOrCreateCategory(Text.translatable("moreculling.config.category." + group));
+                category = builder.getOrCreateCategory(Component.translatable("moreculling.config.category." + group));
             } else {
                 category = generalCategory;
             }
@@ -314,7 +314,7 @@ public class ModMenuConfig implements ModMenuApi {
                     optionBuilder = null;
                 }
                 if (optionBuilder != null) {
-                    optionBuilder.setTooltip(Text.translatable(option.getTranslationKey() + ".tooltip"))
+                    optionBuilder.setTooltip(Component.translatable(option.getTranslationKey() + ".tooltip"))
                             .setValue(option.getGetter().get())
                             .setDefaultValue(option.getDefaultValue())
                             .setSaveConsumer(newValue -> option.getSetter().accept(newValue))
@@ -326,7 +326,7 @@ public class ModMenuConfig implements ModMenuApi {
                     if (option instanceof ConfigModLimit configModLimit) {
                         optionBuilder.setModLimited(
                                 FabricLoader.getInstance().isModLoaded(configModLimit.getLimitedModId()),
-                                Text.translatable(configModLimit.getTranslationKey())
+                                Component.translatable(configModLimit.getTranslationKey())
                         );
                     }
                     if (option instanceof ConfigModIncompatibility configModIncompatibility) {

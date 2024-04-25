@@ -3,7 +3,7 @@ package ca.fxco.moreculling.api.model;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.util.GsonHelper;
 import org.joml.Vector3f;
 
 import java.lang.reflect.Type;
@@ -51,14 +51,14 @@ public class CullShapeElement {
         }
 
         private Vector3f deserializeVec3f(JsonObject object, String name) {
-            JsonArray jsonArray = JsonHelper.getArray(object, name);
+            JsonArray jsonArray = GsonHelper.getAsJsonArray(object, name);
             if (jsonArray.size() != 3) {
                 throw new JsonParseException("Expected 3 " + name + " values, found: " + jsonArray.size());
             }
             float[] fs = new float[3];
 
             for (int i = 0; i < fs.length; ++i) {
-                fs[i] = JsonHelper.asFloat(jsonArray.get(i), name + "[" + i + "]");
+                fs[i] = GsonHelper.convertToFloat(jsonArray.get(i), name + "[" + i + "]");
             }
 
             return new Vector3f(fs[0], fs[1], fs[2]);

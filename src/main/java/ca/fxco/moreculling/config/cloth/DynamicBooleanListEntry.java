@@ -1,13 +1,12 @@
 package ca.fxco.moreculling.config.cloth;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.GameNarrator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -17,7 +16,7 @@ import java.util.function.Supplier;
 
 public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
 
-    public DynamicBooleanListEntry(Text fieldName, Text resetButtonKey, Boolean value, Supplier<Boolean> defaultValue, @Nullable Consumer<Boolean> saveConsumer, @Nullable BiConsumer<AbstractDynamicEntry<Boolean>, Boolean> changeConsumer, Supplier<Optional<Text[]>> tooltipSupplier, boolean requiresRestart, boolean locked) {
+    public DynamicBooleanListEntry(Component fieldName, Component resetButtonKey, Boolean value, Supplier<Boolean> defaultValue, @Nullable Consumer<Boolean> saveConsumer, @Nullable BiConsumer<AbstractDynamicEntry<Boolean>, Boolean> changeConsumer, Supplier<Optional<Component[]>> tooltipSupplier, boolean requiresRestart, boolean locked) {
         super(fieldName, resetButtonKey, value, defaultValue, saveConsumer, changeConsumer, tooltipSupplier, requiresRestart, locked);
         this.onChange(); // Run once on load
     }
@@ -30,33 +29,33 @@ public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
     }
 
     @Override
-    protected ClickableWidget createMainWidget() {
-        return ButtonWidget.builder(NarratorManager.EMPTY, (widget) -> {
+    protected AbstractWidget createMainWidget() {
+        return Button.builder(GameNarrator.NO_TITLE, (widget) -> {
             if (this.isEnabled()) {
                 this.setValue(!this.getValue());
                 this.onChange();
             }
-        }).dimensions(0, 0, 150, 20).build();
+        }).bounds(0, 0, 150, 20).build();
     }
 
     @Override
-    protected void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight) {
-        Window window = MinecraftClient.getInstance().getWindow();
+    protected void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight) {
+        Window window = Minecraft.getInstance().getWindow();
         this.mainWidget.setMessage(this.getYesNoText(this.getValue()));
-        Text displayedFieldName = this.getDisplayedFieldName();
-        if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName), y + 6, 16777215);
+        Component displayedFieldName = this.getDisplayedFieldName();
+        if (Minecraft.getInstance().font.isBidirectional()) {
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), window.getGuiScaledWidth() - x - Minecraft.getInstance().font.width(displayedFieldName), y + 6, 16777215);
             this.resetButton.setX(x);
             this.mainWidget.setX(x + this.resetButton.getWidth() + 2);
         } else {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), x, y + 6, this.getPreferredTextColor());
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), x, y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
             this.mainWidget.setX(x + entryWidth - 150);
         }
         this.mainWidget.setWidth(150 - this.resetButton.getWidth() - 2);
     }
 
-    public Text getYesNoText(boolean bool) {
-        return Text.translatable("text.cloth-config.boolean.value." + bool);
+    public Component getYesNoText(boolean bool) {
+        return Component.translatable("text.cloth-config.boolean.value." + bool);
     }
 }

@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.config.cloth;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, DynamicIntSliderEntry, DynamicIntSliderBuilder> {
     private int max;
     private int min;
-    private Function<Integer, Text> textGetter = null;
+    private Function<Integer, Component> textGetter = null;
 
     public DynamicIntSliderBuilder(String translationKey, int min, int max) {
         super(translationKey);
@@ -16,13 +16,13 @@ public class DynamicIntSliderBuilder extends AbstractDynamicBuilder<Integer, Dyn
         this.min = min;
     }
 
-    public DynamicIntSliderBuilder(String translationKey, Text resetButtonKey, int min, int max) {
+    public DynamicIntSliderBuilder(String translationKey, Component resetButtonKey, int min, int max) {
         super(translationKey, resetButtonKey);
         this.max = max;
         this.min = min;
     }
 
-    public DynamicIntSliderBuilder setTextGetter(Function<Integer, Text> textGetter) {
+    public DynamicIntSliderBuilder setTextGetter(Function<Integer, Component> textGetter) {
         this.textGetter = textGetter;
         return this;
     }

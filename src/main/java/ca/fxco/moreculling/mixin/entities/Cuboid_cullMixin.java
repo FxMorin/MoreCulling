@@ -2,9 +2,9 @@ package ca.fxco.moreculling.mixin.entities;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.VertexUtils;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.geom.ModelPart;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,27 +16,27 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ModelPart.Cuboid.class)
+@Mixin(ModelPart.Cube.class)
 public class Cuboid_cullMixin {
 
     @Shadow
     @Final
-    private ModelPart.Quad[] sides;
+    private ModelPart.Polygon[] polygons;
 
     @Inject(
-            method = "renderCuboid",
+            method = "compile",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void moreculling$renderCuboid(MatrixStack.Entry entry, VertexConsumer vertexConsumer, int light,
+    private void moreculling$renderCuboid(PoseStack.Pose pose, VertexConsumer vertexConsumer, int light,
                                           int overlay, float red, float green, float blue, float alpha,
                                           CallbackInfo ci) {
         if (!MoreCulling.CONFIG.entityModelCulling) {
             return;
         }
-        Matrix4f matrix4f = entry.getPositionMatrix();
-        Matrix3f matrix3f = entry.getNormalMatrix();
-        for (ModelPart.Quad quad : this.sides) {
+        Matrix4f matrix4f = pose.pose();
+        Matrix3f matrix3f = pose.normal();
+        for (ModelPart.Polygon quad : this.polygons) {
             ModelPart.Vertex[] vertices = quad.vertices;
 
             if (VertexUtils.isTriangleInvisible(
@@ -47,7 +47,7 @@ public class Cuboid_cullMixin {
                 continue;
             }
 
-            Vector3f vector3f = matrix3f.transform(new Vector3f(quad.direction));
+            Vector3f vector3f = matrix3f.transform(new Vector3f(quad.normal));
             float nx = vector3f.x(), ny = vector3f.y(), nz = vector3f.z();
 
             for (ModelPart.Vertex vertex : vertices) {

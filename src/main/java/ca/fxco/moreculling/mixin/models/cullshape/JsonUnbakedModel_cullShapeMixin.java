@@ -5,20 +5,20 @@ import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.render.model.json.ModelElement;
-import net.minecraft.client.render.model.json.ModelElementFace;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AffineTransformation;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import com.mojang.math.Transformation;
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,15 +32,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Mixin(JsonUnbakedModel.class)
+@Mixin(BlockModel.class)
 public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbakedModel {
 
     @Shadow
     @Nullable
-    protected JsonUnbakedModel parent;
+    protected BlockModel parent;
 
     @Shadow
-    public abstract List<ModelElement> getElements();
+    public abstract List<BlockElement> getElements();
 
     @Unique
     @Nullable
@@ -55,7 +55,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     }
 
     @Override
-    public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(Identifier id) {
+    public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
         if (this.cullShapeElements == null) {
             return this.parent != null ?
                     ((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
@@ -69,12 +69,12 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     }
 
     @Override
-    public boolean moreculling$getUseModelShape(Identifier id) {
+    public boolean moreculling$getUseModelShape(ResourceLocation id) {
         return this.moreculling$useModelShape;
     }
 
     @Override
-    public ModelElementFace moreculling$modifyElementFace(ModelElementFace elementFace) {
+    public BlockElementFace moreculling$modifyElementFace(BlockElementFace elementFace) {
         return elementFace;
     }
 
@@ -90,32 +90,32 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     }
 
     @Redirect(
-            method = "bake(Lnet/minecraft/client/render/model/Baker;" +
-                    "Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)" +
-                    "Lnet/minecraft/client/render/model/BakedModel;",
+            method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
+                    "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
             )
     )
-    private Object moreculling$overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
+    private Object moreculling$overrideFaceData(Map<Direction, BlockElementFace> map, Object direction) {
         return moreculling$modifyElementFace(map.get((Direction) direction));
     }
 
     @Inject(
-            method = "bake(Lnet/minecraft/client/render/model/Baker;" +
-                    "Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)" +
-                    "Lnet/minecraft/client/render/model/BakedModel;",
+            method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
+                    "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "RETURN",
                     shift = At.Shift.BEFORE
             )
     )
-    private void moreculling$onBake(Baker baker, JsonUnbakedModel parent,
-                                    Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings,
-                                    Identifier id, boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
+    private void moreculling$onBake(ModelBaker baker, BlockModel parent,
+                                    Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
+                                    ResourceLocation id, boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
             return;
@@ -124,16 +124,16 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        if (moreculling$getUseModelShape(id) && settings.getRotation() == AffineTransformation.identity()) {
-            List<ModelElement> modelElementList = this.getElements();
+        if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
+            List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
-                VoxelShape voxelShape = VoxelShapes.empty();
-                for (ModelElement e : modelElementList) {
+                VoxelShape voxelShape = Shapes.empty();
+                for (BlockElement e : modelElementList) {
                     if (e.rotation == null || e.rotation.angle() == 0) {
-                        VoxelShape shape = Block.createCuboidShape(
+                        VoxelShape shape = Block.box(
                                 e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z
                         );
-                        voxelShape = VoxelShapes.union(voxelShape, shape);
+                        voxelShape = Shapes.or(voxelShape, shape);
                     }
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
@@ -142,10 +142,10 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         } else {
             List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
             if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
-                VoxelShape voxelShape = VoxelShapes.empty();
+                VoxelShape voxelShape = Shapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
-                    VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = VoxelShapes.union(voxelShape, shape);
+                    VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                    voxelShape = Shapes.or(voxelShape, shape);
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
                 return;

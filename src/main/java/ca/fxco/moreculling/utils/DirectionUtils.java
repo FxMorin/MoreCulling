@@ -1,12 +1,11 @@
 package ca.fxco.moreculling.utils;
 
-import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.core.Direction;
 
 import java.util.Map;
 
-import static net.minecraft.util.math.Direction.*;
+import static net.minecraft.core.Direction.*;
 
 public class DirectionUtils {
 
@@ -25,14 +24,14 @@ public class DirectionUtils {
         return DIRECTIONS_EXCLUDING_DIRECTION_MAP.get(excluding);
     }
 
-    public static Direction changeDirectionUsingTransformation(Direction dir, Transformation transform) {
+    public static Direction changeDirectionUsingTransformation(Direction dir, ItemTransform transform) {
         float yRot = transform.rotation.y();
         if (yRot == 0) {
             return dir.getOpposite();
         } else if (yRot == 90) {
-            return dir.rotateYCounterclockwise();
+            return dir.getCounterClockWise();
         } else if (yRot == 270) {
-            return dir.rotateYClockwise();
+            return dir.getClockWise();
         }
         return dir;
     }
@@ -40,9 +39,9 @@ public class DirectionUtils {
     public static Direction magicalRotation(Direction face, int rotation) {
         return switch (rotation) {
             default -> face;
-            case 90 -> face.rotateClockwise(Axis.Z);
+            case 90 -> face.getClockWise(Axis.Z);
             case 180 -> face != NORTH && face != SOUTH ? face.getOpposite() : face;
-            case 270 -> face.rotateCounterclockwise(Axis.Z);
+            case 270 -> face.getCounterClockWise(Axis.Z);
         };
     }
 

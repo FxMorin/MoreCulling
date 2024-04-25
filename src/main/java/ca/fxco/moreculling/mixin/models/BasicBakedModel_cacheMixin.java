@@ -5,15 +5,15 @@ import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.VertexUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BasicBakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.SimpleBakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,12 +25,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-@Mixin(BasicBakedModel.class)
+@Mixin(SimpleBakedModel.class)
 public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final
-    protected Map<Direction, List<BakedQuad>> faceQuads; // cullface quads
+    protected Map<Direction, List<BakedQuad>> culledFaces; // cullface quads
 
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
@@ -45,7 +45,7 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$resetTranslucencyCache() {
         moreculling$solidFaces.clear();
-        for (Map.Entry<Direction, List<BakedQuad>> entry : faceQuads.entrySet()) {
+        for (Map.Entry<Direction, List<BakedQuad>> entry : culledFaces.entrySet()) {
             Direction direction = entry.getKey();
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
             if (!layeredQuads.isEmpty()) {
@@ -90,8 +90,8 @@ public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
             at = @At("RETURN")
     )
     private void moreculling$onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
-                                    boolean isSideLit, boolean hasDepth, Sprite sprite,
-                                    ModelTransformation transformation, ModelOverrideList itemPropertyOverrides,
+                                    boolean isSideLit, boolean hasDepth, TextureAtlasSprite sprite,
+                                    ItemTransforms transformation, ItemOverrides itemOverrides,
                                     CallbackInfo ci) {
         moreculling$resetTranslucencyCache();
     }

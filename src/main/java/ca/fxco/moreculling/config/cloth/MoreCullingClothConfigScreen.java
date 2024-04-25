@@ -3,11 +3,11 @@ package ca.fxco.moreculling.config.cloth;
 import ca.fxco.moreculling.utils.CacheUtils;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
@@ -15,10 +15,10 @@ import static ca.fxco.moreculling.utils.CompatUtils.IS_MODERNFIX_LOADED;
 
 public class MoreCullingClothConfigScreen extends ClothConfigScreen {
 
-    private ClickableWidget resetCacheButton;
+    private AbstractWidget resetCacheButton;
 
-    public MoreCullingClothConfigScreen(Screen parent, Text title, Map<String,
-            ConfigCategory> categoryMap, Identifier backgroundLocation) {
+    public MoreCullingClothConfigScreen(Screen parent, Component title, Map<String,
+            ConfigCategory> categoryMap, ResourceLocation backgroundLocation) {
         super(parent, title, categoryMap, backgroundLocation);
     }
 
@@ -29,12 +29,12 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
             return;
         }
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 4);
-        this.addDrawableChild(this.resetCacheButton = ButtonWidget.builder(
-                Text.translatable("moreculling.config.resetCache"),
+        this.addRenderableWidget(this.resetCacheButton = Button.builder(
+                Component.translatable("moreculling.config.resetCache"),
                 (widget) -> {
                     CacheUtils.resetAllCache();
                     this.resetCacheButton.active = false;
-                }).dimensions(10, 5, buttonWidths, 20).build()
+                }).bounds(10, 5, buttonWidths, 20).build()
         );
     }
 }

@@ -1,32 +1,33 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FacingBlock;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ShulkerBoxBlock.class)
 public class ShulkerBoxBlock_cullMixin extends Block implements MoreBlockCulling {
 
-    public ShulkerBoxBlock_cullMixin(Settings settings) {
+    public ShulkerBoxBlock_cullMixin(BlockBehaviour.Properties settings) {
         super(settings);
     }
 
     @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter world, BlockPos pos) {
+        return Shapes.block();
     }
 
     @Override
     public boolean moreculling$cantCullAgainst(BlockState state, @Nullable Direction side) {
-        return side != state.get(FacingBlock.FACING).getOpposite();
+        return side != state.getValue(DirectionalBlock.FACING).getOpposite();
     }
 }

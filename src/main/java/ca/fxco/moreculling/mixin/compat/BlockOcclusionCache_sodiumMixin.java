@@ -4,10 +4,10 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,15 +28,15 @@ public class BlockOcclusionCache_sodiumMixin {
             locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/BlockView;getBlockState(Lnet/minecraft/util/math/BlockPos;)" +
-                            "Lnet/minecraft/block/BlockState;",
+                    target = "Lnet/minecraft/world/level/BlockGetter;getBlockState(" +
+                            "Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
                     shift = At.Shift.BEFORE
             ),
             cancellable = true
     )
-    private void moreculling$useMoreCulling(BlockState selfState, BlockView view, BlockPos pos,
+    private void moreculling$useMoreCulling(BlockState selfState, BlockGetter view, BlockPos pos,
                                             Direction facing, CallbackInfoReturnable<Boolean> cir,
-                                            BlockPos.Mutable adjPos) {
+                                            BlockPos.MutableBlockPos adjPos) {
         if (MoreCulling.CONFIG.useBlockStateCulling) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
         }

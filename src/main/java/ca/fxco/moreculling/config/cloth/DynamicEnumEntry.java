@@ -1,16 +1,16 @@
 package ca.fxco.moreculling.config.cloth;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.Window;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.Window;
-import net.minecraft.text.Text;
+import net.minecraft.client.GameNarrator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -22,9 +22,9 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
 
     private final ImmutableList<T> values;
     private final AtomicInteger index = new AtomicInteger();
-    private final Function<T, Text> nameProvider;
+    private final Function<T, Component> nameProvider;
 
-    public DynamicEnumEntry(DynamicEnumBuilder<T> builder, Class<T> clazz, @Nullable Function<T, Text> nameProvider) {
+    public DynamicEnumEntry(DynamicEnumBuilder<T> builder, Class<T> clazz, @Nullable Function<T, Component> nameProvider) {
         super(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
         T[] enums = clazz.getEnumConstants();
         if (enums != null) {
@@ -33,7 +33,7 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
             this.values = ImmutableList.of(builder.getValue());
         }
         this.nameProvider = nameProvider == null ? (t) -> {
-            return Text.translatable(t instanceof SelectionListEntry.Translatable ?
+            return Component.translatable(t instanceof SelectionListEntry.Translatable ?
                     ((SelectionListEntry.Translatable) t).getKey() : t.toString());
         } : nameProvider;
         this.setValue(builder.getValue());
@@ -55,27 +55,27 @@ public class DynamicEnumEntry<T extends Enum<?>> extends AbstractDynamicEntry<T>
     }
 
     @Override
-    protected ClickableWidget createMainWidget() {
-        return ButtonWidget.builder(NarratorManager.EMPTY, (widget) -> {
+    protected AbstractWidget createMainWidget() {
+        return Button.builder(GameNarrator.NO_TITLE, (widget) -> {
             if (!this.isLocked() && this.isEnabled()) {
                 this.index.incrementAndGet();
                 this.index.compareAndSet(this.values.size(), 0);
                 this.onChange();
             }
-        }).dimensions(0, 0, 150, 20).build();
+        }).bounds(0, 0, 150, 20).build();
     }
 
     @Override
-    protected void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight) {
-        Window window = MinecraftClient.getInstance().getWindow();
+    protected void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight) {
+        Window window = Minecraft.getInstance().getWindow();
         this.mainWidget.setMessage(this.nameProvider.apply(this.getValue()));
-        Text displayedFieldName = this.getDisplayedFieldName();
-        if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName), y + 6, this.getPreferredTextColor());
+        Component displayedFieldName = this.getDisplayedFieldName();
+        if (Minecraft.getInstance().font.isBidirectional()) {
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), window.getGuiScaledWidth() - x - Minecraft.getInstance().font.width(displayedFieldName), y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x);
             this.mainWidget.setX(x + this.resetButton.getWidth() + 2);
         } else {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), x, y + 6, this.getPreferredTextColor());
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), x, y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
             this.mainWidget.setX(x + entryWidth - 150);
         }

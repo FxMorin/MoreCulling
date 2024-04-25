@@ -2,13 +2,13 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BuiltinBakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BuiltInModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BuiltinBakedModel.class)
+@Mixin(BuiltInModel.class)
 public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final
-    private Sprite sprite;
+    private TextureAtlasSprite particleTexture;
 
     @Unique
     private boolean moreculling$hasTranslucency;
@@ -37,7 +37,7 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
 
     @Override
     public void moreculling$resetTranslucencyCache() {
-        moreculling$hasTranslucency = ((SpriteOpacity) sprite).moreculling$hasTranslucency();
+        moreculling$hasTranslucency = ((SpriteOpacity) particleTexture).moreculling$hasTranslucency();
     }
 
     @Override
@@ -59,8 +59,8 @@ public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
             method = "<init>",
             at = @At("RETURN")
     )
-    private void moreculling$onInit(ModelTransformation transformation, ModelOverrideList itemPropertyOverrides,
-                                    Sprite sprite, boolean sideLit, CallbackInfo ci) {
+    private void moreculling$onInit(ItemTransforms transformation, ItemOverrides itemPropertyOverrides,
+                                    TextureAtlasSprite sprite, boolean sideLit, CallbackInfo ci) {
         moreculling$resetTranslucencyCache();
     }
 }

@@ -9,8 +9,8 @@ import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
 import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.widgets.FlatButtonWidget;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,12 +39,12 @@ public class SodiumOptionsGUIMixin extends Screen {
     @Unique
     private FlatButtonWidget moreculling$resetCacheButton;
 
-    protected SodiumOptionsGUIMixin(Text title) {
+    protected SodiumOptionsGUIMixin(Component title) {
         super(title);
     }
 
     @Inject(
-            method = "<init>(Lnet/minecraft/client/gui/screen/Screen;)V",
+            method = "<init>",
             at = @At("RETURN")
     )
     private void moreculling$addGuiAtInit(Screen prevScreen, CallbackInfo ci) {
@@ -67,9 +67,9 @@ public class SodiumOptionsGUIMixin extends Screen {
         }
         if (MoreCulling.CONFIG.enableSodiumMenu && this.currentPage == this.moreculling$moreCullingPage) {
             // 325 is the last button (211) + width (100) plus padding (20 + 4)
-            this.addDrawableChild(this.moreculling$resetCacheButton = new FlatButtonWidget(
+            this.addRenderableWidget(this.moreculling$resetCacheButton = new FlatButtonWidget(
                     new Dim2i(this.width - 325, this.height - 30, 100, 20),
-                    Text.translatable("moreculling.config.resetCache"),
+                    Component.translatable("moreculling.config.resetCache"),
                     () -> {
                         CacheUtils.resetAllCache();
                         this.moreculling$resetCacheButton.setEnabled(false);

@@ -1,7 +1,8 @@
 package ca.fxco.moreculling.api.model;
 
-import net.minecraft.client.render.model.json.ModelElementFace;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.resources.ResourceLocation;
+
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface ExtendedUnbakedModel {
      * @deprecated As of v0.25.0, you should now be using {@link #moreculling$getCullShapeElements}
      */
     @Deprecated(forRemoval = true)
-    default List<CullShapeElement> getCullShapeElements(Identifier id) {
+    default List<CullShapeElement> getCullShapeElements(ResourceLocation id) {
         return moreculling$getCullShapeElements(id);
     }
 
@@ -47,7 +48,7 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    List<CullShapeElement> moreculling$getCullShapeElements(Identifier id);
+    List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id);
 
     /**
      * When set to true, the cull shape is completely ignored and instead the model will be used as the cull shape
@@ -74,7 +75,7 @@ public interface ExtendedUnbakedModel {
      * @deprecated As of v0.25.0, you should now be using {@link #moreculling$getUseModelShape}
      */
     @Deprecated(forRemoval = true)
-    default boolean getUseModelShape(Identifier id) {
+    default boolean getUseModelShape(ResourceLocation id) {
         return moreculling$getUseModelShape(id);
     }
 
@@ -83,7 +84,7 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    boolean moreculling$getUseModelShape(Identifier id);
+    boolean moreculling$getUseModelShape(ResourceLocation id);
 
     /**
      * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
@@ -93,7 +94,7 @@ public interface ExtendedUnbakedModel {
      * @deprecated As of v0.25.0, you should now be using {@link #moreculling$modifyElementFace}
      */
     @Deprecated(forRemoval = true)
-    default ModelElementFace modifyElementFace(ModelElementFace elementFace) {
+    default BlockElementFace modifyElementFace(BlockElementFace elementFace) {
         return moreculling$modifyElementFace(elementFace);
     }
 
@@ -103,5 +104,5 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    ModelElementFace moreculling$modifyElementFace(ModelElementFace elementFace);
+    BlockElementFace moreculling$modifyElementFace(BlockElementFace elementFace);
 }

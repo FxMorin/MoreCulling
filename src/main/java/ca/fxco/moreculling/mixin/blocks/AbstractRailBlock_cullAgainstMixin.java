@@ -1,12 +1,12 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(AbstractRailBlock.class)
+@Mixin(BaseRailBlock.class)
 public class AbstractRailBlock_cullAgainstMixin implements MoreBlockCulling {
 
     @Override

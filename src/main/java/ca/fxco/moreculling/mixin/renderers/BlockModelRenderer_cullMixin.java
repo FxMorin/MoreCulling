@@ -1,16 +1,16 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderer;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.block.BlockModelRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.LocalRandom;
-import net.minecraft.util.math.random.Random;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,37 +20,37 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Arrays;
 import java.util.List;
 
-@Mixin(BlockModelRenderer.class)
+@Mixin(ModelBlockRenderer.class)
 public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
 
     @Unique
-    private final Random moreculling$rand = new LocalRandom(42L);
+    private final RandomSource moreculling$rand = new SingleThreadedRandomSource(42L);
 
     @Shadow
     @Final
     private static Direction[] DIRECTIONS;
 
     @Override
-    public void moreculling$renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    public void moreculling$renderQuad(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                        float blue, float alpha, BakedQuad bakedQuad, int light, int overlay) {
-        if (bakedQuad.hasColor()) {
-            vertices.quad(
-                    entry,
+        if (bakedQuad.isTinted()) {
+            vertices.putBulkData(
+                    pose,
                     bakedQuad,
-                    MathHelper.clamp(red, 0.0f, 1.0f),
-                    MathHelper.clamp(green, 0.0f, 1.0f),
-                    MathHelper.clamp(blue, 0.0f, 1.0f),
-                    MathHelper.clamp(alpha, 0.0f, 1.0f),
+                    Mth.clamp(red, 0.0f, 1.0f),
+                    Mth.clamp(green, 0.0f, 1.0f),
+                    Mth.clamp(blue, 0.0f, 1.0f),
+                    Mth.clamp(alpha, 0.0f, 1.0f),
                     light,
                     overlay
             );
         } else {
-            vertices.quad(entry, bakedQuad, 1.0f, 1.0f, 1.0f, 1.0f, light, overlay);
+            vertices.putBulkData(pose, bakedQuad, 1.0f, 1.0f, 1.0f, 1.0f, light, overlay);
         }
     }
 
     @Override
-    public void moreculling$renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices,
+    public void moreculling$renderModelWithoutFace(PoseStack.Pose pose, VertexConsumer vertices,
                                                    @Nullable BlockState state, BakedModel model, float red,
                                                    float green, float blue, float alpha, int light,
                                                    int overlay, Direction withoutFace) {
@@ -61,136 +61,136 @@ public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModel
             this.moreculling$rand.setSeed(42L);
             List<BakedQuad> bakedQuads = model.getQuads(state, direction, this.moreculling$rand);
             if (!bakedQuads.isEmpty()) {
-                moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+                moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
             }
         }
         this.moreculling$rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuadsWithoutFace(entry, vertices, red, green, blue, alpha,
+            moreculling$renderQuadsWithoutFace(pose, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, withoutFace);
         }
     }
 
     @Override
-    public void moreculling$renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices,
+    public void moreculling$renderQuadsWithoutFace(PoseStack.Pose pose, VertexConsumer vertices,
                                                    float red, float green, float blue, float alpha,
                                                    List<BakedQuad> quads, int light, int overlay,
                                                    Direction withoutFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() == withoutFace) {
+            if (bakedQuad.getDirection() == withoutFace) {
                 continue;
             }
-            moreculling$renderQuad(entry, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
+            moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
         }
     }
 
     @Override
-    public void moreculling$renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices,
+    public void moreculling$renderModelForFace(PoseStack.Pose pose, VertexConsumer vertices,
                                                @Nullable BlockState state, BakedModel model, float red, float green,
                                                float blue, float alpha, int light, int overlay, Direction forFace) {
         this.moreculling$rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, forFace, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+            moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
         this.moreculling$rand.setSeed(42L);
         bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuadsForFace(entry, vertices, red, green, blue, alpha,
+            moreculling$renderQuadsForFace(pose, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, forFace);
         }
     }
 
     @Override
-    public void moreculling$renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red,
+    public void moreculling$renderQuadsForFace(PoseStack.Pose pose, VertexConsumer vertices, float red,
                                                float green, float blue, float alpha, List<BakedQuad> quads, int light,
                                                int overlay, Direction forFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getFace() != forFace) {
+            if (bakedQuad.getDirection() != forFace) {
                 continue;
             }
-            moreculling$renderQuad(entry, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
+            moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
         }
     }
 
     @Override
-    public void moreculling$renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices,
+    public void moreculling$renderModelFor3Faces(PoseStack.Pose pose, VertexConsumer vertices,
                                                  @Nullable BlockState state, BakedModel model, float red, float green,
                                                  float blue, float alpha, int light, int overlay, Direction faceX,
                                                  Direction faceY, Direction faceZ) {
         this.moreculling$rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, faceX, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+            moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
         this.moreculling$rand.setSeed(42L);
         bakedQuads = model.getQuads(state, faceY, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+            moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
         this.moreculling$rand.setSeed(42L);
         bakedQuads = model.getQuads(state, faceZ, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+            moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
         }
         this.moreculling$rand.setSeed(42L);
         bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuadsFor3Faces(entry, vertices, red, green, blue, alpha,
+            moreculling$renderQuadsFor3Faces(pose, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, faceX, faceY, faceZ);
         }
     }
 
     @Override
-    public void moreculling$renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red,
+    public void moreculling$renderQuadsFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, float red,
                                                  float green, float blue, float alpha, List<BakedQuad> quads,
                                                  int light, int overlay, Direction faceX, Direction faceY,
                                                  Direction faceZ) {
         for (BakedQuad bakedQuad : quads) {
-            Direction face = bakedQuad.getFace();
+            Direction face = bakedQuad.getDirection();
             if (face == faceX || face == faceY || face == faceZ) {
-                moreculling$renderQuad(entry, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
+                moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
             }
         }
     }
 
     @Override
-    public void moreculling$renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices,
+    public void moreculling$renderModelForFaces(PoseStack.Pose pose, VertexConsumer vertices,
                                                 @Nullable BlockState state, BakedModel model, float red, float green,
                                                 float blue, float alpha, int light, int overlay, Direction[] faces) {
         for (Direction direction : faces) {
             this.moreculling$rand.setSeed(42L);
             List<BakedQuad> bakedQuads = model.getQuads(state, direction, this.moreculling$rand);
             if (!bakedQuads.isEmpty()) {
-                moreculling$renderQuads(entry, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
+                moreculling$renderQuads(pose, vertices, red, green, blue, alpha, bakedQuads, light, overlay);
             }
         }
         this.moreculling$rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, null, this.moreculling$rand);
         if (!bakedQuads.isEmpty()) {
-            moreculling$renderQuadsForFaces(entry, vertices, red, green, blue, alpha,
+            moreculling$renderQuadsForFaces(pose, vertices, red, green, blue, alpha,
                     bakedQuads, light, overlay, faces);
         }
     }
 
     @Override
-    public void moreculling$renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red,
+    public void moreculling$renderQuadsForFaces(PoseStack.Pose pose, VertexConsumer vertices, float red,
                                                 float green, float blue, float alpha, List<BakedQuad> quads,
                                                 int light, int overlay, Direction[] faces) {
         for (BakedQuad bakedQuad : quads) {
-            Direction face = bakedQuad.getFace();
+            Direction face = bakedQuad.getDirection();
             if (Arrays.stream(faces).anyMatch((f) -> f == face)) {
-                moreculling$renderQuad(entry, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
+                moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
             }
         }
     }
 
     @Unique
-    private void moreculling$renderQuads(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    private void moreculling$renderQuads(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                          float blue, float alpha, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedQuad : quads) {
-            moreculling$renderQuad(entry, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
+            moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
         }
     }
 }

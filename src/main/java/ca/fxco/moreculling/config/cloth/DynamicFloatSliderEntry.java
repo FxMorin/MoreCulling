@@ -1,14 +1,13 @@
 package ca.fxco.moreculling.config.cloth;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.GameNarrator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
 import java.util.function.Function;
 
@@ -16,11 +15,11 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
     private final float minimum;
     private final float maximum;
     private final float step;
-    private Function<Float, Text> textGetter;
+    private Function<Float, Component> textGetter;
 
     public DynamicFloatSliderEntry(DynamicFloatSliderBuilder builder, float minimum, float maximum, float step) {
         super(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
-        this.textGetter = (thevalue) -> Text.literal(String.format("Value: %3.1f", thevalue));
+        this.textGetter = (thevalue) -> Component.literal(String.format("Value: %3.1f", thevalue));
         this.step = step;
         this.maximum = maximum;
         this.minimum = minimum;
@@ -33,11 +32,11 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
         return ((Math.round(input / step)) * step);
     }
 
-    public Function<Float, Text> getTextGetter() {
+    public Function<Float, Component> getTextGetter() {
         return this.textGetter;
     }
 
-    public void setTextGetter(Function<Float, Text> textGetter) {
+    public void setTextGetter(Function<Float, Component> textGetter) {
         this.textGetter = textGetter;
         this.mainWidget.setMessage(textGetter.apply(this.getValue()));
     }
@@ -46,7 +45,7 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
     public void setValue(Float value) {
         if (!this.isLocked() && this.isEnabled()) {
             value = roundStep(value, this.step);
-            ((Slider) this.mainWidget).setValue((double) (MathHelper.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
+            ((Slider) this.mainWidget).setValue((double) (Mth.clamp(value, this.minimum, this.maximum) - this.minimum) / (double) Math.abs(this.maximum - this.minimum));
             value = Math.min(Math.max(value, this.minimum), this.maximum);
             super.setValue(value);
             ((Slider) this.mainWidget).updateMessage();
@@ -54,29 +53,29 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
     }
 
     @Override
-    protected ClickableWidget createMainWidget() {
+    protected AbstractWidget createMainWidget() {
         return new Slider(0, 0, 152, 20, ((double) this.getValue() - (double) this.minimum) / (double) Math.abs(this.maximum - this.minimum));
     }
 
     @Override
-    protected void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight) {
-        Window window = MinecraftClient.getInstance().getWindow();
-        Text displayedFieldName = this.getDisplayedFieldName();
-        if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName), y + 6, this.getPreferredTextColor());
+    protected void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight) {
+        Window window = Minecraft.getInstance().getWindow();
+        Component displayedFieldName = this.getDisplayedFieldName();
+        if (Minecraft.getInstance().font.isBidirectional()) {
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), window.getGuiScaledWidth() - x - Minecraft.getInstance().font.width(displayedFieldName), y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x);
             this.mainWidget.setX(x + this.resetButton.getWidth() + 1);
         } else {
-            drawContext.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, displayedFieldName.asOrderedText(), x, y + 6, this.getPreferredTextColor());
+            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), x, y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
             this.mainWidget.setX(x + entryWidth - 150);
         }
         this.mainWidget.setWidth(150 - this.resetButton.getWidth() - 2);
     }
 
-    private class Slider extends SliderWidget {
+    private class Slider extends AbstractSliderButton {
         protected Slider(int x, int y, int width, int height, double value) {
-            super(x, y, width, height, NarratorManager.EMPTY, value);
+            super(x, y, width, height, GameNarrator.NO_TITLE, value);
         }
 
         public void updateMessage() {

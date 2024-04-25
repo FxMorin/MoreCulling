@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.utils;
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 
 // A faster replacement for Set<Direction>
 // TODO: Add static methods to work with containers not using DirectionBits

@@ -3,11 +3,11 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.WeightedBakedModel;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.WeightedBakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -43,7 +43,7 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
             method = "getQuads",
             at = @At("RETURN")
     )
-    private void moreculling$onGetQuads(@Nullable BlockState state, @Nullable Direction face, Random random,
+    private void moreculling$onGetQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random,
                                         CallbackInfoReturnable<List<BakedQuad>> cir) {
         if (face != null) { // Must be quads that have cullface
             List<BakedQuad> quads = cir.getReturnValue();

@@ -1,13 +1,13 @@
 package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.resource.SynchronousResourceReloader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.main.GameConfig;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,31 +15,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public class MinecraftClient_managersMixin {
 
     @Shadow
     @Final
-    private BlockRenderManager blockRenderManager;
+    private BlockRenderDispatcher blockRenderer;
 
     @Shadow
     @Final
-    private BakedModelManager bakedModelManager;
+    private ModelManager modelManager;
 
     @Shadow
     @Final
-    private ReloadableResourceManagerImpl resourceManager;
+    private ReloadableResourceManager resourceManager;
 
     @Inject(
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "net/minecraft/client/render/model/BakedModelManager",
+                    target = "net/minecraft/client/resources/model/ModelManager",
                     shift = At.Shift.AFTER
             )
     )
-    private void moreculling$onBakedModelManagerInitialized(RunArgs args, CallbackInfo ci) {
-        MoreCulling.bakedModelManager = this.bakedModelManager;
+    private void moreculling$onBakedModelManagerInitialized(GameConfig args, CallbackInfo ci) {
+        MoreCulling.bakedModelManager = this.modelManager;
     }
 
 
@@ -47,14 +47,14 @@ public class MinecraftClient_managersMixin {
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "net/minecraft/client/render/WorldRenderer",
+                    target = "net/minecraft/client/renderer/LevelRenderer",
                     shift = At.Shift.BEFORE
             )
     )
-    private void moreculling$onBlockRenderManagerInitialized(RunArgs args, CallbackInfo ci) {
-        MoreCulling.blockRenderManager = this.blockRenderManager;
+    private void moreculling$onBlockRenderManagerInitialized(GameConfig args, CallbackInfo ci) {
+        MoreCulling.blockRenderManager = this.blockRenderer;
 
         // Make sure to reload block states on resource reload
-        this.resourceManager.registerReloader((SynchronousResourceReloader) manager -> Blocks.refreshShapeCache());
+        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager -> Blocks.rebuildCache());
     }
 }

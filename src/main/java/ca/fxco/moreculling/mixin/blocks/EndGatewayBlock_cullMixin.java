@@ -2,27 +2,28 @@ package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.EndGatewayBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.EndGatewayBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(EndGatewayBlock.class)
-public abstract class EndGatewayBlock_cullMixin extends BlockWithEntity implements MoreBlockCulling {
+public abstract class EndGatewayBlock_cullMixin extends BaseEntityBlock implements MoreBlockCulling {
 
-    protected EndGatewayBlock_cullMixin(Settings settings) {
+    protected EndGatewayBlock_cullMixin(BlockBehaviour.Properties settings) {
         super(settings);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return MoreCulling.CONFIG.endGatewayCulling ? BlockRenderType.MODEL : BlockRenderType.INVISIBLE;
+    public RenderShape getRenderShape(BlockState state) {
+        return MoreCulling.CONFIG.endGatewayCulling ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
     @Override
@@ -31,7 +32,7 @@ public abstract class EndGatewayBlock_cullMixin extends BlockWithEntity implemen
     }
 
     @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.fullCube();
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter world, BlockPos pos) {
+        return Shapes.block();
     }
 }

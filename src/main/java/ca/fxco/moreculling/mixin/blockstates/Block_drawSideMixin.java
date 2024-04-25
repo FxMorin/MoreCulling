@@ -5,11 +5,11 @@ import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.utils.CullingUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,12 +27,12 @@ public class Block_drawSideMixin implements MoreBlockCulling {
 
     @Override
     public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
-        return state.isIn(DONT_CULL);
+        return state.is(DONT_CULL);
     }
 
     @Override
     public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side) {
-        return !((BakedOpacity) blockRenderManager.getModel(state)).moreculling$hasTextureTranslucency(state, side);
+        return !((BakedOpacity) blockRenderManager.getBlockModel(state)).moreculling$hasTextureTranslucency(state, side);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class Block_drawSideMixin implements MoreBlockCulling {
      * If your mixin breaks due to this, please use the API if MoreCulling is present
      */
     @Inject(
-            method = "shouldDrawSide",
+            method = "shouldRenderFace",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void moreculling$customShouldDrawSide(BlockState state, BlockView world, BlockPos pos,
+    private static void moreculling$customShouldDrawSide(BlockState state, BlockGetter world, BlockPos pos,
                                                          Direction side, BlockPos otherPos,
                                                          CallbackInfoReturnable<Boolean> cir) {
         if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) state).moreculling$canCull()) {

@@ -1,11 +1,12 @@
 package ca.fxco.moreculling.api.renderers;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Direction;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * This interface allows you to call the MoreCulling methods used for block model rendering.
  * This gives you access to the custom MoreCulling rendering methods, in order to allow everyone to benefit from the
  * performance boost that MoreCulling can offer.<br/>
- * Use these methods over ones provided in {@link net.minecraft.client.render.block.BlockModelRenderer}
+ * Use these methods over ones provided in {@link ModelBlockRenderer}
  *
  * @since 0.9.0
  */
@@ -30,9 +31,9 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green, float blue,
+    default void renderQuad(PoseStack.Pose pose, VertexConsumer vertices, float red, float green, float blue,
                             BakedQuad bakedQuad, int light, int overlay) {
-        moreculling$renderQuad(entry, vertices, red, green, blue, 1f, bakedQuad, light, overlay);
+        moreculling$renderQuad(pose, vertices, red, green, blue, 1f, bakedQuad, light, overlay);
     }
 
     /**
@@ -41,7 +42,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green, float blue,
+    void moreculling$renderQuad(PoseStack.Pose pose, VertexConsumer vertices, float red, float green, float blue,
                                 float alpha, BakedQuad bakedQuad, int light, int overlay);
 
     /**
@@ -53,10 +54,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    default void renderModelWithoutFace(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                         BakedModel bakedModel, float red, float green, float blue, int light,
                                         int overlay, Direction withoutFace) {
-        moreculling$renderModelWithoutFace(entry, vertices, state, bakedModel, red, green, blue, 1F,
+        moreculling$renderModelWithoutFace(pose, vertices, state, bakedModel, red, green, blue, 1F,
                 light, overlay, withoutFace);
     }
 
@@ -66,7 +67,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices,
+    void moreculling$renderModelWithoutFace(PoseStack.Pose pose, VertexConsumer vertices,
                                             @Nullable BlockState state, BakedModel bakedModel, float red,
                                             float green, float blue, float alpha, int light, int overlay,
                                             Direction withoutFace);
@@ -80,10 +81,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    default void renderQuadsWithoutFace(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                         float blue, List<BakedQuad> quads, int light, int overlay,
                                         Direction withoutFace) {
-        moreculling$renderQuadsWithoutFace(entry, vertices, red, green, blue, 1F, quads, light, overlay, withoutFace);
+        moreculling$renderQuadsWithoutFace(pose, vertices, red, green, blue, 1F, quads, light, overlay, withoutFace);
     }
 
     /**
@@ -92,7 +93,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    void moreculling$renderQuadsWithoutFace(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                             float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
                                             Direction withoutFace);
 
@@ -104,10 +105,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    default void renderModelForFace(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                     BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
                                     Direction forFace) {
-        moreculling$renderModelForFace(entry, vertices, state, bakedModel, red, green, blue, 1F,
+        moreculling$renderModelForFace(pose, vertices, state, bakedModel, red, green, blue, 1F,
                 light, overlay, forFace);
     }
 
@@ -116,7 +117,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    void moreculling$renderModelForFace(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                         BakedModel bakedModel, float red, float green, float blue, float alpha,
                                         int light, int overlay, Direction forFace);
 
@@ -128,9 +129,9 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    default void renderQuadsForFace(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                     float blue, List<BakedQuad> quads, int light, int overlay, Direction forFace) {
-        moreculling$renderQuadsForFace(entry, vertices, red, green, blue, 1F, quads, light, overlay, forFace);
+        moreculling$renderQuadsForFace(pose, vertices, red, green, blue, 1F, quads, light, overlay, forFace);
     }
 
     /**
@@ -138,7 +139,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    void moreculling$renderQuadsForFace(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                         float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
                                         Direction forFace);
 
@@ -151,10 +152,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    default void renderModelFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                       BakedModel bakedModel, float red, float green, float blue, int light,
                                       int overlay, Direction faceX, Direction faceY, Direction faceZ) {
-        moreculling$renderModelFor3Faces(entry, vertices, state, bakedModel, red, green, blue, 1F,
+        moreculling$renderModelFor3Faces(pose, vertices, state, bakedModel, red, green, blue, 1F,
                 light, overlay, faceX, faceY, faceZ);
     }
 
@@ -164,7 +165,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    void moreculling$renderModelFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                           BakedModel bakedModel, float red, float green, float blue, float alpha,
                                           int light, int overlay, Direction faceX, Direction faceY, Direction faceZ);
 
@@ -177,10 +178,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    default void renderQuadsFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                       float blue, List<BakedQuad> quads, int light, int overlay,
                                       Direction faceX, Direction faceY, Direction faceZ) {
-        moreculling$renderQuadsFor3Faces(entry, vertices, red, green, blue, 1F,
+        moreculling$renderQuadsFor3Faces(pose, vertices, red, green, blue, 1F,
                 quads, light, overlay, faceX, faceY, faceZ);
     }
 
@@ -190,7 +191,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    void moreculling$renderQuadsFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                           float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
                                           Direction faceX, Direction faceY, Direction faceZ);
 
@@ -202,10 +203,10 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    default void renderModelForFaces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                      BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
                                      Direction[] faces) {
-        moreculling$renderModelForFaces(entry, vertices, state, bakedModel, red, green, blue, 1F,
+        moreculling$renderModelForFaces(pose, vertices, state, bakedModel, red, green, blue, 1F,
                 light, overlay, faces);
     }
 
@@ -214,7 +215,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+    void moreculling$renderModelForFaces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
                                          BakedModel bakedModel, float red, float green, float blue, float alpha,
                                          int light, int overlay, Direction[] faces);
 
@@ -226,9 +227,9 @@ public interface ExtendedBlockModelRenderer {
      * since it also supports alpha.
      */
     @Deprecated(forRemoval = true)
-    default void renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    default void renderQuadsForFaces(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,
                                      float blue, List<BakedQuad> quads, int light, int overlay, Direction[] faces) {
-        moreculling$renderQuadsForFaces(entry, vertices, red, green, blue, 1F, quads, light, overlay, faces);
+        moreculling$renderQuadsForFaces(pose, vertices, red, green, blue, 1F, quads, light, overlay, faces);
     }
 
     /**
@@ -236,7 +237,7 @@ public interface ExtendedBlockModelRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+    void moreculling$renderQuadsForFaces(PoseStack.Pose post, VertexConsumer vertices, float red, float green,
                                          float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
                                          Direction[] faces);
 }

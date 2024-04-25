@@ -9,7 +9,7 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.GenericBinding;
 import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,8 +37,8 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     protected final EnumSet<OptionFlag> flags;
 
-    protected final Text name;
-    protected final Text tooltip;
+    protected final Component name;
+    protected final Component tooltip;
 
     protected final OptionImpact impact;
 
@@ -48,18 +48,20 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     protected boolean enabled;
     private final boolean locked; // Prevents anything from changing
 
-    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
-                                          EnumSet<OptionFlag> flags, OptionImpact impact,
-                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged, boolean enabled) {
+    protected MoreCullingSodiumOptionImpl(
+            OptionStorage<S> storage, Component name, Component tooltip, OptionBinding<S, T> binding,
+            Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
+            OptionImpact impact, BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged, boolean enabled
+    ) {
         this(storage, name, tooltip, binding, control, flags, impact, onChanged, enabled, false);
     }
 
-    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
-                                          EnumSet<OptionFlag> flags, OptionImpact impact,
-                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged,
-                                          boolean enabled, boolean locked) {
+    protected MoreCullingSodiumOptionImpl(
+            OptionStorage<S> storage, Component name, Component tooltip, OptionBinding<S, T> binding,
+            Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
+            OptionImpact impact, BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged,
+            boolean enabled, boolean locked
+    ) {
         this.storage = storage;
         this.name = name;
         this.tooltip = tooltip;
@@ -75,12 +77,12 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     }
 
     @Override
-    public Text getName() {
+    public Component getName() {
         return this.name;
     }
 
     @Override
-    public Text getTooltip() {
+    public Component getTooltip() {
         return this.tooltip;
     }
 
@@ -178,7 +180,7 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     public static class Builder<S, T> {
         private final OptionStorage<S> storage;
         private String nameTranslationKey;
-        private Text tooltip;
+        private Component tooltip;
         private OptionBinding<S, T> binding;
         private Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
@@ -197,7 +199,7 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             return this;
         }
 
-        public Builder<S, T> setTooltip(@Nullable Text tooltip) {
+        public Builder<S, T> setTooltip(@Nullable Component tooltip) {
             if (!this.locked) {
                 this.tooltip = tooltip;
             }
@@ -252,13 +254,13 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             if (isLoaded) {
                 this.locked = true;
                 this.enabled = false;
-                this.tooltip = Text.translatable("moreculling.config.optionDisabled", modId);
+                this.tooltip = Component.translatable("moreculling.config.optionDisabled", modId);
                 this.onChanged = null;
             }
             return this;
         }
 
-        public Builder<S, T> setModLimited(boolean isLoaded, Text limitedMessage) {
+        public Builder<S, T> setModLimited(boolean isLoaded, Component limitedMessage) {
             if (isLoaded) {
                 this.tooltip = this.tooltip != null ? this.tooltip.copy().append("\n").append(limitedMessage) : limitedMessage;
             }
@@ -273,10 +275,10 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             OptionOverride optionOverride = ConfigAdditions.getDisabledOptions().get(this.nameTranslationKey);
             if (optionOverride != null && !optionOverride.canChange().getAsBoolean()) {
                 this.locked = true;
-                this.tooltip = Text.literal(optionOverride.reason());
+                this.tooltip = Component.literal(optionOverride.reason());
             }
             return new MoreCullingSodiumOptionImpl<>(
-                    this.storage, Text.translatable(this.nameTranslationKey), this.tooltip, this.binding, this.control,
+                    this.storage, Component.translatable(this.nameTranslationKey), this.tooltip, this.binding, this.control,
                     this.flags, this.impact, this.onChanged, this.enabled, this.locked
             );
         }

@@ -5,24 +5,27 @@ import ca.fxco.moreculling.api.map.MapOpacity;
 import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderer;
 import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
 import ca.fxco.moreculling.utils.CullingUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.type.MapIdComponent;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapState;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemFrameRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapId;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
 
-@Mixin(value = ItemFrameEntityRenderer.class, priority = 1200)
-public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntity> extends EntityRenderer<T> {
+@Mixin(value = ItemFrameRenderer.class, priority = 1200)
+public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrame> extends EntityRenderer<T> {
 
     @Unique
     private static final Direction[] MAP_RENDER_SIDES = new Direction[]{
@@ -43,177 +46,179 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
 
     @Shadow
     @Final
-    private BlockRenderManager blockRenderManager;
+    private BlockRenderDispatcher blockRenderer;
 
     @Shadow
     @Final
     private ItemRenderer itemRenderer;
 
     @Shadow
-    protected abstract ModelIdentifier getModelId(T entity, ItemStack stack);
+    protected abstract ModelResourceLocation getFrameModelResourceLoc(T entity, ItemStack stack);
 
     @Shadow
-    protected abstract int getLight(T itemFrame, int glowLight, int regularLight);
+    protected abstract int getLightVal(T itemFrame, int glowLight, int regularLight);
 
-    protected ItemFrameEntityRenderer_cullMixin(EntityRendererFactory.Context ctx) {
+    @Shadow public abstract Vec3 getRenderOffset(T itemFrame, float f);
+
+    protected ItemFrameEntityRenderer_cullMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
 
     @Inject(
-            method = "render(Lnet/minecraft/entity/decoration/ItemFrameEntity;" +
-                    "FFLnet/minecraft/client/util/math/MatrixStack;" +
-                    "Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
+            method = "render(Lnet/minecraft/world/entity/decoration/ItemFrame;" +
+                    "FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/EntityRenderer;" +
-                            "render(Lnet/minecraft/entity/Entity;FFLnet/minecraft/client/util/math/MatrixStack;" +
-                            "Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
+                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(" +
+                            "Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;" +
+                            "Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
                     shift = At.Shift.AFTER
             ),
             cancellable = true
     )
-    private void moreculling$optimizedRender(T itemFrameEntity, float f, float g, MatrixStack matrixStack,
-                                             VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+    private void moreculling$optimizedRender(T itemFrameEntity, float f, float g, PoseStack poseStack,
+                                             MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
         if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) {
             return;
         }
         ci.cancel();
-        matrixStack.push();
-        Direction direction = itemFrameEntity.getHorizontalFacing();
-        Vec3d vec3d = this.getPositionOffset(itemFrameEntity, g);
-        matrixStack.translate(-vec3d.getX(), -vec3d.getY(), -vec3d.getZ());
+        poseStack.pushPose();
+        Direction direction = itemFrameEntity.getDirection();
+        Vec3 vec3d = this.getRenderOffset(itemFrameEntity, g);
+        poseStack.translate(-vec3d.x(), -vec3d.y(), -vec3d.z());
         double d = 0.46875;
-        matrixStack.translate(
-                (double) direction.getOffsetX() * d,
-                (double) direction.getOffsetY() * d,
-                (double) direction.getOffsetZ() * d
+        poseStack.translate(
+                (double) direction.getStepX() * d,
+                (double) direction.getStepY() * d,
+                (double) direction.getStepZ() * d
         );
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(itemFrameEntity.getPitch()));
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f - itemFrameEntity.getYaw()));
+        poseStack.mulPose(Axis.XP.rotationDegrees(itemFrameEntity.getXRot()));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - itemFrameEntity.getYRot()));
         boolean isInvisible = itemFrameEntity.isInvisible();
-        ItemStack itemStack = itemFrameEntity.getHeldItemStack();
+        ItemStack itemStack = itemFrameEntity.getItem();
         boolean skipFrontRender = false;
         if (!itemStack.isEmpty()) {
-            matrixStack.push();
-            MapIdComponent mapIdComponent = itemFrameEntity.getMapId();
+            poseStack.pushPose();
+            MapId mapIdComponent = itemFrameEntity.getFramedMapId();
             if (mapIdComponent != null) {
-                MapState mapState = FilledMapItem.getMapState(mapIdComponent, itemFrameEntity.getWorld());
+                MapItemSavedData mapState = MapItem.getSavedData(mapIdComponent, itemFrameEntity.level());
                 if (mapState != null) { // Map is present
-                    if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
+                    if (shouldShowMapFace(direction, itemFrameEntity.position(),
+                            this.entityRenderDispatcher.camera.getPosition())) {
                         skipFrontRender = !((MapOpacity) mapState).moreculling$hasTransparency();
                         double di;
                         double offsetZFighting = isInvisible ? 0.5 :
                                 skipFrontRender ?
-                                        ((di = this.dispatcher.getSquaredDistanceToCamera(itemFrameEntity) / 5000) > 6 ?
+                                        ((di = this.entityRenderDispatcher.distanceToSqr(itemFrameEntity) / 5000) > 6 ?
                                                 Math.max(0.4452 - di, 0.4) : 0.4452) :
                                         0.4375;
-                        matrixStack.translate(0.0, 0.0, offsetZFighting);
+                        poseStack.translate(0.0, 0.0, offsetZFighting);
                         int j = itemFrameEntity.getRotation() % 4 * 2;
-                        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) j * 360.0f / 8.0f));
-                        matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0f));
+                        poseStack.mulPose(Axis.ZP.rotationDegrees((float) j * 360.0f / 8.0f));
+                        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f));
                         float h = 0.0078125f;
-                        matrixStack.scale(h, h, h);
-                        matrixStack.translate(-64.0, -64.0, 0.0);
-                        matrixStack.translate(0.0, 0.0, -1.0);
-                        MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
-                                matrixStack,
-                                vertexConsumerProvider,
+                        poseStack.scale(h, h, h);
+                        poseStack.translate(-64.0, -64.0, 0.0);
+                        poseStack.translate(0.0, 0.0, -1.0);
+                        Minecraft.getInstance().gameRenderer.getMapRenderer().render(
+                                poseStack,
+                                multiBufferSource,
                                 mapIdComponent,
                                 mapState,
                                 true,
-                                this.getLight(
+                                this.getLightVal(
                                         itemFrameEntity,
-                                        LightmapTextureManager.MAX_SKY_LIGHT_COORDINATE | 0xD2,
+                                        LightTexture.FULL_SKY | 0xD2,
                                         i
                                 )
                         );
                     }
                 }
             } else {
-                matrixStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
-                matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(
+                poseStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(
                         (float) itemFrameEntity.getRotation() * 360.0f / 8.0f)
                 );
-                int l = this.getLight(itemFrameEntity, LightmapTextureManager.MAX_LIGHT_COORDINATE, i);
-                matrixStack.scale(0.5f, 0.5f, 0.5f);
+                int l = this.getLightVal(itemFrameEntity, LightTexture.FULL_BRIGHT, i);
+                poseStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
                 ((ExtendedItemRenderer) this.itemRenderer).moreculling$renderItemFrameItem(
                         itemStack,
-                        matrixStack,
-                        vertexConsumerProvider,
+                        poseStack,
+                        multiBufferSource,
                         l,
                         itemFrameEntity,
-                        this.dispatcher.camera
+                        this.entityRenderDispatcher.camera
                 );
             }
-            matrixStack.pop();
+            poseStack.popPose();
         }
         if (!isInvisible) { // Render Item Frame block model
-            BakedModelManager bakedModelManager = this.blockRenderManager.getModels().getModelManager();
-            ModelIdentifier modelIdentifier = this.getModelId(itemFrameEntity, itemStack);
-            matrixStack.translate(-0.5, -0.5, -0.5);
-            var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer();
+            ModelManager modelManager = this.blockRenderer.getBlockModelShaper().getModelManager();
+            ModelResourceLocation modelResourceLocation = this.getFrameModelResourceLoc(itemFrameEntity, itemStack);
+            poseStack.translate(-0.5, -0.5, -0.5);
+            var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderer.getModelRenderer();
             if (CullingUtils.shouldCullBack(itemFrameEntity)) {
                 if (skipFrontRender) {
                     modelRenderer.moreculling$renderModelForFaces(
-                            matrixStack.peek(),
-                            vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
+                            poseStack.last(),
+                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            bakedModelManager.getModel(modelIdentifier),
+                            modelManager.getModel(modelResourceLocation),
                             1.0f,
                             1.0f,
                             1.0f,
                             1.0f,
                             i,
-                            OverlayTexture.DEFAULT_UV,
+                            OverlayTexture.NO_OVERLAY,
                             MAP_RENDER_SIDES
                     );
                 } else {
                     modelRenderer.moreculling$renderModelWithoutFace(
-                            matrixStack.peek(),
-                            vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
+                            poseStack.last(),
+                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            bakedModelManager.getModel(modelIdentifier),
+                            modelManager.getModel(modelResourceLocation),
                             1.0f,
                             1.0f,
                             1.0f,
                             1.0f,
                             i,
-                            OverlayTexture.DEFAULT_UV,
+                            OverlayTexture.NO_OVERLAY,
                             Direction.SOUTH
                     );
                 }
             } else {
                 if (skipFrontRender) {
                     modelRenderer.moreculling$renderModelWithoutFace(
-                            matrixStack.peek(),
-                            vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
+                            poseStack.last(),
+                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            bakedModelManager.getModel(modelIdentifier),
+                            modelManager.getModel(modelResourceLocation),
                             1.0f,
                             1.0f,
                             1.0f,
                             1.0f,
                             i,
-                            OverlayTexture.DEFAULT_UV,
+                            OverlayTexture.NO_OVERLAY,
                             Direction.NORTH
                     );
                 } else {
-                    this.blockRenderManager.getModelRenderer().render(
-                            matrixStack.peek(),
-                            vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
+                    this.blockRenderer.getModelRenderer().renderModel(
+                            poseStack.last(),
+                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            bakedModelManager.getModel(modelIdentifier),
+                            modelManager.getModel(modelResourceLocation),
                             1.0f,
                             1.0f,
                             1.0f,
                             i,
-                            OverlayTexture.DEFAULT_UV
+                            OverlayTexture.NO_OVERLAY
                     );
                 }
             }
         }
-        matrixStack.pop();
+        poseStack.popPose();
     }
 }

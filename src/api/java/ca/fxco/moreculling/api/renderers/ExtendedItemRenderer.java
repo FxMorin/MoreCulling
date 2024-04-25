@@ -1,20 +1,21 @@
 package ca.fxco.moreculling.api.renderers;
 
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * This interface allows you to call the MoreCulling methods used for item rendering.
  * This gives you access to the custom MoreCulling rendering methods, in order to allow everyone to benefit from the
  * performance boost that MoreCulling can offer.<br/>
- * Use these methods over ones provided in {@link net.minecraft.client.render.item.ItemRenderer}
+ * Use these methods over ones provided in {@link ItemRenderer}
  *
  * @since 0.8.0
  */
@@ -30,9 +31,9 @@ public interface ExtendedItemRenderer {
      */
     @Deprecated(forRemoval = true)
     default void renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                 MatrixStack matrices, VertexConsumer vertices,
+                                                 PoseStack poseStack, VertexConsumer vertices,
                                                  @Nullable Direction withoutFace) {
-        moreculling$renderBakedItemModelWithoutFace(model, stack, light, overlay, matrices, vertices, withoutFace);
+        moreculling$renderBakedItemModelWithoutFace(model, stack, light, overlay, poseStack, vertices, withoutFace);
     }
 
     /**
@@ -42,7 +43,7 @@ public interface ExtendedItemRenderer {
      * @since 0.25.0
      */
     void moreculling$renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                     MatrixStack matrices, VertexConsumer vertices,
+                                                     PoseStack poseStack, VertexConsumer vertices,
                                                      @Nullable Direction withoutFace);
 
     /**
@@ -54,8 +55,8 @@ public interface ExtendedItemRenderer {
      */
     @Deprecated(forRemoval = true)
     default void renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                             MatrixStack matrices, VertexConsumer vertices, Direction face) {
-        moreculling$renderBakedItemModelForFace(model, stack, light, overlay, matrices, vertices, face);
+                                             PoseStack poseStack, VertexConsumer vertices, Direction face) {
+        moreculling$renderBakedItemModelForFace(model, stack, light, overlay, poseStack, vertices, face);
     }
 
     /**
@@ -65,7 +66,7 @@ public interface ExtendedItemRenderer {
      * @since 0.25.0
      */
     void moreculling$renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
-                                                 MatrixStack matrices, VertexConsumer vertices, Direction face);
+                                                 PoseStack poseStack, VertexConsumer vertices, Direction face);
 
     /**
      * This will render 3 sides of a baked item model. (Item Frame)
@@ -76,9 +77,9 @@ public interface ExtendedItemRenderer {
      */
     @Deprecated(forRemoval = true)
     default void renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
-                                                MatrixStack matrices, VertexConsumer vertices,
+                                                PoseStack poseStack, VertexConsumer vertices,
                                                 Direction faceX, Direction faceY, Direction faceZ) {
-        moreculling$renderBakedItemModelOnly3Faces(model, stack, light, overlay, matrices,
+        moreculling$renderBakedItemModelOnly3Faces(model, stack, light, overlay, poseStack,
                 vertices, faceX, faceY, faceZ);
     }
 
@@ -89,7 +90,7 @@ public interface ExtendedItemRenderer {
      * @since 0.25.0
      */
     void moreculling$renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
-                                                    MatrixStack matrices, VertexConsumer vertices,
+                                                    PoseStack poseStack, VertexConsumer vertices,
                                                     Direction faceX, Direction faceY, Direction faceZ);
 
     /**
@@ -100,9 +101,9 @@ public interface ExtendedItemRenderer {
      * @deprecated As of v0.25.0, you should now be using {@link #moreculling$renderItemFrameItem}
      */
     @Deprecated(forRemoval = true)
-    default void renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                                     int light, ItemFrameEntity frame, Camera camera) {
-        moreculling$renderItemFrameItem(stack, matrices, vertexConsumers, light, frame, camera);
+    default void renderItemFrameItem(ItemStack stack, PoseStack poseStack, MultiBufferSource multiBufferSource,
+                                     int light, ItemFrame frame, Camera camera) {
+        moreculling$renderItemFrameItem(stack, poseStack, multiBufferSource, light, frame, camera);
     }
 
     /**
@@ -111,6 +112,6 @@ public interface ExtendedItemRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderItemFrameItem(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                                         int light, ItemFrameEntity frame, Camera camera);
+    void moreculling$renderItemFrameItem(ItemStack stack, PoseStack poseStack, MultiBufferSource multiBufferSource,
+                                         int light, ItemFrame frame, Camera camera);
 }

@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.config.cloth;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,13 +11,13 @@ public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, Dyn
     private float min;
     private float step;
     @Nullable
-    private Function<Float, Text> textGetter = null;
+    private Function<Float, Component> textGetter = null;
 
     public DynamicFloatSliderBuilder(String translationKey, float min, float max) {
         this(translationKey, min, max, 0.5F);
     }
 
-    public DynamicFloatSliderBuilder(String translationKey, Text resetButtonKey, float min, float max) {
+    public DynamicFloatSliderBuilder(String translationKey, Component resetButtonKey, float min, float max) {
         this(translationKey, resetButtonKey, min, max, 0.5F);
     }
 
@@ -28,14 +28,14 @@ public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, Dyn
         this.step = step;
     }
 
-    public DynamicFloatSliderBuilder(String translationKey, Text resetButtonKey, float min, float max, float step) {
+    public DynamicFloatSliderBuilder(String translationKey, Component resetButtonKey, float min, float max, float step) {
         super(translationKey, resetButtonKey);
         this.max = max;
         this.min = min;
         this.step = step;
     }
 
-    public DynamicFloatSliderBuilder setTextGetter(Function<Float, Text> textGetter) {
+    public DynamicFloatSliderBuilder setTextGetter(Function<Float, Component> textGetter) {
         this.textGetter = textGetter;
         return this;
     }

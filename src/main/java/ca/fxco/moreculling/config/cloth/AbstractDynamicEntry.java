@@ -3,15 +3,15 @@ package ca.fxco.moreculling.config.cloth;
 import com.google.common.collect.Lists;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
-    protected ClickableWidget mainWidget;
-    protected ButtonWidget resetButton;
+    protected AbstractWidget mainWidget;
+    protected Button resetButton;
     @Nullable
     private final Consumer<T> saveConsumer;
     @Nullable
@@ -33,7 +33,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     private final AtomicReference<T> value;
     private final Supplier<T> defaultValue;
 
-    private final List<ClickableWidget> widgets;
+    private final List<AbstractWidget> widgets;
 
     private boolean enabled;
     private final boolean locked;
@@ -42,7 +42,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         this(builder.getFieldNameKey(), builder.getResetButtonKey(), builder.getValue(), builder.getDefaultValue(), builder.saveConsumer, builder.changeConsumer, null, builder.isRequireRestart(), builder.getLocked());
     }
 
-    public AbstractDynamicEntry(Text fieldName, Text resetButtonKey, T value, Supplier<T> defaultValue, @Nullable Consumer<T> saveConsumer, @Nullable BiConsumer<AbstractDynamicEntry<T>, T> changeConsumer, Supplier<Optional<Text[]>> tooltipSupplier, boolean requiresRestart, boolean locked) {
+    public AbstractDynamicEntry(Component fieldName, Component resetButtonKey, T value, Supplier<T> defaultValue, @Nullable Consumer<T> saveConsumer, @Nullable BiConsumer<AbstractDynamicEntry<T>, T> changeConsumer, Supplier<Optional<Component[]>> tooltipSupplier, boolean requiresRestart, boolean locked) {
         super(fieldName, tooltipSupplier, requiresRestart);
         this.defaultValue = defaultValue;
         this.original = value;
@@ -52,12 +52,12 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         this.changeConsumer = changeConsumer;
         this.saveConsumer = saveConsumer;
         this.mainWidget = this.createMainWidget();
-        this.resetButton = ButtonWidget.builder(resetButtonKey, (widget) -> {
+        this.resetButton = Button.builder(resetButtonKey, (widget) -> {
             if (this.getDefaultValue().isPresent() && !this.getValue().equals(this.getDefaultValue().get())) {
                 this.setValue(this.getDefaultValue().get());
                 this.onChange();
             }
-        }).dimensions(0, 0, MinecraftClient.getInstance().textRenderer.getWidth(resetButtonKey) + 6, 20).build();
+        }).bounds(0, 0, Minecraft.getInstance().font.width(resetButtonKey) + 6, 20).build();
         this.widgets = Lists.newArrayList(this.mainWidget, this.resetButton);
     }
 
@@ -117,7 +117,7 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     }
 
     @Override
-    public final void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    public final void render(GuiGraphics drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.render(drawContext, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         this.resetButton.active = this.isEnabled() && this.isEditable() && this.getDefaultValue().isPresent() && !this.getDefaultValue().get().equals(this.getValue());
         this.resetButton.setY(y);
@@ -131,37 +131,37 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
     }
 
     // Create the main widget to use for this entry
-    abstract ClickableWidget createMainWidget();
+    abstract AbstractWidget createMainWidget();
 
     // This is where you render your widgets & text
-    abstract void onRender(DrawContext drawContext, int y, int x, int entryWidth, int entryHeight);
+    abstract void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight);
 
     @Override
-    public Text getDisplayedFieldName() {
-        MutableText text = this.getFieldName().copy();
+    public Component getDisplayedFieldName() {
+        MutableComponent text = this.getFieldName().copy();
         boolean hasError = this.getConfigError().isPresent();
         boolean isEdited = this.isEdited();
         boolean notEnabled = !isEnabled();
         if (hasError) {
-            text = text.formatted(Formatting.RED);
+            text = text.withStyle(ChatFormatting.RED);
         }
         if (isEdited) {
-            text = text.formatted(Formatting.ITALIC);
+            text = text.withStyle(ChatFormatting.ITALIC);
         }
         if ((!hasError && !isEdited) || notEnabled) {
-            text = text.formatted(Formatting.GRAY);
+            text = text.withStyle(ChatFormatting.GRAY);
         }
         if (notEnabled) {
-            text = text.formatted(Formatting.STRIKETHROUGH);
+            text = text.withStyle(ChatFormatting.STRIKETHROUGH);
         }
         return text;
     }
 
-    public List<? extends Element> children() {
+    public List<? extends GuiEventListener> children() {
         return this.widgets;
     }
 
-    public List<? extends Selectable> narratables() {
+    public List<? extends NarratableEntry> narratables() {
         return this.widgets;
     }
 }

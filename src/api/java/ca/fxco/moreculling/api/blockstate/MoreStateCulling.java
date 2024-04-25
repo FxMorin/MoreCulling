@@ -1,9 +1,9 @@
 package ca.fxco.moreculling.api.blockstate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
@@ -40,7 +40,7 @@ public interface MoreStateCulling {
      * @deprecated As of v0.25.0, you should now be using {@link #moreculling$customShouldDrawFace}
      */
     @Deprecated(forRemoval = true)
-    default Optional<Boolean> customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos,
+    default Optional<Boolean> customShouldDrawFace(BlockGetter view, BlockState sideState, BlockPos thisPos,
                                                    BlockPos sidePos, Direction side) {
         return moreculling$customShouldDrawFace(view, sideState, thisPos, sidePos, side);
     }
@@ -51,7 +51,7 @@ public interface MoreStateCulling {
      *
      * @since 0.25.0
      */
-    Optional<Boolean> moreculling$customShouldDrawFace(BlockView view, BlockState sideState, BlockPos thisPos,
+    Optional<Boolean> moreculling$customShouldDrawFace(BlockGetter view, BlockState sideState, BlockPos thisPos,
                                                        BlockPos sidePos, Direction side);
 
     /**

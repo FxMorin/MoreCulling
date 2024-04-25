@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.api.sprite;
 
 import ca.fxco.moreculling.api.data.QuadBounds;
-import net.minecraft.client.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

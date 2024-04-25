@@ -4,9 +4,9 @@ import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.mixin.accessors.SpriteContentsAccessor;
 import ca.fxco.moreculling.utils.SpriteUtils;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteContents;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
 
-@Mixin(Sprite.class)
+@Mixin(TextureAtlasSprite.class)
 public class Sprite_opacityMixin implements SpriteOpacity {
 
     @Shadow

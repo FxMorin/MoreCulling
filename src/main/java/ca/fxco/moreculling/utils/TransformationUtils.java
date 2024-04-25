@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.utils;
 
-import net.minecraft.client.render.model.json.Transformation;
+import net.minecraft.client.renderer.block.model.ItemTransform;
 
 public class TransformationUtils {
 
@@ -11,7 +11,7 @@ public class TransformationUtils {
     stuff like 3-face item culling.
      */
 
-    public static boolean canCullTransformation(Transformation transform) { // FRONT = SOUTH
+    public static boolean canCullTransformation(ItemTransform transform) { // FRONT = SOUTH
         if (transform.scale.x() > 1.0F || transform.scale.y() > 1.0F || transform.scale.z() > 1.0F) {
             return false; //TODO: Maybe Allow Z axis
         }
