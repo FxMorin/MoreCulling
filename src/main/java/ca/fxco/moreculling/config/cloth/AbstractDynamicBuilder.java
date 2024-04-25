@@ -78,7 +78,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
             } else {
                 Text[] tooltips = currentTooltips.get();
                 Text[] newArray = new Text[tooltips.length + 1];
-                for (int i = 0; i < tooltips.length; i++) newArray[i] = tooltips[i];
+                System.arraycopy(tooltips, 0, newArray, 0, tooltips.length);
                 newArray[tooltips.length] = limitedMessage;
                 this.setTooltip(newArray);
             }

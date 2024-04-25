@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.util.JsonHelper;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -29,7 +30,7 @@ public class Deserializer_cullShapeMixin {
                                JsonDeserializationContext jsonContext, CallbackInfoReturnable<JsonUnbakedModel> cir) {
         ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel) cir.getReturnValue();
         JsonObject jsonObj = jsonElement.getAsJsonObject();
-        List<CullShapeElement> list = this.cullshapesFromJson(jsonContext, jsonObj);
+        List<CullShapeElement> list = this.moreculling$cullshapesFromJson(jsonContext, jsonObj);
         unbakedModel.setCullShapeElements(list);
 
         if (jsonObj.has("useModelShape")) {
@@ -37,7 +38,9 @@ public class Deserializer_cullShapeMixin {
         }
     }
 
-    private List<CullShapeElement> cullshapesFromJson(JsonDeserializationContext context, JsonObject jsonObj) {
+    @Unique
+    private List<CullShapeElement> moreculling$cullshapesFromJson(JsonDeserializationContext context,
+                                                                  JsonObject jsonObj) {
         if (jsonObj.has("cullshapes")) {
             List<CullShapeElement> list = Lists.newArrayList();
             for (JsonElement shape : JsonHelper.getArray(jsonObj, "cullshapes")) {

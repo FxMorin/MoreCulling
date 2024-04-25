@@ -26,81 +26,226 @@ public interface ExtendedBlockModelRenderer {
      * rendered separately, this is done since we don't render all quads like vanilla
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderQuad(MatrixStack.Entry, VertexConsumer, float, float, float, float, BakedQuad, int, int)}
+     * since it also supports alpha.
      */
-    void renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green, float blue,
-                    BakedQuad bakedQuad, int light, int overlay);
+    @Deprecated(forRemoval = true)
+    default void renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green, float blue,
+                            BakedQuad bakedQuad, int light, int overlay) {
+        moreculling$renderQuad(entry, vertices, red, green, blue, 1f, bakedQuad, light, overlay);
+    }
+
+    /**
+     * This will render a single quad. In vanilla this is mostly done all at once, although we call each quad to be
+     * rendered separately, this is done since we don't render all quads like vanilla
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderQuad(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green, float blue,
+                                float alpha, BakedQuad bakedQuad, int light, int overlay);
 
     /**
      * This will render a model without a specific face.
      * This can be used to skip the face of a block model that cannot be seen
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderModelWithoutFace(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction)}
+     * since it also supports alpha.
      */
-    void renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
-                                BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
-                                Direction withoutFace);
+    @Deprecated(forRemoval = true)
+    default void renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                        BakedModel bakedModel, float red, float green, float blue, int light,
+                                        int overlay, Direction withoutFace) {
+        moreculling$renderModelWithoutFace(entry, vertices, state, bakedModel, red, green, blue, 1F,
+                light, overlay, withoutFace);
+    }
+
+    /**
+     * This will render a model without a specific face.
+     * This can be used to skip the face of a block model that cannot be seen
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderModelWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices,
+                                            @Nullable BlockState state, BakedModel bakedModel, float red,
+                                            float green, float blue, float alpha, int light, int overlay,
+                                            Direction withoutFace);
 
     /**
      * This will render quads without a specific face.
      * This can be used to skip the face of quads that cannot be seen
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderQuadsWithoutFace(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction)}
+     * since it also supports alpha.
      */
-    void renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
-                                float blue, List<BakedQuad> quads, int light, int overlay, Direction withoutFace);
+    @Deprecated(forRemoval = true)
+    default void renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                        float blue, List<BakedQuad> quads, int light, int overlay,
+                                        Direction withoutFace) {
+        moreculling$renderQuadsWithoutFace(entry, vertices, red, green, blue, 1F, quads, light, overlay, withoutFace);
+    }
+
+    /**
+     * This will render quads without a specific face.
+     * This can be used to skip the face of quads that cannot be seen
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderQuadsWithoutFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                            float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
+                                            Direction withoutFace);
 
     /**
      * This will render a single face of a model.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderModelForFace(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction)}
+     * since it also supports alpha.
      */
-    void renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
-                            BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
-                            Direction forFace);
+    @Deprecated(forRemoval = true)
+    default void renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                    BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
+                                    Direction forFace) {
+        moreculling$renderModelForFace(entry, vertices, state, bakedModel, red, green, blue, 1F,
+                light, overlay, forFace);
+    }
+
+    /**
+     * This will render a single face of a model.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderModelForFace(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                        BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                        int light, int overlay, Direction forFace);
 
     /**
      * This will render a single face of quads.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderQuadsForFace(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction)}
+     * since it also supports alpha.
      */
-    void renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
-                            float blue, List<BakedQuad> quads, int light, int overlay, Direction forFace);
+    @Deprecated(forRemoval = true)
+    default void renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                    float blue, List<BakedQuad> quads, int light, int overlay, Direction forFace) {
+        moreculling$renderQuadsForFace(entry, vertices, red, green, blue, 1F, quads, light, overlay, forFace);
+    }
+
+    /**
+     * This will render a single face of quads.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderQuadsForFace(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                        float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
+                                        Direction forFace);
 
     /**
      * This will render 3 sides of the model.
      * This is part of the 3-face rendering technique.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderModelFor3Faces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction, Direction, Direction)}
+     * since it also supports alpha.
      */
-    void renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
-                              BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
-                              Direction faceX, Direction faceY, Direction faceZ);
+    @Deprecated(forRemoval = true)
+    default void renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                      BakedModel bakedModel, float red, float green, float blue, int light,
+                                      int overlay, Direction faceX, Direction faceY, Direction faceZ) {
+        moreculling$renderModelFor3Faces(entry, vertices, state, bakedModel, red, green, blue, 1F,
+                light, overlay, faceX, faceY, faceZ);
+    }
+
+    /**
+     * This will render 3 sides of the model.
+     * This is part of the 3-face rendering technique.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderModelFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                          BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                          int light, int overlay, Direction faceX, Direction faceY, Direction faceZ);
 
     /**
      * This will render 3 sides of quads.
      * This is part of the 3-face rendering technique.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderModelFor3Faces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction, Direction, Direction)}
+     * since it also supports alpha.
      */
-    void renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
-                              float blue, List<BakedQuad> quads, int light, int overlay,
-                              Direction faceX, Direction faceY, Direction faceZ);
+    @Deprecated(forRemoval = true)
+    default void renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                      float blue, List<BakedQuad> quads, int light, int overlay,
+                                      Direction faceX, Direction faceY, Direction faceZ) {
+        moreculling$renderQuadsFor3Faces(entry, vertices, red, green, blue, 1F,
+                quads, light, overlay, faceX, faceY, faceZ);
+    }
+
+    /**
+     * This will render 3 sides of quads.
+     * This is part of the 3-face rendering technique.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderQuadsFor3Faces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                          float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
+                                          Direction faceX, Direction faceY, Direction faceZ);
 
     /**
      * This will render a list of faces for a model.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderModelForFaces(MatrixStack.Entry, VertexConsumer, BlockState, BakedModel, float, float, float, float, int, int, Direction[])}
+     * since it also supports alpha.
      */
-    void renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
-                             BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
-                             Direction[] faces);
+    @Deprecated(forRemoval = true)
+    default void renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                     BakedModel bakedModel, float red, float green, float blue, int light, int overlay,
+                                     Direction[] faces) {
+        moreculling$renderModelForFaces(entry, vertices, state, bakedModel, red, green, blue, 1F,
+                light, overlay, faces);
+    }
+
+    /**
+     * This will render a list of faces for a model.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderModelForFaces(MatrixStack.Entry entry, VertexConsumer vertices, @Nullable BlockState state,
+                                         BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                         int light, int overlay, Direction[] faces);
 
     /**
      * This will render all quads for a list of faces.
      *
      * @since 0.9.0
+     * @deprecated As of MC 1.20.5, you should now be using
+     * {@link #moreculling$renderQuadsForFaces(MatrixStack.Entry, VertexConsumer, float, float, float, float, List, int, int, Direction[])}
+     * since it also supports alpha.
      */
-    void renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
-                             float blue, List<BakedQuad> quads, int light, int overlay,
-                             Direction[] faces);
+    @Deprecated(forRemoval = true)
+    default void renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                     float blue, List<BakedQuad> quads, int light, int overlay, Direction[] faces) {
+        moreculling$renderQuadsForFaces(entry, vertices, red, green, blue, 1F, quads, light, overlay, faces);
+    }
+
+    /**
+     * This will render all quads for a list of faces.
+     *
+     * @since 0.25.0
+     */
+    void moreculling$renderQuadsForFaces(MatrixStack.Entry entry, VertexConsumer vertices, float red, float green,
+                                         float blue, float alpha, List<BakedQuad> quads, int light, int overlay,
+                                         Direction[] faces);
 }

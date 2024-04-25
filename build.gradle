@@ -1,8 +1,7 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
+    id 'fabric-loom' version '1.6.3'
     id 'maven-publish'
 }
 
@@ -82,7 +81,6 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}"))
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixinsquared_version}")))
 }
 
@@ -94,33 +92,34 @@ processResources {
     }
 }
 
-tasks.withType(AbstractArchiveTask) {
+tasks.withType(AbstractArchiveTask).configureEach {
     reproducibleFileOrder = true
     preserveFileTimestamps = false
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    it.options.release = 17
+    it.options.release = 21
 }
 
-tasks.withType(Jar) {
+tasks.withType(Jar).configureEach {
     from "LICENSE"
     from sourceSets.api.output
 }
 
-task apiJar(type: Jar) {
-    classifier "api-dev"
+tasks.register('apiJar', Jar) {
+    archiveClassifier.set("api-dev")
     from sourceSets.api.output
 }
 
-task remapApiJar(type: RemapJarTask) {
-    classifier "api"
+tasks.register('remapApiJar', RemapJarTask) {
+    dependsOn apiJar
+    archiveClassifier.set("api")
 
     input = apiJar.archiveFile.get().asFile
     addNestedDependencies = false
 }
-prepareRemapApiJar.dependsOn(apiJar)
+build.dependsOn remapApiJar
 
 runClient.doFirst {
     args = ['--username', "PR0CESS", '--uuid', UUID.randomUUID()]

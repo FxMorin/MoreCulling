@@ -55,7 +55,6 @@ public class WorldRenderer_cloudsMixin {
         float v = m * 0.8F;
         float w = n * 0.8F;
         float aa = o * 0.8F;
-        RenderSystem.setShader(GameRenderer::getPositionTexColorNormalProgram);
         builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
         float ab = (float) Math.floor(y / 4.0) * 4.0F;
         if (this.lastCloudRenderMode == CloudRenderMode.FANCY) {

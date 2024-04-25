@@ -39,7 +39,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
 
     @ApiStatus.Internal
     public MoreCullingClothConfigBuilder() {
-        this.defaultBackground = Screen.OPTIONS_BACKGROUND_TEXTURE;
+        this.defaultBackground = Screen.MENU_BACKGROUND_TEXTURE;
         this.afterInitConsumer = (screen) -> {
         };
         this.categoryMap = Maps.newLinkedHashMap();

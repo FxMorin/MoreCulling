@@ -29,16 +29,12 @@
   "accessWidener" : "moreculling.accesswidener",
   "depends": {
     "fabricloader": ">=0.15.0",
-    "minecraft": ">=1.20.1",
-    "java": ">=17",
-    "cloth-config": ">=11.0.99"
+    "minecraft": ">=1.20.5",
+    "java": ">=21",
+    "cloth-config": ">=14.0.0"
   },
   "suggests": {
     "sodium": ">=0.5.0"
-  },
-  "conflicts": {
-    "cull-less-leaves": "*",
-    "sodium": "<=0.4.10"
   },
   "custom": {
     "mc-publish": {

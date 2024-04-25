@@ -15,6 +15,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
@@ -29,8 +30,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.OptionalInt;
 
 import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
 
@@ -97,10 +96,9 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
         boolean skipFrontRender = false;
         if (!itemStack.isEmpty()) {
             matrixStack.push();
-            OptionalInt optionalInt = itemFrameEntity.getMapId();
-            if (optionalInt.isPresent()) {
-                int mapId = optionalInt.getAsInt();
-                MapState mapState = FilledMapItem.getMapState(mapId, itemFrameEntity.getWorld());
+            MapIdComponent mapIdComponent = itemFrameEntity.getMapId();
+            if (mapIdComponent != null) {
+                MapState mapState = FilledMapItem.getMapState(mapIdComponent, itemFrameEntity.getWorld());
                 if (mapState != null) { // Map is present
                     if (shouldShowMapFace(direction, itemFrameEntity.getPos(), this.dispatcher.camera.getPos())) {
                         skipFrontRender = !((MapOpacity) mapState).hasTransparency();
@@ -121,7 +119,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                         MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
                                 matrixStack,
                                 vertexConsumerProvider,
-                                mapId,
+                                mapIdComponent,
                                 mapState,
                                 true,
                                 this.getLight(
@@ -155,13 +153,15 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
             BakedModelManager bakedModelManager = this.blockRenderManager.getModels().getModelManager();
             ModelIdentifier modelIdentifier = this.getModelId(itemFrameEntity, itemStack);
             matrixStack.translate(-0.5, -0.5, -0.5);
+            var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer();
             if (CullingUtils.shouldCullBack(itemFrameEntity)) {
                 if (skipFrontRender) {
-                    ((ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer()).renderModelForFaces(
+                    modelRenderer.moreculling$renderModelForFaces(
                             matrixStack.peek(),
                             vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
                             null,
                             bakedModelManager.getModel(modelIdentifier),
+                            1.0f,
                             1.0f,
                             1.0f,
                             1.0f,
@@ -170,11 +170,12 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                             MAP_RENDER_SIDES
                     );
                 } else {
-                    ((ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer()).renderModelWithoutFace(
+                    modelRenderer.moreculling$renderModelWithoutFace(
                             matrixStack.peek(),
                             vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
                             null,
                             bakedModelManager.getModel(modelIdentifier),
+                            1.0f,
                             1.0f,
                             1.0f,
                             1.0f,
@@ -185,11 +186,12 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrameEntit
                 }
             } else {
                 if (skipFrontRender) {
-                    ((ExtendedBlockModelRenderer) this.blockRenderManager.getModelRenderer()).renderModelWithoutFace(
+                    modelRenderer.moreculling$renderModelWithoutFace(
                             matrixStack.peek(),
                             vertexConsumerProvider.getBuffer(TexturedRenderLayers.getEntitySolid()),
                             null,
                             bakedModelManager.getModel(modelIdentifier),
+                            1.0f,
                             1.0f,
                             1.0f,
                             1.0f,

@@ -5,13 +5,12 @@
 # More Culling
 
 [![Mod Environment](https://img.shields.io/badge/Enviroment-Client-blue?style=round)](https://github.com/fxmorin/moreculling)
-[![Latest Minecraft Version](https://img.shields.io/badge/Latest%20MC%20Support-1.20.4-green?style=round)](https://github.com/fxmorin/moreculling/releases)
+[![Latest Minecraft Version](https://img.shields.io/badge/Latest%20MC%20Support-1.20.5-green?style=round)](https://github.com/fxmorin/moreculling/releases)
 [![Hits Of Code](https://hitsofcode.com/github/fxmorin/moreculling?branch=master)](https://github.com/fxmorin/moreculling)
 [![FX's Modding Discord](https://img.shields.io/discord/636633673524969483?logo=discord)](https://discord.gg/SGFDrvA)
 
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/moreculling?color=00AF5C&label=downloads&style=round&logo=modrinth)](https://modrinth.com/mod/moreculling)
 [![GitHub Downloads via the Releases section](https://img.shields.io/github/downloads/fxmorin/moreculling/total?style=round&logo=github)](https://github.com/fxmorin/moreculling)
-[![CurseForge downloads](https://cf.way2muchnoise.eu/moreculling.svg)](https://curseforge.com/minecraft/mc-mods/moreculling)
 
 ### A mod that changes how multiple types of culling are handled in order to improve performance  
 ###### Culling is when you don't render things that the player can't see, to improve performance
@@ -34,12 +33,8 @@ Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for ex
 * [Blanket](https://github.com/BlanketMC/blanket-client-tweaks) - Client-side tweaks/fixes  
 
 ---
-
-<a href="https://client.kinetichosting.net/aff.php?aff=42"><img alt="Kinetic Hosting" src="https://fxco.ca/assets/Mod_Banner.png"></a>
-
----
    
 Feel free to contribute to the project!  
 I'm also fine if you use this mod in your modpacks, just make sure to mention it.  
 
-However I don't allow clients or other mods to merge this mod without permission, if you would like to use this mod in your client or another mod please contact me.
+However, I don't allow clients or other mods to merge this mod without permission, if you would like to use this mod in your client or another mod please contact me.

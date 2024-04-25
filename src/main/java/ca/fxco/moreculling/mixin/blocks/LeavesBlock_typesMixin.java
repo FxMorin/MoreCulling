@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 
-import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 import static ca.fxco.moreculling.config.option.LeavesCullingMode.FAST;
 import static ca.fxco.moreculling.config.option.LeavesCullingMode.VERTICAL;
