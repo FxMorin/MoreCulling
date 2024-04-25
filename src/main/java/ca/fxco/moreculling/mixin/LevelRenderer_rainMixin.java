@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LevelRenderer.class)
-public class WorldRenderer_rainMixin {
+public class LevelRenderer_rainMixin {
 
     @Shadow
     private Frustum cullingFrustum;

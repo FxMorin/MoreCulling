@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
 @Mixin(targets = "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase$Cache")
-public class ShapeCache_cullShapeMixin {
+public class Cache_cullShapeMixin {
 
     @Redirect(
             method = "<init>",

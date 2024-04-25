@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(TextureAtlasSprite.class)
-public class Sprite_opacityMixin implements SpriteOpacity {
+public class TextureAtlasSprite_opacityMixin implements SpriteOpacity {
 
     @Shadow
     @Final

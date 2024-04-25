@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MapItemSavedData.class)
-public class MapState_cacheMixin implements MapOpacity {
+public class MapItemSavedData_cacheMixin implements MapOpacity {
 
     @Unique
     private boolean moreculling$hasTransparency = false;

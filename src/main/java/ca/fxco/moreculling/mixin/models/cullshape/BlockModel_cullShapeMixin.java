@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Mixin(BlockModel.class)
-public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbakedModel {
+public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel {
 
     @Shadow
     @Nullable

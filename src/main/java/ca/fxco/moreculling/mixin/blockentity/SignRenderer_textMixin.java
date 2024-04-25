@@ -24,7 +24,7 @@ import static ca.fxco.moreculling.utils.CullingUtils.shouldHideWallSignText;
 import static ca.fxco.moreculling.utils.MathUtils.ONE_SIGN_ROTATION;
 
 @Mixin(SignRenderer.class)
-public class SignBlockEntityRenderer_textMixin {
+public class SignRenderer_textMixin {
 
     @WrapWithCondition(
             method = "renderSignWithText(Lnet/minecraft/world/level/block/entity/SignBlockEntity;" +

@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.mixin.blockentity;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.mixin.accessors.WorldRendererAccessor;
+import ca.fxco.moreculling.mixin.accessors.LevelRendererAccessor;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BeaconRenderer.class)
-public class BeaconBlockEntityRenderer_frustumMixin {
+public class BeaconRenderer_frustumMixin {
 
     @WrapWithCondition(
             method = "render(Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;" +
@@ -35,7 +35,7 @@ public class BeaconBlockEntityRenderer_frustumMixin {
         }
         BlockPos pos = beaconBlockEntity.getBlockPos();
         LevelRenderer renderer = Minecraft.getInstance().levelRenderer;
-        return renderer == null || ((WorldRendererAccessor) renderer).getFrustum().isVisible(new AABB(
+        return renderer == null || ((LevelRendererAccessor) renderer).getFrustum().isVisible(new AABB(
                 pos.getX() - 1, pos.getY() + yOffset - 1, pos.getZ() - 1,
                 pos.getX() + 1, Math.min(pos.getY() + yOffset + maxY, 1024) + 1, pos.getZ() + 1
         ));

@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
         @Condition("extendedclouds")
 })
 @Mixin(LevelRenderer.class)
-public class WorldRenderer_cloudsMixin {
+public class LevelRenderer_cloudsMixin {
 
     @Unique
     private static final float SCALE = 0.00390625F;

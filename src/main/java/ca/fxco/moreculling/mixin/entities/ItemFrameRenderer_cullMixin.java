@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static ca.fxco.moreculling.utils.CullingUtils.shouldShowMapFace;
 
 @Mixin(value = ItemFrameRenderer.class, priority = 1200)
-public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrame> extends EntityRenderer<T> {
+public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends EntityRenderer<T> {
 
     @Unique
     private static final Direction[] MAP_RENDER_SIDES = new Direction[]{
@@ -60,7 +60,7 @@ public abstract class ItemFrameEntityRenderer_cullMixin<T extends ItemFrame> ext
 
     @Shadow public abstract Vec3 getRenderOffset(T itemFrame, float f);
 
-    protected ItemFrameEntityRenderer_cullMixin(EntityRendererProvider.Context ctx) {
+    protected ItemFrameRenderer_cullMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 

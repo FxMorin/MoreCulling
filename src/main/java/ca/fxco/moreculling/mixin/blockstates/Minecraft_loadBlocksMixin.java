@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MinecraftClient_loadBlocksMixin {
+public class Minecraft_loadBlocksMixin {
 
     @Inject(
             method = "<init>",

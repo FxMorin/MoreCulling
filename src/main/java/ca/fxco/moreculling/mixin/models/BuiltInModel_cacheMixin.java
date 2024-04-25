@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BuiltInModel.class)
-public abstract class BuiltinBakedModel_cacheMixin implements BakedOpacity {
+public abstract class BuiltInModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final

@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(BaseRailBlock.class)
-public class AbstractRailBlock_cullAgainstMixin implements MoreBlockCulling {
+public class BaseRailBlock_cullAgainstMixin implements MoreBlockCulling {
 
     @Override
     public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {

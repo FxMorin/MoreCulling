@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LevelRenderer.class)
-public interface WorldRendererAccessor {
+public interface LevelRendererAccessor {
 
     @Accessor("cullingFrustum")
     Frustum getFrustum();

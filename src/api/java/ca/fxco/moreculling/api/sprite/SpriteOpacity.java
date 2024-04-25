@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * SpriteOpacity is an interface that should be used on classes that extend Sprite
+ * SpriteOpacity is an interface that should be used on classes that extend TextureAtlasSprite
  * It allows your custom sprite to take full advantage of MoreCulling's culling techniques.
  *
  * @since 0.3.0

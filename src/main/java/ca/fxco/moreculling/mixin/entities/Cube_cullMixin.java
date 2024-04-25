@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ModelPart.Cube.class)
-public class Cuboid_cullMixin {
+public class Cube_cullMixin {
 
     @Shadow
     @Final

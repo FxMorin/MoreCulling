@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(BlockModelShaper.class)
-public interface BlockModelsAccessor {
+public interface BlockModelShaperAccessor {
 
     @Accessor("modelByStateCache")
     Map<BlockState, BakedModel> getModels();

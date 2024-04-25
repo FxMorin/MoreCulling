@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(SimpleBakedModel.class)
-public abstract class BasicBakedModel_cacheMixin implements BakedOpacity {
+public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final

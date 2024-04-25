@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Optional;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public abstract class AbstractBlockState_moreMixin implements MoreStateCulling {
+public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
     @Shadow
     public abstract Block getBlock();
 

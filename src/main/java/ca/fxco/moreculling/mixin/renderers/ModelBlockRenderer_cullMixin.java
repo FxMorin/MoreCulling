@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(ModelBlockRenderer.class)
-public abstract class BlockModelRenderer_cullMixin implements ExtendedBlockModelRenderer {
+public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModelRenderer {
 
     @Unique
     private final RandomSource moreculling$rand = new SingleThreadedRandomSource(42L);

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(value = MultiPartBakedModel.class, priority = 1010)
-public abstract class MultipartBakedModel_cacheMixin implements BakedOpacity {
+public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
 
