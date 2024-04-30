@@ -3,7 +3,7 @@ package ca.fxco.moreculling.api.config.defaults;
 import ca.fxco.moreculling.api.config.ConfigOption;
 import ca.fxco.moreculling.api.config.ConfigOptionFlag;
 import ca.fxco.moreculling.api.config.ConfigOptionImpact;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -24,11 +24,11 @@ public class ConfigEnumOption<T extends Enum<?>> implements ConfigOption<T> {
     private final ConfigOptionImpact impact;
     private final ConfigOptionFlag flag;
     private final Class<T> typeClass;
-    private final Text[] localizedNames;
+    private final Component[] localizedNames;
 
     public ConfigEnumOption(String translationKey, Consumer<T> setter, Supplier<T> getter, Consumer<T> changed,
                             T defaultValue, ConfigOptionImpact impact, ConfigOptionFlag flag, Class<T> typeClass,
-                            Text[] localizedNames) {
+                            Component[] localizedNames) {
         this.translationKey = translationKey;
         this.setter = setter;
         this.getter = getter;
@@ -79,7 +79,7 @@ public class ConfigEnumOption<T extends Enum<?>> implements ConfigOption<T> {
         return typeClass;
     }
 
-    public Text[] getLocalizedNames() {
+    public Component[] getLocalizedNames() {
         return localizedNames;
     }
 }

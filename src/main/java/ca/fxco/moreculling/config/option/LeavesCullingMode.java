@@ -3,7 +3,7 @@ package ca.fxco.moreculling.config.option;
 import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -29,8 +29,8 @@ public enum LeavesCullingMode implements SelectionListEntry.Translatable {
         this.hasAmount = hasAmount;
     }
 
-    public Text getText() {
-        return Text.translatable(this.translationKey);
+    public Component getText() {
+        return Component.translatable(this.translationKey);
     }
 
     @Override
@@ -42,9 +42,9 @@ public enum LeavesCullingMode implements SelectionListEntry.Translatable {
         return this.hasAmount;
     }
 
-    public static Text[] getLocalizedNames() {
+    public static Component[] getLocalizedNames() {
         LeavesCullingMode[] values = values();
-        Text[] names = new Text[values.length];
+        Component[] names = new Component[values.length];
         for (int i = 0; i < values.length; i++) {
             names[i] = values[i].getText();
         }

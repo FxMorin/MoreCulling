@@ -1,5 +1,7 @@
 package ca.fxco.moreculling.config.sodium;
 
+import ca.fxco.moreculling.api.config.ConfigAdditions;
+import ca.fxco.moreculling.api.config.OptionOverride;
 import me.jellysquid.mods.sodium.client.gui.options.Option;
 import me.jellysquid.mods.sodium.client.gui.options.OptionFlag;
 import me.jellysquid.mods.sodium.client.gui.options.OptionImpact;
@@ -7,7 +9,7 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.GenericBinding;
 import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +37,8 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     protected final EnumSet<OptionFlag> flags;
 
-    protected final Text name;
-    protected final Text tooltip;
+    protected final Component name;
+    protected final Component tooltip;
 
     protected final OptionImpact impact;
 
@@ -46,18 +48,20 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     protected boolean enabled;
     private final boolean locked; // Prevents anything from changing
 
-    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
-                                          EnumSet<OptionFlag> flags, OptionImpact impact,
-                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged, boolean enabled) {
+    protected MoreCullingSodiumOptionImpl(
+            OptionStorage<S> storage, Component name, Component tooltip, OptionBinding<S, T> binding,
+            Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
+            OptionImpact impact, BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged, boolean enabled
+    ) {
         this(storage, name, tooltip, binding, control, flags, impact, onChanged, enabled, false);
     }
 
-    protected MoreCullingSodiumOptionImpl(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding,
-                                          Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control,
-                                          EnumSet<OptionFlag> flags, OptionImpact impact,
-                                          BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged,
-                                          boolean enabled, boolean locked) {
+    protected MoreCullingSodiumOptionImpl(
+            OptionStorage<S> storage, Component name, Component tooltip, OptionBinding<S, T> binding,
+            Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags,
+            OptionImpact impact, BiConsumer<MoreCullingSodiumOptionImpl<S, T>, T> onChanged,
+            boolean enabled, boolean locked
+    ) {
         this.storage = storage;
         this.name = name;
         this.tooltip = tooltip;
@@ -73,12 +77,12 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
     }
 
     @Override
-    public Text getName() {
+    public Component getName() {
         return this.name;
     }
 
     @Override
-    public Text getTooltip() {
+    public Component getTooltip() {
         return this.tooltip;
     }
 
@@ -175,8 +179,8 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     public static class Builder<S, T> {
         private final OptionStorage<S> storage;
-        private Text name;
-        private Text tooltip;
+        private String nameTranslationKey;
+        private Component tooltip;
         private OptionBinding<S, T> binding;
         private Function<MoreCullingSodiumOptionImpl<S, T>, Control<T>> control;
         private OptionImpact impact;
@@ -190,12 +194,12 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             this.storage = storage;
         }
 
-        public Builder<S, T> setName(@Nullable Text name) {
-            this.name = name;
+        public Builder<S, T> setNameTranslation(String translationKey) {
+            this.nameTranslationKey = translationKey;
             return this;
         }
 
-        public Builder<S, T> setTooltip(@Nullable Text tooltip) {
+        public Builder<S, T> setTooltip(@Nullable Component tooltip) {
             if (!this.locked) {
                 this.tooltip = tooltip;
             }
@@ -250,13 +254,13 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
             if (isLoaded) {
                 this.locked = true;
                 this.enabled = false;
-                this.tooltip = Text.translatable("moreculling.config.optionDisabled", modId);
+                this.tooltip = Component.translatable("moreculling.config.optionDisabled", modId);
                 this.onChanged = null;
             }
             return this;
         }
 
-        public Builder<S, T> setModLimited(boolean isLoaded, Text limitedMessage) {
+        public Builder<S, T> setModLimited(boolean isLoaded, Component limitedMessage) {
             if (isLoaded) {
                 this.tooltip = this.tooltip != null ? this.tooltip.copy().append("\n").append(limitedMessage) : limitedMessage;
             }
@@ -264,13 +268,18 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
         }
 
         public MoreCullingSodiumOptionImpl<S, T> build() {
-            Validate.notNull(this.name, "Name must be specified");
+            Validate.notNull(this.nameTranslationKey, "Name must be specified");
             Validate.notNull(this.tooltip, "Tooltip must be specified");
             Validate.notNull(this.binding, "Option binding must be specified");
             Validate.notNull(this.control, "Control must be specified");
+            OptionOverride optionOverride = ConfigAdditions.getDisabledOptions().get(this.nameTranslationKey);
+            if (optionOverride != null && !optionOverride.canChange().getAsBoolean()) {
+                this.locked = true;
+                this.tooltip = Component.literal(optionOverride.reason());
+            }
             return new MoreCullingSodiumOptionImpl<>(
-                    this.storage, this.name, this.tooltip, this.binding, this.control, this.flags, this.impact,
-                    this.onChanged, this.enabled, this.locked
+                    this.storage, Component.translatable(this.nameTranslationKey), this.tooltip, this.binding, this.control,
+                    this.flags, this.impact, this.onChanged, this.enabled, this.locked
             );
         }
     }

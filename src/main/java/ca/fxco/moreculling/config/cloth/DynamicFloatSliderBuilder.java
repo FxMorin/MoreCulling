@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.config.cloth;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,31 +11,31 @@ public class DynamicFloatSliderBuilder extends AbstractDynamicBuilder<Float, Dyn
     private float min;
     private float step;
     @Nullable
-    private Function<Float, Text> textGetter = null;
+    private Function<Float, Component> textGetter = null;
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, float min, float max) {
-        this(fieldNameKey, min, max, 0.5F);
+    public DynamicFloatSliderBuilder(String translationKey, float min, float max) {
+        this(translationKey, min, max, 0.5F);
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, Text resetButtonKey, float min, float max) {
-        this(fieldNameKey, resetButtonKey, min, max, 0.5F);
+    public DynamicFloatSliderBuilder(String translationKey, Component resetButtonKey, float min, float max) {
+        this(translationKey, resetButtonKey, min, max, 0.5F);
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, float min, float max, float step) {
-        super(fieldNameKey);
+    public DynamicFloatSliderBuilder(String translationKey, float min, float max, float step) {
+        super(translationKey);
         this.max = max;
         this.min = min;
         this.step = step;
     }
 
-    public DynamicFloatSliderBuilder(Text fieldNameKey, Text resetButtonKey, float min, float max, float step) {
-        super(fieldNameKey, resetButtonKey);
+    public DynamicFloatSliderBuilder(String translationKey, Component resetButtonKey, float min, float max, float step) {
+        super(translationKey, resetButtonKey);
         this.max = max;
         this.min = min;
         this.step = step;
     }
 
-    public DynamicFloatSliderBuilder setTextGetter(Function<Float, Text> textGetter) {
+    public DynamicFloatSliderBuilder setTextGetter(Function<Float, Component> textGetter) {
         this.textGetter = textGetter;
         return this;
     }

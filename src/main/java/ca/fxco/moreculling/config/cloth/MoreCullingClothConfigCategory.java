@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,18 +17,18 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
     private final ConfigBuilder builder;
     private final List<Object> data;
     @Nullable
-    private Identifier background;
-    private final Text categoryKey;
+    private ResourceLocation background;
+    private final Component categoryKey;
     @Nullable
-    private Supplier<Optional<StringVisitable[]>> description = Optional::empty;
+    private Supplier<Optional<FormattedText[]>> description = Optional::empty;
 
-    public MoreCullingClothConfigCategory(ConfigBuilder builder, Text categoryKey) {
+    public MoreCullingClothConfigCategory(ConfigBuilder builder, Component categoryKey) {
         this.builder = builder;
         this.data = Lists.newArrayList();
         this.categoryKey = categoryKey;
     }
 
-    public Text getCategoryKey() {
+    public Component getCategoryKey() {
         return this.categoryKey;
     }
 
@@ -41,7 +41,7 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
         return this;
     }
 
-    public ConfigCategory setCategoryBackground(Identifier identifier) {
+    public ConfigCategory setCategoryBackground(ResourceLocation identifier) {
         if (this.builder.hasTransparentBackground()) {
             throw new IllegalStateException("Cannot set category background if screen is using transparent background.");
         } else {
@@ -54,21 +54,21 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
         this.builder.removeCategory(this.categoryKey);
     }
 
-    public void setBackground(@Nullable Identifier background) {
+    public void setBackground(@Nullable ResourceLocation background) {
         this.background = background;
     }
 
     @Nullable
-    public Identifier getBackground() {
+    public ResourceLocation getBackground() {
         return this.background;
     }
 
     @Nullable
-    public Supplier<Optional<StringVisitable[]>> getDescription() {
+    public Supplier<Optional<FormattedText[]>> getDescription() {
         return this.description;
     }
 
-    public void setDescription(@Nullable Supplier<Optional<StringVisitable[]>> description) {
+    public void setDescription(@Nullable Supplier<Optional<FormattedText[]>> description) {
         this.description = description;
     }
 }

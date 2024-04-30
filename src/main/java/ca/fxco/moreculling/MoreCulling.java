@@ -5,12 +5,12 @@ import ca.fxco.moreculling.config.MoreCullingConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.block.Block;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +18,11 @@ public class MoreCulling implements ClientModInitializer {
 
     public static int CURRENT_VERSION = 1;
 
-    public static BakedModelManager bakedModelManager = null;
-    public static BlockRenderManager blockRenderManager = null;
+    public static ModelManager bakedModelManager = null;
+    public static BlockRenderDispatcher blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
-    public static final TagKey<Block> DONT_CULL = TagKey.of(Registries.BLOCK.getKey(), new Identifier(MOD_ID, "dont_cull"));
+    public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), new ResourceLocation(MOD_ID, "dont_cull"));
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MoreCullingConfig CONFIG;
@@ -33,13 +33,17 @@ public class MoreCulling implements ClientModInitializer {
             public MoreCullingConfig deserialize() {
                 try {
                     return super.deserialize();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     return this.createDefault();
                 }
             }
         });
         CONFIG = AutoConfig.getConfigHolder(MoreCullingConfig.class).getConfig();
         ConfigUpdater.updateConfig(CONFIG);
-        MoreCulling.CONFIG.modCompatibility.defaultReturnValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault);
+        CONFIG.modCompatibility.defaultReturnValue(CONFIG.useOnModdedBlocksByDefault);
+    }
+
+    public void saveConfig() {
+        AutoConfig.getConfigHolder(MoreCullingConfig.class).save();
     }
 }

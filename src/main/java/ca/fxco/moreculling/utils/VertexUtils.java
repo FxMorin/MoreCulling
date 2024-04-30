@@ -1,8 +1,8 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.api.data.QuadBounds;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
 import org.joml.*;
 import org.joml.Math;
 
@@ -54,7 +54,7 @@ public class VertexUtils {
     public static QuadBounds getQuadBounds(BakedQuad quad, Direction.Axis axis) {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
-        int[] vertexData = quad.getVertexData();
+        int[] vertexData = quad.getVertices();
         for (int i = 0; i < 4; i++) {
             Vector2f tmpPos = getPos(vertexData, i, axis).mul(16);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
@@ -65,7 +65,7 @@ public class VertexUtils {
     }
 
     public static boolean isAxisAligned(BakedQuad quad) {
-        int[] vertexData = quad.getVertexData();
+        int[] vertexData = quad.getVertices();
         Vector3f p1 = getPos(vertexData, 0);
         Vector3f p4 = getPos(vertexData, 3);
         if (p1.y == p4.y) {

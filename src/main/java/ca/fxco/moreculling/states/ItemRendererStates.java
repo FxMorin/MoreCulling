@@ -1,8 +1,8 @@
 package ca.fxco.moreculling.states;
 
-import net.minecraft.client.render.Camera;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.Camera;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ItemRendererStates {
 
-    public static @Nullable ItemFrameEntity ITEM_FRAME;
+    public static @Nullable ItemFrame ITEM_FRAME;
     public static Camera CAMERA;
     public static Direction[] DIRECTIONS;
 }

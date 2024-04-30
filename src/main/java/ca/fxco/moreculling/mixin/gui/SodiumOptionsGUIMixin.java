@@ -9,11 +9,12 @@ import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
 import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.widgets.FlatButtonWidget;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,22 +34,23 @@ public class SodiumOptionsGUIMixin extends Screen {
     @Shadow(remap = false)
     private OptionPage currentPage;
 
-    private OptionPage moreCullingPage;
-    private FlatButtonWidget resetCacheButton;
+    @Unique
+    private OptionPage moreculling$moreCullingPage;
+    @Unique
+    private FlatButtonWidget moreculling$resetCacheButton;
 
-    protected SodiumOptionsGUIMixin(Text title) {
+    protected SodiumOptionsGUIMixin(Component title) {
         super(title);
     }
 
-
     @Inject(
-            method = "<init>(Lnet/minecraft/client/gui/screen/Screen;)V",
+            method = "<init>",
             at = @At("RETURN")
     )
-    private void addGuiAtInit(Screen prevScreen, CallbackInfo ci) {
+    private void moreculling$addGuiAtInit(Screen prevScreen, CallbackInfo ci) {
         if (MoreCulling.CONFIG.enableSodiumMenu) {
-            this.moreCullingPage = SodiumOptionPage.moreCullingPage();
-            this.pages.add(this.moreCullingPage); // Inject sodium page for moreCulling
+            this.moreculling$moreCullingPage = SodiumOptionPage.moreCullingPage();
+            this.pages.add(this.moreculling$moreCullingPage); // Inject sodium page for moreCulling
         }
     }
 
@@ -59,16 +61,19 @@ public class SodiumOptionsGUIMixin extends Screen {
             remap = false,
             require = 0
     )
-    private void addCacheRefreshButton(CallbackInfo ci) {
+    private void moreculling$addCacheRefreshButton(CallbackInfo ci) {
         if (IS_MODERNFIX_LOADED) {
             return;
         }
-        if (MoreCulling.CONFIG.enableSodiumMenu && this.currentPage == this.moreCullingPage) {
+        if (MoreCulling.CONFIG.enableSodiumMenu && this.currentPage == this.moreculling$moreCullingPage) {
             // 325 is the last button (211) + width (100) plus padding (20 + 4)
-            this.addDrawableChild(this.resetCacheButton = new FlatButtonWidget(new Dim2i(this.width - 325, this.height - 30, 100, 20), Text.translatable("moreculling.config.resetCache"), () -> {
-                CacheUtils.resetAllCache();
-                this.resetCacheButton.setEnabled(false);
-            }));
+            this.addRenderableWidget(this.moreculling$resetCacheButton = new FlatButtonWidget(
+                    new Dim2i(this.width - 325, this.height - 30, 100, 20),
+                    Component.translatable("moreculling.config.resetCache"),
+                    () -> {
+                        CacheUtils.resetAllCache();
+                        this.moreculling$resetCacheButton.setEnabled(false);
+                    }));
         }
     }
 }

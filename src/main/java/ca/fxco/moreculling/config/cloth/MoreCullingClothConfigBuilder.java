@@ -5,12 +5,9 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.data.client.TextureMap;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
@@ -21,13 +18,13 @@ import java.util.function.Consumer;
 public class MoreCullingClothConfigBuilder implements ConfigBuilder {
     private Runnable savingRunnable;
     private Screen parent;
-    private Text title = Text.translatable("moreculling.title");
+    private Component title = Component.translatable("moreculling.title");
     private boolean editable = true;
     private boolean tabsSmoothScroll = true;
     private boolean listSmoothScroll = true;
     private boolean doesConfirmSave = true;
     private boolean transparentBackground = false;
-    private Identifier defaultBackground;
+    private ResourceLocation defaultBackground;
     private Consumer<Screen> afterInitConsumer;
     protected final Map<String, ConfigCategory> categoryMap;
     private String fallbackCategory;
@@ -39,7 +36,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
 
     @ApiStatus.Internal
     public MoreCullingClothConfigBuilder() {
-        this.defaultBackground = Screen.OPTIONS_BACKGROUND_TEXTURE;
+        this.defaultBackground = Screen.MENU_BACKGROUND;
         this.afterInitConsumer = (screen) -> {
         };
         this.categoryMap = Maps.newLinkedHashMap();
@@ -98,11 +95,11 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         return this;
     }
 
-    public Text getTitle() {
+    public Component getTitle() {
         return this.title;
     }
 
-    public ConfigBuilder setTitle(Text title) {
+    public ConfigBuilder setTitle(Component title) {
         this.title = title;
         return this;
     }
@@ -116,7 +113,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         return this;
     }
 
-    public ConfigCategory getOrCreateCategory(Text categoryKey) {
+    public ConfigCategory getOrCreateCategory(Component categoryKey) {
         if (this.categoryMap.containsKey(categoryKey.getString())) {
             return this.categoryMap.get(categoryKey.getString());
         } else {
@@ -129,7 +126,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         }
     }
 
-    public ConfigBuilder removeCategory(Text category) {
+    public ConfigBuilder removeCategory(Component category) {
         if (this.categoryMap.containsKey(category.getString()) &&
                 Objects.equals(this.fallbackCategory, category.getString())) {
             this.fallbackCategory = null;
@@ -142,7 +139,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         }
     }
 
-    public ConfigBuilder removeCategoryIfExists(Text category) {
+    public ConfigBuilder removeCategoryIfExists(Component category) {
         if (this.categoryMap.containsKey(category.getString()) &&
                 Objects.equals(this.fallbackCategory, category.getString())) {
             this.fallbackCategory = null;
@@ -151,7 +148,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         return this;
     }
 
-    public boolean hasCategory(Text category) {
+    public boolean hasCategory(Component category) {
         return this.categoryMap.containsKey(category.getString());
     }
 
@@ -182,11 +179,11 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         return this.doesConfirmSave;
     }
 
-    public Identifier getDefaultBackgroundTexture() {
+    public ResourceLocation getDefaultBackgroundTexture() {
         return this.defaultBackground;
     }
 
-    public ConfigBuilder setDefaultBackgroundTexture(Identifier texture) {
+    public ConfigBuilder setDefaultBackgroundTexture(ResourceLocation texture) {
         this.defaultBackground = texture;
         return this;
     }
@@ -207,7 +204,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
             );
             screen.setSavingRunnable(this.savingRunnable);
             screen.setEditable(this.editable);
-            screen.setFallbackCategory(this.fallbackCategory == null ? null : Text.literal(this.fallbackCategory));
+            screen.setFallbackCategory(this.fallbackCategory == null ? null : Component.literal(this.fallbackCategory));
             screen.setTransparentBackground(this.transparentBackground);
             screen.setAlwaysShowTabs(this.alwaysShowTabs);
             screen.setConfirmSave(this.doesConfirmSave);

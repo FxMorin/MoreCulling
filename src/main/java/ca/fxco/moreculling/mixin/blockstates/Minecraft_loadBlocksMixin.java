@@ -2,26 +2,25 @@ package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
-import net.minecraft.registry.Registries;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.main.GameConfig;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftClient.class)
-public class MinecraftClient_loadBlocksMixin {
-
+@Mixin(Minecraft.class)
+public class Minecraft_loadBlocksMixin {
 
     @Inject(
-            method = "<init>(Lnet/minecraft/client/RunArgs;)V",
+            method = "<init>",
             at = @At("RETURN")
     )
-    private void onInit(RunArgs args, CallbackInfo ci) {
-        Registries.BLOCK.forEach(block -> {
-            ((MoreBlockCulling) block).setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
-                    Registries.BLOCK.getId(block).getNamespace(),
+    private void moreculling$onInit(GameConfig args, CallbackInfo ci) {
+        BuiltInRegistries.BLOCK.forEach(block -> {
+            ((MoreBlockCulling) block).moreculling$setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
+                    BuiltInRegistries.BLOCK.getKey(block).getNamespace(),
                     MoreCulling.CONFIG.useOnModdedBlocksByDefault
             ));
         });

@@ -1,8 +1,10 @@
 package ca.fxco.moreculling.config.cloth;
 
+import ca.fxco.moreculling.api.config.ConfigAdditions;
+import ca.fxco.moreculling.api.config.OptionOverride;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,17 +21,19 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
     @Nullable
     protected BiConsumer<AbstractDynamicEntry<T>, T> changeConsumer = null;
     @NotNull
-    protected Function<T, Optional<Text[]>> tooltipSupplier = (bool) -> Optional.empty();
+    protected Function<T, Optional<Component[]>> tooltipSupplier = (bool) -> Optional.empty();
 
     private T value = null;
     private boolean locked = false;
+    private final String translationKey;
 
-    protected AbstractDynamicBuilder(Text fieldNameKey) {
-        this(fieldNameKey, Text.translatable("text.cloth-config.reset_value"));
+    protected AbstractDynamicBuilder(String translationKey) {
+        this(translationKey, Component.translatable("text.cloth-config.reset_value"));
     }
 
-    protected AbstractDynamicBuilder(Text fieldNameKey, Text resetButtonKey) {
-        super(resetButtonKey, fieldNameKey);
+    protected AbstractDynamicBuilder(String translationKey, Component resetButtonKey) {
+        super(resetButtonKey, Component.translatable(translationKey));
+        this.translationKey = translationKey;
     }
 
     /*
@@ -54,7 +58,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
 
     public AbstractDynamicBuilder<T, A, ?> setModIncompatibility(boolean isLoaded, String modId) {
         if (isLoaded) {
-            this.setTooltip(Text.translatable("moreculling.config.optionDisabled", modId));
+            this.setTooltip(Component.translatable("moreculling.config.optionDisabled", modId));
             if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {
                 this.value = this.defaultValue.get();
             }
@@ -66,15 +70,15 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
-    public AbstractDynamicBuilder<T, A, ?> setModLimited(boolean isLoaded, Text limitedMessage) {
+    public AbstractDynamicBuilder<T, A, ?> setModLimited(boolean isLoaded, Component limitedMessage) {
         if (isLoaded) {
-            Optional<Text[]> currentTooltips = this.tooltipSupplier.apply(this.value);
+            Optional<Component[]> currentTooltips = this.tooltipSupplier.apply(this.value);
             if (currentTooltips.isEmpty()) {
                 this.setTooltip(limitedMessage);
             } else {
-                Text[] tooltips = currentTooltips.get();
-                Text[] newArray = new Text[tooltips.length + 1];
-                for (int i = 0; i < tooltips.length; i++) newArray[i] = tooltips[i];
+                Component[] tooltips = currentTooltips.get();
+                Component[] newArray = new Component[tooltips.length + 1];
+                System.arraycopy(tooltips, 0, newArray, 0, tooltips.length);
                 newArray[tooltips.length] = limitedMessage;
                 this.setTooltip(newArray);
             }
@@ -88,7 +92,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
-    public AbstractDynamicBuilder<T, A, ?> setErrorSupplier(@Nullable Function<T, Optional<Text>> errorSupplier) {
+    public AbstractDynamicBuilder<T, A, ?> setErrorSupplier(@Nullable Function<T, Optional<Component>> errorSupplier) {
         this.errorSupplier = errorSupplier;
         return this;
     }
@@ -124,23 +128,23 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
-    public AbstractDynamicBuilder<T, A, ?> setTooltip(@Nullable Text... tooltip) {
+    public AbstractDynamicBuilder<T, A, ?> setTooltip(@Nullable Component... tooltip) {
         if (!this.locked) {
             this.tooltipSupplier = (val) -> Optional.ofNullable(tooltip);
         }
         return this;
     }
 
-    public AbstractDynamicBuilder<T, A, ?> setTooltipSupplier(@NotNull Function<T, Optional<Text[]>> tooltipSupplier) {
+    public AbstractDynamicBuilder<T, A, ?> setTooltipSupplier(@NotNull Function<T, Optional<Component[]>> tooltipSupplier) {
         if (!this.locked) {
             this.tooltipSupplier = tooltipSupplier;
         }
         return this;
     }
 
-    public AbstractDynamicBuilder<T, A, ?> setTooltipSupplier(@NotNull Supplier<Optional<Text[]>> tooltipSupplier) {
+    public AbstractDynamicBuilder<T, A, ?> setTooltipSupplier(@NotNull Supplier<Optional<Component[]>> tooltipSupplier) {
         if (!this.locked) {
-            this.tooltipSupplier = (val) -> (Optional<Text[]>) tooltipSupplier.get();
+            this.tooltipSupplier = (val) -> (Optional<Component[]>) tooltipSupplier.get();
         }
         return this;
     }
@@ -148,6 +152,15 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
     @Override
     public final @NotNull A build() {
         Objects.requireNonNull(this.value);
+        OptionOverride optionOverride = ConfigAdditions.getDisabledOptions().get(this.translationKey);
+        if (optionOverride != null && !optionOverride.canChange().getAsBoolean()) {
+            this.setTooltip(Component.literal(optionOverride.reason()));
+            if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {
+                this.value = this.defaultValue.get();
+            }
+            this.locked = true;
+            this.requireRestart(false);
+        }
         return this.runBuild();
     }
 
