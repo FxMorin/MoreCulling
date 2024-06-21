@@ -92,7 +92,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Redirect(
             method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
                     "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
                     "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "INVOKE",
@@ -106,7 +106,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Inject(
             method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
                     "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
                     "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "RETURN",
