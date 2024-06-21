@@ -55,9 +55,8 @@ public class LevelRenderer_cloudsMixin {
         float v = m * 0.8F;
         float w = n * 0.8F;
         float aa = o * 0.8F;
-        tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL);
+        BufferBuilder builder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR_NORMAL);
         float ab = (float) Math.floor(y / 4.0) * 4.0F;
-        BufferBuilder builder = null;
         if (this.prevCloudsType == CloudStatus.FANCY) {
             RenderSystem.enableCull(); // Enable culling
             for (int ac = -3; ac <= 4; ++ac) {
