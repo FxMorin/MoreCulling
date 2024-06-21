@@ -115,7 +115,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     )
     private void moreculling$onBake(ModelBaker baker, BlockModel parent,
                                     Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
-                                    ResourceLocation id, boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
+                                    boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
             return;
