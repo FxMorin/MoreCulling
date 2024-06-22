@@ -6,6 +6,7 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.math.Transformation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -122,7 +123,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
             return;
         }
         UnbakedModel findMe = parent;
-        Map<ModelResourceLocation, UnbakedModel> topLevelModels = Map.of();
+        Map<ModelResourceLocation, UnbakedModel> topLevelModels = Minecraft.getInstance().modelBakery.topLevelModels;
         ModelResourceLocation location = null;
         for (Map.Entry<ModelResourceLocation, UnbakedModel> entry : topLevelModels.entrySet()) {
             if (entry.getValue() == findMe) {
