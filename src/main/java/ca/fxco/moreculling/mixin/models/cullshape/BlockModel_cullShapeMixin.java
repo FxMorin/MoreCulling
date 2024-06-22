@@ -10,10 +10,7 @@ import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -124,6 +121,16 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
+        UnbakedModel findMe = parent;
+        Map<ModelResourceLocation, UnbakedModel> topLevelModels = Map.of();
+        ModelResourceLocation location = null;
+        for (Map.Entry<ModelResourceLocation, UnbakedModel> entry : topLevelModels.entrySet()) {
+            if (entry.getValue() == findMe) {
+                location = entry.getKey();
+                break;
+            }
+        }
+        ResourceLocation id = location.id();
         if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
