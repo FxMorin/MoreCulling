@@ -37,6 +37,9 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Nullable
     protected BlockModel parent;
 
+    @Unique
+    public ModelBakery modelBakery;
+
     @Shadow
     public abstract List<BlockElement> getElements();
 
@@ -123,7 +126,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
             return;
         }
         UnbakedModel findMe = parent;
-        Map<ModelResourceLocation, UnbakedModel> topLevelModels = Minecraft.getInstance().modelBakery.topLevelModels;
+        Map<ModelResourceLocation, UnbakedModel> topLevelModels = this.modelBakery.topLevelModels;
         ModelResourceLocation location = null;
         for (Map.Entry<ModelResourceLocation, UnbakedModel> entry : topLevelModels.entrySet()) {
             if (entry.getValue() == findMe) {
