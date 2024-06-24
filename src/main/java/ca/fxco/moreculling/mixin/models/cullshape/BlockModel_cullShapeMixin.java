@@ -92,7 +92,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Redirect(
             method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
                     "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
                     "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "INVOKE",
@@ -106,7 +106,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Inject(
             method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
                     "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)" +
+                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
                     "Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "RETURN",
@@ -115,7 +115,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     )
     private void moreculling$onBake(ModelBaker baker, BlockModel parent,
                                     Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
-                                    ResourceLocation id, boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
+                                    boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
             return;
@@ -124,6 +124,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
+        ResourceLocation id = parent.parentLocation;
         if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {

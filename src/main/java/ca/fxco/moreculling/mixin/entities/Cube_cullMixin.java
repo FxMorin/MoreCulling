@@ -28,9 +28,7 @@ public class Cube_cullMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void moreculling$renderCuboid(PoseStack.Pose pose, VertexConsumer vertexConsumer, int light,
-                                          int overlay, float red, float green, float blue, float alpha,
-                                          CallbackInfo ci) {
+    private void moreculling$renderCuboid(PoseStack.Pose pose, VertexConsumer vertexConsumer, int light, int overlay, int color, CallbackInfo ci) {
         if (!MoreCulling.CONFIG.entityModelCulling) {
             return;
         }
@@ -57,8 +55,8 @@ public class Cube_cullMixin {
                         vertex.pos.z() * VertexUtils.FAST_NORM,
                         1.0F
                 ));
-                vertexConsumer.vertex(vector4f.x(), vector4f.y(), vector4f.z(),
-                        red, green, blue, alpha, vertex.u, vertex.v, overlay, light, nx, ny, nz);
+                vertexConsumer.addVertex(vector4f.x(), vector4f.y(), vector4f.z(),
+                        color, vertex.u, vertex.v, overlay, light, nx, ny, nz);
             }
         }
         ci.cancel();
