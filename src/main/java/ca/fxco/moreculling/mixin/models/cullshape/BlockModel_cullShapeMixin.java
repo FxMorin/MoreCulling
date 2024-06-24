@@ -37,9 +37,6 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Nullable
     protected BlockModel parent;
 
-    @Unique
-    private ModelBakery modelBakery;
-
     @Shadow
     public abstract List<BlockElement> getElements();
 
@@ -125,16 +122,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        UnbakedModel findMe = parent;
-        Map<ModelResourceLocation, UnbakedModel> topLevelModels = this.modelBakery.topLevelModels;
-        ModelResourceLocation location = null;
-        for (Map.Entry<ModelResourceLocation, UnbakedModel> entry : topLevelModels.entrySet()) {
-            if (entry.getValue() == findMe) {
-                location = entry.getKey();
-                break;
-            }
-        }
-        ResourceLocation id = location.id();
+        ResourceLocation id = parent.parentLocation;
         if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {

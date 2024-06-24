@@ -1,4 +1,4 @@
 accessWidener	v1	 named
 accessible field net/minecraft/world/level/block/Block OCCLUSION_CACHE Ljava/lang/ThreadLocal;
 accessible method net/minecraft/world/level/block/state/BlockBehaviour getOcclusionShape (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;
-accessible field net/minecraft/client/resources/model/ModelBakery topLevelModels Ljava/util/Map;
+accessible field net/minecraft/client/renderer/block/model/BlockModel parentLocation Lnet/minecraft/resources/ResourceLocation;
