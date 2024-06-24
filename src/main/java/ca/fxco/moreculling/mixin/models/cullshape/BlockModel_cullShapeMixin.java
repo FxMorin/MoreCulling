@@ -38,7 +38,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     protected BlockModel parent;
 
     @Unique
-    public ModelBakery modelBakery;
+    private ModelBakery modelBakery;
 
     @Shadow
     public abstract List<BlockElement> getElements();
