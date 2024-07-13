@@ -100,7 +100,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         boolean skipFrontRender = false;
         if (!itemStack.isEmpty()) {
             poseStack.pushPose();
-            MapId mapIdComponent = itemFrameEntity.getFramedMapId();
+            MapId mapIdComponent = itemFrameEntity.getFramedMapId(itemStack);
             if (mapIdComponent != null) {
                 MapItemSavedData mapState = MapItem.getSavedData(mapIdComponent, itemFrameEntity.level());
                 if (mapState != null) { // Map is present

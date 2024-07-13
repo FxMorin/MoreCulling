@@ -42,7 +42,8 @@ import static net.minecraft.core.Direction.SOUTH;
 @Mixin(value = ItemRenderer.class, priority = 1100)
 public class ItemRenderer_faceCullingMixin {
 
-    @Redirect(
+    // Doesn't work in 1.21, too stupid to figure it out.
+    /*@Redirect(
             method = "render",
             at = @At(
                     value = "INVOKE",
@@ -52,7 +53,7 @@ public class ItemRenderer_faceCullingMixin {
     )
     private boolean moreculling$skipSlowTransparencyChecks(ItemDisplayContext renderMode) {
         return ItemRendererStates.ITEM_FRAME != null;
-    }
+    }*/
 
     @Inject(
             method = "render",

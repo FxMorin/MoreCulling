@@ -25,12 +25,12 @@ public class TheEndGatewayRenderer_beamMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;renderBeaconBeam(" +
                             "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;" +
-                            "Lnet/minecraft/resources/ResourceLocation;FFJII[FFF)V"
+                            "Lnet/minecraft/resources/ResourceLocation;FFJIIIFF)V"
             )
     )
     private boolean moreculling$onRenderBeam(PoseStack poseStack, MultiBufferSource multiBufferSource,
                                              ResourceLocation textureId, float tickDelta, float heightScale,
-                                             long worldTime, int yOffset, int maxY, float[] color,
+                                             long worldTime, int yOffset, int maxY, int color,
                                              float innerRadius, float outerRadius,
                                              TheEndGatewayBlockEntity endGatewayBlockEntity) {
         if (!MoreCulling.CONFIG.beaconBeamCulling) {

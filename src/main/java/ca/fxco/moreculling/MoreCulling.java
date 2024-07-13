@@ -22,7 +22,7 @@ public class MoreCulling implements ClientModInitializer {
     public static BlockRenderDispatcher blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
-    public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), new ResourceLocation(MOD_ID, "dont_cull"));
+    public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MoreCullingConfig CONFIG;

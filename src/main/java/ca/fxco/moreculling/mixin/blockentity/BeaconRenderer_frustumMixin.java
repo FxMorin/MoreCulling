@@ -24,11 +24,11 @@ public class BeaconRenderer_frustumMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;" +
                             "renderBeaconBeam(Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/MultiBufferSource;FJII[F)V"
+                            "Lnet/minecraft/client/renderer/MultiBufferSource;FJIII)V"
             )
     )
     private boolean moreculling$onRenderBeam(PoseStack poseStack, MultiBufferSource multiBufferSource,
-                                             float tickDelta, long worldTime, int yOffset, int maxY, float[] color,
+                                             float tickDelta, long worldTime, int yOffset, int maxY, int color,
                                              BeaconBlockEntity beaconBlockEntity) {
         if (!MoreCulling.CONFIG.beaconBeamCulling) {
             return true;
