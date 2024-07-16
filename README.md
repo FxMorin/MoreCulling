@@ -5,7 +5,7 @@
 # More Culling
 
 [![Mod Environment](https://img.shields.io/badge/Enviroment-Client-blue?style=round)](https://github.com/fxmorin/moreculling)
-[![Latest Minecraft Version](https://img.shields.io/badge/Latest%20MC%20Support-1.20.5-green?style=round)](https://github.com/fxmorin/moreculling/releases)
+[![Latest Minecraft Version](https://img.shields.io/badge/Latest%20MC%20Support-1.21-green?style=round)](https://github.com/fxmorin/moreculling/releases)
 [![Hits Of Code](https://hitsofcode.com/github/fxmorin/moreculling?branch=master)](https://github.com/fxmorin/moreculling)
 [![FX's Modding Discord](https://img.shields.io/discord/636633673524969483?logo=discord)](https://discord.gg/SGFDrvA)
 
