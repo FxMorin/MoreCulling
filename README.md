@@ -28,7 +28,7 @@ Feel free to contribute to the project. Make sure to star the project to help ou
 Check out [MoreCullingExtra](https://github.com/fxmorin/MoreCullingExtra) for extra culling features 
 
 ### My other optimization/bugfix mods:  
-* [MemoryLeakFix](https://github.com/fxmorin/memoryLeakFix) - self-explanatory
+* [MemoryLeakFix](https://github.com/fxmorin/memoryLeakFix) - self-explanatory ([MemoryLeakFix is unmaintained](https://github.com/FxMorin/MemoryLeakFix/issues/177#issuecomment-2168541518))
 * [Carpet-Fixes](https://github.com/fxmorin/carpet-fixes) - Largest Server-Side Bug fixing mod  
 * [Blanket](https://github.com/BlanketMC/blanket-client-tweaks) - Client-side tweaks/fixes  
 
