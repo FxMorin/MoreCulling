@@ -2,7 +2,7 @@ package ca.fxco.moreculling.api.config;
 
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import me.jellysquid.mods.sodium.client.gui.options.control.Control;
+import net.caffeinemc.mods.sodium.client.gui.options.control.Control;
 
 /**
  * Extend your ConfigOption with this interface to use a custom sodium Control

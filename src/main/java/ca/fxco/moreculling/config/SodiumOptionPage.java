@@ -6,9 +6,9 @@ import ca.fxco.moreculling.api.config.defaults.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.*;
 import com.google.common.collect.ImmutableList;
-import me.jellysquid.mods.sodium.client.gui.options.*;
-import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
-import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
+import net.caffeinemc.mods.sodium.client.gui.options.*;
+import net.caffeinemc.mods.sodium.client.gui.options.control.CyclingControl;
+import net.caffeinemc.mods.sodium.client.gui.options.control.TickBoxControl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 
