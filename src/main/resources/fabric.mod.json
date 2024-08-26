@@ -36,6 +36,9 @@
   "suggests": {
     "sodium": ">=0.6.0"
   },
+  "breaks": {
+    "sodium": "<0.6.0"
+  },
   "custom": {
     "mc-publish": {
       "modrinth": "51shyZVL",
