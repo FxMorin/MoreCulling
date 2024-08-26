@@ -2,7 +2,7 @@ package ca.fxco.moreculling.config.sodium;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.MoreCullingConfig;
-import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
+import net.caffeinemc.mods.sodium.client.gui.options.storage.OptionStorage;
 import me.shedaniel.autoconfig.AutoConfig;
 
 public class MoreCullingSodiumOptionsStorage implements OptionStorage<MoreCullingConfig> {

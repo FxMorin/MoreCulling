@@ -1,9 +1,9 @@
 package ca.fxco.moreculling.config.sodium;
 
-import me.jellysquid.mods.sodium.client.gui.options.Option;
-import me.jellysquid.mods.sodium.client.gui.options.control.Control;
-import me.jellysquid.mods.sodium.client.gui.options.control.ControlElement;
-import me.jellysquid.mods.sodium.client.util.Dim2i;
+import net.caffeinemc.mods.sodium.client.gui.options.Option;
+import net.caffeinemc.mods.sodium.client.gui.options.control.Control;
+import net.caffeinemc.mods.sodium.client.gui.options.control.ControlElement;
+import net.caffeinemc.mods.sodium.client.util.Dim2i;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
