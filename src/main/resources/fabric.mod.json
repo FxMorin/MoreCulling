@@ -37,7 +37,7 @@
     "sodium": ">=0.6.0"
   },
   "breaks": {
-    "sodium": "<0.6.0"
+    "sodium": "<=0.5.11"
   },
   "custom": {
     "mc-publish": {
