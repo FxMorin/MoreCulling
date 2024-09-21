@@ -54,15 +54,6 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.signTextCulling = value, opts -> opts.signTextCulling)
                 .build();
 
-        // Entity Model Culling - Does not work with sodium (sodium is faster)
-        /*MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> entityModelCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setNameTranslation("moreculling.config.option.entityModelCulling")
-                .setTooltip(Text.translatable("moreculling.config.option.entityModelCulling.tooltip"))
-                .setControl(TickBoxControl::new)
-                .setImpact(OptionImpact.VARIES)
-                .setBinding((opts, value) -> opts.entityModelCulling = value, opts -> opts.entityModelCulling)
-                .build();*/
-
         // Rain/Snow Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> rainCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.rainCulling")
@@ -121,17 +112,6 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
 
-        // Powder Snow Culling
-        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setNameTranslation("moreculling.config.option.powderSnowCulling")
-                .setTooltip(Component.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
-                .setControl(TickBoxControl::new)
-                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
-                .setImpact(OptionImpact.LOW)
-                .setBinding((opts, value) -> opts.powderSnowCulling = value, opts -> opts.powderSnowCulling)
-                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .build();
-
         // End Gateway Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> endGatewayCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.endGatewayCulling")
@@ -154,7 +134,6 @@ public class SodiumOptionPage {
                 .onChanged((instance, value) -> {
                     leavesCullingMode.setAvailable(value);
                     includeMangroveRoots.setAvailable(value);
-                    powderSnowCulling.setAvailable(value);
                     endGatewayCulling.setAvailable(value);
                 })
                 .build();
@@ -241,7 +220,6 @@ public class SodiumOptionPage {
         );
 
         groups.add(OptionGroup.createBuilder()
-                .add(powderSnowCulling)
                 .add(endGatewayCulling)
                 .build()
         );

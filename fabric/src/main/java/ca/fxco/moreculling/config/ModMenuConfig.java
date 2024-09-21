@@ -9,7 +9,6 @@ import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
 import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import ca.fxco.moreculling.utils.CompatUtils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -155,20 +154,6 @@ public class ModMenuConfig implements ModMenuApi {
                 })
                 .build();
 
-        // Powder Snow Culling
-        DynamicBooleanListEntry powderSnowCulling = new DynamicBooleanBuilder("moreculling.config.option.powderSnowCulling")
-                .setValue(MoreCulling.CONFIG.powderSnowCulling)
-                .setDefaultValue(false)
-                .setTooltip(Component.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
-                .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.powderSnowCulling = newValue;
-                    Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
-                    }
-                })
-                .build();
-
         // End Gateway Culling
         DynamicBooleanListEntry endGatewayCulling = new DynamicBooleanBuilder("moreculling.config.option.endGatewayCulling")
                 .setValue(MoreCulling.CONFIG.endGatewayCulling)
@@ -198,7 +183,6 @@ public class ModMenuConfig implements ModMenuApi {
                 .setChangeConsumer((instance, value) -> {
                     leavesCullingMode.setEnabledState(value);
                     includeMangroveRoots.setEnabledState(value);
-                    powderSnowCulling.setEnabledState(value);
                     useOnModdedBlocks.setEnabledState(value);
                     for (DynamicBooleanListEntry entry : modsOption) {
                         entry.setEnabledState(value);
@@ -260,7 +244,6 @@ public class ModMenuConfig implements ModMenuApi {
         generalCategory.addEntry(leavesCullingAmount);
         generalCategory.addEntry(includeMangroveRoots);
 
-        generalCategory.addEntry(powderSnowCulling);
         generalCategory.addEntry(endGatewayCulling);
         leavesCullingAmount.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
 

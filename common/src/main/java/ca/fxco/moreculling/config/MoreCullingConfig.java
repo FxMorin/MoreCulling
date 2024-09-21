@@ -41,8 +41,6 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean includeMangroveRoots = false;
 
-    public boolean powderSnowCulling = true;
-
     public boolean endGatewayCulling = false;
 
     public boolean beaconBeamCulling = true;
