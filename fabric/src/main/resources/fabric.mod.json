@@ -41,10 +41,6 @@
     "sodium": "<=0.5.11"
   },
   "custom": {
-    "mc-publish": {
-      "modrinth": "51shyZVL",
-      "loaders": ["fabric", "quilt"]
-    },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/SGFDrvA"
