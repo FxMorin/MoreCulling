@@ -27,6 +27,7 @@
     "${mod_id}.mixins.json",
     "${mod_id}.fabric.mixins.json"
   ],
+  "accessWidener" : "moreculling.accesswidener",
   "depends": {
     "fabricloader": ">=0.15.0",
     "minecraft": ">=1.21",
