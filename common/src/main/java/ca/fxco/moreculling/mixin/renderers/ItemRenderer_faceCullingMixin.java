@@ -21,19 +21,6 @@ import java.util.List;
 @Mixin(value = ItemRenderer.class, priority = 1100)
 public class ItemRenderer_faceCullingMixin {
 
-    // Doesn't work in 1.21, too stupid to figure it out.
-    /*@Redirect(
-            method = "render",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/ItemDisplayContext;firstPerson()Z",
-                    ordinal = 0
-            )
-    )
-    private boolean moreculling$skipSlowTransparencyChecks(ItemDisplayContext renderMode) {
-        return ItemRendererStates.ITEM_FRAME != null;
-    }*/
-
     @Redirect(
             method = "renderModelLists",
             at = @At(
@@ -60,8 +47,7 @@ public class ItemRenderer_faceCullingMixin {
         if (ItemRendererStates.DIRECTIONS != null) {
             List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
             Iterator<BakedQuad> iterator = bakedQuads.iterator();
-            quads:
-            while (iterator.hasNext()) {
+            quads: while (iterator.hasNext()) {
                 BakedQuad bakedQuad = iterator.next();
                 Direction face = bakedQuad.getDirection();
                 for (Direction dir : ItemRendererStates.DIRECTIONS) {

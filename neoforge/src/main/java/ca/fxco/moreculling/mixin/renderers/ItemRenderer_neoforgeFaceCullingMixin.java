@@ -1,41 +1,30 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.TransformationUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import static ca.fxco.moreculling.utils.DirectionUtils.shiftDirection;
 import static net.minecraft.core.Direction.NORTH;
@@ -43,28 +32,6 @@ import static net.minecraft.core.Direction.SOUTH;
 
 @Mixin(value = ItemRenderer.class, priority = 1100)
 public class ItemRenderer_neoforgeFaceCullingMixin {
-    @Inject(
-            method = "render",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/resources/model/BakedModel;getRenderPasses(" +
-                            "Lnet/minecraft/world/item/ItemStack;Z)Ljava/util/List;"
-            )
-    )
-    private void moreculling$fastTransparencyChecks(ItemStack stack, ItemDisplayContext displayContext,
-                                                    boolean leftHanded, PoseStack poseStack,
-                                                    MultiBufferSource multiBufferSource, int light, int overlay,
-                                                    BakedModel model, CallbackInfo ci,
-                                                    @Local(ordinal = 2) LocalBooleanRef useDirectConsumer,
-                                                    @Share("isBlockItem") LocalBooleanRef isBlockItemRef) {
-        // Use faster cached check for translucency instead of multiple instanceof checks
-        if (ItemRendererStates.ITEM_FRAME != null && stack.getItem() instanceof BlockItem blockItem) {
-            isBlockItemRef.set(true);
-            useDirectConsumer.set(!((BakedOpacity) model).moreculling$hasTextureTranslucency(
-                    blockItem.getBlock().defaultBlockState()
-            ));
-        }
-    }
 
     @WrapOperation(
             method = "render",
@@ -102,8 +69,7 @@ public class ItemRenderer_neoforgeFaceCullingMixin {
                                          boolean leftHanded, PoseStack poseStack,
                                          MultiBufferSource multiBufferSource, int light, int overlay,
                                          BakedModel model, CallbackInfo ci,
-                                         @Share("transformation") LocalRef<ItemTransform> transformationRef,
-                                         @Share("isBlockItem") LocalBooleanRef isBlockItemRef) {
+                                         @Share("transformation") LocalRef<ItemTransform> transformationRef) {
         ItemFrame frame = ItemRendererStates.ITEM_FRAME;
         if (frame == null) {
             ItemRendererStates.DIRECTIONS = null;
@@ -111,7 +77,7 @@ public class ItemRenderer_neoforgeFaceCullingMixin {
         }
         Vec3 cameraPos = ItemRendererStates.CAMERA.getPosition();
         Vec3 framePos = frame.position();
-        boolean isBlockItem = isBlockItemRef.get();
+        boolean isBlockItem = stack.getItem() instanceof BlockItem;
         ItemTransform transformation = transformationRef.get();
         boolean canCull = ((!isBlockItem && !frame.isInvisible()) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
