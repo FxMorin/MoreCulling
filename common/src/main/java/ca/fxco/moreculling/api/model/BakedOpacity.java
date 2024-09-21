@@ -23,22 +23,6 @@ public interface BakedOpacity {
      * usually if no blockstate is passed it will work fine, although some baked models will always return true.
      * If possible, the default state of the block will be used.
      *
-     * @since 0.12.0
-     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$hasTextureTranslucency(BlockState, Direction)}
-     */
-    @Deprecated(forRemoval = true)
-    default boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return moreculling$hasTextureTranslucency(state, direction);
-    }
-
-    /**
-     * States if any of the textures of the model that are on a face of the block are translucent.
-     * If they are not translucent, MoreCulling will be able to provide faster culling for its states.
-     * <p>
-     * Some baked models will require a blockstate in order to provide more accurate translucency checks,
-     * usually if no blockstate is passed it will work fine, although some baked models will always return true.
-     * If possible, the default state of the block will be used.
-     *
      * @since 0.25.0
      */
     default boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -49,34 +33,10 @@ public interface BakedOpacity {
      * This just acts like hasTextureTranslucency(state, null)
      * Using this method is slower than if you also pass the direction
      *
-     * @since 0.8.0
-     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$hasTextureTranslucency(BlockState)}
-     */
-    @Deprecated(forRemoval = true)
-    default boolean hasTextureTranslucency(@Nullable BlockState state) {
-        return moreculling$hasTextureTranslucency(state);
-    }
-
-    /**
-     * This just acts like hasTextureTranslucency(state, null)
-     * Using this method is slower than if you also pass the direction
-     *
      * @since 0.25.0
      */
     default boolean moreculling$hasTextureTranslucency(@Nullable BlockState state) {
-        return hasTextureTranslucency(state, null);
-    }
-
-    /**
-     * This just acts like hasTextureTranslucency(null, null)
-     * Using this method is slower than the others
-     *
-     * @since 0.3.0
-     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$hasTextureTranslucency}
-     */
-    @Deprecated(forRemoval = true)
-    default boolean hasTextureTranslucency() {
-        return moreculling$hasTextureTranslucency();
+        return moreculling$hasTextureTranslucency(state, null);
     }
 
     /**
@@ -86,19 +46,7 @@ public interface BakedOpacity {
      * @since 0.25.0
      */
     default boolean moreculling$hasTextureTranslucency() {
-        return hasTextureTranslucency(null, null);
-    }
-
-    /**
-     * When called this method will reset the translucency cache of the model.
-     * This should be called if the texture of the model is ever changed!
-     *
-     * @since 0.7.0
-     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$resetTranslucencyCache}
-     */
-    @Deprecated(forRemoval = true)
-    default void resetTranslucencyCache() {
-        moreculling$resetTranslucencyCache();
+        return moreculling$hasTextureTranslucency(null, null);
     }
 
     /**
@@ -108,19 +56,6 @@ public interface BakedOpacity {
      * @since 0.25.0
      */
     default void moreculling$resetTranslucencyCache() {}
-
-    /**
-     * Gets the VoxelShape culling shape for the baked model.
-     * Returns null unless its set within the model json `cullshapes`
-     * WeightedBakedModels cannot use this as we cannot determine which model will be used
-     *
-     * @since 0.15.0
-     * @deprecated As of v0.25.0, you should now be using {@link #moreculling$getCullingShape}
-     */
-    @Deprecated(forRemoval = true)
-    default @Nullable VoxelShape getCullingShape(BlockState state) {
-        return moreculling$getCullingShape(state);
-    }
 
     /**
      * Gets the VoxelShape culling shape for the baked model.
