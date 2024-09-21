@@ -49,7 +49,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
             Direction direction = entry.getKey();
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
             if (!layeredQuads.isEmpty()) {
-                BakedQuad initialQuad = layeredQuads.remove(0);
+                BakedQuad initialQuad = layeredQuads.removeFirst();
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
                 QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis());
                 if (!opacity.moreculling$hasTranslucency(bounds)) {

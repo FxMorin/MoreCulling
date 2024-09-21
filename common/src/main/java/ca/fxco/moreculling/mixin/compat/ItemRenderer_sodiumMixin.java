@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.DirectionUtils;
+import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
@@ -25,8 +26,7 @@ import java.util.List;
 public class ItemRenderer_sodiumMixin {
 
     // Sodium cancels the entire method... again
-
-    /*@TargetHandler(
+    @TargetHandler(
             mixin = "net.caffeinemc.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
             name = "renderModelFast"
     )
@@ -36,7 +36,7 @@ public class ItemRenderer_sodiumMixin {
                     value = "FIELD",
                     target = "Lnet/caffeinemc/mods/sodium/client/util/DirectionUtil;" +
                             "ALL_DIRECTIONS:[Lnet/minecraft/core/Direction;",
-                    opcode = Opcodes.GETSTATIC
+                    opcode = 178 //Opcodes.GETSTATIC
             )
     )
     private Direction[] moreculling$modifyDirections$Sodium() {
@@ -76,5 +76,5 @@ public class ItemRenderer_sodiumMixin {
             return bakedQuads;
         }
         return original.call(instance, blockState, direction, random);
-    }*/
+    }
 }

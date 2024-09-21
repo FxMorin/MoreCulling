@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
+import com.llamalad7.mixinextras.sugar.Local;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,6 @@ public class BlockOcclusionCache_sodiumMixin {
 
     @Inject(
             method = "shouldDrawSide",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/BlockGetter;getBlockState(" +
@@ -36,7 +36,7 @@ public class BlockOcclusionCache_sodiumMixin {
     )
     private void moreculling$useMoreCulling(BlockState selfState, BlockGetter view, BlockPos pos,
                                             Direction facing, CallbackInfoReturnable<Boolean> cir,
-                                            BlockPos.MutableBlockPos adjPos) {
+                                            @Local BlockPos.MutableBlockPos adjPos) {
         if (MoreCulling.CONFIG.useBlockStateCulling) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
         }

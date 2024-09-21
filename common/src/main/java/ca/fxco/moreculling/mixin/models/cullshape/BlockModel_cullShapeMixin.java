@@ -44,23 +44,23 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
 
     @Unique
     @Nullable
-    private List<CullShapeElement> cullShapeElements = null;
+    private List<CullShapeElement> moreculling$cullShapeElements = null;
 
     @Unique
     private boolean moreculling$useModelShape = true;
 
     @Override
     public void moreculling$setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
-        this.cullShapeElements = cullShapeElements;
+        this.moreculling$cullShapeElements = cullShapeElements;
     }
 
     @Override
     public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
-        if (this.cullShapeElements == null) {
+        if (this.moreculling$cullShapeElements == null) {
             return this.parent != null ?
                     ((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
         }
-        return cullShapeElements;
+        return moreculling$cullShapeElements;
     }
 
     @Override

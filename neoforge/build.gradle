@@ -37,12 +37,13 @@ neoForge {
 }
 
 dependencies {
-    implementation "me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}"
     implementation "maven.modrinth:sodium:${project.sodium_version}-neoforge"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
     implementation("me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}")
     jarJar(group: 'me.fallenbreath', name: 'conditional-mixin-neoforge', version: "${project.conditional_mixins_version}")
+    compileOnly(annotationProcessor("com.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
+    implementation(jarJar("com.bawnorton.mixinsquared:mixinsquared-neoforge:${project.mixinsquared_version}"))
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

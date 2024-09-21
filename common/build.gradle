@@ -27,6 +27,7 @@ dependencies {
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
     implementation "me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}"
+    implementation(annotationProcessor("com.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
 }
 
 configurations {

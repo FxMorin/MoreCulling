@@ -13,10 +13,13 @@ dependencies {
 
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
     modImplementation "maven.modrinth:sodium:${project.sodium_version}-fabric"
+    // ^ Change to `modCompileOnly` to test without sodium
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
     modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
     include("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
+
+    include(implementation(annotationProcessor("com.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixinsquared_version}")))
 }
 
 loom {
