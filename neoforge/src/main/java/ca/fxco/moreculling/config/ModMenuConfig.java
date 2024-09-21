@@ -88,15 +88,6 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.signTextCulling = newValue)
                 .build());
 
-        // Entity Model Culling
-        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.entityModelCulling")
-                .setValue(MoreCulling.CONFIG.entityModelCulling)
-                .setDefaultValue(false)
-                .setTooltip(Component.translatable("moreculling.config.option.entityModelCulling.tooltip"))
-                .setSaveConsumer(newValue -> MoreCulling.CONFIG.entityModelCulling = newValue)
-                .setModIncompatibility(CompatUtils.IS_SODIUM_LOADED, "sodium")
-                .build());
-
         // Rain/Snow Culling
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.rainCulling")
                 .setValue(MoreCulling.CONFIG.rainCulling)

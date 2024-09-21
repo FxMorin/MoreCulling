@@ -34,7 +34,6 @@
     "blockstates.Minecraft_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "compat.ItemRenderer_sodiumMixin",
-    "entities.Cube_cullMixin",
     "entities.ItemFrameRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
