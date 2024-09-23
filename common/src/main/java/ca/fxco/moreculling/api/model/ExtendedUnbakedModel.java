@@ -1,0 +1,52 @@
+package ca.fxco.moreculling.api.model;
+
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.resources.ResourceLocation;
+
+
+import java.util.List;
+
+/**
+ * ExtendedUnbakedModel is an interface that should be used on classes that extend JsonUnbakedModel
+ * It allows unbaked models to use custom cullshapes and modify some inner workings
+ *
+ * @since 0.15.0
+ */
+public interface ExtendedUnbakedModel {
+
+    /**
+     * Sets the CullShapeElement for the extended unbaked model
+     *
+     * @since 0.25.0
+     */
+    void moreculling$setCullShapeElements(List<CullShapeElement> cullShapeElements);
+
+    /**
+     * Gets the CullShapeElement for the extended unbaked model
+     *
+     * @since 0.25.0
+     */
+    List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id);
+
+    /**
+     * When set to true, the cull shape is completely ignored and instead the model will be used as the cull shape
+     *
+     * @since 0.25.0
+     */
+    void moreculling$setUseModelShape(boolean useModelShape);
+
+    /**
+     * Returns if it should use the model shape instead of the cull shape
+     *
+     * @since 0.25.0
+     */
+    boolean moreculling$getUseModelShape(ResourceLocation id);
+
+    /**
+     * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
+     * it. Do this to modify the element face data.
+     *
+     * @since 0.25.0
+     */
+    BlockElementFace moreculling$modifyElementFace(BlockElementFace elementFace);
+}

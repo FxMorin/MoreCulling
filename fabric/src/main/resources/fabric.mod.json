@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "More Culling",
+  "description": "${description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/moreculling",
+    "sources": "https://github.com/fxmorin/moreculling",
+    "issues": "https://github.com/fxmorin/moreculling/issues"
+  },
+  "icon": "assets/moreculling/MoreCulling.png",
+  "license": "${license}",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ca.fxco.moreculling.MoreCullingFabric"
+    ],
+    "modmenu": [
+      "ca.fxco.moreculling.config.ModMenuConfig"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
+  ],
+  "accessWidener" : "moreculling.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": ">=1.21",
+    "java": ">=21",
+    "cloth-config": ">=15.0.0"
+  },
+  "suggests": {
+    "sodium": ">=0.6.0"
+  },
+  "breaks": {
+    "sodium": "<=0.5.11"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/SGFDrvA"
+      }
+    }
+  }
+}

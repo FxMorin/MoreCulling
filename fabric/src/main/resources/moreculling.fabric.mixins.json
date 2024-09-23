@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ca.fxco.moreculling.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
+  "client": [
+    "models.ForwardingBakedModel_compatMixin",
+    "models.MultiPartBakedModel_cacheMixin",
+    "models.WeightedBakedModel_cacheMixin",
+    "renderers.ItemRenderer_fabricFaceCullingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
