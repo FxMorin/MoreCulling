@@ -24,8 +24,7 @@ jobs:
         with:
           files: neoforge/build/libs/!(*-@(dev|sources|api)).jar
           github-files: neoforge/build/libs/*-@(dev|sources|api).jar
-          version-type: release
-          game-version-filter: releases
+          version-type: beta
           modrinth-featured: true
           modrinth-id: 51shyZVL
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -56,8 +55,7 @@ jobs:
         with:
           files: fabric/build/libs/!(*-@(dev|sources|api)).jar
           github-files: fabric/build/libs/*-@(dev|sources|api).jar
-          version-type: release
-          game-version-filter: releases
+          version-type: beta
           modrinth-featured: true
           modrinth-id: 51shyZVL
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
