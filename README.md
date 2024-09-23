@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://github.com/fxmorin/MoreCulling/blob/master/src/main/resources/assets/moreculling/MoreCulling.png?raw=true" alt="MoreCulling Icon"/>
+<img src="https://github.com/FxMorin/MoreCulling/blob/master/common/src/main/resources/assets/moreculling/MoreCulling.png?raw=true" alt="MoreCulling Icon"/>
 
 # More Culling
 
