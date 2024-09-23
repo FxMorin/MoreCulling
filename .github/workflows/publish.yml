@@ -22,8 +22,8 @@ jobs:
         run: ./gradlew -p neoforge build
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          files: neoforge/build/libs/!(*-@(dev|sources|api)).jar
-          github-files: neoforge/build/libs/*-@(dev|sources|api).jar
+          files: neoforge/build/libs/!(*-@(dev|sources|api|javadoc)).jar
+          github-files: neoforge/build/libs/*-@(dev|sources|api|javadoc).jar
           version-type: beta
           modrinth-featured: true
           modrinth-id: 51shyZVL
@@ -53,8 +53,8 @@ jobs:
         run: ./gradlew -p fabric build
       - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          files: fabric/build/libs/!(*-@(dev|sources|api)).jar
-          github-files: fabric/build/libs/*-@(dev|sources|api).jar
+          files: fabric/build/libs/!(*-@(dev|sources|api|javadoc)).jar
+          github-files: fabric/build/libs/*-@(dev|sources|api|javadoc).jar
           version-type: beta
           modrinth-featured: true
           modrinth-id: 51shyZVL
