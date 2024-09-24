@@ -12,7 +12,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
-    modImplementation "maven.modrinth:sodium:${project.sodium_version}-fabric"
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}-fabric"
     // ^ Change to `modCompileOnly` to test without sodium
     modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
