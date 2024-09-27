@@ -52,7 +52,7 @@ dependencies {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 tasks.register("modifyMetaData") {
-    def jsonFile = file('./build/generated/jarJar/META-INF/jarJar/metadata.json')
+    def jsonFile = file('./build/generated/jarJar/META-INF/jarjar/metadata.json')
 
     doLast {
         def jsonContent = new JsonSlurper().parseText(jsonFile.text)
