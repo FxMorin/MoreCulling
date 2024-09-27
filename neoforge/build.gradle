@@ -77,5 +77,8 @@ tasks.register("modifyMetaData") {
 
 tasks.named("jar") {
     dependsOn modifyMetaData
-    //Files.write(getTemporaryDir().toPath().resolve("metadata.json"), MetadataIOHandler.toLines(metadata), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)
+}
+
+tasks.named("modifyMetaData") {
+    dependsOn jarJar
 }
