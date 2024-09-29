@@ -10,6 +10,6 @@ public class MoreCullingNeoforge {
     public MoreCullingNeoforge(ModContainer container) {
         MoreCulling.init();
 
-        container.registerExtensionPoint(IConfigScreenFactory.class, ModMenuConfig::createConfigScreen);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (con, screen) ->  ModMenuConfig.createConfigScreen(screen));
     }
 }

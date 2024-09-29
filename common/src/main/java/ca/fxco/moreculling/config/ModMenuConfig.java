@@ -9,14 +9,11 @@ import ca.fxco.moreculling.api.config.defaults.ConfigFloatOption;
 import ca.fxco.moreculling.api.config.defaults.ConfigIntOption;
 import ca.fxco.moreculling.config.cloth.*;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
+import ca.fxco.moreculling.platform.Services;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ModMenuConfig implements ModMenuApi {
+public class ModMenuConfig {
 
     //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
 
-    private static Screen createConfigScreen(Screen parent) {
+    public static Screen createConfigScreen(Screen parent) {
         ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.general"));
@@ -50,8 +47,7 @@ public class ModMenuConfig implements ModMenuApi {
             if (modId.equals("minecraft")) {
                 continue;
             }
-            ModContainer con = FabricLoader.getInstance().getModContainer(modId).orElse(null);
-            DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(con == null ? modId : con.getMetadata().getName())
+            DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(Services.PLATFORM.getModName(modId))
                     .setValue(entry.getBooleanValue())
                     .setDefaultValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)
                     .setTooltip(Component.literal(modId))
@@ -258,11 +254,6 @@ public class ModMenuConfig implements ModMenuApi {
         return builder.build();
     }
 
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return ModMenuConfig::createConfigScreen;
-    }
-
     //TODO: Add more Sodium option to the ModMenu options
     @SuppressWarnings("unchecked")
     public static void generateConfigCategories(ConfigBuilder builder, ConfigCategory generalCategory) {
@@ -299,13 +290,13 @@ public class ModMenuConfig implements ModMenuApi {
                             });
                     if (option instanceof ConfigModLimit configModLimit) {
                         optionBuilder.setModLimited(
-                                FabricLoader.getInstance().isModLoaded(configModLimit.getLimitedModId()),
+                                Services.PLATFORM.isModLoaded(configModLimit.getLimitedModId()),
                                 Component.translatable(configModLimit.getTranslationKey())
                         );
                     }
                     if (option instanceof ConfigModIncompatibility configModIncompatibility) {
                         optionBuilder.setModIncompatibility(
-                                FabricLoader.getInstance().isModLoaded(configModIncompatibility.getIncompatibleModId()),
+                                Services.PLATFORM.isModLoaded(configModIncompatibility.getIncompatibleModId()),
                                 configModIncompatibility.getMessage()
                         );
                     }

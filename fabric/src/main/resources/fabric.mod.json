@@ -20,7 +20,7 @@
       "ca.fxco.moreculling.MoreCullingFabric"
     ],
     "modmenu": [
-      "ca.fxco.moreculling.config.ModMenuConfig"
+      "ca.fxco.moreculling.config.ModMenuCompat"
     ]
   },
   "mixins": [
