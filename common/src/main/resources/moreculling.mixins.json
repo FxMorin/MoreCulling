@@ -28,6 +28,7 @@
     "blocks.LadderBlock_cullAgainstMixin",
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
+    "blocks.PowderSnowBlock_cullMixin",
     "blocks.ShulkerBoxBlock_cullMixin",
     "blockstates.BlockStateBase_moreMixin",
     "blockstates.Block_drawSideMixin",
