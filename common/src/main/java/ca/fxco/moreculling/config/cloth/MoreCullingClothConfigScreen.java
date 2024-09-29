@@ -3,6 +3,7 @@ package ca.fxco.moreculling.config.cloth;
 import ca.fxco.moreculling.utils.CacheUtils;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,5 +37,10 @@ public class MoreCullingClothConfigScreen extends ClothConfigScreen {
                     this.resetCacheButton.active = false;
                 }).bounds(10, 5, buttonWidths, 20).build()
         );
+    }
+
+    @Override
+    public boolean isTransparentBackground() {
+        return true;
     }
 }
