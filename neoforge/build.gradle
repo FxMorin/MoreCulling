@@ -45,8 +45,8 @@ dependencies {
 
     implementation(jarJar("me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}"))
 
-    compileOnly(annotationProcessor("com.github.bawnorton:mixinsquared-common:${project.mixinsquared_version}"))
-    implementation(jarJar("com.github.bawnorton:mixinsquared-neoforge:${project.mixinsquared_version}"))
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
+    implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:${project.mixinsquared_version}"))
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
