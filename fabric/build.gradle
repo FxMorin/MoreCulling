@@ -19,7 +19,7 @@ dependencies {
     modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
     include("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
 
-    include(implementation(annotationProcessor("com.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixinsquared_version}")))
+    include(implementation(annotationProcessor("com.github.bawnorton:mixinsquared-fabric:${project.mixinsquared_version}")))
 }
 
 loom {
