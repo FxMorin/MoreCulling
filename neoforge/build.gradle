@@ -50,35 +50,3 @@ dependencies {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-tasks.register("modifyMetaData") {
-    def jsonFile = file('./build/generated/jarJar/META-INF/jarjar/metadata.json')
-
-    doLast {
-        def jsonContent = new JsonSlurper().parseText(jsonFile.text)
-
-        def newEntry = [
-                identifier: [
-                        group: "com.github.bawnorton.mixinsquared",
-                        artifact: "mixinsquared-neoforge"
-                ],
-                version: [
-                        range: "[0.2.0,)",
-                        artifactVersion: "0.2.0"
-                ],
-                path: "META-INF/jarjar/mixinsquared-neoforge-0.2.0.jar",
-                isObfuscated: false
-        ]
-
-        jsonContent.jars << newEntry
-        jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(jsonContent))
-    }
-}
-
-tasks.named("jar") {
-    dependsOn modifyMetaData
-}
-
-tasks.named("modifyMetaData") {
-    dependsOn jarJar
-}
