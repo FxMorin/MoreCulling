@@ -28,7 +28,7 @@ jobs:
           game-versions: 1.21.1
           game-version-filter: releases
           dependencies: |
-            cloth-config@15.0.0+neoforge(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
+            cloth-config(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
           modrinth-featured: true
           modrinth-id: 51shyZVL
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -63,7 +63,8 @@ jobs:
           game-versions: 1.21.1
           game-version-filter: releases
           dependencies: |
-            cloth-config@15.0.0+neoforge(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
+            cloth-config(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
+            sodium@mc1.21-0.5.11(incompatible){modrinth:AANobbMI}#(ignore:github)(ignore:curseforge)
           modrinth-featured: true
           modrinth-id: 51shyZVL
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
