@@ -7,9 +7,6 @@ import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,11 +16,10 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Mixin(SimpleBakedModel.class)
 public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
@@ -83,16 +79,5 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public boolean moreculling$canSetCullingShape() {
         return true;
-    }
-
-    @Inject(
-            method = "<init>",
-            at = @At("RETURN")
-    )
-    private void moreculling$onInit(List<BakedQuad> quads, Map<Direction, List<BakedQuad>> faceQuads, boolean usesAo,
-                                    boolean isSideLit, boolean hasDepth, TextureAtlasSprite sprite,
-                                    ItemTransforms transformation, ItemOverrides itemOverrides,
-                                    CallbackInfo ci) {
-        moreculling$resetTranslucencyCache();
     }
 }

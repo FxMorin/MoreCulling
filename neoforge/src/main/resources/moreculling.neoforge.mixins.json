@@ -7,6 +7,7 @@
   "client": [
     "models.BakedModelWrapper_compatMixin",
     "models.MultiPartBakedModel_cacheMixin",
+    "models.SimpleBakedModel_neoforgeCacheMixin",
     "models.WeightedBakedModel_cacheMixin",
     "renderers.ItemRenderer_neoforgeFaceCullingMixin"
   ],
