@@ -17,10 +17,17 @@ import java.util.Map;
 @Mixin(SimpleBakedModel.class)
 public abstract class SimpleBakedModel_neoforgeCacheMixin implements BakedOpacity {
     @Inject(
-            method = "<init>(Ljava/util/List;Ljava/util/Map;ZZZLnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraft/client/renderer/block/model/ItemTransforms;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/neoforged/neoforge/client/RenderTypeGroup;)V",
+            method = "<init>(Ljava/util/List;Ljava/util/Map;ZZZ" +
+                    "Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;" +
+                    "Lnet/minecraft/client/renderer/block/model/ItemTransforms;" +
+                    "Lnet/minecraft/client/renderer/block/model/ItemOverrides;" +
+                    "Lnet/neoforged/neoforge/client/RenderTypeGroup;)V",
             at = @At("RETURN")
     )
-    private void moreculling$onInit(List unculledFaces, Map culledFaces, boolean hasAmbientOcclusion, boolean usesBlockLight, boolean isGui3d, TextureAtlasSprite particleIcon, ItemTransforms transforms, ItemOverrides overrides, RenderTypeGroup renderTypes, CallbackInfo ci) {
+    private void moreculling$onInit(List unculledFaces, Map culledFaces, boolean hasAmbientOcclusion,
+                                    boolean usesBlockLight, boolean isGui3d, TextureAtlasSprite particleIcon,
+                                    ItemTransforms transforms, ItemOverrides overrides,
+                                    RenderTypeGroup renderTypes, CallbackInfo ci) {
         moreculling$resetTranslucencyCache();
     }
 }

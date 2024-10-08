@@ -21,6 +21,7 @@ public class MoreCulling {
     public static BlockRenderDispatcher blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
+    //TODO: make so it would work on the servers too
     public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
