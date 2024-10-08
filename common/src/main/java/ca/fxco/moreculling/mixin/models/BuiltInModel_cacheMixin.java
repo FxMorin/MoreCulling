@@ -2,7 +2,6 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BuiltInModel;
@@ -59,8 +58,8 @@ public abstract class BuiltInModel_cacheMixin implements BakedOpacity {
             method = "<init>",
             at = @At("RETURN")
     )
-    private void moreculling$onInit(ItemTransforms transformation, ItemOverrides itemPropertyOverrides,
-                                    TextureAtlasSprite sprite, boolean sideLit, CallbackInfo ci) {
+    private void moreculling$onInit(ItemTransforms transformation, TextureAtlasSprite sprite,
+                                    boolean sideLit, CallbackInfo ci) {
         moreculling$resetTranslucencyCache();
     }
 }

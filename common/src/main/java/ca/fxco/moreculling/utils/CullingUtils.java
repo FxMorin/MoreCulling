@@ -6,10 +6,10 @@ import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -61,22 +61,22 @@ public class CullingUtils {
         if (((MoreStateCulling) sideState).moreculling$cantCullAgainst(side)) {
             return true; // Check if we can cull against this block
         }
-        Block.BlockStatePairKey statePairKey = new Block.BlockStatePairKey(thisState, sideState, side);
-        Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
+        Block.ShapePairKey statePairKey = new Block.ShapePairKey(thisState.getShape(world, thisPos), sideState.getShape(world, sidePos));
+        Object2ByteLinkedOpenHashMap<Block.ShapePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(statePairKey);
         if (b != 127) {
             return b != 0;
         }
         Direction opposite = side.getOpposite();
-        VoxelShape thisShape = thisState.getFaceOcclusionShape(world, thisPos, side);
+        VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
         VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
         if (thisShape.isEmpty()) { // It this shape is empty
             if (!sideState.isFaceSturdy(world, sidePos, opposite) ||
-                    (sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite)).isEmpty()) {
+                    (sideShape = sideState.getFaceOcclusionShape(opposite)).isEmpty()) {
                 return true; // Face should be drawn if the side face is not a full square or its empty
             }
         } else {
-            sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite);
+            sideShape = sideState.getFaceOcclusionShape(opposite);
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
         if (object2ByteLinkedOpenHashMap.size() == 2048) {
@@ -154,14 +154,14 @@ public class CullingUtils {
         return Optional.of(true);
     }
 
-    public static boolean shouldCullBack(ItemFrame frame) {
-        Direction dir = frame.getDirection();
-        BlockPos posBehind = frame.getPos().relative(dir.getOpposite());
-        BlockState blockState = frame.level().getBlockState(posBehind);
-        return blockState.canOcclude() && blockState.isFaceSturdy(frame.level(), posBehind, dir);
+    public static boolean shouldCullBack(ItemFrameRenderState frame) {
+        Direction dir = frame.direction;
+        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y, (int) frame.z) .relative(dir.getOpposite());
+        BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
+        return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
     }
 
-    public static boolean shouldShowMapFace(Direction facingDir, Vec3 framePos, Vec3 cameraPos) {
+    public static boolean shouldShowMapFace(Direction facingDir, ItemFrameRenderState framePos, Vec3 cameraPos) {
         if (MoreCulling.CONFIG.itemFrameMapCulling) {
             return switch (facingDir) {
                 case DOWN -> cameraPos.y <= framePos.y;
