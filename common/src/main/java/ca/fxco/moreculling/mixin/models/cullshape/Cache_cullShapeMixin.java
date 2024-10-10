@@ -54,6 +54,6 @@ public class Cache_cullShapeMixin {
                 }
             }
         }
-        return instance.getOcclusionShape(state, BlockGetter, blockPos);
+        return instance.getOcclusionShape(state);
     }
 }
