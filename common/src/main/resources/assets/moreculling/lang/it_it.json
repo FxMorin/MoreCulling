@@ -39,7 +39,7 @@
 	"moreculling.config.option.endGatewayCulling": "Culling del Portale End",
 	"moreculling.config.option.endGatewayCulling.tooltip": "Permette ad altri blocchi di essere cullati contro i portali End",
 	"moreculling.config.option.useOnModdedBlocks": "Culling degli Stati dei Blocchi Modificati",
-	"moreculling.config.option.useOnModdedBlocks.tooltip": "Se il culling dello stato dei blocchi deve funzionare di default sui blocchi modificati",
+	"moreculling.config.option.useOnModdedBlocks.tooltip": "Se il culling basato sullo stato dei blocchi deve funzionare di default sui blocchi modificati",
 	"moreculling.config.options.blockstate": "Stato del Blocco",
 	"moreculling.config.options.check": "Controlla i Dintorni",
 	"moreculling.config.options.gap": "Spazio",
