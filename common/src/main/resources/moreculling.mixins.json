@@ -42,7 +42,7 @@
     "models.BuiltInModel_cacheMixin",
     "models.cullshape.Deserializer_cullShapeMixin",
     "models.cullshape.BlockModel_cullShapeMixin",
-    "models.cullshape.Cache_cullShapeMixin",
+    "models.cullshape.BlockStateBase_cullShapeMixin",
     "renderers.ModelBlockRenderer_cullMixin",
     "renderers.ItemRenderer_apiMixin",
     "renderers.ItemRenderer_faceCullingMixin"
