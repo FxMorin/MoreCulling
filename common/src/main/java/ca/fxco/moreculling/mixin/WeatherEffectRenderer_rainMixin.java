@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WeatherEffectRenderer.class)
-public class LevelRenderer_rainMixin {
+public class WeatherEffectRenderer_rainMixin {
     @Inject(
             method = "getPrecipitationAt",
             locals = LocalCapture.CAPTURE_FAILSOFT,
@@ -48,7 +48,8 @@ public class LevelRenderer_rainMixin {
             at = @At(
                     value = "RETURN",
                     ordinal = 1
-            )
+            ),
+            cancellable = true
     )
     private void moreculling$skipRainLoop(Level level, BlockPos blockPos,
                                           CallbackInfoReturnable<Biome.Precipitation> cir,
