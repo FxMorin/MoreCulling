@@ -29,10 +29,9 @@ public class CullingUtils {
     /**
      * Replaces the default vanilla culling with a custom implementation
      */
-    public static boolean shouldDrawSideCulling(BlockState thisState,
+    public static boolean shouldDrawSideCulling(BlockState thisState, BlockState sideState,
                                                 BlockGetter world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos) {
-        BlockState sideState = world.getBlockState(sidePos);
         if (thisState.skipRendering(sideState, side)) {
             return false;
         }
@@ -63,7 +62,11 @@ public class CullingUtils {
         }
         Direction opposite = side.getOpposite();
         VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
+        if (thisShape.isEmpty()) //vanilla 1.21.2 will just return empty if block cant occlude instead of its shape
+            thisShape = thisState.getShape(world, thisPos).getFaceShape(side);
         VoxelShape sideShape = sideState.getFaceOcclusionShape(opposite);
+        if (sideShape.isEmpty())
+            sideShape = sideState.getShape(world, sidePos).getFaceShape(opposite);
 
         Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
                 thisShape,
