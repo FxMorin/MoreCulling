@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MapRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -58,6 +59,8 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
 
     @Shadow protected abstract int getLightVal(boolean par1, int par2, int par3);
 
+    @Shadow @Final private MapRenderer mapRenderer;
+
     protected ItemFrameRenderer_cullMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
@@ -88,9 +91,9 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         poseStack.translate(-vec3d.x(), -vec3d.y(), -vec3d.z());
         double d = 0.46875;
         poseStack.translate(
-                (double) direction.getStepX() * d,
-                (double) direction.getStepY() * d,
-                (double) direction.getStepZ() * d
+                (double)direction.getStepX() * d,
+                (double)direction.getStepY() * d,
+                (double)direction.getStepZ() * d
         );
         float xRot;
         float yRot;
@@ -101,9 +104,9 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             xRot = (float)(-90 * direction.getAxisDirection().getStep());
             yRot = 180.0F;
         }
+
         poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
-        boolean isInvisible = itemFrameState.isInvisible;
         ItemStack itemStack = itemFrameState.itemStack;
         boolean skipFrontRender = false;
         if (!itemStack.isEmpty()) {
@@ -116,9 +119,9 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             this.entityRenderDispatcher.camera.getPosition())) {
                         skipFrontRender = !((MapOpacity) mapState).moreculling$hasTransparency();
                         double di;
-                        double offsetZFighting = isInvisible ? 0.5 :
+                        double offsetZFighting = itemFrameState.isInvisible ? 0.5 :
                                 skipFrontRender ?
-                                        ((di = this.entityRenderDispatcher.distanceToSqr(itemFrameState.x, itemFrameState.y, itemFrameState.z) / 5000) > 6 ?
+                                        ((di = this.entityRenderDispatcher.distanceToSqr(itemFrameState.x, itemFrameState.y - 1, itemFrameState.z) / 5000) > 6 ?
                                                 Math.max(0.4452 - di, 0.4) : 0.4452) :
                                         0.4375;
                         poseStack.translate(0.0, 0.0, offsetZFighting);
@@ -129,7 +132,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                         poseStack.scale(h, h, h);
                         poseStack.translate(-64.0, -64.0, 0.0);
                         poseStack.translate(0.0, 0.0, -1.0);
-                        Minecraft.getInstance().getMapRenderer().render(
+                        mapRenderer.render(
                                 itemFrameState.mapRenderState,
                                 poseStack,
                                 multiBufferSource,
@@ -143,7 +146,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                     }
                 }
             } else {
-                poseStack.translate(0.0, 0.0, isInvisible ? 0.5 : 0.4375);
+                poseStack.translate(0.0, 0.0, itemFrameState.isInvisible ? 0.5 : 0.4375);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(
                         (float) itemFrameState.rotation * 360.0f / 8.0f)
                 );
@@ -161,7 +164,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             }
             poseStack.popPose();
         }
-        if (!isInvisible) { // Render Item Frame block model
+        if (!itemFrameState.isInvisible) { // Render Item Frame block model
             ModelManager modelManager = this.blockRenderer.getBlockModelShaper().getModelManager();
             ModelResourceLocation modelResourceLocation = this.getFrameModelResourceLoc(itemFrameState.isGlowFrame, itemStack);
             poseStack.translate(-0.5, -0.5, -0.5);

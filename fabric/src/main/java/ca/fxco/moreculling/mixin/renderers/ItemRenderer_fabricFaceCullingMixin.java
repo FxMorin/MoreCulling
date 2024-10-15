@@ -63,10 +63,10 @@ public class ItemRenderer_fabricFaceCullingMixin {
                             "Lcom/mojang/blaze3d/vertex/VertexConsumer;)V"
             )
     )
-    private void moreculling$faceRemoval(ItemStack stack, ItemDisplayContext itemDisplayContext,
-                                         PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int j,
-                                         BakedModel bakedModel, boolean bl, CallbackInfo ci, @Share("transformation")
-                                             LocalRef<ItemTransform> transformationRef) {
+    private void moreculling$faceRemoval(ItemStack stack, ItemDisplayContext displayContext,
+                                         PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay,
+                                         BakedModel model, boolean bl, CallbackInfo ci,
+                                         @Share("transformation") LocalRef<ItemTransform> transformationRef) {
         ItemFrameRenderState frame = ItemRendererStates.ITEM_FRAME;
         if (frame == null) {
             ItemRendererStates.DIRECTIONS = null;
@@ -76,6 +76,8 @@ public class ItemRenderer_fabricFaceCullingMixin {
         Vec3 framePos = new Vec3(frame.x, frame.y, frame.z) ;
         boolean isBlockItem = stack.getItem() instanceof BlockItem;
         ItemTransform transformation = transformationRef.get();
+        if (transformation == null)
+            return;
         boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
         double dist = ItemRendererStates.CAMERA.getPosition().distanceTo(framePos);

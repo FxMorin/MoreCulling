@@ -61,28 +61,30 @@ public class CullingUtils {
         if (((MoreStateCulling) sideState).moreculling$cantCullAgainst(side)) {
             return true; // Check if we can cull against this block
         }
-        Block.ShapePairKey statePairKey = new Block.ShapePairKey(thisState.getShape(world, thisPos), sideState.getShape(world, sidePos));
+        Direction opposite = side.getOpposite();
+        VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
+        VoxelShape sideShape = sideState.getFaceOcclusionShape(opposite);
+
+        Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
+                thisShape,
+                sideShape
+                );
         Object2ByteLinkedOpenHashMap<Block.ShapePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
-        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(statePairKey);
+        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(shapePairKey);
         if (b != 127) {
             return b != 0;
         }
-        Direction opposite = side.getOpposite();
-        VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
-        VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
         if (thisShape.isEmpty()) { // It this shape is empty
             if (!sideState.isFaceSturdy(world, sidePos, opposite) ||
-                    (sideShape = sideState.getFaceOcclusionShape(opposite)).isEmpty()) {
+                    sideShape.isEmpty()) {
                 return true; // Face should be drawn if the side face is not a full square or its empty
             }
-        } else {
-            sideShape = sideState.getFaceOcclusionShape(opposite);
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
-        if (object2ByteLinkedOpenHashMap.size() == 2048) {
+        if (object2ByteLinkedOpenHashMap.size() == 256) {
             object2ByteLinkedOpenHashMap.removeLastByte();
         }
-        object2ByteLinkedOpenHashMap.putAndMoveToFirst(statePairKey, (byte) (bl ? 1 : 0));
+        object2ByteLinkedOpenHashMap.putAndMoveToFirst(shapePairKey, (byte) (bl ? 1 : 0));
         return bl;
     }
 
@@ -156,7 +158,7 @@ public class CullingUtils {
 
     public static boolean shouldCullBack(ItemFrameRenderState frame) {
         Direction dir = frame.direction;
-        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y, (int) frame.z) .relative(dir.getOpposite());
+        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y - 1, (int) frame.z) .relative(dir.getOpposite());
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
         return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
     }
