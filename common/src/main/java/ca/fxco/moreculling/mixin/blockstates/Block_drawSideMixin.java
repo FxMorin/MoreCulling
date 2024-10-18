@@ -9,7 +9,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,11 +59,11 @@ public class Block_drawSideMixin implements MoreBlockCulling {
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void moreculling$customShouldDrawSide(BlockState state, BlockGetter world, BlockPos pos,
-                                                         Direction side, BlockPos otherPos,
-                                                         CallbackInfoReturnable<Boolean> cir) {
-        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) state).moreculling$canCull()) {
-            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(state, world, pos, side, otherPos));
+    private static void moreculling$customShouldDrawSide(BlockState thisState, BlockState sideState,
+                                                         Direction side, CallbackInfoReturnable<Boolean> cir) {
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) thisState).moreculling$canCull()) {
+            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(thisState, sideState,
+                    EmptyBlockGetter.INSTANCE, BlockPos.ZERO, side, BlockPos.ZERO));
         }
     }
 }

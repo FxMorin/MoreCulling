@@ -79,7 +79,7 @@ public class SignRenderer_textMixin {
             if (state.hasProperty(WallSignBlock.FACING) &&
                     (cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition()) != null) {
                 Direction dir = state.getValue(WallSignBlock.FACING);
-                if (model instanceof SignRenderer.SignModel) {
+                if (model instanceof Model.Simple) {
                     return front == !shouldHideWallSignText(
                             dir,
                             pos.getCenter().subtract(dir.getStepX() * 0.39, 0, dir.getStepZ() * 0.39),

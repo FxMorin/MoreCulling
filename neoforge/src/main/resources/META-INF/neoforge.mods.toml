@@ -9,7 +9,7 @@ version="${mod_version}" #mandatory
 displayName="${mod_name}" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 displayURL="https://modrinth.com/mod/moreculling" #optional
-issueTrackerURL="https://github.com/fxmorin/moreculling" #optional
+issueTrackerURL="https://github.com/fxmorin/moreculling/issues" #optional
 logoFile="assets/moreculling/MoreCulling.png" #optional
 #credits="" #optional
 authors="${mod_author}" #optional
@@ -18,7 +18,7 @@ description='''${description}'''
 [modproperties.modmenu]
 badges=["client"]
 links=["mod_menu.discord=https://discord.gg/SGFDrvA"]
-sources="https://github.com/fxmorin/moreculling/issues"
+sources="https://github.com/fxmorin/moreculling"
 
 [[mixins]]
 config = "${mod_id}.mixins.json"
