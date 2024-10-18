@@ -37,7 +37,7 @@ neoForge {
 }
 
 dependencies {
-    implementation "maven.modrinth:sodium:${project.sodium_version}-neoforge"
+    compileOnly "maven.modrinth:sodium:${project.sodium_version}-neoforge"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
     implementation(jarJar("me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}"))

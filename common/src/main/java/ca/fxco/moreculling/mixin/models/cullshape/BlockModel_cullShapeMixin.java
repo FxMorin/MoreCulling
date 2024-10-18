@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -92,7 +91,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Redirect(
             method = {"bake(Ljava/util/function/Function;" +
                     "Lnet/minecraft/client/resources/model/ModelState;" +
-                    "Z)Lnet/minecraft/client/resources/model/BakedModel;", "bakeVanilla"},
+                    "Z)Lnet/minecraft/client/resources/model/BakedModel;"},
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
