@@ -33,7 +33,7 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
 
     @Shadow
     @Final
-    private List<Pair<Predicate<BlockState>, BakedModel>> selectors;
+    private List<MultiPartBakedModel.Selector> selectors;
 
     @Unique // Only works on chunk update, so the best performance is after placing a block
     private byte solidFaces = 0; // 0 = all sides translucent
@@ -54,9 +54,9 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
         VoxelShape cachedShape = null;
-        for (Pair<Predicate<BlockState>, BakedModel> pair : this.selectors) {
-            if ((pair.getLeft()).test(state)) {
-                VoxelShape shape = ((BakedOpacity) pair.getRight()).moreculling$getCullingShape(state);
+        for (MultiPartBakedModel.Selector pair : this.selectors) {
+            if ((pair.condition()).test(state)) {
+                VoxelShape shape = ((BakedOpacity) pair.model()).moreculling$getCullingShape(state);
                 if (shape != null) {
                     if (cachedShape == null) {
                         cachedShape = shape;

@@ -14,9 +14,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ import static net.minecraft.core.Direction.SOUTH;
 public class ItemRenderer_fabricFaceCullingMixin {
 
     @WrapOperation(
-            method = "render",
+            method = "renderItemModelRaw",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/block/model/ItemTransforms;getTransform(" +
@@ -54,7 +54,7 @@ public class ItemRenderer_fabricFaceCullingMixin {
     }
 
     @Inject(
-            method = "render",
+            method = "renderItem",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(" +
@@ -64,20 +64,21 @@ public class ItemRenderer_fabricFaceCullingMixin {
             )
     )
     private void moreculling$faceRemoval(ItemStack stack, ItemDisplayContext displayContext,
-                                         boolean leftHanded, PoseStack poseStack,
-                                         MultiBufferSource multiBufferSource, int light, int overlay,
-                                         BakedModel model, CallbackInfo ci,
+                                         PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay,
+                                         BakedModel model, boolean bl, CallbackInfo ci,
                                          @Share("transformation") LocalRef<ItemTransform> transformationRef) {
-        ItemFrame frame = ItemRendererStates.ITEM_FRAME;
+        ItemFrameRenderState frame = ItemRendererStates.ITEM_FRAME;
         if (frame == null) {
             ItemRendererStates.DIRECTIONS = null;
             return;
         }
         Vec3 cameraPos = ItemRendererStates.CAMERA.getPosition();
-        Vec3 framePos = frame.position();
+        Vec3 framePos = new Vec3(frame.x, frame.y, frame.z) ;
         boolean isBlockItem = stack.getItem() instanceof BlockItem;
         ItemTransform transformation = transformationRef.get();
-        boolean canCull = ((!isBlockItem && !frame.isInvisible()) || CullingUtils.shouldCullBack(frame)) &&
+        if (transformation == null)
+            return;
+        boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
         double dist = ItemRendererStates.CAMERA.getPosition().distanceTo(framePos);
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
@@ -95,13 +96,13 @@ public class ItemRenderer_fabricFaceCullingMixin {
             // TODO: Add model rotation logic (items need this!) Currently we only support blocks and some models
             if (MoreCulling.CONFIG.useItemFrame3FaceCulling &&
                     dist > MoreCulling.CONFIG.itemFrame3FaceCullingRange &&
-                    frame.getRotation() % 2 == 0 &&
+                    frame.rotation % 2 == 0 &&
                     transformation.rotation.y() == 0 &&
                     transformation.rotation.x() == 0 &&
                     transformation.rotation.z() == 0
             ) {
-                int rotation = frame.getRotation() * 45;
-                Direction facing = frame.getDirection();
+                int rotation = frame.rotation * 45;
+                Direction facing = frame.direction;
                 Direction dirX = shiftDirection(facing,
                         cameraPos.x > framePos.x ? Direction.EAST : Direction.WEST, rotation);
                 Direction dirY = shiftDirection(facing,

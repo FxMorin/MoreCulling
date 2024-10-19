@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
+    "blockstates.Block_neoforgeDrawSideMixin",
     "models.BakedModelWrapper_compatMixin",
     "models.MultiPartBakedModel_cacheMixin",
     "models.SimpleBakedModel_neoforgeCacheMixin",
