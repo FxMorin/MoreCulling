@@ -19,7 +19,7 @@
     "blockentity.TheEndGatewayRenderer_beamMixin",
     "blockentity.SignRenderer_textMixin",
     "blocks.BaseRailBlock_cullAgainstMixin",
-    "blocks.BrewingStandBlock_cullAgainstMixin",
+    "blocks.cullshape.BrewingStandBlock_voxelMixin",
     "blocks.cullshape.CampfireBlock_voxelMixin",
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
