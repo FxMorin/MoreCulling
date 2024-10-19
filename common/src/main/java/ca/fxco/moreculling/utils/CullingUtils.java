@@ -63,10 +63,10 @@ public class CullingUtils {
         Direction opposite = side.getOpposite();
         VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
         if (thisShape.isEmpty()) //vanilla 1.21.2 will just return empty if block cant occlude instead of its shape
-            thisShape = thisState.getShape(world, thisPos).getFaceShape(side);
+            thisShape = thisState.getBlock().getOcclusionShape(thisState).getFaceShape(side);
         VoxelShape sideShape = sideState.getFaceOcclusionShape(opposite);
         if (sideShape.isEmpty())
-            sideShape = sideState.getShape(world, sidePos).getFaceShape(opposite);
+            sideShape = sideState.getBlock().getOcclusionShape(thisState).getFaceShape(opposite);
 
         Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
                 thisShape,
