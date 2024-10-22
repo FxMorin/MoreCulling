@@ -17,15 +17,6 @@ repositories {
     mavenCentral()
     // https://docs.gradle.org/current/userguide/declaring_repositories.html#declaring_content_exclusively_found_in_one_repository
     exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Sponge'
-                url = 'https://repo.spongepowered.org/repository/maven-public'
-            }
-        }
-        filter { includeGroupAndSubgroups('org.spongepowered') }
-    }
-    exclusiveContent {
         forRepositories(
                 maven {
                     name = 'ParchmentMC'
@@ -38,10 +29,6 @@ repositories {
                 maven {
                     name = "Modrinth"
                     url = "https://api.modrinth.com/maven"
-                },
-                maven {
-                    name = "Maven for PR #1590" // https://github.com/neoforged/NeoForge/pull/1590
-                    url = "https://prmaven.neoforged.net/NeoForge/pr1590"
                 }
         )
         filter {
