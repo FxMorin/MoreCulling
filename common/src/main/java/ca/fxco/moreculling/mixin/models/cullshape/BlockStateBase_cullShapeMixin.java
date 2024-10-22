@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
-@Mixin(targets = "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase")
+@Mixin(BlockBehaviour.BlockStateBase.class)
 public class BlockStateBase_cullShapeMixin {
 
     @Redirect(

@@ -51,10 +51,6 @@ repositories {
             includeModule("net.neoforged", "neoforge")
         }
     }
-    maven {
-        name = 'BlameJared'
-        url = 'https://maven.blamejared.com'
-    }
     maven { //AutoConfig
         name = "Shedaniel's Maven"
         url = "https://maven.shedaniel.me/"

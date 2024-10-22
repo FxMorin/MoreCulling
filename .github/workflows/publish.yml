@@ -24,8 +24,8 @@ jobs:
         with:
           files: neoforge/build/libs/!(*-@(dev|sources|api|javadoc)).jar
           github-files: neoforge/build/libs/*-@(dev|sources|api|javadoc).jar
-          version-type: release
-          game-versions: 1.21.1
+          version-type: beta
+          game-versions: 1.21.2
           game-version-filter: releases
           dependencies: |
             cloth-config(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
@@ -59,8 +59,8 @@ jobs:
         with:
           files: fabric/build/libs/!(*-@(dev|sources|api|javadoc)).jar
           github-files: fabric/build/libs/*-@(dev|sources|api|javadoc).jar
-          version-type: release
-          game-versions: 1.21.1
+          version-type: beta
+          game-versions: 1.21.2
           game-version-filter: releases
           dependencies: |
             cloth-config(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
