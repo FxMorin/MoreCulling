@@ -1,8 +1,6 @@
 package ca.fxco.moreculling.mixin.blocks.cullshape;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BrewingStandBlock;
@@ -26,7 +24,7 @@ public abstract class BrewingStandBlock_voxelMixin extends BaseEntityBlock imple
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state) {
         return moreculling$occlusionShape;
     }
 }

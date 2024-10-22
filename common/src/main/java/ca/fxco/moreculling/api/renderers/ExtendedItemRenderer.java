@@ -5,9 +5,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,5 +58,5 @@ public interface ExtendedItemRenderer {
      * @since 0.25.0
      */
     void moreculling$renderItemFrameItem(ItemStack stack, PoseStack poseStack, MultiBufferSource multiBufferSource,
-                                         int light, ItemFrame frame, Camera camera);
+                                         int light, ItemFrameRenderState frame, Camera camera);
 }

@@ -6,10 +6,10 @@ import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -29,10 +29,9 @@ public class CullingUtils {
     /**
      * Replaces the default vanilla culling with a custom implementation
      */
-    public static boolean shouldDrawSideCulling(BlockState thisState,
+    public static boolean shouldDrawSideCulling(BlockState thisState, BlockState sideState,
                                                 BlockGetter world, BlockPos thisPos, Direction side,
                                                 BlockPos sidePos) {
-        BlockState sideState = world.getBlockState(sidePos);
         if (thisState.skipRendering(sideState, side)) {
             return false;
         }
@@ -61,28 +60,34 @@ public class CullingUtils {
         if (((MoreStateCulling) sideState).moreculling$cantCullAgainst(side)) {
             return true; // Check if we can cull against this block
         }
-        Block.BlockStatePairKey statePairKey = new Block.BlockStatePairKey(thisState, sideState, side);
-        Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
-        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(statePairKey);
+        Direction opposite = side.getOpposite();
+        VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
+        if (thisShape.isEmpty()) //vanilla 1.21.2 will just return empty if block cant occlude instead of its shape
+            thisShape = thisState.getBlock().getOcclusionShape(thisState).getFaceShape(side);
+        VoxelShape sideShape = sideState.getFaceOcclusionShape(opposite);
+        if (sideShape.isEmpty())
+            sideShape = sideState.getBlock().getOcclusionShape(sideState).getFaceShape(opposite);
+
+        Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
+                thisShape,
+                sideShape
+                );
+        Object2ByteLinkedOpenHashMap<Block.ShapePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
+        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(shapePairKey);
         if (b != 127) {
             return b != 0;
         }
-        Direction opposite = side.getOpposite();
-        VoxelShape thisShape = thisState.getFaceOcclusionShape(world, thisPos, side);
-        VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
         if (thisShape.isEmpty()) { // It this shape is empty
             if (!sideState.isFaceSturdy(world, sidePos, opposite) ||
-                    (sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite)).isEmpty()) {
+                    sideShape.isEmpty()) {
                 return true; // Face should be drawn if the side face is not a full square or its empty
             }
-        } else {
-            sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite);
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
-        if (object2ByteLinkedOpenHashMap.size() == 2048) {
+        if (object2ByteLinkedOpenHashMap.size() == 256) {
             object2ByteLinkedOpenHashMap.removeLastByte();
         }
-        object2ByteLinkedOpenHashMap.putAndMoveToFirst(statePairKey, (byte) (bl ? 1 : 0));
+        object2ByteLinkedOpenHashMap.putAndMoveToFirst(shapePairKey, (byte) (bl ? 1 : 0));
         return bl;
     }
 
@@ -154,14 +159,14 @@ public class CullingUtils {
         return Optional.of(true);
     }
 
-    public static boolean shouldCullBack(ItemFrame frame) {
-        Direction dir = frame.getDirection();
-        BlockPos posBehind = frame.getPos().relative(dir.getOpposite());
-        BlockState blockState = frame.level().getBlockState(posBehind);
-        return blockState.canOcclude() && blockState.isFaceSturdy(frame.level(), posBehind, dir);
+    public static boolean shouldCullBack(ItemFrameRenderState frame) {
+        Direction dir = frame.direction;
+        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y - 1, (int) frame.z) .relative(dir.getOpposite());
+        BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
+        return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
     }
 
-    public static boolean shouldShowMapFace(Direction facingDir, Vec3 framePos, Vec3 cameraPos) {
+    public static boolean shouldShowMapFace(Direction facingDir, ItemFrameRenderState framePos, Vec3 cameraPos) {
         if (MoreCulling.CONFIG.itemFrameMapCulling) {
             return switch (facingDir) {
                 case DOWN -> cameraPos.y <= framePos.y;

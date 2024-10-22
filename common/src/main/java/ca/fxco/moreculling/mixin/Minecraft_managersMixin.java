@@ -7,7 +7,8 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,6 +56,7 @@ public class Minecraft_managersMixin {
         MoreCulling.blockRenderManager = this.blockRenderer;
 
         // Make sure to reload block states on resource reload
-        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager -> Blocks.rebuildCache());
+        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager ->
+                Block.BLOCK_STATE_REGISTRY.forEach(BlockBehaviour.BlockStateBase::initCache));
     }
 }

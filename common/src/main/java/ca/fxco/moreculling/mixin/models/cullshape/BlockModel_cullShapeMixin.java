@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -90,10 +89,9 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     }
 
     @Redirect(
-            method = {"bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
-                    "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
-                    "Lnet/minecraft/client/resources/model/BakedModel;", "bakeVanilla"},
+            method = {"bake(Ljava/util/function/Function;" +
+                    "Lnet/minecraft/client/resources/model/ModelState;" +
+                    "Z)Lnet/minecraft/client/resources/model/BakedModel;"},
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
@@ -104,17 +102,15 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     }
 
     @Inject(
-            method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;" +
-                    "Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;Z)" +
-                    "Lnet/minecraft/client/resources/model/BakedModel;",
+            method = "bake(Ljava/util/function/Function;" +
+                    "Lnet/minecraft/client/resources/model/ModelState;" +
+                    "Z)Lnet/minecraft/client/resources/model/BakedModel;",
             at = @At(
                     value = "RETURN",
                     shift = At.Shift.BEFORE
             )
     )
-    private void moreculling$onBake(ModelBaker baker, BlockModel parent,
-                                    Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
+    private void moreculling$onBake(Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
                                     boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
