@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class CullingUtils {
 
-    private static final RandomSource random = RandomSource.createNewThreadLocalInstance();
+    public static final RandomSource random = RandomSource.createNewThreadLocalInstance();
 
     /**
      * Replaces the default vanilla culling with a custom implementation

@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.mixin.accessors.LevelRendererAccessor;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
@@ -29,11 +30,13 @@ public class WeatherEffectRenderer_rainMixin {
                     shift = At.Shift.BEFORE
             )
     )
-    private void moreculling$checkRainFrustum(Level level, BlockPos mutable, CallbackInfoReturnable<Biome.Precipitation> cir, @Share("skipLoop") LocalBooleanRef skipLoopRef) {
+    private void moreculling$checkRainFrustum(Level level, BlockPos mutable,
+                                              CallbackInfoReturnable<Biome.Precipitation> cir,
+                                              @Share("skipLoop") LocalBooleanRef skipLoopRef) {
         if (!MoreCulling.CONFIG.rainCulling) {
             return;
         }
-        skipLoopRef.set(!Minecraft.getInstance().levelRenderer.cullingFrustum.isVisible(new AABB(
+        skipLoopRef.set(!((LevelRendererAccessor) Minecraft.getInstance().levelRenderer).getFrustum().isVisible(new AABB(
                 mutable.getX() + 1,
                 level.getHeight(),
                 mutable.getZ() + 1,

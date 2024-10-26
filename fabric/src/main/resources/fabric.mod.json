@@ -30,9 +30,9 @@
   "accessWidener" : "moreculling.accesswidener",
   "depends": {
     "fabricloader": ">=0.15.0",
-    "minecraft": ">=1.21",
+    "minecraft": ">=1.21.2",
     "java": ">=21",
-    "cloth-config": ">=15.0.0"
+    "cloth-config": ">=16.0.0"
   },
   "suggests": {
     "sodium": ">=0.6.0"

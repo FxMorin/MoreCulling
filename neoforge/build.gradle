@@ -5,6 +5,7 @@ plugins {
 
 neoForge {
     version = neoforge_version
+    validateAccessTransformers = true
     // Automatically enable neoforge AccessTransformers if the file exists
     def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {

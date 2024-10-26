@@ -44,14 +44,14 @@ public class ItemRenderer_neoforgeFaceCullingMixin {
             )
     )
     private BakedModel moreculling$getTransformation(
-            PoseStack poseStack, BakedModel model, ItemDisplayContext cameraTransformType, boolean applyLeftHandTransform,
+            PoseStack poseStack, BakedModel model, ItemDisplayContext displayContext, boolean applyLeftHandTransform,
             Operation<BakedModel> original, @Share("transformation") LocalRef<ItemTransform> transformationRef
     ) {
-        ItemTransform transformation = model.getTransforms().getTransform(cameraTransformType);
+        ItemTransform transformation = model.getTransforms().getTransform(displayContext);
         if (ItemRendererStates.ITEM_FRAME != null) {
             transformationRef.set(transformation);
         }
-        return original.call(poseStack, model, cameraTransformType, applyLeftHandTransform);
+        return original.call(poseStack, model, displayContext, applyLeftHandTransform);
     }
 
     @Inject(
