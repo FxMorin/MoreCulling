@@ -145,7 +145,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                         );
                     }
                 }
-            } else {
+            } else if (itemFrameState.itemModel != null) {
                 poseStack.translate(0.0, 0.0, itemFrameState.isInvisible ? 0.5 : 0.4375);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(
                         (float) itemFrameState.rotation * 360.0f / 8.0f)
