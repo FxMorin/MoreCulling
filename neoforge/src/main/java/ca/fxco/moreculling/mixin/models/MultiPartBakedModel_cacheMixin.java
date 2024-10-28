@@ -5,7 +5,6 @@ import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.MultiPartBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -13,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.model.data.ModelData;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 @Mixin(value = MultiPartBakedModel.class, priority = 1010)
 public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
@@ -54,9 +51,9 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
         VoxelShape cachedShape = null;
-        for (MultiPartBakedModel.Selector pair : this.selectors) {
-            if ((pair.condition()).test(state)) {
-                VoxelShape shape = ((BakedOpacity) pair.model()).moreculling$getCullingShape(state);
+        for (MultiPartBakedModel.Selector selector : this.selectors) {
+            if ((selector.condition()).test(state)) {
+                VoxelShape shape = ((BakedOpacity) selector.model()).moreculling$getCullingShape(state);
                 if (shape != null) {
                     if (cachedShape == null) {
                         cachedShape = shape;

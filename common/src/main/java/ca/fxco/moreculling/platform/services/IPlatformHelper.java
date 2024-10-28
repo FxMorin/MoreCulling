@@ -1,5 +1,13 @@
 package ca.fxco.moreculling.platform.services;
 
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
+
 public interface IPlatformHelper {
 
     /**
@@ -34,4 +42,6 @@ public interface IPlatformHelper {
     }
 
     String getModName(String modId);
+
+    List<BakedQuad> getQuads(BakedModel model, BlockState state, Direction direction, RandomSource source);
 }
