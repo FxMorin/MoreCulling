@@ -30,9 +30,4 @@ public abstract class BrewingStandBlock_voxelMixin extends BaseEntityBlock imple
     public VoxelShape getOcclusionShape(BlockState state) {
         return moreculling$occlusionShape;
     }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return moreculling$occlusionShape;
-    }
 }
