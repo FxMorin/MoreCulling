@@ -24,6 +24,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     implementation "maven.modrinth:sodium:${project.sodium_version}-neoforge"
+    //implementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+neoforge-${project.minecraft_version}"
 
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
