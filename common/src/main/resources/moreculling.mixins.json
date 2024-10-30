@@ -34,6 +34,7 @@
     "blockstates.BlockStateBase_moreMixin",
     "blockstates.Block_drawSideMixin",
     "blockstates.Minecraft_loadBlocksMixin",
+    "compat.BambooStalkBlock_clientTweaksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "compat.ItemRenderer_sodiumMixin",
     "entities.ItemFrameRenderer_cullMixin",
