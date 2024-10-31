@@ -50,3 +50,29 @@ dependencies {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+tasks.register("modifyMetaData") {
+    def jsonFile = file('./build/generated/jarJar/META-INF/jarjar/metadata.json')
+    doLast {
+        def jsonContent = new JsonSlurper().parseText(jsonFile.text)
+        def newEntry = [
+                identifier: [
+                        group: "com.github.Fallen-Breath.conditional-mixin",
+                        artifact: "conditional-mixin-neoforge"
+                ],
+                version: [
+                        range: "[0.6.3,)",
+                        artifactVersion: "0.6.3"
+                ],
+                path: "META-INF/jarjar/conditional-mixin-neoforge-0.6.3.jar",
+                isObfuscated: false
+        ]
+        jsonContent.jars << newEntry
+        jsonFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(jsonContent))
+    }
+}
+tasks.named("jar") {
+    dependsOn modifyMetaData
+    //Files.write(getTemporaryDir().toPath().resolve("metadata.json"), MetadataIOHandler.toLines(metadata), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)
+}
