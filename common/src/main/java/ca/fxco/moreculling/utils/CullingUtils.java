@@ -43,7 +43,8 @@ public class CullingUtils {
                 return shouldDrawFace.get();
             }
         }
-        if (sideState.canOcclude() || (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
+        if (sideState.canOcclude() && ((MoreStateCulling) sideState).moreculling$canCull() ||
+                (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
                 ((MoreStateCulling) sideState).moreculling$canCull() &&
                 ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side) &&
                 ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite()))) {
