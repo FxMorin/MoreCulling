@@ -3,6 +3,8 @@
 	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "General Culling",
 	"moreculling.config.category.compat": "Mod Compatibility",
+	"moreculling.config.option.dontCull": "Dont Cull",
+	"moreculling.config.option.dontCull.tooltip": "Add block id here to prevent it from culling. for example minecraft:bamboo",
 	"moreculling.config.option.cloudCulling": "Cloud Culling",
 	"moreculling.config.option.cloudCulling.tooltip": "Changing the opengl winding order to apply face culling",
 	"moreculling.config.option.signTextCulling": "Sign Text Culling",

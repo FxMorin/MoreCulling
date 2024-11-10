@@ -6,6 +6,9 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
 
@@ -14,6 +17,8 @@ public class MoreCullingConfig implements ConfigData {
 
     // You can disable the sodium menu in the config
     public boolean enableSodiumMenu = true;
+
+    public List<String> dontCull = new ArrayList<>();
 
     public boolean cloudCulling = true;
 
