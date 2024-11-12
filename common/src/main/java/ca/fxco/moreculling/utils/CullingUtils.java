@@ -101,14 +101,14 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,
                                                         BlockPos thisPos, BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side))) {
+                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
             boolean isSurrounded = true;
             for (Direction dir : DirectionUtils.DIRECTIONS) {
                 if (dir != side) {
                     BlockPos pos = thisPos.relative(dir);
                     BlockState state = view.getBlockState(pos);
                     isSurrounded &= state.getBlock() instanceof LeavesBlock ||
-                            (sideState.canOcclude() && state.isFaceSturdy(view, pos, dir));
+                            (state.canOcclude() && state.isFaceSturdy(view, pos, dir.getOpposite()));
                 }
             }
             return isSurrounded ? Optional.of(false) : Optional.empty();
