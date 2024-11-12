@@ -103,7 +103,7 @@ public class CullingUtils {
                     BlockPos pos = thisPos.relative(dir);
                     BlockState state = view.getBlockState(pos);
                     isSurrounded &= state.getBlock() instanceof LeavesBlock ||
-                            (sideState.canOcclude() && state.isFaceSturdy(view, pos, dir.getOpposite()));
+                            (state.canOcclude() && state.isFaceSturdy(view, pos, dir.getOpposite()));
                 }
             }
             return isSurrounded ? Optional.of(false) : Optional.empty();
