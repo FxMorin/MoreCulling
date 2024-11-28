@@ -6,13 +6,9 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.math.Transformation;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -36,10 +32,10 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
 
     @Shadow
     @Nullable
-    protected BlockModel parent;
+    private UnbakedModel parent;
 
     @Shadow
-    public abstract List<BlockElement> getElements();
+    abstract List<BlockElement> getElements();
 
     @Unique
     @Nullable
@@ -88,7 +84,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
     }
 
-    @Redirect(
+    /*@Redirect(
             method = {"bake(Ljava/util/function/Function;" +
                     "Lnet/minecraft/client/resources/model/ModelState;" +
                     "Z)Lnet/minecraft/client/resources/model/BakedModel;"},
@@ -99,28 +95,27 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     )
     private Object moreculling$overrideFaceData(Map<Direction, BlockElementFace> map, Object direction) {
         return moreculling$modifyElementFace(map.get((Direction) direction));
-    }
+    }*/
 
     @Inject(
-            method = "bake(Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;" +
-                    "Z)Lnet/minecraft/client/resources/model/BakedModel;",
+            method = "bake",
             at = @At(
                     value = "RETURN",
                     shift = At.Shift.BEFORE
             )
     )
-    private void moreculling$onBake(Function<Material, TextureAtlasSprite> textureGetter, ModelState settings,
-                                    boolean hasDepth, CallbackInfoReturnable<BakedModel> cir) {
+    private void moreculling$onBake(TextureSlots p_387258_, ModelBaker p_388168_, ModelState settings,
+                                    boolean p_111455_, boolean p_387632_, ItemTransforms p_386577_,
+                                    CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
-        if (bakedModel == null) {
+        if (bakedModel == null || !(parent instanceof BlockModel blockModel)) {
             return;
         }
         BakedOpacity bakedOpacity = (BakedOpacity) bakedModel;
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        ResourceLocation id = parent.parentLocation;
+        ResourceLocation id = blockModel.parentLocation;
         if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {

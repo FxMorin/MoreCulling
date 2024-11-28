@@ -28,7 +28,7 @@ public class ItemRenderer_faceCullingMixin {
                     target = "Lnet/minecraft/core/Direction;values()[Lnet/minecraft/core/Direction;"
             )
     )
-    private Direction[] moreculling$modifyDirections() {
+    private static Direction[] moreculling$modifyDirections() {
         return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
     }
 
@@ -41,9 +41,9 @@ public class ItemRenderer_faceCullingMixin {
                             "Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;"
             )
     )
-    private List<BakedQuad> moreculling$onlySomeFaces$Vanilla(BakedModel instance, BlockState blockState,
-                                                              Direction direction, RandomSource random,
-                                                              Operation<List<BakedQuad>> original) {
+    private static List<BakedQuad> moreculling$onlySomeFaces$Vanilla(BakedModel instance, BlockState blockState,
+                                                                     Direction direction, RandomSource random,
+                                                                     Operation<List<BakedQuad>> original) {
         if (ItemRendererStates.DIRECTIONS != null) {
             List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
             Iterator<BakedQuad> iterator = bakedQuads.iterator();

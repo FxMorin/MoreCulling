@@ -19,6 +19,7 @@
     "blockentity.TheEndGatewayRenderer_beamMixin",
     "blockentity.SignRenderer_textMixin",
     "blocks.BaseRailBlock_cullAgainstMixin",
+    "blocks.cullshape.BaseTorchBlock_voxelMixin",
     "blocks.cullshape.BrewingStandBlock_voxelMixin",
     "blocks.cullshape.CampfireBlock_voxelMixin",
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
@@ -42,13 +43,13 @@
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
     "models.SimpleBakedModel_cacheMixin",
-    "models.BuiltInModel_cacheMixin",
     "models.cullshape.Deserializer_cullShapeMixin",
     "models.cullshape.BlockModel_cullShapeMixin",
     "models.cullshape.BlockStateBase_cullShapeMixin",
-    "renderers.ModelBlockRenderer_cullMixin",
-    "renderers.ItemRenderer_apiMixin",
-    "renderers.ItemRenderer_faceCullingMixin"
+    "renderers.ItemRenderer_faceCullingMixin",
+    "renderers.ItemStackRenderState_apiMixin",
+    "renderers.LayerRenderState_apiMixin",
+    "renderers.ModelBlockRenderer_cullMixin"
   ],
   "injectors": {
     "defaultRequire": 1

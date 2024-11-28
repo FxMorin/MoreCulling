@@ -5,3 +5,4 @@ accessible field net/minecraft/client/renderer/block/model/BlockModel parentLoca
 accessible class net/minecraft/client/renderer/CloudRenderer$RelativeCameraPos
 accessible class net/minecraft/world/level/block/Block$ShapePairKey
 accessible method net/minecraft/world/level/block/Block$ShapePairKey <init> (Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/VoxelShape;)V
+accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;[IIILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V

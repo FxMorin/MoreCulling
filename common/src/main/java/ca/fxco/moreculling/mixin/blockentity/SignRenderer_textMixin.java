@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.SignRenderer;
+import net.minecraft.client.renderer.blockentity.AbstractSignRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.StandingSignBlock;
@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import static ca.fxco.moreculling.utils.CullingUtils.shouldHideWallSignText;
 import static ca.fxco.moreculling.utils.MathUtils.ONE_SIGN_ROTATION;
 
-@Mixin(SignRenderer.class)
+@Mixin(AbstractSignRenderer.class)
 public class SignRenderer_textMixin {
 
     @WrapWithCondition(
@@ -34,14 +34,14 @@ public class SignRenderer_textMixin {
                     "Lnet/minecraft/world/level/block/state/properties/WoodType;Lnet/minecraft/client/model/Model;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/blockentity/SignRenderer;renderSignText(" +
+                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;renderSignText(" +
                             "Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/SignText;" +
                             "Lcom/mojang/blaze3d/vertex/PoseStack;" +
                             "Lnet/minecraft/client/renderer/MultiBufferSource;IIIZ)V",
                     ordinal = 0
             )
     )
-    private boolean moreculling$cullFrontSignText(SignRenderer renderer, BlockPos pos, SignText text,
+    private boolean moreculling$cullFrontSignText(AbstractSignRenderer renderer, BlockPos pos, SignText text,
                                                   PoseStack poseStack, MultiBufferSource mutliBufferSource,
                                                   int i, int j, int i2, boolean l,
                                                   @Local(argsOnly = true) BlockState state,
@@ -57,14 +57,14 @@ public class SignRenderer_textMixin {
                     "Lnet/minecraft/world/level/block/state/properties/WoodType;Lnet/minecraft/client/model/Model;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/blockentity/SignRenderer;renderSignText(" +
+                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;renderSignText(" +
                             "Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/SignText;" +
                             "Lcom/mojang/blaze3d/vertex/PoseStack;" +
                             "Lnet/minecraft/client/renderer/MultiBufferSource;IIIZ)V",
                     ordinal = 1
             )
     )
-    private boolean moreculling$cullBackSignText(SignRenderer renderer, BlockPos pos, SignText text,
+    private boolean moreculling$cullBackSignText(AbstractSignRenderer renderer, BlockPos pos, SignText text,
                                                  PoseStack poseStack, MultiBufferSource mutliBufferSource,
                                                  int i, int j, int i2, boolean l,
                                                  @Local(argsOnly = true) BlockState state,
