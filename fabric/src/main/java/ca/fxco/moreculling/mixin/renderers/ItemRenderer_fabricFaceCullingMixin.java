@@ -57,6 +57,12 @@ public class ItemRenderer_fabricFaceCullingMixin {
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
         if (dist <= 3) { // 3 Blocks away
             ItemRendererStates.DIRECTIONS = null;
+        } else if (MoreCulling.CONFIG.useItemFrameLOD && dist > MoreCulling.CONFIG.itemFrameLODRange) {
+            if (!canCull) {
+                ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH, NORTH };
+            } else {
+                ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH };
+            }
         } else {
             // EXPERIMENTAL CULLING
             // Use smart culling to render only 3 face directions.
