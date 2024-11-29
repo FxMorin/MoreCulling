@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
@@ -51,13 +52,14 @@ public class ItemRenderer_fabricFaceCullingMixin {
         ItemTransform transformation = ItemRendererStates.TRANSFORMS;
         if (transformation == null)
             return;
-        boolean canCull = (CullingUtils.shouldCullBack(frame)) &&
+        boolean isBlockItem = !((BakedOpacity) bakedModel).moreculling$isItem();
+        boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
         double dist = ItemRendererStates.CAMERA.getPosition().distanceTo(framePos);
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
-        if (dist <= 3) { // 3 Blocks away
+        if (isBlockItem &&dist <= 3) { // 3 Blocks away
             ItemRendererStates.DIRECTIONS = null;
-        } else if (MoreCulling.CONFIG.useItemFrameLOD && dist > MoreCulling.CONFIG.itemFrameLODRange) {
+        } else if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
             if (!canCull) {
                 ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH, NORTH };
             } else {

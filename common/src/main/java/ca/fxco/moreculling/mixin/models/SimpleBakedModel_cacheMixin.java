@@ -32,6 +32,8 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
     private @Nullable VoxelShape moreculling$cullVoxelShape;
+    @Unique
+    private @Nullable boolean moreculling$isItem = false;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -79,5 +81,15 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public boolean moreculling$canSetCullingShape() {
         return true;
+    }
+
+    @Override
+    public boolean moreculling$isItem() {
+        return moreculling$isItem;
+    }
+
+    @Override
+    public void moreculling$setIsItem() {
+        moreculling$isItem = true;
     }
 }

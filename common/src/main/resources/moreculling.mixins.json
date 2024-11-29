@@ -42,6 +42,7 @@
     "entities.ItemFrameRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
+    "models.ItemModelGenerator_cullMixin",
     "models.SimpleBakedModel_cacheMixin",
     "models.cullshape.Deserializer_cullShapeMixin",
     "models.cullshape.BlockModel_cullShapeMixin",
