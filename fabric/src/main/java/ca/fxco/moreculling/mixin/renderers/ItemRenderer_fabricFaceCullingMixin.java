@@ -49,10 +49,8 @@ public class ItemRenderer_fabricFaceCullingMixin {
         }
         Vec3 cameraPos = ItemRendererStates.CAMERA.getPosition();
         Vec3 framePos = new Vec3(frame.x, frame.y, frame.z) ;
-        ItemTransform transformation = ItemRendererStates.TRANSFORMS;
-        if (transformation == null)
-            return;
         boolean isBlockItem = !((BakedOpacity) bakedModel).moreculling$isItem();
+        ItemTransform transformation = ItemRendererStates.TRANSFORMS;
         boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
         double dist = ItemRendererStates.CAMERA.getPosition().distanceTo(framePos);
