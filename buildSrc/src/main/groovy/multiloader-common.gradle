@@ -34,8 +34,6 @@ repositories {
         filter {
             includeGroup('org.parchmentmc.data')
             includeGroup "maven.modrinth"
-            includeModule("net.neoforged", "testframework")
-            includeModule("net.neoforged", "neoforge")
         }
     }
     maven { //AutoConfig

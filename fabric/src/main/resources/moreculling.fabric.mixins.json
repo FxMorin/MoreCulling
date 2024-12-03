@@ -7,11 +7,11 @@
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "blockstates.Block_fabricDrawSideMixin",
-    "models.ForwardingBakedModel_compatMixin",
+    "models.ItemModelGenerator_cullMixin",
     "models.MultiPartBakedModel_cacheMixin",
     "models.SimpleBakedModel_fabricCacheMixin",
     "models.WeightedBakedModel_cacheMixin",
-    "renderers.ItemRenderer_fabricFaceCullingMixin"
+    "models.cullshape.BlockModel_fabricCullShapeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

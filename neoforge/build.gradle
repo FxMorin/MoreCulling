@@ -23,9 +23,6 @@ neoForge {
         client {
             client()
         }
-        data {
-            data()
-        }
         server {
             server()
         }
@@ -38,7 +35,7 @@ neoForge {
 }
 
 dependencies {
-    implementation "maven.modrinth:sodium:${project.sodium_version}-neoforge"
+    compileOnly "maven.modrinth:sodium:${project.sodium_version}-neoforge"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
     //implementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+neoforge-${project.minecraft_version}"

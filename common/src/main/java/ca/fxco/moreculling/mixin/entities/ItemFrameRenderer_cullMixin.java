@@ -3,7 +3,7 @@ package ca.fxco.moreculling.mixin.entities;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.map.MapOpacity;
 import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderer;
-import ca.fxco.moreculling.api.renderers.ExtendedItemRenderer;
+import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -16,14 +16,13 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -50,16 +49,14 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
     @Final
     private BlockRenderDispatcher blockRenderer;
 
-    @Shadow
-    @Final
-    private ItemRenderer itemRenderer;
-
-    @Shadow
-    protected abstract ModelResourceLocation getFrameModelResourceLoc(boolean isGlow, ItemStack stack);
-
-    @Shadow protected abstract int getLightVal(boolean par1, int par2, int par3);
-
     @Shadow @Final private MapRenderer mapRenderer;
+
+    @Shadow
+    private static ModelResourceLocation getFrameModelResourceLocation(ItemFrameRenderState itemFrameRenderState) {
+        return null;
+    }
+
+    @Shadow protected abstract int getLightCoords(boolean bl, int i, int j);
 
     protected ItemFrameRenderer_cullMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
@@ -107,9 +104,9 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
 
         poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
-        ItemStack itemStack = itemFrameState.itemStack;
+        ItemStackRenderState itemStackState = itemFrameState.item;
         boolean skipFrontRender = false;
-        if (!itemStack.isEmpty()) {
+        if (!itemStackState.isEmpty()) {
             poseStack.pushPose();
             MapId mapIdComponent = itemFrameState.mapId;
             if (mapIdComponent != null) {
@@ -137,7 +134,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                                 poseStack,
                                 multiBufferSource,
                                 true,
-                                this.getLightVal(
+                                this.getLightCoords(
                                         itemFrameState.isGlowFrame,
                                         LightTexture.FULL_SKY | 0xD2,
                                         i
@@ -145,16 +142,15 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                         );
                     }
                 }
-            } else if (itemFrameState.itemModel != null) {
+            } else if (!itemStackState.isEmpty()) {
                 poseStack.translate(0.0, 0.0, itemFrameState.isInvisible ? 0.5 : 0.4375);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(
                         (float) itemFrameState.rotation * 360.0f / 8.0f)
                 );
-                int l = this.getLightVal(itemFrameState.isGlowFrame, LightTexture.FULL_BRIGHT, i);
+                int l = this.getLightCoords(itemFrameState.isGlowFrame, LightTexture.FULL_BRIGHT, i);
                 poseStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
-                ((ExtendedItemRenderer) this.itemRenderer).moreculling$renderItemFrameItem(
-                        itemStack,
+                ((ExtendedItemStackRenderState) itemStackState).moreculling$renderItemFrameItem(
                         poseStack,
                         multiBufferSource,
                         l,
@@ -166,7 +162,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         }
         if (!itemFrameState.isInvisible) { // Render Item Frame block model
             ModelManager modelManager = this.blockRenderer.getBlockModelShaper().getModelManager();
-            ModelResourceLocation modelResourceLocation = this.getFrameModelResourceLoc(itemFrameState.isGlowFrame, itemStack);
+            ModelResourceLocation modelResourceLocation = getFrameModelResourceLocation(itemFrameState);
             poseStack.translate(-0.5, -0.5, -0.5);
             var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderer.getModelRenderer();
             if (CullingUtils.shouldCullBack(itemFrameState)) {

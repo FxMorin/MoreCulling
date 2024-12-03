@@ -2,6 +2,7 @@ package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
@@ -161,7 +162,7 @@ public class CullingUtils {
 
     public static boolean shouldCullBack(ItemFrameRenderState frame) {
         Direction dir = frame.direction;
-        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y - 1, (int) frame.z) .relative(dir.getOpposite());
+        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y, (int) frame.z).relative(dir.getOpposite());
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
         return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
     }
