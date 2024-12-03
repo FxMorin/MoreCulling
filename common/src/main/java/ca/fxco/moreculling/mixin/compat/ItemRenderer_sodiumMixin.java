@@ -39,7 +39,7 @@ public class ItemRenderer_sodiumMixin {
                     opcode = 178 //Opcodes.GETSTATIC
             )
     )
-    private Direction[] moreculling$modifyDirections$Sodium() {
+    private static Direction[] moreculling$modifyDirections$Sodium() {
         return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
     }
 
@@ -56,7 +56,7 @@ public class ItemRenderer_sodiumMixin {
                             "Lnet/minecraft/util/RandomSource;)Ljava/util/List;"
             )
     )
-    private List<BakedQuad> moreculling$onlySomeFaces$Sodium(BakedModel instance, BlockState blockState,
+    private static List<BakedQuad> moreculling$onlySomeFaces$Sodium(BakedModel instance, BlockState blockState,
                                                              Direction direction, RandomSource random,
                                                              Operation<List<BakedQuad>> original) {
         if (ItemRendererStates.DIRECTIONS != null) {

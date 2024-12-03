@@ -162,7 +162,7 @@ public class CullingUtils {
 
     public static boolean shouldCullBack(ItemFrameRenderState frame) {
         Direction dir = frame.direction;
-        BlockPos posBehind = new BlockPos((int) frame.x, (int) frame.y, (int) frame.z).relative(dir.getOpposite());
+        BlockPos posBehind = new BlockPos((int) Math.floor(frame.x), (int) Math.floor(frame.y), (int) Math.floor(frame.z)).relative(dir.getOpposite());
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
         return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
     }
