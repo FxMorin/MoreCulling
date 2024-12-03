@@ -6,11 +6,12 @@
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "blockstates.Block_neoforgeDrawSideMixin",
-    "models.BakedModelWrapper_compatMixin",
+    "models.ItemModelGenerator_cullMixin",
     "models.MultiPartBakedModel_cacheMixin",
     "models.SimpleBakedModel_neoforgeCacheMixin",
     "models.WeightedBakedModel_cacheMixin",
-    "renderers.ItemRenderer_neoforgeFaceCullingMixin"
+    "models.cullshape.BlockModel_neoforgeCullShapeMixin",
+    "renderers.IBakedModelExtension_faceCullingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

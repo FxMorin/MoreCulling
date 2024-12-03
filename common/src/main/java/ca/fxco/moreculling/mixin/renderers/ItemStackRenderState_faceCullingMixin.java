@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = ItemStackRenderState.LayerRenderState.class, priority = 1100)
-public class ItemStackRenderState_fabricFaceCullingMixin {
+public class ItemStackRenderState_faceCullingMixin {
 
     @WrapOperation(
             method = "render",

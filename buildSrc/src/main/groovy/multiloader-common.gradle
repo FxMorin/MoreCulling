@@ -29,6 +29,14 @@ repositories {
                 maven {
                     name = "Modrinth"
                     url = "https://api.modrinth.com/maven"
+                },
+                maven {
+                    name 'Maven for PR #1724' // https://github.com/neoforged/NeoForge/pull/1724
+                    url 'https://prmaven.neoforged.net/NeoForge/pr1724'
+                    content {
+                        includeModule('net.neoforged', 'neoforge')
+                        includeModule('net.neoforged', 'testframework')
+                    }
                 }
         )
         filter {
