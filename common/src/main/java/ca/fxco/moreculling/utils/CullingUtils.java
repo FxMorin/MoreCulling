@@ -2,7 +2,6 @@ package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
-import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
