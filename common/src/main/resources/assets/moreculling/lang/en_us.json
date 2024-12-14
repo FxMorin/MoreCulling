@@ -13,6 +13,8 @@
 	"moreculling.config.option.beaconBeamCulling.tooltip": "Does frustum culling on beacon beams",
 	"moreculling.config.option.entityModelCulling": "Entity Model Culling",
 	"moreculling.config.option.entityModelCulling.tooltip": "This only helps if your gpu is the bottleneck and your cpu has some performance to spare!",
+	"moreculling.config.option.dontCull": "Dont Cull",
+	"moreculling.config.option.dontCull.tooltip": "Add block id here to prevent it from culling. for example minecraft:bamboo",
 	"moreculling.config.option.blockStateCulling": "BlockState Culling",
 	"moreculling.config.option.blockStateCulling.tooltip": "Enables aggressive blockstate culling",
 	"moreculling.config.option.customItemFrameRenderer": "Custom Item Frame Renderer",

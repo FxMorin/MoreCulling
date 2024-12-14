@@ -14,14 +14,19 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.impl.builders.StringListBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ModMenuConfig {
 
@@ -163,6 +168,42 @@ public class ModMenuConfig {
                     }
                 })
                 .build();
+
+        //dont cull list
+        generalCategory.addEntry(new StringListBuilder(
+                Component.translatable("text.cloth-config.reset_value"),
+                Component.translatable("moreculling.config.option.dontCull"), MoreCulling.CONFIG.dontCull)
+                .setDefaultValue(new ArrayList<>())
+                .setTooltip(Component.translatable("moreculling.config.option.dontCull.tooltip"))
+                .setSaveConsumer(
+                        value -> {
+                            MoreCulling.CONFIG.dontCull.forEach(prevBlockId -> {
+                                        Optional<Block> optionalBlock =
+                                                BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(prevBlockId));
+
+                                        if (optionalBlock.isEmpty())
+                                            return;
+
+                                        ((MoreBlockCulling) optionalBlock.get()).moreculling$setCanCull(true);
+                                    }
+                            );
+
+                            value.forEach(blockId -> {
+                                Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(blockId));
+
+                                if (optionalBlock.isEmpty()) {
+                                    MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);
+                                    return;
+                                }
+
+                                MoreBlockCulling block = (MoreBlockCulling) optionalBlock.get();
+                                if (block.moreculling$canCull())
+                                    block.moreculling$setCanCull(false);
+                            });
+
+                            MoreCulling.CONFIG.dontCull = value;
+                        }
+                ).build());
 
         // BlockStates
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.blockStateCulling")

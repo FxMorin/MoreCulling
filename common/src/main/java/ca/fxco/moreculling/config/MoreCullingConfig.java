@@ -6,6 +6,9 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Config(name = "moreculling")
 public class MoreCullingConfig implements ConfigData {
 
@@ -20,6 +23,8 @@ public class MoreCullingConfig implements ConfigData {
     public boolean signTextCulling = true;
 
     public boolean rainCulling = true;
+
+    public List<String> dontCull = new ArrayList<>();
 
     public boolean useBlockStateCulling = true;
 

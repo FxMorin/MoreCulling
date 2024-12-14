@@ -18,7 +18,8 @@ public abstract class BrewingStandBlock_voxelMixin extends BaseEntityBlock imple
     private static final VoxelShape moreculling$occlusionShape = Shapes.or(
             Block.box(1, 0, 1, 7, 2, 7),
             Block.box(1, 0, 9, 7, 2, 15),
-            Block.box(9, 0, 5, 15, 2, 11)
+            Block.box(9, 0, 5, 15, 2, 11),
+            Block.box(7.0, 0.0, 7.0, 9.0, 14.0, 9.0)
     ) ;
 
     protected BrewingStandBlock_voxelMixin(Properties settings) {

@@ -47,7 +47,9 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
             if (!layeredQuads.isEmpty()) {
                 BakedQuad initialQuad = layeredQuads.removeFirst();
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
-                QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis());
+                NativeImage image = opacity.moreculling$getUnmipmappedImage();
+                QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis(),
+                        image.getWidth(), image.getHeight());
                 if (!opacity.moreculling$hasTranslucency(bounds)) {
                     if (!layeredQuads.isEmpty()) {
                         List<NativeImage> overlappingImages = new ArrayList<>();

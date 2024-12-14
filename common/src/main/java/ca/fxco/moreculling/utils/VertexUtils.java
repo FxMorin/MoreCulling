@@ -51,17 +51,19 @@ public class VertexUtils {
         }
     }
 
-    public static QuadBounds getQuadBounds(BakedQuad quad, Direction.Axis axis) {
+    public static QuadBounds getQuadBounds(BakedQuad quad, Direction.Axis axis,
+                                           int resolutionScaleX, int resolutionScaleY) {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
         int[] vertexData = quad.getVertices();
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getPos(vertexData, i, axis).mul(16);
+            Vector2f tmpPos = getPos(vertexData, i, axis);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);
         }
-        return new QuadBounds(minPos.x, minPos.y, maxPos.x, maxPos.y);
+        return new QuadBounds(minPos.x * resolutionScaleX, minPos.y * resolutionScaleY,
+                maxPos.x * resolutionScaleX, maxPos.y * resolutionScaleY);
     }
 
     public static boolean isAxisAligned(BakedQuad quad) {

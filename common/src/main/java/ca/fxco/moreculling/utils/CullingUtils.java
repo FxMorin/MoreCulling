@@ -44,10 +44,11 @@ public class CullingUtils {
                 return shouldDrawFace.get();
             }
         }
-        if (sideState.canOcclude() || (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
+        if (((MoreStateCulling) sideState).moreculling$canCull() &&
+                (sideState.canOcclude() || (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
                 ((MoreStateCulling) sideState).moreculling$canCull() &&
                 ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side) &&
-                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite()))) {
+                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite())))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;
