@@ -22,6 +22,8 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
+    modCompileOnly "maven.modrinth:vulkanmod:${vulkan_version}-${minecraft_version}"
+
     modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
     include("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
 

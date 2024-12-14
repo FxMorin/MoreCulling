@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
+    "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
     "models.MultiPartBakedModel_cacheMixin",
