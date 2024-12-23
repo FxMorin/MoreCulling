@@ -37,7 +37,7 @@ public interface MoreStateCulling {
      *
      * @since 0.25.0
      */
-    boolean moreculling$shouldAttemptToCull(Direction side);
+    boolean moreculling$shouldAttemptToCull(Direction side, BlockGetter getter, BlockPos pos);
 
     /**
      * This method allows you to check if a state should be allowed to be culled against.

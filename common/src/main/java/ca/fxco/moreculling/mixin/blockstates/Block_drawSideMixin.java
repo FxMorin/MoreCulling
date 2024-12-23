@@ -4,11 +4,11 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
+import ca.fxco.moreculling.platform.Services;
 import ca.fxco.moreculling.utils.CullingUtils;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,9 +33,9 @@ public class Block_drawSideMixin implements MoreBlockCulling {
     }
 
     @Override
-    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side) {
+    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side, BlockGetter level, BlockPos pos) {
         BakedModel model = blockRenderManager.getBlockModel(state);
-        model.getQuads(state, side, RandomSource.create());
+        Services.PLATFORM.getQuads(model, state, side, CullingUtils.random, level, pos);
         return !((BakedOpacity) model).moreculling$hasTextureTranslucency(state, side);
     }
 

@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class CullingUtils {
 
-    private static final RandomSource random = RandomSource.createNewThreadLocalInstance();
+    public static final RandomSource random = RandomSource.createNewThreadLocalInstance();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -47,8 +47,8 @@ public class CullingUtils {
         if (((MoreStateCulling) sideState).moreculling$canCull() &&
                 (sideState.canOcclude() || (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
                 ((MoreStateCulling) sideState).moreculling$canCull() &&
-                ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side) &&
-                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite())))) {
+                ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side, world, thisPos) &&
+                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite(), world, sidePos)))) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
         }
         return true;

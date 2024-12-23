@@ -45,7 +45,7 @@ public interface MoreBlockCulling {
      *
      * @since 0.25.0
      */
-    default boolean moreculling$shouldAttemptToCull(BlockState state, @Nullable Direction side) {
+    default boolean moreculling$shouldAttemptToCull(BlockState state, @Nullable Direction side, BlockGetter level, BlockPos pos) {
         return false;
     }
 
