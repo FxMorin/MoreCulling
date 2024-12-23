@@ -43,7 +43,7 @@ public interface MoreBlockCulling {
      * This is not used if blocks are opaque.
      * Allows you to pass the side to check against
      *
-     * @since 0.25.0
+     * @since 1.0.3
      */
     default boolean moreculling$shouldAttemptToCull(BlockState state, @Nullable Direction side, BlockGetter level, BlockPos pos) {
         return false;

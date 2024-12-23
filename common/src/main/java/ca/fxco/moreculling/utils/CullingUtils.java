@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class CullingUtils {
 
-    public static final RandomSource random = RandomSource.createNewThreadLocalInstance();
+    public static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -148,7 +148,7 @@ public class CullingUtils {
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
-            if (random.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
+            if (RANDOM.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }
         }
