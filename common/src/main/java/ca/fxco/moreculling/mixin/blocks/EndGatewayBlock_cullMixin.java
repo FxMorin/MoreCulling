@@ -2,7 +2,9 @@ package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.EndGatewayBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -24,7 +26,7 @@ public abstract class EndGatewayBlock_cullMixin extends BaseEntityBlock implemen
     }
 
     @Override
-    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side) {
+    public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side, BlockGetter level, BlockPos pos) {
         return MoreCulling.CONFIG.endGatewayCulling;
     }
 

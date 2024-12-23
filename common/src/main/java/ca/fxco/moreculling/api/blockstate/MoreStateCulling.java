@@ -35,9 +35,9 @@ public interface MoreStateCulling {
      * By default, it returns true if the states model does not have translucency.
      * Allows you to pass the side to check against
      *
-     * @since 0.25.0
+     * @since 1.2.2
      */
-    boolean moreculling$shouldAttemptToCull(Direction side);
+    boolean moreculling$shouldAttemptToCull(Direction side, BlockGetter level, BlockPos pos);
 
     /**
      * This method allows you to check if a state should be allowed to be culled against.

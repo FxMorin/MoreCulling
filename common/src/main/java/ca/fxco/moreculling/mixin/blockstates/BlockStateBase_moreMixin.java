@@ -36,8 +36,8 @@ public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
     }
 
     @Override
-    public boolean moreculling$shouldAttemptToCull(Direction side) {
-        return ((MoreBlockCulling) this.getBlock()).moreculling$shouldAttemptToCull(this.asState(), side);
+    public boolean moreculling$shouldAttemptToCull(Direction side, BlockGetter level, BlockPos pos) {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$shouldAttemptToCull(this.asState(), side, level, pos);
     }
 
     @Override
