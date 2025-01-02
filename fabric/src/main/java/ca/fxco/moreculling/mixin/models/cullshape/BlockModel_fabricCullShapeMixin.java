@@ -37,8 +37,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
     @Inject(
             method = "bake",
             at = @At(
-                    value = "RETURN",
-                    shift = At.Shift.BEFORE
+                    value = "RETURN"
             )
     )
     private void moreculling$onBake(TextureSlots p_387258_, ModelBaker p_388168_, ModelState settings,
@@ -53,6 +52,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
             return;
         }
         ResourceLocation id = blockModel.parentLocation;
+        //TODO fix use model shape
         if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {

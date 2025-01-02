@@ -43,7 +43,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Override
     public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
         if (this.moreculling$cullShapeElements == null) {
-            return this.parent != null ?
+            return this.parent instanceof BlockModel ?
                     ((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
         }
         return moreculling$cullShapeElements;

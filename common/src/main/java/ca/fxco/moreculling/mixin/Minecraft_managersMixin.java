@@ -2,17 +2,15 @@ package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import com.mojang.logging.LogUtils;
+import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -66,14 +64,9 @@ public class Minecraft_managersMixin {
                 Block.BLOCK_STATE_REGISTRY.forEach(BlockBehaviour.BlockStateBase::initCache));
 
         this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager -> {
-            long startTime = System.currentTimeMillis();
-            for (Block block : BuiltInRegistries.BLOCK) {
-                for (BlockState state : block.getStateDefinition().getPossibleStates()) {
-                    ((BakedOpacity) blockRenderManager.getBlockModel(state))
-                            .moreculling$initTranslucencyCache(state);
-                }
-            }
-            LogUtils.getLogger().warn(String.valueOf(System.currentTimeMillis() - startTime));
+            ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
+                    .forEach((state, model) ->
+                            ((BakedOpacity) model).moreculling$initTranslucencyCache(state));
         });
     }
 }

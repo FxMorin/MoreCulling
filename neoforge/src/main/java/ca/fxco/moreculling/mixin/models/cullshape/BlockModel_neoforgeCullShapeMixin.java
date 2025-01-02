@@ -38,8 +38,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
     @Inject(
             method = "bake",
             at = @At(
-                    value = "RETURN",
-                    shift = At.Shift.BEFORE
+                    value = "RETURN"
             )
     )
     private void moreculling$onBake(TextureSlots p_387258_, ModelBaker p_388168_, ModelState settings,

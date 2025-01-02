@@ -75,7 +75,7 @@ public class CullingUtils {
         Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
                 thisShape,
                 sideShape
-                );
+        );
         Object2ByteLinkedOpenHashMap<Block.ShapePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(shapePairKey);
         if (b != 127) {
