@@ -9,9 +9,6 @@
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
-    "models.MultiPartBakedModel_cacheMixin",
-    "models.SimpleBakedModel_fabricCacheMixin",
-    "models.WeightedBakedModel_cacheMixin",
     "models.cullshape.BlockModel_fabricCullShapeMixin"
   ],
   "injectors": {

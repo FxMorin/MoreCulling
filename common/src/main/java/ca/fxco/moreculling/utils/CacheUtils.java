@@ -4,6 +4,7 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collection;
 

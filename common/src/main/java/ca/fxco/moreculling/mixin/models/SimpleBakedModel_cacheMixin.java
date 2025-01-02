@@ -3,12 +3,17 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import ca.fxco.moreculling.platform.Services;
+import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.SimpleBakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -68,6 +73,16 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
                 }
             }
         }
+    }
+
+    @Override
+    public void moreculling$initTranslucencyCache(BlockState state) {
+        for (Direction face : Direction.values()) {
+            List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
+                    face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        }
+
+        moreculling$resetTranslucencyCache();
     }
 
     @Override

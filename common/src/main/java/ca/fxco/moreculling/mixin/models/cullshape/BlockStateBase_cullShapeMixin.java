@@ -1,57 +1,82 @@
 package ca.fxco.moreculling.mixin.models.cullshape;
 
+import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public class BlockStateBase_cullShapeMixin {
+public abstract class BlockStateBase_cullShapeMixin implements StateCullingShapeCache {
 
-    @Redirect(
+    @Shadow @Final private boolean canOcclude;
+
+    @Shadow protected abstract BlockState asState();
+
+    @Shadow private VoxelShape[] occlusionShapesByFace;
+
+    @Shadow public abstract VoxelShape getShape(BlockGetter level, BlockPos pos);
+
+    @Shadow @Final private static VoxelShape[] EMPTY_OCCLUSION_SHAPES;
+    @Shadow @Final private static VoxelShape[] FULL_BLOCK_OCCLUSION_SHAPES;
+    @Shadow @Final private static Direction[] DIRECTIONS;
+    @Unique
+    private VoxelShape[] moreculling$cullingShapesByFace;
+
+    @Inject(
             method = "initCache",
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase;canOcclude:Z"
+                    value = "TAIL"
             )
     )
-    private boolean moreculling$shouldDoShapeCache(BlockBehaviour.BlockStateBase instance) {
-        BlockState state = (BlockState) instance;
+    private void moreculling$customCullingShape(CallbackInfo ci) {
+        VoxelShape voxelShape = null;
         if (blockRenderManager != null) {
-            BakedModel model = blockRenderManager.getBlockModel(state);
-            if (model != null && ((BakedOpacity) model).moreculling$getCullingShape(state) != null) {
-                return true;
+            BakedModel model = blockRenderManager.getBlockModel(this.asState());
+            if (model != null) {
+                voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
             }
         }
-        return state.canOcclude();
+
+        if (voxelShape == null) {
+            voxelShape = getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+            if (this.canOcclude) {
+                this.moreculling$cullingShapesByFace = occlusionShapesByFace;
+                return;
+            }
+        }
+
+        if (voxelShape == Shapes.empty()) {
+            this.moreculling$cullingShapesByFace = EMPTY_OCCLUSION_SHAPES;
+        } else if (Block.isShapeFullBlock(voxelShape)) {
+            this.moreculling$cullingShapesByFace = FULL_BLOCK_OCCLUSION_SHAPES;
+        } else {
+            this.moreculling$cullingShapesByFace = new VoxelShape[DIRECTIONS.length];
+
+            for (Direction direction : DIRECTIONS) {
+                this.moreculling$cullingShapesByFace[direction.ordinal()] = voxelShape.getFaceShape(direction);
+            }
+        }
     }
 
-    @Redirect(
-            method = "initCache",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/block/Block;getOcclusionShape(" +
-                            "Lnet/minecraft/world/level/block/state/BlockState;)" +
-                            "Lnet/minecraft/world/phys/shapes/VoxelShape;"
-            )
-    )
-    private VoxelShape moreculling$customCullingShape(Block instance, BlockState state) {
-        if (blockRenderManager != null) {
-            BakedModel model = blockRenderManager.getBlockModel(state);
-            if (model != null) {
-                VoxelShape voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(state);
-                if (voxelShape != null) {
-                    return voxelShape;
-                }
-            }
-        }
-        return instance.getOcclusionShape(state);
+    @Override
+    public VoxelShape moreculling$getFaceCullingShape(Direction face) {
+        return this.moreculling$cullingShapesByFace[face.ordinal()];
     }
 }

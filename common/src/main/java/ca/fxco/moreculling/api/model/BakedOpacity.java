@@ -58,6 +58,13 @@ public interface BakedOpacity {
     default void moreculling$resetTranslucencyCache() {}
 
     /**
+     * When called this method will init the translucency cache of the model.
+     *
+     * @since 1.2.2
+     */
+    default void moreculling$initTranslucencyCache(BlockState state) {}
+
+    /**
      * Gets the VoxelShape culling shape for the baked model.
      * Returns null unless its set within the model json `cullshapes`
      * WeightedBakedModels cannot use this as we cannot determine which model will be used

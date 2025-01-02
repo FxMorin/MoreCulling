@@ -2,6 +2,7 @@ package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
+import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 public class CullingUtils {
 
-    public static final RandomSource random = RandomSource.createNewThreadLocalInstance();
+    public static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -61,12 +62,15 @@ public class CullingUtils {
             return true; // Check if we can cull against this block
         }
         Direction opposite = side.getOpposite();
-        VoxelShape thisShape = thisState.getFaceOcclusionShape(side);
-        if (thisShape.isEmpty()) //vanilla 1.21.2 will just return empty if block cant occlude instead of its shape
-            thisShape = thisState.getBlock().getOcclusionShape(thisState).getFaceShape(side);
-        VoxelShape sideShape = sideState.getFaceOcclusionShape(opposite);
-        if (sideShape.isEmpty())
-            sideShape = sideState.getBlock().getOcclusionShape(sideState).getFaceShape(opposite);
+        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
+        VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
+
+        if (thisShape == Shapes.empty()) { // It this shape is empty
+            if (sideShape == Shapes.empty() ||
+                    !sideState.isFaceSturdy(world, sidePos, opposite)) {
+                return true; // Face should be drawn if the side face is not a full square or its empty
+            }
+        }
 
         Block.ShapePairKey shapePairKey = new Block.ShapePairKey(
                 thisShape,
@@ -76,12 +80,6 @@ public class CullingUtils {
         byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(shapePairKey);
         if (b != 127) {
             return b != 0;
-        }
-        if (thisShape.isEmpty()) { // It this shape is empty
-            if (!sideState.isFaceSturdy(world, sidePos, opposite) ||
-                    sideShape.isEmpty()) {
-                return true; // Face should be drawn if the side face is not a full square or its empty
-            }
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
         if (object2ByteLinkedOpenHashMap.size() == 256) {
@@ -152,7 +150,7 @@ public class CullingUtils {
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
-            if (random.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
+            if (RANDOM.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }
         }

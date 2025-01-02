@@ -7,9 +7,6 @@
   "client": [
     "blockstates.Block_neoforgeDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
-    "models.MultiPartBakedModel_cacheMixin",
-    "models.SimpleBakedModel_neoforgeCacheMixin",
-    "models.WeightedBakedModel_cacheMixin",
     "models.cullshape.BlockModel_neoforgeCullShapeMixin",
     "renderers.IBakedModelExtension_faceCullingMixin"
   ],

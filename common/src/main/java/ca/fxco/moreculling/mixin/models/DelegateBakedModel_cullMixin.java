@@ -27,6 +27,11 @@ public class DelegateBakedModel_cullMixin implements BakedOpacity {
     }
 
     @Override
+    public void moreculling$initTranslucencyCache(BlockState state) {
+        ((BakedOpacity) parent).moreculling$initTranslucencyCache(state);
+    }
+
+    @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
         return ((BakedOpacity) parent).moreculling$getCullingShape(state);
     }
