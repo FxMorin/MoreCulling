@@ -62,17 +62,15 @@ public class CullingUtils {
             return true; // Check if we can cull against this block
         }
         Direction opposite = side.getOpposite();
-        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
         VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
 
         if (sideShape == Shapes.block()) {
             return false;
         }
-        if (thisShape == Shapes.empty()) { // It this shape is empty
-            if (sideShape == Shapes.empty() ||
-                    !sideState.isFaceSturdy(world, sidePos, opposite)) {
-                return true; // Face should be drawn if the side face is not a full square or its empty
-            }
+
+        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
+        if (thisShape == Shapes.empty() || sideShape == Shapes.empty()) { // It this shape is empty
+            return true; // Face should be drawn if the side face is empty
         }
 
         Block.ShapePairKey shapePairKey = new Block.ShapePairKey(

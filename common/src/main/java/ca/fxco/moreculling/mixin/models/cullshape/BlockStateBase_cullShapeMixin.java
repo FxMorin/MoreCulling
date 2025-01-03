@@ -36,6 +36,9 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
     @Shadow @Final private static VoxelShape[] EMPTY_OCCLUSION_SHAPES;
     @Shadow @Final private static VoxelShape[] FULL_BLOCK_OCCLUSION_SHAPES;
     @Shadow @Final private static Direction[] DIRECTIONS;
+
+    @Shadow public abstract Block getBlock();
+
     @Unique
     private VoxelShape[] moreculling$cullingShapesByFace;
 
@@ -55,11 +58,12 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
         }
 
         if (voxelShape == null) {
-            voxelShape = getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
             if (this.canOcclude) {
                 this.moreculling$cullingShapesByFace = occlusionShapesByFace;
                 return;
             }
+
+            voxelShape = this.getBlock().getOcclusionShape(this.asState());
         }
 
         if (voxelShape == Shapes.empty()) {
