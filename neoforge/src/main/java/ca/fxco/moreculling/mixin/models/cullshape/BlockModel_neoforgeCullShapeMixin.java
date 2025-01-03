@@ -54,7 +54,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
             return;
         }
         ResourceLocation id = blockModel.parentLocation;
-        if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
+        if (moreculling$getUseModelShape(id)) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = Shapes.empty();

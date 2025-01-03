@@ -52,8 +52,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
             return;
         }
         ResourceLocation id = blockModel.parentLocation;
-        //TODO fix use model shape
-        if (moreculling$getUseModelShape(id) && settings.getRotation() == Transformation.identity()) {
+        if (moreculling$getUseModelShape(id)) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = Shapes.empty();

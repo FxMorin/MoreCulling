@@ -33,7 +33,7 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     private List<CullShapeElement> moreculling$cullShapeElements = null;
 
     @Unique
-    private boolean moreculling$useModelShape = true;
+    private boolean moreculling$useModelShape = false;
 
     @Override
     public void moreculling$setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {

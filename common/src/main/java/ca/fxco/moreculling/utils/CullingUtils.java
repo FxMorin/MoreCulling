@@ -65,6 +65,9 @@ public class CullingUtils {
         VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
         VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
 
+        if (sideShape == Shapes.block()) {
+            return false;
+        }
         if (thisShape == Shapes.empty()) { // It this shape is empty
             if (sideShape == Shapes.empty() ||
                     !sideState.isFaceSturdy(world, sidePos, opposite)) {
