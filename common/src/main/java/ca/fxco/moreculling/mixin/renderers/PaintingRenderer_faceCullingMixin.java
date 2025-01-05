@@ -95,65 +95,93 @@ public abstract class PaintingRenderer_faceCullingMixin {
         double d0 = 1.0 / (double)width;  // fast math
         double d1 = 1.0 / (double)height; // fast math
         Direction opposite = renderState.direction.getOpposite();
+        BlockPos[][] positions = ((ExtendedPaintingRenderState) renderState).moreculling$getPaintingPositions();
 
-        BlockPos[][] positions = ((ExtendedPaintingRenderState)renderState).moreculling$getPaintingPositions();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                // Vertices are drawn from the center, so use negative to offset
-                float x1 = negHalfX + (float)x;
-                float x2 = negHalfX + (float)(x + 1);
-                float y1 = negHalfY + (float)y;
-                float y2 = negHalfY + (float)(y + 1);
-                int light = lightCoords[x + y * width];
-                // Get the UV's for a single block of the texture instead of the entire texture
-                float fU0 = variant.getU((float)(d0 * (double)(width - x)));        // Front U0
-                float fU1 = variant.getU((float)(d0 * (double)(width - (x + 1))));  // Front U1
-                float fV0 = variant.getV((float)(d1 * (double)(height - y)));       // Front V0
-                float fV1 = variant.getV((float)(d1 * (double)(height - (y + 1)))); // Front V1
-                //front
-                this.vertex(pose, consumer, x2, y1, fU1, fV0, -0.03125F, 0, 0, -1, light);
-                this.vertex(pose, consumer, x1, y1, fU0, fV0, -0.03125F, 0, 0, -1, light);
-                this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
-                this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
-
-                if (!CullingUtils.shouldCullPaintingBack(positions[x][y], opposite)) {
-                    //back
-                    this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
-                    this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);
-                    this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 0, 0, 1, light);
-                    this.vertex(pose, consumer, x2, y1, u1, v1, 0.03125F, 0, 0, 1, light);
+        boolean singleLight = true;
+        int lastLight = -1;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int light = lightCoords[i + j * width];
+                if (i == 0 && j == 0) {
+                    lastLight = light;
+                } else if (light != lastLight) {
+                    singleLight = false;
                 }
+            }
+        }
 
-                if (y == height - 1) {
-                    //up
-                    this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, 0, 1, 0, light);
-                    this.vertex(pose, consumer, x1, y2, u1, v0, -0.03125F, 0, 1, 0, light);
-                    this.vertex(pose, consumer, x1, y2, u1, vY, 0.03125F, 0, 1, 0, light);
-                    this.vertex(pose, consumer, x2, y2, u0, vY, 0.03125F, 0, 1, 0, light);
-                }
+        if (singleLight) { // Batch faces together
+            float x2 = negHalfX + (float) (width);
+            float y2 = negHalfY + (float) (height);
+            float fU0 = variant.getU0();
+            float fU1 = variant.getU1();
+            float fV0 = variant.getV0();
+            float fV1 = variant.getV1();
+            //front
+            this.vertex(pose, consumer, x2, negHalfY, fU0, fV1, -0.03125F, 0, 0, -1, lastLight);
+            this.vertex(pose, consumer, negHalfX, negHalfY, fU1, fV1, -0.03125F, 0, 0, -1, lastLight);
+            this.vertex(pose, consumer, negHalfX, y2, fU1, fV0, -0.03125F, 0, 0, -1, lastLight);
+            this.vertex(pose, consumer, x2, y2, fU0, fV0, -0.03125F, 0, 0, -1, lastLight);
 
-                if (y == 0) {
-                    //down
-                    this.vertex(pose, consumer, x2, y1, u0, v0, 0.03125F, 0, -1, 0, light);
-                    this.vertex(pose, consumer, x1, y1, u1, v0, 0.03125F, 0, -1, 0, light);
-                    this.vertex(pose, consumer, x1, y1, u1, vY, -0.03125F, 0, -1, 0, light);
-                    this.vertex(pose, consumer, x2, y1, u0, vY, -0.03125F, 0, -1, 0, light);
-                }
+        } else {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    // Vertices are drawn from the center, so use negative to offset
+                    float x1 = negHalfX + (float) x;
+                    float x2 = negHalfX + (float) (x + 1);
+                    float y1 = negHalfY + (float) y;
+                    float y2 = negHalfY + (float) (y + 1);
+                    int light = lightCoords[x + y * width];
+                    // Get the UV's for a single block of the texture instead of the entire texture
+                    float fU0 = variant.getU((float) (d0 * (double) (width - x)));        // Front U0
+                    float fU1 = variant.getU((float) (d0 * (double) (width - (x + 1))));  // Front U1
+                    float fV0 = variant.getV((float) (d1 * (double) (height - y)));       // Front V0
+                    float fV1 = variant.getV((float) (d1 * (double) (height - (y + 1)))); // Front V1
+                    //front
+                    this.vertex(pose, consumer, x2, y1, fU1, fV0, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x1, y1, fU0, fV0, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
 
-                if (x == width - 1) {
-                    //left
-                    this.vertex(pose, consumer, x2, y2, uY, v0, 0.03125F, -1, 0, 0, light);
-                    this.vertex(pose, consumer, x2, y1, uY, v1, 0.03125F, -1, 0, 0, light);
-                    this.vertex(pose, consumer, x2, y1, u0, v1, -0.03125F, -1, 0, 0, light);
-                    this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, -1, 0, 0, light);
-                }
+                    if (!CullingUtils.shouldCullPaintingBack(positions[x][y], opposite)) {
+                        //back
+                        this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x2, y1, u1, v1, 0.03125F, 0, 0, 1, light);
+                    }
 
-                if (x == 0) {
-                    //right
-                    this.vertex(pose, consumer, x1, y2, uY, v0, -0.03125F, 1, 0, 0, light);
-                    this.vertex(pose, consumer, x1, y1, uY, v1, -0.03125F, 1, 0, 0, light);
-                    this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 1, 0, 0, light);
-                    this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 1, 0, 0, light);
+                    if (y == height - 1) {
+                        //up
+                        this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, 0, 1, 0, light);
+                        this.vertex(pose, consumer, x1, y2, u1, v0, -0.03125F, 0, 1, 0, light);
+                        this.vertex(pose, consumer, x1, y2, u1, vY, 0.03125F, 0, 1, 0, light);
+                        this.vertex(pose, consumer, x2, y2, u0, vY, 0.03125F, 0, 1, 0, light);
+                    }
+
+                    if (y == 0) {
+                        //down
+                        this.vertex(pose, consumer, x2, y1, u0, v0, 0.03125F, 0, -1, 0, light);
+                        this.vertex(pose, consumer, x1, y1, u1, v0, 0.03125F, 0, -1, 0, light);
+                        this.vertex(pose, consumer, x1, y1, u1, vY, -0.03125F, 0, -1, 0, light);
+                        this.vertex(pose, consumer, x2, y1, u0, vY, -0.03125F, 0, -1, 0, light);
+                    }
+
+                    if (x == width - 1) {
+                        //left
+                        this.vertex(pose, consumer, x2, y2, uY, v0, 0.03125F, -1, 0, 0, light);
+                        this.vertex(pose, consumer, x2, y1, uY, v1, 0.03125F, -1, 0, 0, light);
+                        this.vertex(pose, consumer, x2, y1, u0, v1, -0.03125F, -1, 0, 0, light);
+                        this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, -1, 0, 0, light);
+                    }
+
+                    if (x == 0) {
+                        //right
+                        this.vertex(pose, consumer, x1, y2, uY, v0, -0.03125F, 1, 0, 0, light);
+                        this.vertex(pose, consumer, x1, y1, uY, v1, -0.03125F, 1, 0, 0, light);
+                        this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 1, 0, 0, light);
+                        this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 1, 0, 0, light);
+                    }
                 }
             }
         }
