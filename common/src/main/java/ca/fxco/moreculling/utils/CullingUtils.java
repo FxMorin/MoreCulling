@@ -188,4 +188,10 @@ public class CullingUtils {
             default -> false;
         };
     }
+
+    public static boolean shouldCullPaintingBack(BlockPos paintingPos, Direction oppositeDir) {
+        BlockPos posBehind = paintingPos.relative(oppositeDir, 1);
+        BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
+        return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, oppositeDir);
+    }
 }

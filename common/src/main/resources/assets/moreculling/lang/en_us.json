@@ -29,6 +29,8 @@
 	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "Enables a 3-face culling technique",
 	"moreculling.config.option.itemFrame3FaceCullingRange": "3-Face Frame Culling Range",
 	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Change the distance that this culling starts to work at, may be visible at smaller distances",
+	"moreculling.config.option.paintingCulling": "Painting Culling",
+	"moreculling.config.option.paintingCulling.tooltip": "Culls back and inner faces of the painting",
 	"moreculling.config.option.leavesCulling": "Leaves Culling",
 	"moreculling.config.option.leavesCulling.tooltip": "Change the type of culling used for leaves",
 	"moreculling.config.option.leavesCullingAmount": "Leaves Culling Amount",
