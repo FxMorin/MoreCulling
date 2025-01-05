@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.renderers.ExtendedPaintingRenderState;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -15,12 +16,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.Painting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static ca.fxco.moreculling.states.PaintingRendererStates.DIRECTION;
-import static ca.fxco.moreculling.states.PaintingRendererStates.PAINTING_POS;
 
 @Mixin(PaintingRenderer.class)
 public abstract class PaintingRenderer_faceCullingMixin {
@@ -39,8 +38,7 @@ public abstract class PaintingRenderer_faceCullingMixin {
     private void moreculling$getPaintingPos(Painting painting, PaintingRenderState renderState, float partialTick,
                                             CallbackInfo ci, @Local(ordinal = 0) int width,
                                             @Local(ordinal = 1) int height) {
-        PAINTING_POS = new BlockPos[width][height];
-        DIRECTION = painting.getDirection();
+        ((ExtendedPaintingRenderState)renderState).moreculling$setPaintingPositions(new BlockPos[width][height]);
     }
 
     @WrapOperation(
@@ -50,26 +48,41 @@ public abstract class PaintingRenderer_faceCullingMixin {
                     value = "NEW",
                     target = "(III)Lnet/minecraft/core/BlockPos;")
     )
-    private BlockPos moreculling$getPaintingPos(int x, int y, int z, Operation<BlockPos> original,
+    private BlockPos moreculling$getPaintingPos(int x, int y, int z, Operation<BlockPos> original, Painting painting,
+                                                PaintingRenderState paintingRenderState,
                                                 @Local(ordinal = 3) int width, @Local(ordinal = 2) int height) {
         BlockPos pos = original.call(x, y, z);
-        PAINTING_POS[width][height] = pos;
+        ((ExtendedPaintingRenderState)paintingRenderState).moreculling$getPaintingPositions()[width][height] = pos;
         return pos;
     }
 
-    @Inject(
-            method = "renderPainting",
+    @WrapOperation(
+            method = "render(Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;" +
+                    "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At(
-                    value = "HEAD"
-            ),
-            cancellable = true
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/entity/PaintingRenderer;renderPainting(" +
+                            "Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;" +
+                            "[IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;" +
+                            "Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"
+            )
     )
-    private void moreculling$cullFace(PoseStack poseStack, VertexConsumer consumer, int[] lightCoords,
-                                      int width, int height, TextureAtlasSprite variant,
-                                      TextureAtlasSprite paintingAtlas, CallbackInfo ci) {
+    private void moreculling$onRender(PaintingRenderer instance, PoseStack poseStack, VertexConsumer vertexConsumer,
+                                      int[] lightCoords, int width, int height, TextureAtlasSprite variant,
+                                      TextureAtlasSprite paintingAtlas, Operation<Void> original,
+                                      PaintingRenderState paintingRenderState) {
         if (!MoreCulling.CONFIG.paintingCulling) {
+            original.call(instance, poseStack, vertexConsumer, lightCoords, width, height, variant, paintingAtlas);
             return;
         }
+        moreculling$customRender(paintingRenderState, poseStack, vertexConsumer, lightCoords,
+                width, height, variant, paintingAtlas);
+    }
+
+    @Unique
+    private void moreculling$customRender(PaintingRenderState renderState, PoseStack poseStack,
+                                          VertexConsumer consumer, int[] lightCoords, int width, int height,
+                                          TextureAtlasSprite variant, TextureAtlasSprite paintingAtlas) {
         PoseStack.Pose pose = poseStack.last();
         float negHalfX = (float)(-width) / 2.0F;
         float negHalfY = (float)(-height) / 2.0F;
@@ -81,8 +94,9 @@ public abstract class PaintingRenderer_faceCullingMixin {
         float uY = paintingAtlas.getU(0.0625F);
         double d0 = 1.0 / (double)width;  // fast math
         double d1 = 1.0 / (double)height; // fast math
-        Direction opposite = DIRECTION.getOpposite();
+        Direction opposite = renderState.direction.getOpposite();
 
+        BlockPos[][] positions = ((ExtendedPaintingRenderState)renderState).moreculling$getPaintingPositions();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 // Vertices are drawn from the center, so use negative to offset
@@ -102,7 +116,7 @@ public abstract class PaintingRenderer_faceCullingMixin {
                 this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
                 this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
 
-                if (!CullingUtils.shouldCullPaintingBack(PAINTING_POS[x][y], opposite)) {
+                if (!CullingUtils.shouldCullPaintingBack(positions[x][y], opposite)) {
                     //back
                     this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
                     this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);
@@ -143,6 +157,5 @@ public abstract class PaintingRenderer_faceCullingMixin {
                 }
             }
         }
-        ci.cancel();
     }
 }
