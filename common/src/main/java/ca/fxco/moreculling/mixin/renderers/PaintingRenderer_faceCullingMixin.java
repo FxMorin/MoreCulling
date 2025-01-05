@@ -1,7 +1,6 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.config.MoreCullingConfig;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -25,7 +24,9 @@ import static ca.fxco.moreculling.states.PaintingRendererStates.PAINTING_POS;
 
 @Mixin(PaintingRenderer.class)
 public abstract class PaintingRenderer_faceCullingMixin {
-    @Shadow protected abstract void vertex(PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float u, float v, float z, int normalX, int normalY, int normalZ, int packedLight);
+
+    @Shadow protected abstract void vertex(PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float u,
+                                           float v, float z, int normalX, int normalY, int normalZ, int packedLight);
 
     @Inject(
             method = "extractRenderState(Lnet/minecraft/world/entity/decoration/Painting;" +
@@ -35,8 +36,9 @@ public abstract class PaintingRenderer_faceCullingMixin {
                     target = "Lnet/minecraft/world/entity/decoration/Painting;level()Lnet/minecraft/world/level/Level;"
             )
     )
-    public void getPaintingPos(Painting painting, PaintingRenderState p_364263_, float p_360460_, CallbackInfo ci,
-                               @Local(ordinal = 0) int width, @Local(ordinal = 1) int height) {
+    private void moreculling$getPaintingPos(Painting painting, PaintingRenderState renderState, float partialTick,
+                                            CallbackInfo ci, @Local(ordinal = 0) int width,
+                                            @Local(ordinal = 1) int height) {
         PAINTING_POS = new BlockPos[width][height];
         DIRECTION = painting.getDirection();
     }
@@ -48,14 +50,12 @@ public abstract class PaintingRenderer_faceCullingMixin {
                     value = "NEW",
                     target = "(III)Lnet/minecraft/core/BlockPos;")
     )
-    public BlockPos moreculling$getPaintingPos(int x, int y, int z, Operation<BlockPos> original,
-                                   @Local(ordinal = 3) int width, @Local(ordinal = 2) int height) {
+    private BlockPos moreculling$getPaintingPos(int x, int y, int z, Operation<BlockPos> original,
+                                                @Local(ordinal = 3) int width, @Local(ordinal = 2) int height) {
         BlockPos pos = original.call(x, y, z);
         PAINTING_POS[width][height] = pos;
         return pos;
     }
-
-
 
     @Inject(
             method = "renderPainting",
@@ -64,85 +64,82 @@ public abstract class PaintingRenderer_faceCullingMixin {
             ),
             cancellable = true
     )
-    public void moreculling$cullFace(PoseStack p_115559_, VertexConsumer p_115560_, int[] p_363896_, int width, int height, TextureAtlasSprite p_115564_, TextureAtlasSprite p_115565_, CallbackInfo ci) {
+    private void moreculling$cullFace(PoseStack poseStack, VertexConsumer consumer, int[] lightCoords,
+                                      int width, int height, TextureAtlasSprite variant,
+                                      TextureAtlasSprite paintingAtlas, CallbackInfo ci) {
         if (!MoreCulling.CONFIG.paintingCulling) {
             return;
         }
-        PoseStack.Pose posestack$pose = p_115559_.last();
-        float f = (float)(-width) / 2.0F;
-        float f1 = (float)(-height) / 2.0F;
-        float f2 = 0.03125F;
-        float f3 = p_115565_.getU0();
-        float f4 = p_115565_.getU1();
-        float f5 = p_115565_.getV0();
-        float f6 = p_115565_.getV1();
-        float f7 = p_115565_.getU0();
-        float f8 = p_115565_.getU1();
-        float f9 = p_115565_.getV0();
-        float f10 = p_115565_.getV(0.0625F);
-        float f11 = p_115565_.getU0();
-        float f12 = p_115565_.getU(0.0625F);
-        float f13 = p_115565_.getV0();
-        float f14 = p_115565_.getV1();
-        double d0 = 1.0 / (double)width;
-        double d1 = 1.0 / (double)height;
+        PoseStack.Pose pose = poseStack.last();
+        float negHalfX = (float)(-width) / 2.0F;
+        float negHalfY = (float)(-height) / 2.0F;
+        float u0 = paintingAtlas.getU0();
+        float u1 = paintingAtlas.getU1();
+        float v0 = paintingAtlas.getV0();
+        float v1 = paintingAtlas.getV1();
+        float vY = paintingAtlas.getV(0.0625F);
+        float uY = paintingAtlas.getU(0.0625F);
+        double d0 = 1.0 / (double)width;  // fast math
+        double d1 = 1.0 / (double)height; // fast math
         Direction opposite = DIRECTION.getOpposite();
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                float f15 = f + (float)(i + 1);
-                float f16 = f + (float)i;
-                float f17 = f1 + (float)(j + 1);
-                float f18 = f1 + (float)j;
-                int k = p_363896_[i + j * width];
-                float f19 = p_115564_.getU((float)(d0 * (double)(width - i)));
-                float f20 = p_115564_.getU((float)(d0 * (double)(width - (i + 1))));
-                float f21 = p_115564_.getV((float)(d1 * (double)(height - j)));
-                float f22 = p_115564_.getV((float)(d1 * (double)(height - (j + 1))));
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // Vertices are drawn from the center, so use negative to offset
+                float x1 = negHalfX + (float)x;
+                float x2 = negHalfX + (float)(x + 1);
+                float y1 = negHalfY + (float)y;
+                float y2 = negHalfY + (float)(y + 1);
+                int light = lightCoords[x + y * width];
+                // Get the UV's for a single block of the texture instead of the entire texture
+                float fU0 = variant.getU((float)(d0 * (double)(width - x)));        // Front U0
+                float fU1 = variant.getU((float)(d0 * (double)(width - (x + 1))));  // Front U1
+                float fV0 = variant.getV((float)(d1 * (double)(height - y)));       // Front V0
+                float fV1 = variant.getV((float)(d1 * (double)(height - (y + 1)))); // Front V1
                 //front
-                this.vertex(posestack$pose, p_115560_, f15, f18, f20, f21, -0.03125F, 0, 0, -1, k);
-                this.vertex(posestack$pose, p_115560_, f16, f18, f19, f21, -0.03125F, 0, 0, -1, k);
-                this.vertex(posestack$pose, p_115560_, f16, f17, f19, f22, -0.03125F, 0, 0, -1, k);
-                this.vertex(posestack$pose, p_115560_, f15, f17, f20, f22, -0.03125F, 0, 0, -1, k);
+                this.vertex(pose, consumer, x2, y1, fU1, fV0, -0.03125F, 0, 0, -1, light);
+                this.vertex(pose, consumer, x1, y1, fU0, fV0, -0.03125F, 0, 0, -1, light);
+                this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
+                this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
 
-                if (!CullingUtils.shouldCullPaintingBack(PAINTING_POS[i][j], opposite)) {
+                if (!CullingUtils.shouldCullPaintingBack(PAINTING_POS[x][y], opposite)) {
                     //back
-                    this.vertex(posestack$pose, p_115560_, f15, f17, f4, f5, 0.03125F, 0, 0, 1, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f17, f3, f5, 0.03125F, 0, 0, 1, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f18, f3, f6, 0.03125F, 0, 0, 1, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f18, f4, f6, 0.03125F, 0, 0, 1, k);
+                    this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
+                    this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);
+                    this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 0, 0, 1, light);
+                    this.vertex(pose, consumer, x2, y1, u1, v1, 0.03125F, 0, 0, 1, light);
                 }
 
-                if (j == height - 1) {
+                if (y == height - 1) {
                     //up
-                    this.vertex(posestack$pose, p_115560_, f15, f17, f7, f9, -0.03125F, 0, 1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f17, f8, f9, -0.03125F, 0, 1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f17, f8, f10, 0.03125F, 0, 1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f17, f7, f10, 0.03125F, 0, 1, 0, k);
+                    this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, 0, 1, 0, light);
+                    this.vertex(pose, consumer, x1, y2, u1, v0, -0.03125F, 0, 1, 0, light);
+                    this.vertex(pose, consumer, x1, y2, u1, vY, 0.03125F, 0, 1, 0, light);
+                    this.vertex(pose, consumer, x2, y2, u0, vY, 0.03125F, 0, 1, 0, light);
                 }
 
-                if (j == 0) {
+                if (y == 0) {
                     //down
-                    this.vertex(posestack$pose, p_115560_, f15, f18, f7, f9, 0.03125F, 0, -1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f18, f8, f9, 0.03125F, 0, -1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f18, f8, f10, -0.03125F, 0, -1, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f18, f7, f10, -0.03125F, 0, -1, 0, k);
+                    this.vertex(pose, consumer, x2, y1, u0, v0, 0.03125F, 0, -1, 0, light);
+                    this.vertex(pose, consumer, x1, y1, u1, v0, 0.03125F, 0, -1, 0, light);
+                    this.vertex(pose, consumer, x1, y1, u1, vY, -0.03125F, 0, -1, 0, light);
+                    this.vertex(pose, consumer, x2, y1, u0, vY, -0.03125F, 0, -1, 0, light);
                 }
 
-                if (i == width - 1) {
+                if (x == width - 1) {
                     //left
-                    this.vertex(posestack$pose, p_115560_, f15, f17, f12, f13, 0.03125F, -1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f18, f12, f14, 0.03125F, -1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f18, f11, f14, -0.03125F, -1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f15, f17, f11, f13, -0.03125F, -1, 0, 0, k);
+                    this.vertex(pose, consumer, x2, y2, uY, v0, 0.03125F, -1, 0, 0, light);
+                    this.vertex(pose, consumer, x2, y1, uY, v1, 0.03125F, -1, 0, 0, light);
+                    this.vertex(pose, consumer, x2, y1, u0, v1, -0.03125F, -1, 0, 0, light);
+                    this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, -1, 0, 0, light);
                 }
 
-                if (i == 0) {
+                if (x == 0) {
                     //right
-                    this.vertex(posestack$pose, p_115560_, f16, f17, f12, f13, -0.03125F, 1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f18, f12, f14, -0.03125F, 1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f18, f11, f14, 0.03125F, 1, 0, 0, k);
-                    this.vertex(posestack$pose, p_115560_, f16, f17, f11, f13, 0.03125F, 1, 0, 0, k);
+                    this.vertex(pose, consumer, x1, y2, uY, v0, -0.03125F, 1, 0, 0, light);
+                    this.vertex(pose, consumer, x1, y1, uY, v1, -0.03125F, 1, 0, 0, light);
+                    this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 1, 0, 0, light);
+                    this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 1, 0, 0, light);
                 }
             }
         }
