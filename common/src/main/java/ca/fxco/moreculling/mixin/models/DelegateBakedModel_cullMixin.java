@@ -22,13 +22,8 @@ public class DelegateBakedModel_cullMixin implements BakedOpacity {
     }
 
     @Override
-    public void moreculling$resetTranslucencyCache() {
-        ((BakedOpacity) parent).moreculling$resetTranslucencyCache();
-    }
-
-    @Override
-    public void moreculling$initTranslucencyCache(BlockState state) {
-        ((BakedOpacity) parent).moreculling$initTranslucencyCache(state);
+    public void moreculling$resetTranslucencyCache(BlockState state) {
+        ((BakedOpacity) parent).moreculling$resetTranslucencyCache(state);
     }
 
     @Override

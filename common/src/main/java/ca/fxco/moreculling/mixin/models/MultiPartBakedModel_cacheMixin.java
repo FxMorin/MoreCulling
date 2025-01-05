@@ -44,13 +44,8 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
     }
 
     @Override
-    public void moreculling$resetTranslucencyCache() {
+    public void moreculling$resetTranslucencyCache(BlockState state) {
         solidFaces = 0;
-    }
-
-    @Override
-    public void moreculling$initTranslucencyCache(BlockState state) {
-        moreculling$resetTranslucencyCache();
         for (Direction face : Direction.values()) {
             List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
                     face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);

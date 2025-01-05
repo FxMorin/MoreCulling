@@ -66,7 +66,7 @@ public class Minecraft_managersMixin {
         this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager -> {
             ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
                     .forEach((state, model) ->
-                            ((BakedOpacity) model).moreculling$initTranslucencyCache(state));
+                            ((BakedOpacity) model).moreculling$resetTranslucencyCache(state));
         });
     }
 }
