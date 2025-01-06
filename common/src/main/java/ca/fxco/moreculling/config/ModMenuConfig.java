@@ -277,13 +277,23 @@ public class ModMenuConfig {
         generalCategory.addEntry(itemFrame3FaceCulling);
         generalCategory.addEntry(itemFrame3FaceCullingRange);
 
-        // BlockStates
+        // Paintings
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
                 .setValue(MoreCulling.CONFIG.paintingCulling)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.paintingCulling = newValue;
+                })
+                .build());
+
+        //TODO name and description
+        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
+                .setValue(MoreCulling.CONFIG.paintingBatching)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.paintingBatching = newValue;
                 })
                 .build());
 

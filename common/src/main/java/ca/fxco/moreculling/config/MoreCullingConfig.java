@@ -42,6 +42,8 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean paintingCulling = true;
 
+    public boolean paintingBatching = true;
+
     public LeavesCullingMode leavesCullingMode = LeavesCullingMode.DEFAULT;
 
     public int leavesCullingAmount = 2;

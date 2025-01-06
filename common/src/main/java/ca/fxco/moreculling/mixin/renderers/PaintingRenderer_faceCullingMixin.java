@@ -99,13 +99,17 @@ public abstract class PaintingRenderer_faceCullingMixin {
 
         boolean singleLight = true;
         int lastLight = -1;
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                int light = lightCoords[i + j * width];
-                if (i == 0 && j == 0) {
-                    lastLight = light;
-                } else if (light != lastLight) {
-                    singleLight = false;
+        if (MoreCulling.CONFIG.paintingBatching) {
+            lightLoop:
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    int light = lightCoords[i + j * width];
+                    if (i == 0 && j == 0) {
+                        lastLight = light;
+                    } else if (light != lastLight) {
+                        singleLight = false;
+                        break lightLoop;
+                    }
                 }
             }
         }
@@ -123,6 +127,47 @@ public abstract class PaintingRenderer_faceCullingMixin {
             this.vertex(pose, consumer, negHalfX, y2, fU1, fV0, -0.03125F, 0, 0, -1, lastLight);
             this.vertex(pose, consumer, x2, y2, fU0, fV0, -0.03125F, 0, 0, -1, lastLight);
 
+            boolean shouldRenderBack = false;
+            shouldCullLoop : for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (!CullingUtils.shouldCullPaintingBack(positions[x][y], opposite)) {
+                        shouldRenderBack = true;
+                        break shouldCullLoop;
+                    }
+                }
+            }
+
+            if (shouldRenderBack) {
+                //back
+                this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, lastLight);
+                this.vertex(pose, consumer, negHalfX, y2, u0, v0 , 0.03125F, 0, 0, 1, lastLight);
+                this.vertex(pose, consumer, negHalfX, negHalfY, u0, v1, 0.03125F, 0, 0, 1, lastLight);
+                this.vertex(pose, consumer, x2, negHalfY, u1, v1, 0.03125F, 0, 0, 1, lastLight);
+            }
+
+            //up
+            this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, 0, 1, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, y2, u1, v0, -0.03125F, 0, 1, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, y2, u1, vY, 0.03125F, 0, 1, 0, lastLight);
+            this.vertex(pose, consumer, x2, y2, u0, vY, 0.03125F, 0, 1, 0, lastLight);
+
+            //down
+            this.vertex(pose, consumer, x2, negHalfY, u0, v0, 0.03125F, 0, -1, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, negHalfY, u1, v0, 0.03125F, 0, -1, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, negHalfY, u1, vY, -0.03125F, 0, -1, 0, lastLight);
+            this.vertex(pose, consumer, x2, negHalfY, u0, vY, -0.03125F, 0, -1, 0, lastLight);
+
+            //left
+            this.vertex(pose, consumer, x2, y2, uY, v0, 0.03125F, -1, 0, 0, lastLight);
+            this.vertex(pose, consumer, x2, negHalfY, uY, v1, 0.03125F, -1, 0, 0, lastLight);
+            this.vertex(pose, consumer, x2, negHalfY, u0, v1, -0.03125F, -1, 0, 0, lastLight);
+            this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, -1, 0, 0, lastLight);
+
+            //right
+            this.vertex(pose, consumer, negHalfX, y2, uY, v0, -0.03125F, 1, 0, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, negHalfY, uY, v1, -0.03125F, 1, 0, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, negHalfY, u0, v1, 0.03125F, 1, 0, 0, lastLight);
+            this.vertex(pose, consumer, negHalfX, y2, u0, v0, 0.03125F, 1, 0, 0, lastLight);
         } else {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
