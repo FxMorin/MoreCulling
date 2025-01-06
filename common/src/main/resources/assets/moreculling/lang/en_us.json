@@ -31,6 +31,8 @@
 	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Change the distance that this culling starts to work at, may be visible at smaller distances",
 	"moreculling.config.option.paintingCulling": "Painting Culling",
 	"moreculling.config.option.paintingCulling.tooltip": "Culls back and inner faces of the painting",
+	"moreculling.config.option.paintingBatching": "Painting Batching",
+	"moreculling.config.option.paintingBatching.tooltip": "draws paintings in one face instead of many if light is the same. changes how back and sides look",
 	"moreculling.config.option.leavesCulling": "Leaves Culling",
 	"moreculling.config.option.leavesCulling.tooltip": "Change the type of culling used for leaves",
 	"moreculling.config.option.leavesCullingAmount": "Leaves Culling Amount",

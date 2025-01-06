@@ -182,6 +182,15 @@ public class SodiumOptionPage {
                 .onChanged((instance, value) -> itemFrame3FaceRange.setAvailable(instance.isAvailable() && value))
                 .build();
 
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> paintingBatchingOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setNameTranslation("moreculling.config.option.paintingBatching")
+                .setTooltip(Component.translatable("moreculling.config.option.paintingBatching.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().paintingCulling)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.paintingBatching = value, opts -> opts.paintingBatching)
+                .build();
+
         groups.add(OptionGroup.createBuilder()
                 .add(rainCulling)
                 .add(cloudCulling)
@@ -211,6 +220,20 @@ public class SodiumOptionPage {
                 .add(itemFrame3FaceRange)
                 .build()
         );
+
+        groups.add(OptionGroup.createBuilder()
+                .add(MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                        .setNameTranslation("moreculling.config.option.paintingCulling")
+                        .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
+                        .setControl(TickBoxControl::new)
+                        .setImpact(OptionImpact.MEDIUM)
+                        .setBinding((opts, value) -> opts.paintingCulling = value, opts -> opts.paintingCulling)
+                        .onChanged((instance, value) -> {
+                            paintingBatchingOption.setAvailable(value);
+                        })
+                        .build())
+                .add(paintingBatchingOption)
+                .build());
 
         groups.add(OptionGroup.createBuilder()
                 .add(leavesCullingMode)

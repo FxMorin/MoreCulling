@@ -112,6 +112,8 @@ public abstract class PaintingRenderer_faceCullingMixin {
                     }
                 }
             }
+        } else {
+            singleLight = false;
         }
 
         if (singleLight) { // Batch faces together

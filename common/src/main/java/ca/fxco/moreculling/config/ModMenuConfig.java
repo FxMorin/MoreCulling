@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.StringListBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,6 +38,42 @@ public class ModMenuConfig {
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.general"));
         ConfigCategory compatCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.compat"));
+
+        //dont cull list
+        StringListListEntry dontCullList = new StringListBuilder(
+                Component.translatable("text.cloth-config.reset_value"),
+                Component.translatable("moreculling.config.option.dontCull"), MoreCulling.CONFIG.dontCull)
+                .setDefaultValue(new ArrayList<>())
+                .setTooltip(Component.translatable("moreculling.config.option.dontCull.tooltip"))
+                .setSaveConsumer(
+                        value -> {
+                            MoreCulling.CONFIG.dontCull.forEach(prevBlockId -> {
+                                        Optional<Holder.Reference<Block>> optionalBlock =
+                                                BuiltInRegistries.BLOCK.get(ResourceLocation.parse(prevBlockId));
+
+                                        if (optionalBlock.isEmpty())
+                                            return;
+
+                                        ((MoreBlockCulling) optionalBlock.get().value()).moreculling$setCanCull(true);
+                                    }
+                            );
+
+                            value.forEach(blockId -> {
+                                Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+
+                                if (optionalBlock.isEmpty()) {
+                                    MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);
+                                    return;
+                                }
+
+                                MoreBlockCulling block = (MoreBlockCulling) optionalBlock.get().value();
+                                if (block.moreculling$canCull())
+                                    block.moreculling$setCanCull(false);
+                            });
+
+                            MoreCulling.CONFIG.dontCull = value;
+                        }
+                ).build();
 
         // Modded Blocks
         List<DynamicBooleanListEntry> modsOption = new ArrayList<>();
@@ -191,42 +228,6 @@ public class ModMenuConfig {
                 })
                 .build());
 
-        //dont cull list
-        generalCategory.addEntry(new StringListBuilder(
-                Component.translatable("text.cloth-config.reset_value"),
-                Component.translatable("moreculling.config.option.dontCull"), MoreCulling.CONFIG.dontCull)
-                .setDefaultValue(new ArrayList<>())
-                .setTooltip(Component.translatable("moreculling.config.option.dontCull.tooltip"))
-                .setSaveConsumer(
-                        value -> {
-                            MoreCulling.CONFIG.dontCull.forEach(prevBlockId -> {
-                                        Optional<Holder.Reference<Block>> optionalBlock =
-                                                BuiltInRegistries.BLOCK.get(ResourceLocation.parse(prevBlockId));
-
-                                        if (optionalBlock.isEmpty())
-                                            return;
-
-                                        ((MoreBlockCulling) optionalBlock.get().value()).moreculling$setCanCull(true);
-                                    }
-                            );
-
-                            value.forEach(blockId -> {
-                                Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
-
-                                if (optionalBlock.isEmpty()) {
-                                    MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);
-                                    return;
-                                }
-
-                                MoreBlockCulling block = (MoreBlockCulling) optionalBlock.get().value();
-                                if (block.moreculling$canCull())
-                                    block.moreculling$setCanCull(false);
-                            });
-
-                            MoreCulling.CONFIG.dontCull = value;
-                        }
-                ).build());
-
         // Item Frames
         DynamicBooleanListEntry itemFrameMapCulling = new DynamicBooleanBuilder("moreculling.config.option.itemFrameMapCulling")
                 .setValue(MoreCulling.CONFIG.itemFrameMapCulling)
@@ -278,22 +279,20 @@ public class ModMenuConfig {
         generalCategory.addEntry(itemFrame3FaceCullingRange);
 
         // Paintings
+        DynamicBooleanListEntry paintingBatching = new DynamicBooleanBuilder("moreculling.config.option.paintingBatching")
+                .setValue(MoreCulling.CONFIG.paintingBatching)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("moreculling.config.option.paintingBatching.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingBatching = newValue)
+                .build();
+
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
                 .setValue(MoreCulling.CONFIG.paintingCulling)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
-                .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.paintingCulling = newValue;
-                })
-                .build());
-
-        //TODO name and description
-        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
-                .setValue(MoreCulling.CONFIG.paintingBatching)
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
-                .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.paintingBatching = newValue;
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingCulling = newValue)
+                .setChangeConsumer((instance, value) -> {
+                    paintingBatching.setEnabledState(value);
                 })
                 .build());
 
@@ -304,6 +303,7 @@ public class ModMenuConfig {
         generalCategory.addEntry(endGatewayCulling);
         leavesCullingAmount.setEnabledState(leavesCullingMode.isEnabled() && MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.DEPTH);
 
+        compatCategory.addEntry(dontCullList);
         compatCategory.addEntry(useOnModdedBlocks);
         for (DynamicBooleanListEntry entry : modsOption) {
             compatCategory.addEntry(entry);
