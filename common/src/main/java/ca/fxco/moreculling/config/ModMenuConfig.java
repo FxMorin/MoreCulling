@@ -281,9 +281,25 @@ public class ModMenuConfig {
         // Paintings
         DynamicBooleanListEntry paintingBatching = new DynamicBooleanBuilder("moreculling.config.option.paintingBatching")
                 .setValue(MoreCulling.CONFIG.paintingBatching)
-                .setDefaultValue(true)
+                .setDefaultValue(false)
                 .setTooltip(Component.translatable("moreculling.config.option.paintingBatching.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingBatching = newValue)
+                .build();
+
+        DynamicIntSliderEntry paintingLODRange = new DynamicIntSliderBuilder("moreculling.config.option.paintingLODRange", 0, 128)
+                .setValue(MoreCulling.CONFIG.paintingLODRange)
+                .setDefaultValue(64)
+                .setTooltip(Component.translatable("moreculling.config.option.paintingLODRange.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingLODRange = newValue)
+                .build();
+        DynamicBooleanListEntry paintingLOD = new DynamicBooleanBuilder("moreculling.config.option.paintingLOD")
+                .setValue(MoreCulling.CONFIG.paintingLOD)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("moreculling.config.option.paintingLOD.tooltip"))
+                .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingLOD = newValue)
+                .setChangeConsumer((instance, value) -> {
+                    paintingLODRange.setEnabledState(value);
+                })
                 .build();
 
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
@@ -293,8 +309,13 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.paintingCulling = newValue)
                 .setChangeConsumer((instance, value) -> {
                     paintingBatching.setEnabledState(value);
+                    paintingLOD.setEnabledState(value);
+                    paintingLODRange.setEnabledState(value);
                 })
                 .build());
+        generalCategory.addEntry(paintingBatching);
+        generalCategory.addEntry(paintingLOD);
+        generalCategory.addEntry(paintingLODRange);
 
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingAmount);

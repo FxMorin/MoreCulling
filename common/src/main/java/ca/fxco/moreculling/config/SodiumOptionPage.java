@@ -190,6 +190,25 @@ public class SodiumOptionPage {
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.paintingBatching = value, opts -> opts.paintingBatching)
                 .build();
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> paintingLODRangeOption = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
+                .setNameTranslation("moreculling.config.option.paintingLODRange")
+                .setTooltip(Component.translatable("moreculling.config.option.paintingLODRange.tooltip"))
+                .setControl(option -> new SliderControl(option, 2, 16, 1, ControlValueFormatter.number()))
+                .setEnabled(morecullingOpts.getData().paintingCulling)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.paintingLODRange = value, opts -> opts.paintingLODRange)
+                .build();
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> paintingLODOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
+                .setNameTranslation("moreculling.config.option.paintingLOD")
+                .setTooltip(Component.translatable("moreculling.config.option.paintingLOD.tooltip"))
+                .setControl(TickBoxControl::new)
+                .setEnabled(morecullingOpts.getData().paintingLOD)
+                .setImpact(OptionImpact.MEDIUM)
+                .setBinding((opts, value) -> opts.paintingLOD = value, opts -> opts.paintingLOD)
+                .onChanged((instance, value) -> {
+                        paintingLODRangeOption.setAvailable(value);
+                })
+                .build();
 
         groups.add(OptionGroup.createBuilder()
                 .add(rainCulling)
@@ -230,9 +249,13 @@ public class SodiumOptionPage {
                         .setBinding((opts, value) -> opts.paintingCulling = value, opts -> opts.paintingCulling)
                         .onChanged((instance, value) -> {
                             paintingBatchingOption.setAvailable(value);
+                            paintingLODOption.setAvailable(value);
+                            paintingLODRangeOption.setAvailable(value);
                         })
                         .build())
                 .add(paintingBatchingOption)
+                .add(paintingLODOption)
+                .add(paintingLODRangeOption)
                 .build());
 
         groups.add(OptionGroup.createBuilder()

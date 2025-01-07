@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PaintingRenderer;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -115,6 +116,9 @@ public abstract class PaintingRenderer_faceCullingMixin {
         } else {
             singleLight = false;
         }
+        boolean useLod = MoreCulling.CONFIG.paintingLOD &&
+                Minecraft.getInstance().cameraEntity.distanceToSqr(renderState.x, renderState.y, renderState.z) >
+                        MoreCulling.CONFIG.paintingLODRange * MoreCulling.CONFIG.paintingLODRange;
 
         if (singleLight) { // Batch faces together
             float x2 = negHalfX + (float) (width);
@@ -147,6 +151,10 @@ public abstract class PaintingRenderer_faceCullingMixin {
                 this.vertex(pose, consumer, x2, negHalfY, u1, v1, 0.03125F, 0, 0, 1, lastLight);
             }
 
+            if (useLod) {
+                return;
+            }
+
             //up
             this.vertex(pose, consumer, x2, y2, u0, v0, -0.03125F, 0, 1, 0, lastLight);
             this.vertex(pose, consumer, negHalfX, y2, u1, v0, -0.03125F, 0, 1, 0, lastLight);
@@ -170,6 +178,35 @@ public abstract class PaintingRenderer_faceCullingMixin {
             this.vertex(pose, consumer, negHalfX, negHalfY, uY, v1, -0.03125F, 1, 0, 0, lastLight);
             this.vertex(pose, consumer, negHalfX, negHalfY, u0, v1, 0.03125F, 1, 0, 0, lastLight);
             this.vertex(pose, consumer, negHalfX, y2, u0, v0, 0.03125F, 1, 0, 0, lastLight);
+        } else if (useLod) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    // Vertices are drawn from the center, so use negative to offset
+                    float x1 = negHalfX + (float) x;
+                    float x2 = negHalfX + (float) (x + 1);
+                    float y1 = negHalfY + (float) y;
+                    float y2 = negHalfY + (float) (y + 1);
+                    int light = lightCoords[x + y * width];
+                    // Get the UV's for a single block of the texture instead of the entire texture
+                    float fU0 = variant.getU((float) (d0 * (double) (width - x)));        // Front U0
+                    float fU1 = variant.getU((float) (d0 * (double) (width - (x + 1))));  // Front U1
+                    float fV0 = variant.getV((float) (d1 * (double) (height - y)));       // Front V0
+                    float fV1 = variant.getV((float) (d1 * (double) (height - (y + 1)))); // Front V1
+                    //front
+                    this.vertex(pose, consumer, x2, y1, fU1, fV0, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x1, y1, fU0, fV0, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
+                    this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
+
+                    if (!CullingUtils.shouldCullPaintingBack(positions[x][y], opposite)) {
+                        //back
+                        this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x1, y1, u0, v1, 0.03125F, 0, 0, 1, light);
+                        this.vertex(pose, consumer, x2, y1, u1, v1, 0.03125F, 0, 0, 1, light);
+                    }
+                }
+            }
         } else {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
