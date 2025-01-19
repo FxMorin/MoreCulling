@@ -25,10 +25,9 @@ import java.util.List;
 @Mixin(value = ItemRenderer.class, priority = 1200)
 public class ItemRenderer_sodiumMixin {
 
-    // Sodium cancels the entire method... again
     @TargetHandler(
             mixin = "net.caffeinemc.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
-            name = "renderModelFast"
+            name = "renderModelFastDirections"
     )
     @Redirect(
             method = "@MixinSquared:Handler",
@@ -41,40 +40,5 @@ public class ItemRenderer_sodiumMixin {
     )
     private static Direction[] moreculling$modifyDirections$Sodium() {
         return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
-    }
-
-    @TargetHandler(
-            mixin = "net.caffeinemc.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
-            name = "renderModelFast"
-    )
-    @WrapOperation(
-            method = "@MixinSquared:Handler",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(" +
-                            "Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;" +
-                            "Lnet/minecraft/util/RandomSource;)Ljava/util/List;"
-            )
-    )
-    private static List<BakedQuad> moreculling$onlySomeFaces$Sodium(BakedModel instance, BlockState blockState,
-                                                             Direction direction, RandomSource random,
-                                                             Operation<List<BakedQuad>> original) {
-        if (ItemRendererStates.DIRECTIONS != null) {
-            List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
-            Iterator<BakedQuad> iterator = bakedQuads.iterator();
-            quads:
-            while (iterator.hasNext()) {
-                BakedQuad bakedQuad = iterator.next();
-                Direction face = bakedQuad.getDirection();
-                for (Direction dir : ItemRendererStates.DIRECTIONS) {
-                    if (face == dir) {
-                        continue quads;
-                    }
-                }
-                iterator.remove();
-            }
-            return bakedQuads;
-        }
-        return original.call(instance, blockState, direction, random);
     }
 }

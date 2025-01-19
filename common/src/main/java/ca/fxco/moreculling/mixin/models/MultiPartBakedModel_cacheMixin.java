@@ -5,6 +5,7 @@ import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.platform.Services;
 import ca.fxco.moreculling.utils.BitUtils;
 import ca.fxco.moreculling.utils.CullingUtils;
+import ca.fxco.moreculling.utils.DirectionUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.MultiPartBakedModel;
@@ -46,7 +47,7 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         solidFaces = 0;
-        for (Direction face : Direction.values()) {
+        for (Direction face : DirectionUtils.DIRECTIONS) {
             List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
                     face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
             if (quads.isEmpty()) { // no faces = translucent
