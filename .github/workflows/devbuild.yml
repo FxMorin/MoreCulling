@@ -29,8 +29,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Upload Build Artifact
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with: 
           name: moreculling-dev
-          path: build/libs/*.jar
+          path: |
+            fabric/build/libs/*.jar
+            neoforge/build/libs/*.jar
