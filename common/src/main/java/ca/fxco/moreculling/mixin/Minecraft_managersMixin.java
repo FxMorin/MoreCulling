@@ -31,10 +31,6 @@ public class Minecraft_managersMixin {
     @Final
     private ModelManager modelManager;
 
-    @Shadow
-    @Final
-    private ReloadableResourceManager resourceManager;
-
     @Inject(
             method = "<init>",
             at = @At(
@@ -58,15 +54,5 @@ public class Minecraft_managersMixin {
     )
     private void moreculling$onBlockRenderManagerInitialized(GameConfig args, CallbackInfo ci) {
         MoreCulling.blockRenderManager = this.blockRenderer;
-
-        // Make sure to reload block states on resource reload
-        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager ->
-                Block.BLOCK_STATE_REGISTRY.forEach(BlockBehaviour.BlockStateBase::initCache));
-
-        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager -> {
-            ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
-                    .forEach((state, model) ->
-                            ((BakedOpacity) model).moreculling$resetTranslucencyCache(state));
-        });
     }
 }

@@ -21,7 +21,10 @@ public class MoreCulling {
     public static BlockRenderDispatcher blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
-    public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
+    public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
+    public static final ResourceLocation RELOAD_LISTENER_ID = ResourceLocation
+            .fromNamespaceAndPath(MoreCulling.MOD_ID, "init_blockstate_culling_cache");
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static MoreCullingConfig CONFIG;

@@ -40,9 +40,9 @@ config = "${mod_id}.neoforge.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="cloth_config"
-    type="required"
-    versionRange="[15.0.0, )"
+    modId="sodium"
+    type="incompatible"
+    versionRange="[, 0.6.7)"
     ordering="AFTER"
     side="BOTH"
 

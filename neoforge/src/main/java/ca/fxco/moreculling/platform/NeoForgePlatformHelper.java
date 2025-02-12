@@ -45,4 +45,5 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
                                     RandomSource source, BlockGetter level, BlockPos pos) {
         return model.getQuads(state, direction, source, level.getModelData(pos), null);
     }
+
 }
