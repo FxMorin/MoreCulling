@@ -2,12 +2,15 @@ package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.mixin.accessors.LevelRendererAccessor;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -20,45 +23,34 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WeatherEffectRenderer.class)
 public class WeatherEffectRenderer_rainMixin {
-    @Inject(
-            method = "getPrecipitationAt",
-            locals = LocalCapture.CAPTURE_FAILSOFT,
+
+    @WrapOperation(
+            method = "collectColumnInstances",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/Level;getBiome(" +
-                            "Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;",
-                    shift = At.Shift.BEFORE
+                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;" +
+                            "getPrecipitationAt(Lnet/minecraft/world/level/Level;" +
+                            "Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"
             )
     )
-    private void moreculling$checkRainFrustum(Level level, BlockPos mutable,
-                                              CallbackInfoReturnable<Biome.Precipitation> cir,
-                                              @Share("skipLoop") LocalBooleanRef skipLoopRef) {
+    private Biome.Precipitation moreculling$checkRainFrustum(WeatherEffectRenderer instance, Level level, BlockPos pos,
+                                                             Operation<Biome.Precipitation> original) {
         if (!MoreCulling.CONFIG.rainCulling) {
-            return;
+            return original.call(instance, level, pos);
         }
-        skipLoopRef.set(!((LevelRendererAccessor) Minecraft.getInstance().levelRenderer).getFrustum().isVisible(new AABB(
-                mutable.getX() + 1,
+
+        if (!((LevelRendererAccessor) Minecraft.getInstance().levelRenderer).getFrustum().isVisible(new AABB(
+                pos.getX() + 1,
                 level.getHeight(),
-                mutable.getZ() + 1,
-                mutable.getX(),
-                level.getHeight(Heightmap.Types.MOTION_BLOCKING, mutable.getX(), mutable.getZ()),
-                mutable.getZ()
-        )));
+                pos.getZ() + 1,
+                pos.getX(),
+                level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()),
+                pos.getZ()
+        ))) {
+            return Biome.Precipitation.NONE;
+        }
+
+        return original.call(instance, level, pos);
     }
 
-    @Inject(
-            method = "getPrecipitationAt",
-            at = @At(
-                    value = "RETURN",
-                    ordinal = 1
-            ),
-            cancellable = true
-    )
-    private void moreculling$skipRainLoop(Level level, BlockPos blockPos,
-                                          CallbackInfoReturnable<Biome.Precipitation> cir,
-                                          @Share("skipLoop") LocalBooleanRef skipLoopRef, @Local Biome biome) {
-        if (skipLoopRef.get() && !biome.hasPrecipitation()) {
-            cir.setReturnValue(Biome.Precipitation.NONE);
-        }
-    }
 }
