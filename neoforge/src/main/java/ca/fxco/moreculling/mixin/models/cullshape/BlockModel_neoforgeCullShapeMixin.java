@@ -3,7 +3,6 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
-import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -69,7 +68,6 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                     }
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
-                return;
             }
         } else {
             List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
@@ -80,9 +78,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                     voxelShape = Shapes.or(voxelShape, shape);
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
-                return;
             }
         }
-        bakedOpacity.moreculling$setCullingShape(null);
     }
 }
