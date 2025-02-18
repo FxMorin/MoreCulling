@@ -4,7 +4,6 @@ import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.UnbakedModel;
@@ -24,9 +23,6 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Shadow
     @Nullable
     private UnbakedModel parent;
-
-    @Shadow
-    abstract List<BlockElement> getElements();
 
     @Unique
     @Nullable
