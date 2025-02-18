@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -61,10 +62,10 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                         VoxelShape shape = Block.box(
                                 e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z
                         );
-                        voxelShape = Shapes.or(voxelShape, shape);
+                        voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);
                     }
                 }
-                bakedOpacity.moreculling$setCullingShape(voxelShape);
+                bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
                 return;
             }
         } else {
