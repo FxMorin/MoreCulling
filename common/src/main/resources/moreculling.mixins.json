@@ -49,7 +49,6 @@
     "models.cullshape.Deserializer_cullShapeMixin",
     "models.cullshape.BlockModel_cullShapeMixin",
     "models.cullshape.BlockStateBase_cullShapeMixin",
-    "models.cullshape.ModelManager_cullShapeMixin",
     "renderers.ItemRenderer_faceCullingMixin",
     "renderers.ItemStackRenderState_apiMixin",
     "renderers.ItemStackRenderState_faceCullingMixin",

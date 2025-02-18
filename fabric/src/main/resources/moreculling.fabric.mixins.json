@@ -9,7 +9,8 @@
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
-    "models.cullshape.BlockModel_fabricCullShapeMixin"
+    "models.cullshape.BlockModel_fabricCullShapeMixin",
+    "models.cullshape.ModelManager_cullShapeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

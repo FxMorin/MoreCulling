@@ -4,7 +4,6 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
@@ -19,10 +18,7 @@ import java.util.Map;
 public class ModelManager_cullShapeMixin {
 
     @WrapOperation(
-            method = {
-                    "lambda$loadBlockModels$10",
-                    "method_65750"
-            },
+            method = "method_65750",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/block/model/BlockModel;fromStream(" +
