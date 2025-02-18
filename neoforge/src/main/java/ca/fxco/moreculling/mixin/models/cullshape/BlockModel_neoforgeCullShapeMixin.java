@@ -47,20 +47,21 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                                     ContextMap additionalProperties,
                                     CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
-        if (bakedModel == null || !(parent instanceof BlockModel blockModel)) {
+        if (bakedModel == null) {
             return;
         }
         BakedOpacity bakedOpacity = (BakedOpacity) bakedModel;
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        ResourceLocation id = blockModel.parentLocation;
+        ResourceLocation id = bakedModel instanceof BlockModel model ? model.parentLocation : null;
         if (moreculling$getUseModelShape(id)) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = Shapes.empty();
                 for (BlockElement e : modelElementList) {
-                    if (e.rotation == null || e.rotation.angle() == 0) {
+                    if ((e.rotation == null || e.rotation.angle() == 0) &&
+                            e.from.x <= e.to.x && e.from.y <= e.to.y && e.from.z <= e.to.z) {
                         VoxelShape shape = Block.box(
                                 e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z
                         );

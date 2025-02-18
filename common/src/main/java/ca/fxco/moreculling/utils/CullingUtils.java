@@ -100,14 +100,16 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,
                                                         BlockPos thisPos, BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
+                (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
+                        .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             boolean isSurrounded = true;
             for (Direction dir : DirectionUtils.DIRECTIONS) {
                 if (dir != side) {
                     BlockPos pos = thisPos.relative(dir);
                     BlockState state = view.getBlockState(pos);
                     isSurrounded &= state.getBlock() instanceof LeavesBlock ||
-                            (state.canOcclude() && state.isFaceSturdy(view, pos, dir.getOpposite()));
+                            (state.canOcclude() && ((StateCullingShapeCache) state)
+                                    .moreculling$getFaceCullingShape(dir.getOpposite()) == Shapes.block());
                 }
             }
             return isSurrounded ? Optional.of(false) : Optional.empty();
@@ -119,12 +121,14 @@ public class CullingUtils {
                                                       BlockPos sidePos, Direction side) {
         Direction oppositeSide = side.getOpposite();
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, oppositeSide))) {
+                (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
+                        .moreculling$getFaceCullingShape(oppositeSide) == Shapes.block())) {
             for (int i = 1; i < (5 - MoreCulling.CONFIG.leavesCullingAmount); i++) {
                 BlockPos pos = sidePos.relative(side, i);
                 BlockState state = view.getBlockState(pos);
                 if (state == null || !(state.getBlock() instanceof LeavesBlock ||
-                        (state.canOcclude() && state.isFaceSturdy(view, pos, oppositeSide)))) {
+                        (state.canOcclude() && ((StateCullingShapeCache) state)
+                                .moreculling$getFaceCullingShape(oppositeSide) == Shapes.block()))) {
                     return Optional.of(false);
                 }
             }
@@ -135,7 +139,8 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceDepth(BlockGetter view, BlockState sideState,
                                                         BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
+                (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
+                        .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
                 BlockState state = view.getBlockState(sidePos.relative(side, i));
                 if (state == null || state.isAir()) {
@@ -150,7 +155,8 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceRandom(BlockGetter view, BlockState sideState,
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
-                (sideState.canOcclude() && sideState.isFaceSturdy(view, sidePos, side.getOpposite()))) {
+                (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
+                        .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             if (RANDOM.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }
@@ -162,7 +168,8 @@ public class CullingUtils {
         Direction dir = frame.direction;
         BlockPos posBehind = new BlockPos((int) Math.floor(frame.x), (int) Math.floor(frame.y), (int) Math.floor(frame.z)).relative(dir.getOpposite());
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
-        return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, dir);
+        return blockState.canOcclude() && ((StateCullingShapeCache) blockState)
+                .moreculling$getFaceCullingShape(dir) == Shapes.block();
     }
 
     public static boolean shouldShowMapFace(Direction facingDir, ItemFrameRenderState framePos, Vec3 cameraPos) {
@@ -192,6 +199,7 @@ public class CullingUtils {
     public static boolean shouldCullPaintingBack(BlockPos paintingPos, Direction oppositeDir) {
         BlockPos posBehind = paintingPos.relative(oppositeDir, 1);
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
-        return blockState.canOcclude() && blockState.isFaceSturdy(Minecraft.getInstance().level, posBehind, oppositeDir);
+        return blockState.canOcclude() && ((StateCullingShapeCache) blockState)
+                .moreculling$getFaceCullingShape(oppositeDir) == Shapes.block();
     }
 }
