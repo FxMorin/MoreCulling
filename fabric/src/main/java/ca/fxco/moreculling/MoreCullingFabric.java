@@ -23,29 +23,5 @@ public class MoreCullingFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MoreCulling.init();
-
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
-                .registerReloadListener(new IdentifiableResourceReloadListener() {
-                    @Override
-                    public ResourceLocation getFabricId() {
-                        return MoreCulling.RELOAD_LISTENER_ID;
-                    }
-
-                    @Override
-                    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, Executor backgroundExecutor, Executor gameExecutor) {
-                        return barrier.wait(Unit.INSTANCE).thenRunAsync(() -> {
-                            ProfilerFiller profilerfiller = Profiler.get();
-                            profilerfiller.push("listener");
-
-                            Block.BLOCK_STATE_REGISTRY.forEach(BlockBehaviour.BlockStateBase::initCache);
-
-                            ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
-                                    .forEach((state, model) ->
-                                            ((BakedOpacity) model).moreculling$resetTranslucencyCache(state));
-
-                            profilerfiller.pop();
-                        }, gameExecutor);
-                    }
-                });
     }
 }
