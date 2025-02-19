@@ -4,6 +4,8 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import me.fallenbreath.conditionalmixin.api.annotation.Condition;
+import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,7 @@ import java.io.Reader;
 import java.util.Map;
 
 @Mixin(ModelManager.class)
+@Restriction(conflict = @Condition("fabric-model-loading-api-v1"))
 public class ModelManager_cullShapeMixin {
 
     @WrapOperation(

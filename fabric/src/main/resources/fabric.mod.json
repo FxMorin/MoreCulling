@@ -38,7 +38,8 @@
     "sodium": ">=0.6.7"
   },
   "breaks": {
-    "sodium": "<=0.6.6"
+    "sodium": "<=0.6.6",
+    "fabric-model-loading-api-v1": "<=0.115.1"
   },
   "custom": {
     "modmenu": {

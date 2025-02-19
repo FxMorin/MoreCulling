@@ -19,28 +19,32 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    void moreculling$setCullShapeElements(List<CullShapeElement> cullShapeElements);
+    default void moreculling$setCullShapeElements(List<CullShapeElement> cullShapeElements) {}
 
     /**
      * Gets the CullShapeElement for the extended unbaked model
      *
      * @since 0.25.0
      */
-    List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id);
+    default List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
+        return List.of();
+    }
 
     /**
      * When set to true, the cull shape is completely ignored and instead the model will be used as the cull shape
      *
      * @since 0.25.0
      */
-    void moreculling$setUseModelShape(boolean useModelShape);
+    default void moreculling$setUseModelShape(boolean useModelShape) {}
 
     /**
      * Returns if it should use the model shape instead of the cull shape
      *
      * @since 0.25.0
      */
-    boolean moreculling$getUseModelShape(ResourceLocation id);
+    default boolean moreculling$getUseModelShape(ResourceLocation id) {
+        return false;
+    }
 
     /**
      * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap

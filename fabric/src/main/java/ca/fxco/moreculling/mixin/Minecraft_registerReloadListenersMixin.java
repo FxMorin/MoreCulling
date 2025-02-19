@@ -1,12 +1,9 @@
 package ca.fxco.moreculling.mixin;
 
-import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;

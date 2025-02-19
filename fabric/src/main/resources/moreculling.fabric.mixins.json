@@ -11,7 +11,8 @@
     "models.ItemModelGenerator_cullMixin",
     "models.cullshape.BlockModel_fabricCullShapeMixin",
     "models.cullshape.ModelManager_cullShapeMixin",
-    "Minecraft_registerReloadListenersMixin"
+    "Minecraft_registerReloadListenersMixin",
+    "compat.ModelManager_fabricApiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
