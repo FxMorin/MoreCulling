@@ -39,6 +39,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     private @Nullable VoxelShape moreculling$cullVoxelShape;
     @Unique
     private @Nullable boolean moreculling$isItem = false;
+    private boolean moreculling$wasShapeOptimized = false;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -77,6 +78,13 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
 
     @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        if (!this.moreculling$wasShapeOptimized) {
+            if (this.moreculling$cullVoxelShape != null) {
+                this.moreculling$cullVoxelShape = moreculling$cullVoxelShape.optimize();
+            }
+            this.moreculling$wasShapeOptimized = true;
+        }
+
         return this.moreculling$cullVoxelShape;
     }
 

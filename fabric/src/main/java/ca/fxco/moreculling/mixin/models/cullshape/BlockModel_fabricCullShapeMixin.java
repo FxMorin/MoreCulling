@@ -65,7 +65,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                         voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);
                     }
                 }
-                bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
+                bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
         } else {
             List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
