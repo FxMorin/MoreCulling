@@ -67,7 +67,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                         voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);
                     }
                 }
-                bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
+                bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
         } else {
             List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
@@ -75,7 +75,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                 VoxelShape voxelShape = Shapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
                     VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = Shapes.or(voxelShape, shape);
+                    voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);;
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
