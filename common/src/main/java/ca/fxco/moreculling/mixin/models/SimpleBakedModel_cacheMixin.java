@@ -39,6 +39,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     private @Nullable VoxelShape moreculling$cullVoxelShape;
     @Unique
     private @Nullable boolean moreculling$isItem = false;
+    @Unique
     private boolean moreculling$wasShapeOptimized = false;
 
     @Override
