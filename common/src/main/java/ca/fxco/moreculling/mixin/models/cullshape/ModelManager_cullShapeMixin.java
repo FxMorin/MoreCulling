@@ -1,9 +1,7 @@
-package ca.fxco.moreculling.mixin.compat;
+package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.sugar.Local;
-import me.fallenbreath.conditionalmixin.api.annotation.Condition;
-import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -16,10 +14,17 @@ import java.io.Reader;
 import java.util.Map;
 
 @Mixin(value = ModelManager.class, priority = 1050)
-@Restriction(require = @Condition("fabric-model-loading-api-v1"))
-public class ModelManager_fabricApiMixin {
+public class ModelManager_cullShapeMixin {
 
-    @ModifyArg(method = "method_65750(Ljava/util/Map$Entry;)Lcom/mojang/datafixers/util/Pair;", at = @At(value = "INVOKE", target = "com/mojang/datafixers/util/Pair.of(Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/datafixers/util/Pair;", remap = false), index = 1)
+    @ModifyArg(
+            method = {"method_65750", "lambda$loadBlockModels$10"},
+            at = @At(
+                    value = "INVOKE",
+                    target = "com/mojang/datafixers/util/Pair.of(Ljava/lang/Object;" +
+                            "Ljava/lang/Object;)Lcom/mojang/datafixers/util/Pair;",
+                    remap = false
+            ),
+            index = 1)
     private static Object actuallyDeserializeModel(Object originalModel, @Local Reader reader,
                                                    @Local(argsOnly = true)
                                                    Map.Entry<ResourceLocation, Resource> entry) {

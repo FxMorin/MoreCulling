@@ -8,7 +8,6 @@
     "blockstates.Block_neoforgeDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
     "models.cullshape.BlockModel_neoforgeCullShapeMixin",
-    "models.cullshape.ModelManager_cullShapeMixin",
     "renderers.IBakedModelExtension_faceCullingMixin"
   ],
   "injectors": {

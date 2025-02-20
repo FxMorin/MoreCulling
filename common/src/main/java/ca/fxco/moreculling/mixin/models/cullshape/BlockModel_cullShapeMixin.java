@@ -71,16 +71,4 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
     }
 
-    /*@Redirect(
-            method = {"bake(Ljava/util/function/Function;" +
-                    "Lnet/minecraft/client/resources/model/ModelState;" +
-                    "Z)Lnet/minecraft/client/resources/model/BakedModel;"},
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
-            )
-    )
-    private Object moreculling$overrideFaceData(Map<Direction, BlockElementFace> map, Object direction) {
-        return moreculling$modifyElementFace(map.get((Direction) direction));
-    }*/
 }

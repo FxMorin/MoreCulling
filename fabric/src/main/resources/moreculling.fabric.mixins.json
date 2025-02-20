@@ -10,9 +10,7 @@
     "blockstates.Block_fabricDrawSideMixin",
     "models.ItemModelGenerator_cullMixin",
     "models.cullshape.BlockModel_fabricCullShapeMixin",
-    "models.cullshape.ModelManager_cullShapeMixin",
-    "Minecraft_registerReloadListenersMixin",
-    "compat.ModelManager_fabricApiMixin"
+    "Minecraft_registerReloadListenersMixin"
   ],
   "injectors": {
     "defaultRequire": 1
