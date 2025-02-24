@@ -25,7 +25,7 @@ public class ModelManager_cullShapeMixin {
                     remap = false
             ),
             index = 1)
-    private static Object actuallyDeserializeModel(Object originalModel, @Local Reader reader,
+    private static Object moreculling$enableModelShape(Object originalModel, @Local Reader reader,
                                                    @Local(argsOnly = true)
                                                    Map.Entry<ResourceLocation, Resource> entry) {
         UnbakedModel model = (UnbakedModel) originalModel;

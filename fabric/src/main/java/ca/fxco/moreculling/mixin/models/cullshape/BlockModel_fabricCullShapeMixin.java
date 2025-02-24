@@ -3,20 +3,19 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
+import ca.fxco.moreculling.utils.ShapeUtils;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,8 +61,13 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                         VoxelShape shape = Block.box(
                                 e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z
                         );
-                        voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);
+                        voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
                     }
+                }
+                Quaternionf quaternion = settings.getRotation().getLeftRotation();
+                if (quaternion.y != 0) {
+                    voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.SOUTH,
+                            Direction.fromYRot(Math.toDegrees(2.0f * Math.acos(quaternion.w))), voxelShape);
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
@@ -73,7 +77,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                 VoxelShape voxelShape = Shapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
                     VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = Shapes.joinUnoptimized(voxelShape, shape, BooleanOp.OR);
+                    voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
