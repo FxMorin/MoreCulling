@@ -24,9 +24,7 @@ public class CacheUtils {
         // Reset all model translucency cache
         Map<BlockState, BakedModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels();
         allModels.forEach((state, model) -> {
-            if (!state.canOcclude()) {
-                ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
-            }
+            ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
         });
         //TODO: Reset quad cache
         MoreCulling.LOGGER.info(allModels.size() + " cache(s) where cleared!");

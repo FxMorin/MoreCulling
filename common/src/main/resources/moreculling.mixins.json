@@ -25,7 +25,6 @@
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
     "blocks.EndGatewayBlock_cullMixin",
-    "blocks.EndRodBlock_cullMixin",
     "blocks.FletchingTableBlock_devMixin",
     "blocks.LadderBlock_cullAgainstMixin",
     "blocks.LeavesBlock_typesMixin",

@@ -3,17 +3,12 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
-import ca.fxco.moreculling.platform.Services;
-import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.SimpleBakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -57,8 +52,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
                 BakedQuad initialQuad = layeredQuads.removeFirst();
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
                 NativeImage image = opacity.moreculling$getUnmipmappedImage();
-                QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis(),
-                        image.getWidth(), image.getHeight());
+                QuadBounds bounds = VertexUtils.getQuadUvBounds(initialQuad, image.getWidth(), image.getHeight());
                 if (!opacity.moreculling$hasTranslucency(bounds)) {
                     if (!layeredQuads.isEmpty()) {
                         List<NativeImage> overlappingImages = new ArrayList<>();
