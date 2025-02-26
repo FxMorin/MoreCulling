@@ -4,6 +4,7 @@ import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import ca.fxco.moreculling.utils.ShapeUtils;
+import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -69,10 +69,20 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                         voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
                     }
                 }
-                Quaternionf quaternion = settings.getRotation().getLeftRotation();
-                if (quaternion.y != 0) {
-                    voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.SOUTH,
-                            Direction.fromYRot(Math.toDegrees(2.0f * Math.acos(quaternion.w))), voxelShape);
+
+                if (settings.getRotation() != Transformation.identity()) {;
+                    Direction direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.NORTH);
+                    if (direction.getAxis() != Direction.Axis.Y) {
+                        voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.NORTH, direction, voxelShape);
+                    } else {
+                        voxelShape = null;
+                        /*direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.UP); TODO
+                        if (direction.getAxis() != Direction.Axis.X) {
+                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
+                        } else {
+                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundZ(Direction.UP, direction, voxelShape);
+                        }*/
+                    }
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
             }

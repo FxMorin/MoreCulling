@@ -3,12 +3,11 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
@@ -29,8 +28,6 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
     @Shadow protected abstract BlockState asState();
 
     @Shadow private VoxelShape[] occlusionShapesByFace;
-
-    @Shadow public abstract VoxelShape getShape(BlockGetter level, BlockPos pos);
 
     @Shadow @Final private static VoxelShape[] EMPTY_OCCLUSION_SHAPES;
     @Shadow @Final private static VoxelShape[] FULL_BLOCK_OCCLUSION_SHAPES;
@@ -56,7 +53,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
         VoxelShape voxelShape = null;
         if (blockRenderManager != null) {
             BakedModel model = blockRenderManager.getBlockModel(this.asState());
-            if (model != null) {
+            if (model != null && !this.asState().hasProperty(BlockStateProperties.FACING)) {
                 voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
             }
         }

@@ -23,6 +23,8 @@
     "blocks.cullshape.BrewingStandBlock_voxelMixin",
     "blocks.cullshape.CampfireBlock_voxelMixin",
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
+    "blocks.cullshape.EndRodBlock_voxelMixin",
+    "blocks.cullshape.LightningRodBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
     "blocks.EndGatewayBlock_cullMixin",
     "blocks.FletchingTableBlock_devMixin",
