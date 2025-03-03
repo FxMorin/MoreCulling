@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.utils.CullingUtils;
 import net.minecraft.core.BlockPos;

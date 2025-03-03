@@ -1,10 +1,13 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -19,7 +22,7 @@ public class ShulkerBoxBlock_cullMixin extends Block implements MoreBlockCulling
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter world, BlockPos pos) {
         return Shapes.block();
     }
 

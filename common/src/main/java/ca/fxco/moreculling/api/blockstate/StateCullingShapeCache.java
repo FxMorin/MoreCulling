@@ -18,5 +18,11 @@ public interface StateCullingShapeCache {
      * @since 1.2.3
      */
     VoxelShape moreculling$getFaceCullingShape(Direction face);
+    /**
+     * Initialize the voxelshape used for culling
+     *
+     * @since 1.2.3
+     */
+    void moreculling$initShapeCache();
 
 }

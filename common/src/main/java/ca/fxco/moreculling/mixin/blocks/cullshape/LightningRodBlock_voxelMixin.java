@@ -1,6 +1,8 @@
 package ca.fxco.moreculling.mixin.blocks.cullshape;
 
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +30,7 @@ public class LightningRodBlock_voxelMixin extends Block {
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return moreculling$SHAPES[state.getValue(BlockStateProperties.FACING).ordinal()];
     }
 }

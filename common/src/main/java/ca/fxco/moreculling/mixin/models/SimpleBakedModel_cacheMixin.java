@@ -43,6 +43,11 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         moreculling$solidFaces.clear();
+
+        if (state.canOcclude()) {
+            moreculling$solidFaces.fill();
+        }
+
         for (Map.Entry<Direction, List<BakedQuad>> entry : culledFaces.entrySet()) {
             Direction direction = entry.getKey();
             List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());

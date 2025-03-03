@@ -18,8 +18,6 @@ public class MoreCullingConfig implements ConfigData {
     // You can disable the sodium menu in the config
     public boolean enableSodiumMenu = true;
 
-    public List<String> dontCull = new ArrayList<>();
-
     public boolean cloudCulling = true;
 
     public boolean signTextCulling = true;

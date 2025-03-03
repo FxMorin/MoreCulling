@@ -2,6 +2,7 @@ package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
+import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.caffeinemc.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.GraphicsStatus;
@@ -68,15 +69,14 @@ public class CullingUtils {
             return b != 0;
         }
         Direction opposite = side.getOpposite();
-        VoxelShape thisShape = thisState.getFaceOcclusionShape(world, thisPos, side);
-        VoxelShape sideShape; // Culling face may not be required, so we can save performance by skipping it
-        if (thisShape.isEmpty()) { // It this shape is empty
-            if (!sideState.isFaceSturdy(world, sidePos, opposite) ||
-                    (sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite)).isEmpty()) {
-                return true; // Face should be drawn if the side face is not a full square or its empty
-            }
-        } else {
-            sideShape = sideState.getFaceOcclusionShape(world, sidePos, opposite);
+        VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
+        if (sideShape == Shapes.block()) {
+            return false;
+        }
+
+        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
+        if (sideShape == Shapes.empty() || thisShape == Shapes.empty()) {
+            return true;
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
         if (object2ByteLinkedOpenHashMap.size() == 2048) {

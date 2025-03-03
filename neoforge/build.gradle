@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
@@ -5,7 +7,6 @@ plugins {
 
 neoForge {
     version = neoforge_version
-    validateAccessTransformers = true
     // Automatically enable neoforge AccessTransformers if the file exists
     def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
@@ -74,5 +75,4 @@ tasks.register("modifyMetaData") {
 }
 tasks.named("jar") {
     dependsOn modifyMetaData
-    //Files.write(getTemporaryDir().toPath().resolve("metadata.json"), MetadataIOHandler.toLines(metadata), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)
 }

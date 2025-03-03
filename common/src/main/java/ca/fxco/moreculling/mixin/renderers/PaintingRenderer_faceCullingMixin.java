@@ -2,25 +2,20 @@ package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.entity.PaintingRenderer;
-import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.Painting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static ca.fxco.moreculling.states.PaintingRendererStates.DIRECTION;
-import static ca.fxco.moreculling.states.PaintingRendererStates.PAINTING_POS;
 
 @Mixin(PaintingRenderer.class)
 public abstract class PaintingRenderer_faceCullingMixin {
@@ -29,43 +24,14 @@ public abstract class PaintingRenderer_faceCullingMixin {
                                            float v, float z, int normalX, int normalY, int normalZ, int packedLight);
 
     @Inject(
-            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/Painting;" +
-                    "Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;F)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/decoration/Painting;level()Lnet/minecraft/world/level/Level;"
-            )
-    )
-    private void moreculling$getPaintingPos(Painting painting, PaintingRenderState renderState, float partialTick,
-                                            CallbackInfo ci, @Local(ordinal = 0) int width,
-                                            @Local(ordinal = 1) int height) {
-        PAINTING_POS = new BlockPos[width][height];
-        DIRECTION = painting.getDirection();
-    }
-
-    @WrapOperation(
-            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/Painting;" +
-                    "Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;F)V",
-            at = @At(
-                    value = "NEW",
-                    target = "(III)Lnet/minecraft/core/BlockPos;")
-    )
-    private BlockPos moreculling$getPaintingPos(int x, int y, int z, Operation<BlockPos> original,
-                                                @Local(ordinal = 3) int width, @Local(ordinal = 2) int height) {
-        BlockPos pos = original.call(x, y, z);
-        PAINTING_POS[width][height] = pos;
-        return pos;
-    }
-
-    @Inject(
             method = "renderPainting",
             at = @At(
                     value = "HEAD"
             ),
             cancellable = true
     )
-    private void moreculling$cullFace(PoseStack poseStack, VertexConsumer consumer, int[] lightCoords,
-                                      int width, int height, TextureAtlasSprite variant,
+    private void moreculling$cullFace(PoseStack poseStack, VertexConsumer consumer, Painting painting, int width,
+                                      int height, TextureAtlasSprite variant,
                                       TextureAtlasSprite paintingAtlas, CallbackInfo ci) {
         if (!MoreCulling.CONFIG.paintingCulling) {
             return;
@@ -81,7 +47,8 @@ public abstract class PaintingRenderer_faceCullingMixin {
         float uY = paintingAtlas.getU(0.0625F);
         double d0 = 1.0 / (double)width;  // fast math
         double d1 = 1.0 / (double)height; // fast math
-        Direction opposite = DIRECTION.getOpposite();
+        Direction direction = painting.getDirection();
+        Direction opposite = painting.getDirection();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -90,7 +57,27 @@ public abstract class PaintingRenderer_faceCullingMixin {
                 float x2 = negHalfX + (float)(x + 1);
                 float y1 = negHalfY + (float)y;
                 float y2 = negHalfY + (float)(y + 1);
-                int light = lightCoords[x + y * width];
+                int paintingX = painting.getBlockX();
+                int paintingY = Mth.floor(painting.getY() + (double)((y1 + y2) / 2.0F));
+                int paintingZ = painting.getBlockZ();
+                if (direction == Direction.NORTH) {
+                    paintingX = Mth.floor(painting.getX() + (double)((x1 + x2) / 2.0F));
+                }
+
+                if (direction == Direction.WEST) {
+                    paintingZ = Mth.floor(painting.getZ() - (double)((x1 + x2) / 2.0F));
+                }
+
+                if (direction == Direction.SOUTH) {
+                    paintingX = Mth.floor(painting.getX() - (double)((x1 + x2) / 2.0F));
+                }
+
+                if (direction == Direction.EAST) {
+                    paintingZ = Mth.floor(painting.getZ() + (double)((x1 + x2) / 2.0F));
+                }
+
+                BlockPos paintingPos = new BlockPos(paintingX, paintingY, paintingZ);
+                int light = LevelRenderer.getLightColor(painting.level(), paintingPos);
                 // Get the UV's for a single block of the texture instead of the entire texture
                 float fU0 = variant.getU((float)(d0 * (double)(width - x)));        // Front U0
                 float fU1 = variant.getU((float)(d0 * (double)(width - (x + 1))));  // Front U1
@@ -102,7 +89,7 @@ public abstract class PaintingRenderer_faceCullingMixin {
                 this.vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
                 this.vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
 
-                if (!CullingUtils.shouldCullPaintingBack(PAINTING_POS[x][y], opposite)) {
+                if (!CullingUtils.shouldCullPaintingBack(paintingPos, opposite)) {
                     //back
                     this.vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
                     this.vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);

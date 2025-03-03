@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class ModelManager_cullShapeMixin {
 
     @ModifyArg(
-            method = {"method_65750", "lambda$loadBlockModels$10"},
+            method = {"method_45898", "lambda$loadBlockModels$8"},
             at = @At(
                     value = "INVOKE",
                     target = "com/mojang/datafixers/util/Pair.of(Ljava/lang/Object;" +

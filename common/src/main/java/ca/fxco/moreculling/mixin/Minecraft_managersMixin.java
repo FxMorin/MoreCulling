@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
 import net.minecraft.client.Minecraft;
@@ -10,7 +11,6 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,6 +30,8 @@ public class Minecraft_managersMixin {
     @Shadow
     @Final
     private ModelManager modelManager;
+
+    @Shadow @Final private ReloadableResourceManager resourceManager;
 
     @Inject(
             method = "<init>",
@@ -54,5 +56,14 @@ public class Minecraft_managersMixin {
     )
     private void moreculling$onBlockRenderManagerInitialized(GameConfig args, CallbackInfo ci) {
         MoreCulling.blockRenderManager = this.blockRenderer;
+
+        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager ->
+                Block.BLOCK_STATE_REGISTRY.forEach(state ->
+                        ((StateCullingShapeCache) state).moreculling$initShapeCache()));
+
+        this.resourceManager.registerReloadListener((ResourceManagerReloadListener) manager ->
+                ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
+                        .forEach((state, model) ->
+                                ((BakedOpacity) model).moreculling$resetTranslucencyCache(state)));
     }
 }

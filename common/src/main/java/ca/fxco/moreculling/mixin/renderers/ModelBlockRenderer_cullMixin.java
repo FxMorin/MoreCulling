@@ -28,7 +28,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
 
     @Shadow
     @Final
-    static Direction[] DIRECTIONS;
+    private static Direction[] DIRECTIONS;
 
     @Override
     public void moreculling$renderQuad(PoseStack.Pose pose, VertexConsumer vertices, float red, float green,

@@ -8,9 +8,6 @@
   "client": [
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "models.ForwardingBakedModel_compatMixin",
-    "models.MultiPartBakedModel_cacheMixin",
-    "models.SimpleBakedModel_fabricCacheMixin",
-    "models.WeightedBakedModel_cacheMixin",
     "renderers.ItemRenderer_fabricFaceCullingMixin"
   ],
   "injectors": {

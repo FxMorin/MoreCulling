@@ -53,7 +53,7 @@ public interface BakedOpacity {
      * When called this method will reset the translucency cache of the model.
      * This should be called if the texture of the model is ever changed!
      *
-     * @since 1.2.3
+     * @since 1.0.5
      */
     default void moreculling$resetTranslucencyCache(BlockState state) {}
 
@@ -85,10 +85,4 @@ public interface BakedOpacity {
     default boolean moreculling$canSetCullingShape() {
         return false;
     }
-
-    default boolean moreculling$isItem() {
-        return false;
-    }
-
-    default void moreculling$setIsItem() {}
 }

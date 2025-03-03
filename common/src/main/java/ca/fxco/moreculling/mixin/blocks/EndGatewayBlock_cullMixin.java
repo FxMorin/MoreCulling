@@ -31,7 +31,7 @@ public abstract class EndGatewayBlock_cullMixin extends BaseEntityBlock implemen
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return Shapes.block();
     }
 }
