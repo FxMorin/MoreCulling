@@ -38,7 +38,7 @@ public class BlockOcclusionCache_sodiumMixin {
                                             Direction facing, CallbackInfoReturnable<Boolean> cir,
                                             @Local BlockPos.MutableBlockPos adjPos) {
         if (MoreCulling.CONFIG.useBlockStateCulling) {
-            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view, pos, facing, adjPos));
+            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(selfState, view.getBlockState(adjPos), view, pos, facing, adjPos));
         }
     }
 }

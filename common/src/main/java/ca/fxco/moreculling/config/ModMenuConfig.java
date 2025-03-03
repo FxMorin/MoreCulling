@@ -227,6 +227,42 @@ public class ModMenuConfig {
                 })
                 .build());
 
+        //dont cull list
+        generalCategory.addEntry(new StringListBuilder(
+                Component.translatable("text.cloth-config.reset_value"),
+                Component.translatable("moreculling.config.option.dontCull"), MoreCulling.CONFIG.dontCull)
+                .setDefaultValue(new ArrayList<>())
+                .setTooltip(Component.translatable("moreculling.config.option.dontCull.tooltip"))
+                .setSaveConsumer(
+                        value -> {
+                            MoreCulling.CONFIG.dontCull.forEach(prevBlockId -> {
+                                        Optional<Holder.Reference<Block>> optionalBlock =
+                                                BuiltInRegistries.BLOCK.get(ResourceLocation.parse(prevBlockId));
+
+                                        if (optionalBlock.isEmpty())
+                                            return;
+
+                                        ((MoreBlockCulling) optionalBlock.get().value()).moreculling$setCanCull(true);
+                                    }
+                            );
+
+                            value.forEach(blockId -> {
+                                Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+
+                                if (optionalBlock.isEmpty()) {
+                                    MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);
+                                    return;
+                                }
+
+                                MoreBlockCulling block = (MoreBlockCulling) optionalBlock.get().value();
+                                if (block.moreculling$canCull())
+                                    block.moreculling$setCanCull(false);
+                            });
+
+                            MoreCulling.CONFIG.dontCull = value;
+                        }
+                ).build());
+
         // Item Frames
         DynamicBooleanListEntry itemFrameMapCulling = new DynamicBooleanBuilder("moreculling.config.option.itemFrameMapCulling")
                 .setValue(MoreCulling.CONFIG.itemFrameMapCulling)
@@ -276,6 +312,16 @@ public class ModMenuConfig {
         generalCategory.addEntry(itemFrameLODRange);
         generalCategory.addEntry(itemFrame3FaceCulling);
         generalCategory.addEntry(itemFrame3FaceCullingRange);
+
+        // BlockStates
+        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.paintingCulling")
+                .setValue(MoreCulling.CONFIG.paintingCulling)
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
+                .setSaveConsumer(newValue -> {
+                    MoreCulling.CONFIG.paintingCulling = newValue;
+                })
+                .build());
 
         generalCategory.addEntry(leavesCullingMode);
         generalCategory.addEntry(leavesCullingAmount);

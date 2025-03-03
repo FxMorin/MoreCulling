@@ -34,15 +34,6 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
-    /**
-     * Gets the name of the environment type as a string.
-     *
-     * @return The name of the environment type.
-     */
-    default String getEnvironmentName() {
-        return isDevelopmentEnvironment() ? "development" : "production";
-    }
-
     String getModName(String modId);
 
     List<BakedQuad> getQuads(BakedModel model, BlockState state, Direction side, RandomSource random, BlockGetter world, BlockPos pos);

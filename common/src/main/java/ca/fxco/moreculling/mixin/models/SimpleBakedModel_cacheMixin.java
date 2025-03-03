@@ -32,6 +32,8 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
     private @Nullable VoxelShape moreculling$cullVoxelShape;
+    @Unique
+    private boolean moreculling$wasShapeOptimized = false;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -39,7 +41,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     }
 
     @Override
-    public void moreculling$resetTranslucencyCache() {
+    public void moreculling$resetTranslucencyCache(BlockState state) {
         moreculling$solidFaces.clear();
         for (Map.Entry<Direction, List<BakedQuad>> entry : culledFaces.entrySet()) {
             Direction direction = entry.getKey();
@@ -48,8 +50,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
                 BakedQuad initialQuad = layeredQuads.removeFirst();
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
                 NativeImage image = opacity.moreculling$getUnmipmappedImage();
-                QuadBounds bounds = VertexUtils.getQuadBounds(initialQuad, direction.getAxis(),
-                        image.getWidth(), image.getHeight());
+                QuadBounds bounds = VertexUtils.getQuadUvBounds(initialQuad, image.getWidth(), image.getHeight());
                 if (!opacity.moreculling$hasTranslucency(bounds)) {
                     if (!layeredQuads.isEmpty()) {
                         List<NativeImage> overlappingImages = new ArrayList<>();
@@ -70,6 +71,13 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
 
     @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        if (!this.moreculling$wasShapeOptimized) {
+            if (this.moreculling$cullVoxelShape != null) {
+                this.moreculling$cullVoxelShape = moreculling$cullVoxelShape.optimize();
+            }
+            this.moreculling$wasShapeOptimized = true;
+        }
+
         return this.moreculling$cullVoxelShape;
     }
 

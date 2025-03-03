@@ -5,6 +5,7 @@ plugins {
 
 neoForge {
     neoFormVersion = neo_form_version
+    validateAccessTransformers = true
     // Automatically enable AccessTransformers if the file exists
     def at = file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
@@ -17,12 +18,13 @@ neoForge {
 }
 
 dependencies {
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    compileOnly group: 'net.fabricmc', name: 'sponge-mixin', version: '0.15.3+mixin.0.8.7'
 
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-    implementation "maven.modrinth:sodium:${project.sodium_version}-neoforge"
+    compileOnly "maven.modrinth:sodium:${project.sodium_version}-neoforge"
+    //implementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+neoforge-${project.minecraft_version}"
 
     api "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 

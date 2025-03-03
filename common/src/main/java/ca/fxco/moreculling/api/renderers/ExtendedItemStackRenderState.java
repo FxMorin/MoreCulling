@@ -4,23 +4,22 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * This interface allows you to call the MoreCulling methods used for item rendering.
  * This gives you access to the custom MoreCulling rendering methods, in order to allow everyone to benefit from the
  * performance boost that MoreCulling can offer.<br/>
- * Use these methods over ones provided in {@link ItemRenderer}
+ * Use these methods over ones provided in {@link ItemStackRenderState}
  *
  * @since 0.8.0
  */
 
-public interface ExtendedItemRenderer {
+public interface ExtendedItemStackRenderState {
 
     /**
      * This will render a baked item model without a specific face. (Item Frame)
@@ -28,7 +27,7 @@ public interface ExtendedItemRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelWithoutFace(BakedModel model, ItemStack stack, int light, int overlay,
+    void moreculling$renderBakedItemModelWithoutFace(BakedModel model, int light, int overlay,
                                                      PoseStack poseStack, VertexConsumer vertices,
                                                      @Nullable Direction withoutFace);
 
@@ -38,7 +37,7 @@ public interface ExtendedItemRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelForFace(BakedModel model, ItemStack stack, int light, int overlay,
+    void moreculling$renderBakedItemModelForFace(BakedModel model, int light, int overlay,
                                                  PoseStack poseStack, VertexConsumer vertices, Direction face);
 
     /**
@@ -47,9 +46,10 @@ public interface ExtendedItemRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelOnly3Faces(BakedModel model, ItemStack stack, int light, int overlay,
+    void moreculling$renderBakedItemModelOnly3Faces(BakedModel model, int light, int overlay,
                                                     PoseStack poseStack, VertexConsumer vertices,
                                                     Direction faceX, Direction faceY, Direction faceZ);
+
 
     /**
      * This will render an item as if it was in an item frame like MoreCulling, it will automatically include all of
@@ -57,6 +57,6 @@ public interface ExtendedItemRenderer {
      *
      * @since 0.25.0
      */
-    void moreculling$renderItemFrameItem(ItemStack stack, PoseStack poseStack, MultiBufferSource multiBufferSource,
-                                         int light, ItemFrame frame, Camera camera);
+    void moreculling$renderItemFrameItem(PoseStack poseStack, MultiBufferSource multiBufferSource,
+                                         int light, ItemFrameRenderState frame, Camera camera);
 }

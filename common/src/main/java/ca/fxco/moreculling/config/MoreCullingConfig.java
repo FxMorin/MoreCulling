@@ -18,6 +18,8 @@ public class MoreCullingConfig implements ConfigData {
     // You can disable the sodium menu in the config
     public boolean enableSodiumMenu = true;
 
+    public List<String> dontCull = new ArrayList<>();
+
     public boolean cloudCulling = true;
 
     public boolean signTextCulling = true;
@@ -39,6 +41,8 @@ public class MoreCullingConfig implements ConfigData {
     public boolean useItemFrame3FaceCulling = true;
 
     public float itemFrame3FaceCullingRange = 4F; // default 4 blocks away
+
+    public boolean paintingCulling = true;
 
     public LeavesCullingMode leavesCullingMode = LeavesCullingMode.DEFAULT;
 

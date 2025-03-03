@@ -2,38 +2,36 @@ package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
+import ca.fxco.moreculling.platform.Services;
 import ca.fxco.moreculling.utils.BitUtils;
-import net.minecraft.client.renderer.RenderType;
+import ca.fxco.moreculling.utils.CullingUtils;
+import ca.fxco.moreculling.utils.DirectionUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.MultiPartBakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 @Mixin(value = MultiPartBakedModel.class, priority = 1010)
 public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
 
     //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
+    //TODO: test how good moreculling$initTranslucencyCache works
 
     @Shadow
     @Final
-    private List<Pair<Predicate<BlockState>, BakedModel>> selectors;
+    private List<MultiPartBakedModel.Selector> selectors;
 
     @Unique // Only works on chunk update, so the best performance is after placing a block
     private byte solidFaces = 0; // 0 = all sides translucent
@@ -47,38 +45,11 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
     }
 
     @Override
-    public void moreculling$resetTranslucencyCache() {
+    public void moreculling$resetTranslucencyCache(BlockState state) {
         solidFaces = 0;
-    }
-
-    @Override
-    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
-        VoxelShape cachedShape = null;
-        for (Pair<Predicate<BlockState>, BakedModel> pair : this.selectors) {
-            if ((pair.getLeft()).test(state)) {
-                VoxelShape shape = ((BakedOpacity) pair.getRight()).moreculling$getCullingShape(state);
-                if (shape != null) {
-                    if (cachedShape == null) {
-                        cachedShape = shape;
-                    } else {
-                        cachedShape = Shapes.or(cachedShape, shape);
-                    }
-                }
-            }
-        }
-        return cachedShape;
-    }
-
-
-    @Inject(
-            method = "getQuads",
-            at = @At("RETURN")
-    )
-    private void moreculling$onGetQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random,
-                                        ModelData modelData, @Nullable RenderType renderType,
-                                        CallbackInfoReturnable<List<BakedQuad>> cir) {
-        if (face != null) { // Must be quads that have cullface
-            List<BakedQuad> quads = cir.getReturnValue();
+        for (Direction face : DirectionUtils.DIRECTIONS) {
+            List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
+                    face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
             if (quads.isEmpty()) { // no faces = translucent
                 solidFaces = BitUtils.unset(solidFaces, face.ordinal());
             } else {
@@ -91,5 +62,23 @@ public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
                 }
             }
         }
+    }
+
+    @Override
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        VoxelShape cachedShape = null;
+        for (MultiPartBakedModel.Selector selector : this.selectors) {
+            if ((selector.condition()).test(state)) {
+                VoxelShape shape = ((BakedOpacity) selector.model()).moreculling$getCullingShape(state);
+                if (shape != null) {
+                    if (cachedShape == null) {
+                        cachedShape = shape;
+                    } else {
+                        cachedShape = Shapes.or(cachedShape, shape);
+                    }
+                }
+            }
+        }
+        return cachedShape;
     }
 }

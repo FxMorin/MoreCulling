@@ -4,8 +4,9 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Collection;
+import java.util.Map;
 
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 import static ca.fxco.moreculling.utils.CompatUtils.IS_MODERNFIX_LOADED;
@@ -21,10 +22,10 @@ public class CacheUtils {
             return;
         }
         // Reset all model translucency cache
-        Collection<BakedModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels().values();
-        for (BakedModel model : allModels) {
-            ((BakedOpacity) model).moreculling$resetTranslucencyCache();
-        }
+        Map<BlockState, BakedModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels();
+        allModels.forEach((state, model) -> {
+            ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
+        });
         //TODO: Reset quad cache
         MoreCulling.LOGGER.info(allModels.size() + " cache(s) where cleared!");
     }
