@@ -60,7 +60,7 @@ jobs:
           files: fabric/build/libs/!(*-@(dev|sources|api|javadoc)).jar
           github-files: fabric/build/libs/*-@(dev|sources|api|javadoc).jar
           version-type: release
-          game-versions:
+          game-versions: |
             1.21.1
             1.21
           game-version-filter: releases
