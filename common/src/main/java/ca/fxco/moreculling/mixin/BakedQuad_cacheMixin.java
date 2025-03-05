@@ -14,7 +14,7 @@ public class BakedQuad_cacheMixin implements QuadOpacity {
 
     @Shadow
     @Final
-    protected TextureAtlasSprite sprite;
+    private TextureAtlasSprite sprite;
 
     @Unique
     private Boolean moreculling$hasTranslucency;

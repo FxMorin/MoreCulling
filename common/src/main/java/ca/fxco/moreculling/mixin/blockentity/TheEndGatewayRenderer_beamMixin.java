@@ -20,7 +20,8 @@ public class TheEndGatewayRenderer_beamMixin {
 
     @WrapWithCondition(
             method = "render(Lnet/minecraft/world/level/block/entity/TheEndGatewayBlockEntity;" +
-                    "FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
+                    "FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;" +
+                    "IILnet/minecraft/world/phys/Vec3;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;renderBeaconBeam(" +

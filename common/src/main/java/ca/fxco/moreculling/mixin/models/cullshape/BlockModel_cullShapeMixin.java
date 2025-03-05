@@ -21,11 +21,6 @@ import java.util.List;
 @Mixin(BlockModel.class)
 public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel {
 
-    @Final
-    @Shadow
-    @Nullable
-    private UnbakedModel parent;
-
     @Unique
     @Nullable
     private List<CullShapeElement> moreculling$cullShapeElements = null;
@@ -41,8 +36,8 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Override
     public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
         if (this.moreculling$cullShapeElements == null) {
-            return this.parent instanceof BlockModel ?
-                    ((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
+            return null;//this.parent instanceof BlockModel ?
+                    //((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
         }
         return moreculling$cullShapeElements;
     }
