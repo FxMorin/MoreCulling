@@ -3,7 +3,7 @@ package ca.fxco.moreculling.utils;
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.mixin.accessors.BlockModelShaperAccessor;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class CacheUtils {
             return;
         }
         // Reset all model translucency cache
-        Map<BlockState, BakedModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels();
+        Map<BlockState, BlockStateModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels();
         allModels.forEach((state, model) -> {
             ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
         });

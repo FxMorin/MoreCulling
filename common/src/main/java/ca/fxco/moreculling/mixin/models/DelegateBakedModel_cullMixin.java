@@ -1,8 +1,9 @@
 package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.DelegateBakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+//import net.minecraft.client.resources.model.BakedModel;
+//import net.minecraft.client.resources.model.DelegateBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -11,10 +12,11 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+/* TODO
 @Mixin(DelegateBakedModel.class)
 public class DelegateBakedModel_cullMixin implements BakedOpacity {
 
-    @Shadow @Final protected BakedModel parent;
+    @Shadow @Final protected BlockStateModel parent;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -40,4 +42,4 @@ public class DelegateBakedModel_cullMixin implements BakedOpacity {
     public boolean moreculling$canSetCullingShape() {
         return ((BakedOpacity) parent).moreculling$canSetCullingShape();
     }
-}
+}*/

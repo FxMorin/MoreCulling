@@ -49,9 +49,9 @@ public class VertexUtils {
     public static QuadBounds getQuadUvBounds(BakedQuad quad, int imageWidth, int imageHeight) {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
-        int[] vertexData = quad.getVertices();
+        int[] vertexData = quad.vertices();
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getUv(quad.getSprite(), vertexData, i, imageWidth, imageHeight);
+            Vector2f tmpPos = getUv(quad.sprite(), vertexData, i, imageWidth, imageHeight);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);
@@ -61,7 +61,7 @@ public class VertexUtils {
     }
 
     public static boolean isAxisAligned(BakedQuad quad) {
-        int[] vertexData = quad.getVertices();
+        int[] vertexData = quad.vertices();
         Vector3f p1 = getPos(vertexData, 0);
         Vector3f p4 = getPos(vertexData, 3);
         if (p1.y == p4.y) {

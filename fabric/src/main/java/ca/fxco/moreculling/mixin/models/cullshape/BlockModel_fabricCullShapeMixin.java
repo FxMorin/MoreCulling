@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.resources.model.BakedModel;
+//import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-
+/*
 @Mixin(BlockModel.class)
 public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbakedModel {
 
@@ -79,7 +79,7 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                             voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
                         } else {
                             voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundZ(Direction.UP, direction, voxelShape);
-                        }*/
+                        }
                     }
                 }
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
@@ -95,5 +95,5 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                 bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
         }
-    }
-}
+    }todo
+}*/

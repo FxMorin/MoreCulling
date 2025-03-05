@@ -5,7 +5,7 @@ plugins {
 
 neoForge {
     neoFormVersion = neo_form_version
-    validateAccessTransformers = true
+    //validateAccessTransformers = true
     // Automatically enable AccessTransformers if the file exists
     def at = file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {

@@ -43,7 +43,6 @@
     "entities.ItemFrameRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
-    "models.DelegateBakedModel_cullMixin",
     "models.MultiPartBakedModel_cacheMixin",
     "models.SimpleBakedModel_cacheMixin",
     "models.WeightedBakedModel_cacheMixin",

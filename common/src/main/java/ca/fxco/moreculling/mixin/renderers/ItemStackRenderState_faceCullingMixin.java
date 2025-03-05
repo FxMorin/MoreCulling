@@ -14,9 +14,9 @@ public class ItemStackRenderState_faceCullingMixin {
     @WrapOperation(
             method = "render",
             at = @At(
-                    value = "INVOKE",
+                    value = "FIELD",
                     target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;" +
-                            "transform()Lnet/minecraft/client/renderer/block/model/ItemTransform;"
+                            "transform:Lnet/minecraft/client/renderer/block/model/ItemTransform;"
             )
     )
     private ItemTransform moreculling$getTransformation(

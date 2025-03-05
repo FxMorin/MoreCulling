@@ -8,8 +8,8 @@
   "client": [
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
-    "models.ItemModelGenerator_cullMixin",
-    "models.cullshape.BlockModel_fabricCullShapeMixin",
+    //"models.ItemModelGenerator_cullMixin",
+    //"models.cullshape.BlockModel_fabricCullShapeMixin",
     "Minecraft_registerReloadListenersMixin"
   ],
   "injectors": {

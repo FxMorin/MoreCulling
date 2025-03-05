@@ -9,10 +9,10 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
-    modImplementation "maven.modrinth:sodium:${project.sodium_version}-fabric"
+    modCompileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}-fabric"
     // ^ Change to `modCompileOnly` to test without sodium
     //modImplementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+fabric-${project.minecraft_version}"
     //modImplementation "maven.modrinth:balm:${project.clienttweaks_version}+fabric-${project.minecraft_version}"
@@ -22,7 +22,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnly "maven.modrinth:vulkanmod:${vulkan_version}-${minecraft_version}"
+    modCompileOnly "maven.modrinth:vulkanmod:${vulkan_version}"
 
     modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
     include("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")

@@ -7,7 +7,7 @@ import ca.fxco.moreculling.utils.BitUtils;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.WeightedBakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,14 +37,14 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
     public void moreculling$resetTranslucencyCache(BlockState state) {
         solidFaces = 0;
         for (Direction face : DirectionUtils.DIRECTIONS) {
-            List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
+            List<BakedQuad> quads = Services.PLATFORM.getQuads((BlockStateModel) this, state,
                     face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
             if (quads.isEmpty()) { // no faces = translucent
                 solidFaces = BitUtils.unset(solidFaces, face.ordinal());
             } else {
                 solidFaces = BitUtils.set(solidFaces, face.ordinal());
                 for (BakedQuad quad : quads) {
-                    if (((QuadOpacity) quad).moreculling$getTextureTranslucency()) {
+                    if (((QuadOpacity)  (Object) quad).moreculling$getTextureTranslucency()) {
                         solidFaces = BitUtils.unset(solidFaces, face.ordinal());
                         break;
                     }

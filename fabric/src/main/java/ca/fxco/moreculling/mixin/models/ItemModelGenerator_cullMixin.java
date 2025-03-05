@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
-import ca.fxco.moreculling.api.model.BakedOpacity;
+/*import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
@@ -28,4 +28,4 @@ public class ItemModelGenerator_cullMixin {
                             boolean p_387288_, ItemTransforms p_388238_, CallbackInfoReturnable<BakedModel> cir) {
         ((BakedOpacity) cir.getReturnValue()).moreculling$setIsItem();
     }
-}
+}*/

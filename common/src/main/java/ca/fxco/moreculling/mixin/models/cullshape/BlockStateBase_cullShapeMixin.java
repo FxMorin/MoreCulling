@@ -2,7 +2,7 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -52,7 +52,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
 
         VoxelShape voxelShape = null;
         if (blockRenderManager != null) {
-            BakedModel model = blockRenderManager.getBlockModel(this.asState());
+            BlockStateModel model = blockRenderManager.getBlockModel(this.asState());
             if (model != null && !this.asState().hasProperty(BlockStateProperties.FACING)) {
                 voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
             }

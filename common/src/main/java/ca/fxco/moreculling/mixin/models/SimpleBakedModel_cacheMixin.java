@@ -4,10 +4,12 @@ import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import ca.fxco.moreculling.utils.DirectionBits;
+import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.SimpleBakedModel;
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -19,15 +21,11 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@Mixin(SimpleBakedModel.class)
+@Mixin(SimpleModelWrapper.class)
 public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
 
-    @Shadow
-    @Final
-    protected Map<Direction, List<BakedQuad>> culledFaces; // cullface quads
-
+    @Shadow @Final private QuadCollection quads;
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
@@ -45,19 +43,18 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         moreculling$solidFaces.clear();
-        for (Map.Entry<Direction, List<BakedQuad>> entry : culledFaces.entrySet()) {
-            Direction direction = entry.getKey();
-            List<BakedQuad> layeredQuads = new ArrayList<>(entry.getValue());
+        for (Direction direction : DirectionUtils.DIRECTIONS) {
+            List<BakedQuad> layeredQuads = new ArrayList<>(quads.getQuads(direction));
             if (!layeredQuads.isEmpty()) {
                 BakedQuad initialQuad = layeredQuads.removeFirst();
-                SpriteOpacity opacity = ((SpriteOpacity) initialQuad.getSprite());
+                SpriteOpacity opacity = ((SpriteOpacity) initialQuad.sprite());
                 NativeImage image = opacity.moreculling$getUnmipmappedImage();
                 QuadBounds bounds = VertexUtils.getQuadUvBounds(initialQuad, image.getWidth(), image.getHeight());
                 if (!opacity.moreculling$hasTranslucency(bounds)) {
                     if (!layeredQuads.isEmpty()) {
                         List<NativeImage> overlappingImages = new ArrayList<>();
                         for (BakedQuad quad : layeredQuads) {
-                            overlappingImages.add(((SpriteOpacity) quad.getSprite())
+                            overlappingImages.add(((SpriteOpacity) quad.sprite())
                                     .moreculling$getUnmipmappedImage());
                         }
                         if (!opacity.moreculling$hasTranslucency(bounds, overlappingImages)) {

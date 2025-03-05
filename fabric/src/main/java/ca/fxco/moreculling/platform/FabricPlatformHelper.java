@@ -4,7 +4,7 @@ import ca.fxco.moreculling.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -39,7 +39,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public List<BakedQuad> getQuads(BakedModel model, BlockState state, Direction direction,
+    public List<BakedQuad> getQuads(BlockStateModel model, BlockState state, Direction direction,
                                     RandomSource source, BlockGetter level, BlockPos pos) {
         return model.getQuads(state, direction, source);
     }

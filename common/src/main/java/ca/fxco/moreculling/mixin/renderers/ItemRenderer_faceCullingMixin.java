@@ -6,9 +6,10 @@ import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.TransformationUtils;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -16,16 +17,12 @@ import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -39,35 +36,22 @@ import static net.minecraft.core.Direction.SOUTH;
 @Mixin(value = ItemRenderer.class, priority = 1100)
 public class ItemRenderer_faceCullingMixin {
 
-    @Redirect(
-            method = "renderModelLists",
+    @Inject(
+            method = "renderQuadList",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/core/Direction;values()[Lnet/minecraft/core/Direction;"
+                    value = "HEAD"
             )
     )
-    private static Direction[] moreculling$modifyDirections() {
-        return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
-    }
-
-    @WrapOperation(
-            method = "renderModelLists",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/resources/model/BakedModel;getQuads(" +
-                            "Lnet/minecraft/world/level/block/state/BlockState;" +
-                            "Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;"
-            )
-    )
-    private static List<BakedQuad> moreculling$onlySomeFaces$Vanilla(BakedModel instance, BlockState blockState,
-                                                                     Direction direction, RandomSource random,
-                                                                     Operation<List<BakedQuad>> original) {
+    private static void moreculling$onlySomeFaces$Vanilla(PoseStack poseStack, VertexConsumer buffer,
+                                                          List<BakedQuad> quads, int[] tintLayers, int packedLight,
+                                                          int packedOverlay, CallbackInfo ci,
+                                                          @Local(argsOnly = true) LocalRef<List<BakedQuad>> quadList) {
         if (ItemRendererStates.DIRECTIONS != null) {
-            List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
+            List<BakedQuad> bakedQuads = new ArrayList<>(quads);
             Iterator<BakedQuad> iterator = bakedQuads.iterator();
             quads: while (iterator.hasNext()) {
                 BakedQuad bakedQuad = iterator.next();
-                Direction face = bakedQuad.getDirection();
+                Direction face = bakedQuad.direction();
                 for (Direction dir : ItemRendererStates.DIRECTIONS) {
                     if (face == dir) {
                         continue quads;
@@ -75,23 +59,22 @@ public class ItemRenderer_faceCullingMixin {
                 }
                 iterator.remove();
             }
-            return bakedQuads;
+            quadList.set(bakedQuads);
         }
-        return original.call(instance, blockState, direction, random);
     }
 
     @Inject(
             method = "renderItem",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(" +
-                            "Lnet/minecraft/client/resources/model/BakedModel;" +
-                            "[IIILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V"
+                    target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;" +
+                            "renderQuadList(Lcom/mojang/blaze3d/vertex/PoseStack;" +
+                            "Lcom/mojang/blaze3d/vertex/VertexConsumer;Ljava/util/List;[III)V"
             )
     )
     private static void moreculling$faceRemoval(ItemDisplayContext itemDisplayContext, PoseStack poseStack,
                                                 MultiBufferSource multiBufferSource, int light, int overlay,
-                                                int[] tintLayers, BakedModel bakedModel, RenderType renderType,
+                                                int[] tintLayers, List<BakedQuad> bakedModel, RenderType renderType,
                                                 ItemStackRenderState.FoilType foilType, CallbackInfo ci) {
         ItemFrameRenderState frame = ItemRendererStates.ITEM_FRAME;
         if (frame == null) {
@@ -121,9 +104,9 @@ public class ItemRenderer_faceCullingMixin {
             if (MoreCulling.CONFIG.useItemFrame3FaceCulling &&
                     dist > MoreCulling.CONFIG.itemFrame3FaceCullingRange &&
                     frame.rotation % 2 == 0 &&
-                    transformation.rotation.y() == 0 &&
-                    transformation.rotation.x() == 0 &&
-                    transformation.rotation.z() == 0
+                    transformation.rotation().y() == 0 &&
+                    transformation.rotation().x() == 0 &&
+                    transformation.rotation().z() == 0
             ) {
                 int rotation = frame.rotation * 45;
                 Direction facing = frame.direction;

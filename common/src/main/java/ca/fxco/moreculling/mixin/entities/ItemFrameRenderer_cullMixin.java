@@ -13,17 +13,18 @@ import net.minecraft.client.renderer.MapRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.BlockStateDefinitions;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
@@ -50,11 +51,6 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
     private BlockRenderDispatcher blockRenderer;
 
     @Shadow @Final private MapRenderer mapRenderer;
-
-    @Shadow
-    private static ModelResourceLocation getFrameModelResourceLocation(ItemFrameRenderState itemFrameRenderState) {
-        return null;
-    }
 
     @Shadow protected abstract int getLightCoords(boolean bl, int i, int j);
 
@@ -161,8 +157,8 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             poseStack.popPose();
         }
         if (!itemFrameState.isInvisible) { // Render Item Frame block model
-            ModelManager modelManager = this.blockRenderer.getBlockModelShaper().getModelManager();
-            ModelResourceLocation modelResourceLocation = getFrameModelResourceLocation(itemFrameState);
+            BlockState blockstate = BlockStateDefinitions.getItemFrameFakeState(itemFrameState.isGlowFrame, itemFrameState.mapId != null);
+            BlockStateModel blockstatemodel = this.blockRenderer.getBlockModel(blockstate);
             poseStack.translate(-0.5, -0.5, -0.5);
             var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderer.getModelRenderer();
             if (CullingUtils.shouldCullBack(itemFrameState)) {
@@ -171,7 +167,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             poseStack.last(),
                             multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            modelManager.getModel(modelResourceLocation),
+                            blockstatemodel,
                             1.0f,
                             1.0f,
                             1.0f,
@@ -185,7 +181,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             poseStack.last(),
                             multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            modelManager.getModel(modelResourceLocation),
+                            blockstatemodel,
                             1.0f,
                             1.0f,
                             1.0f,
@@ -201,7 +197,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             poseStack.last(),
                             multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            modelManager.getModel(modelResourceLocation),
+                            blockstatemodel,
                             1.0f,
                             1.0f,
                             1.0f,
@@ -215,7 +211,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             poseStack.last(),
                             multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
                             null,
-                            modelManager.getModel(modelResourceLocation),
+                            blockstatemodel,
                             1.0f,
                             1.0f,
                             1.0f,

@@ -4,11 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * This interface allows you to call the MoreCulling methods used for item rendering.
@@ -27,7 +29,7 @@ public interface ExtendedItemStackRenderState {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelWithoutFace(BakedModel model, int light, int overlay,
+    void moreculling$renderBakedItemModelWithoutFace(List<BakedQuad> model, int light, int overlay,
                                                      PoseStack poseStack, VertexConsumer vertices,
                                                      @Nullable Direction withoutFace);
 
@@ -37,7 +39,7 @@ public interface ExtendedItemStackRenderState {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelForFace(BakedModel model, int light, int overlay,
+    void moreculling$renderBakedItemModelForFace(List<BakedQuad> model, int light, int overlay,
                                                  PoseStack poseStack, VertexConsumer vertices, Direction face);
 
     /**
@@ -46,7 +48,7 @@ public interface ExtendedItemStackRenderState {
      *
      * @since 0.25.0
      */
-    void moreculling$renderBakedItemModelOnly3Faces(BakedModel model, int light, int overlay,
+    void moreculling$renderBakedItemModelOnly3Faces(List<BakedQuad> model, int light, int overlay,
                                                     PoseStack poseStack, VertexConsumer vertices,
                                                     Direction faceX, Direction faceY, Direction faceZ);
 

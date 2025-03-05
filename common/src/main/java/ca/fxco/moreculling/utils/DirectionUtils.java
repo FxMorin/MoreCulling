@@ -25,7 +25,7 @@ public class DirectionUtils {
     }
 
     public static Direction changeDirectionUsingTransformation(Direction dir, ItemTransform transform) {
-        float yRot = transform.rotation.y();
+        float yRot = transform.rotation().y();
         if (yRot == 0) {
             return dir.getOpposite();
         } else if (yRot == 90) {

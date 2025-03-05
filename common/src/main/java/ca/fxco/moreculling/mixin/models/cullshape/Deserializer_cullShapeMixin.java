@@ -28,7 +28,7 @@ public class Deserializer_cullShapeMixin {
     )
     private void moreculling$onDeserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonContext,
                                            CallbackInfoReturnable<BlockModel> cir) {
-        ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel) cir.getReturnValue();
+        ExtendedUnbakedModel unbakedModel = (ExtendedUnbakedModel) (Object) cir.getReturnValue();
         JsonObject jsonObj = jsonElement.getAsJsonObject();
         List<CullShapeElement> list = this.moreculling$cullshapesFromJson(jsonContext, jsonObj);
         unbakedModel.moreculling$setCullShapeElements(list);

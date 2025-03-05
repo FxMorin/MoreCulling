@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ public interface ExtendedBlockModelRenderer {
      * @since 0.25.0
      */
     void moreculling$renderModelWithoutFace(PoseStack.Pose pose, VertexConsumer vertices,
-                                            @Nullable BlockState state, BakedModel bakedModel, float red,
+                                            @Nullable BlockState state, BlockStateModel bakedModel, float red,
                                             float green, float blue, float alpha, int light, int overlay,
                                             Direction withoutFace);
 
@@ -58,7 +58,7 @@ public interface ExtendedBlockModelRenderer {
      * @since 0.25.0
      */
     void moreculling$renderModelForFace(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
-                                        BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                        BlockStateModel bakedModel, float red, float green, float blue, float alpha,
                                         int light, int overlay, Direction forFace);
 
     /**
@@ -77,7 +77,7 @@ public interface ExtendedBlockModelRenderer {
      * @since 0.25.0
      */
     void moreculling$renderModelFor3Faces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
-                                          BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                          BlockStateModel bakedModel, float red, float green, float blue, float alpha,
                                           int light, int overlay, Direction faceX, Direction faceY, Direction faceZ);
 
     /**
@@ -96,7 +96,7 @@ public interface ExtendedBlockModelRenderer {
      * @since 0.25.0
      */
     void moreculling$renderModelForFaces(PoseStack.Pose pose, VertexConsumer vertices, @Nullable BlockState state,
-                                         BakedModel bakedModel, float red, float green, float blue, float alpha,
+                                         BlockStateModel bakedModel, float red, float green, float blue, float alpha,
                                          int light, int overlay, Direction[] faces);
 
     /**

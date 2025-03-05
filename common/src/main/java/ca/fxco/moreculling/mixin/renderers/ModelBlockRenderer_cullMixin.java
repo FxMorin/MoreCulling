@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -51,7 +51,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
 
     @Override
     public void moreculling$renderModelWithoutFace(PoseStack.Pose pose, VertexConsumer vertices,
-                                                   @Nullable BlockState state, BakedModel model, float red,
+                                                   @Nullable BlockState state, BlockStateModel model, float red,
                                                    float green, float blue, float alpha, int light,
                                                    int overlay, Direction withoutFace) {
         for (Direction direction : DIRECTIONS) {
@@ -78,7 +78,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
                                                    List<BakedQuad> quads, int light, int overlay,
                                                    Direction withoutFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getDirection() == withoutFace) {
+            if (bakedQuad.direction() == withoutFace) {
                 continue;
             }
             moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
@@ -87,7 +87,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
 
     @Override
     public void moreculling$renderModelForFace(PoseStack.Pose pose, VertexConsumer vertices,
-                                               @Nullable BlockState state, BakedModel model, float red, float green,
+                                               @Nullable BlockState state, BlockStateModel model, float red, float green,
                                                float blue, float alpha, int light, int overlay, Direction forFace) {
         this.moreculling$rand.setSeed(42L);
         List<BakedQuad> bakedQuads = model.getQuads(state, forFace, this.moreculling$rand);
@@ -107,7 +107,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
                                                float green, float blue, float alpha, List<BakedQuad> quads, int light,
                                                int overlay, Direction forFace) {
         for (BakedQuad bakedQuad : quads) {
-            if (bakedQuad.getDirection() != forFace) {
+            if (bakedQuad.direction() != forFace) {
                 continue;
             }
             moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
@@ -116,7 +116,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
 
     @Override
     public void moreculling$renderModelFor3Faces(PoseStack.Pose pose, VertexConsumer vertices,
-                                                 @Nullable BlockState state, BakedModel model, float red, float green,
+                                                 @Nullable BlockState state, BlockStateModel model, float red, float green,
                                                  float blue, float alpha, int light, int overlay, Direction faceX,
                                                  Direction faceY, Direction faceZ) {
         this.moreculling$rand.setSeed(42L);
@@ -148,7 +148,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
                                                  int light, int overlay, Direction faceX, Direction faceY,
                                                  Direction faceZ) {
         for (BakedQuad bakedQuad : quads) {
-            Direction face = bakedQuad.getDirection();
+            Direction face = bakedQuad.direction();
             if (face == faceX || face == faceY || face == faceZ) {
                 moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
             }
@@ -157,7 +157,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
 
     @Override
     public void moreculling$renderModelForFaces(PoseStack.Pose pose, VertexConsumer vertices,
-                                                @Nullable BlockState state, BakedModel model, float red, float green,
+                                                @Nullable BlockState state, BlockStateModel model, float red, float green,
                                                 float blue, float alpha, int light, int overlay, Direction[] faces) {
         for (Direction direction : faces) {
             this.moreculling$rand.setSeed(42L);
@@ -179,7 +179,7 @@ public abstract class ModelBlockRenderer_cullMixin implements ExtendedBlockModel
                                                 float green, float blue, float alpha, List<BakedQuad> quads,
                                                 int light, int overlay, Direction[] faces) {
         for (BakedQuad bakedQuad : quads) {
-            Direction face = bakedQuad.getDirection();
+            Direction face = bakedQuad.direction();
             if (Arrays.stream(faces).anyMatch((f) -> f == face)) {
                 moreculling$renderQuad(pose, vertices, red, green, blue, alpha, bakedQuad, light, overlay);
             }
