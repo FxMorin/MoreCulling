@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CullingUtils;
@@ -22,7 +23,7 @@ import static ca.fxco.moreculling.config.option.LeavesCullingMode.FAST;
 import static ca.fxco.moreculling.config.option.LeavesCullingMode.VERTICAL;
 
 @Mixin(value = LeavesBlock.class, priority = 1220)
-public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
+public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling, LeavesCulling {
 
     @Shadow
     @Final
@@ -36,7 +37,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
         if (MoreCulling.CONFIG.leavesCullingMode == FAST || CullingUtils.areLeavesOpaque() ||
                 (MoreCulling.CONFIG.leavesCullingMode == VERTICAL && direction.getAxis() == Direction.Axis.Y)) {
-            return stateFrom.getBlock() instanceof LeavesBlock || super.skipRendering(state, stateFrom, direction);
+            return stateFrom.getBlock() instanceof LeavesCulling || super.skipRendering(state, stateFrom, direction);
         }
         return super.skipRendering(state, stateFrom, direction);
     }
