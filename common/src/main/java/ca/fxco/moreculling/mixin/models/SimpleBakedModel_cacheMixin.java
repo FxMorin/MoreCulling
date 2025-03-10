@@ -31,6 +31,8 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
+    private boolean moreculling$allStatesCanOcclude = true;
+    @Unique
     private @Nullable VoxelShape moreculling$cullVoxelShape;
     @Unique
     private boolean moreculling$wasShapeOptimized = false;
@@ -45,7 +47,11 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
         moreculling$solidFaces.clear();
 
         if (state.canOcclude()) {
-            moreculling$solidFaces.fill();
+            if (moreculling$allStatesCanOcclude) {
+                moreculling$solidFaces.fill();
+            }
+        } else {
+            moreculling$allStatesCanOcclude = false;
         }
 
         for (Map.Entry<Direction, List<BakedQuad>> entry : culledFaces.entrySet()) {
