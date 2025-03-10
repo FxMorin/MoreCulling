@@ -77,3 +77,4 @@ tasks.register("modifyMetaData") {
 tasks.named("jar") {
     dependsOn modifyMetaData
 }
+modifyMetaData.dependsOn(tasks.named("jarJar"))
