@@ -49,6 +49,7 @@ dependencies {
     compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:${project.mixinsquared_version}"))
     runtimeOnly "curse.maven:bibliocraft-legacy-1122260:6016845"
+    compileOnly "org.sinytra.forgified-fabric-api:forgified-fabric-api:0.102.0+2.0.12+1.21.1"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

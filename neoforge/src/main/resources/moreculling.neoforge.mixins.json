@@ -6,6 +6,7 @@
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "models.BakedModelWrapper_compatMixin",
+    "models.ForwardingBakedModel_compatMixin",
     "renderers.ItemRenderer_neoforgeFaceCullingMixin"
   ],
   "injectors": {
