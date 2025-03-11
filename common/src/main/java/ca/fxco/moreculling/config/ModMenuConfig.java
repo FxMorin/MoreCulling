@@ -52,6 +52,9 @@ public class ModMenuConfig {
             if (modId.equals("minecraft")) {
                 continue;
             }
+            if (!Services.PLATFORM.isModLoaded(modId)) {
+                continue;
+            }
             DynamicBooleanListEntry aMod = new DynamicBooleanBuilder(Services.PLATFORM.getModName(modId))
                     .setValue(entry.getBooleanValue())
                     .setDefaultValue(MoreCulling.CONFIG.useOnModdedBlocksByDefault)

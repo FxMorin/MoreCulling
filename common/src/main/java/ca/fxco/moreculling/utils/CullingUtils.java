@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
@@ -13,7 +14,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -95,7 +95,7 @@ public class CullingUtils {
 
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,
                                                         BlockPos thisPos, BlockPos sidePos, Direction side) {
-        if (sideState.getBlock() instanceof LeavesBlock ||
+        if (sideState.getBlock() instanceof LeavesCulling ||
                 (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
                         .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             boolean isSurrounded = true;
@@ -103,7 +103,7 @@ public class CullingUtils {
                 if (dir != side) {
                     BlockPos pos = thisPos.relative(dir);
                     BlockState state = view.getBlockState(pos);
-                    isSurrounded &= state.getBlock() instanceof LeavesBlock ||
+                    isSurrounded &= state.getBlock() instanceof LeavesCulling ||
                             (state.canOcclude() && ((StateCullingShapeCache) state)
                                     .moreculling$getFaceCullingShape(dir.getOpposite()) == Shapes.block());
                 }
@@ -116,13 +116,13 @@ public class CullingUtils {
     public static Optional<Boolean> shouldDrawFaceGap(BlockGetter view, BlockState sideState,
                                                       BlockPos sidePos, Direction side) {
         Direction oppositeSide = side.getOpposite();
-        if (sideState.getBlock() instanceof LeavesBlock ||
+        if (sideState.getBlock() instanceof LeavesCulling ||
                 (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
                         .moreculling$getFaceCullingShape(oppositeSide) == Shapes.block())) {
             for (int i = 1; i < (5 - MoreCulling.CONFIG.leavesCullingAmount); i++) {
                 BlockPos pos = sidePos.relative(side, i);
                 BlockState state = view.getBlockState(pos);
-                if (state == null || !(state.getBlock() instanceof LeavesBlock ||
+                if (state == null || !(state.getBlock() instanceof LeavesCulling ||
                         (state.canOcclude() && ((StateCullingShapeCache) state)
                                 .moreculling$getFaceCullingShape(oppositeSide) == Shapes.block()))) {
                     return Optional.of(false);
@@ -134,7 +134,7 @@ public class CullingUtils {
 
     public static Optional<Boolean> shouldDrawFaceDepth(BlockGetter view, BlockState sideState,
                                                         BlockPos sidePos, Direction side) {
-        if (sideState.getBlock() instanceof LeavesBlock ||
+        if (sideState.getBlock() instanceof LeavesCulling ||
                 (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
                         .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             for (int i = 1; i < MoreCulling.CONFIG.leavesCullingAmount + 1; i++) {
@@ -150,7 +150,7 @@ public class CullingUtils {
 
     public static Optional<Boolean> shouldDrawFaceRandom(BlockGetter view, BlockState sideState,
                                                          BlockPos sidePos, Direction side) {
-        if (sideState.getBlock() instanceof LeavesBlock ||
+        if (sideState.getBlock() instanceof LeavesCulling ||
                 (sideState.canOcclude() && ((StateCullingShapeCache) sideState)
                         .moreculling$getFaceCullingShape(side.getOpposite()) == Shapes.block())) {
             if (RANDOM.nextIntBetweenInclusive(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {

@@ -18,6 +18,7 @@ dependencies {
     //modImplementation "maven.modrinth:balm:${project.clienttweaks_version}+fabric-${project.minecraft_version}"
     // ^ uncomment to test with clienttweaks
 
+    //modImplementation("maven.modrinth:ebe:0.11.3+1.21.4")
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
