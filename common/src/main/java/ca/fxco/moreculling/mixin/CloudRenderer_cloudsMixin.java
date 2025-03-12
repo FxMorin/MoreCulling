@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.client.renderer.CloudRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,17 +41,6 @@ public abstract class CloudRenderer_cloudsMixin {
     }
 
     @Inject(
-            method = "buildMesh(Lnet/minecraft/client/renderer/CloudRenderer$RelativeCameraPos;Lcom/mojang/blaze3d/vertex/BufferBuilder;IIIIIIZ)V",
-            at = @At(value = "HEAD")
-    )
-    private void moreculling$enableCull(CloudRenderer.RelativeCameraPos p_363221_, BufferBuilder p_364486_,
-                                        int p_361006_, int p_362674_, int p_362100_, int p_360889_, int p_360776_,
-                                        int p_365003_, boolean p_362207_, CallbackInfo ci) {
-        if (p_362207_ && MoreCulling.CONFIG.cloudCulling)
-            RenderSystem.enableCull();
-    }
-
-    @Inject(
             method = "buildExtrudedCell",
             at = @At(value = "HEAD"),
             cancellable = true
@@ -68,7 +58,6 @@ public abstract class CloudRenderer_cloudsMixin {
         if (!MoreCulling.CONFIG.cloudCulling) {
             return;
         }
-        RenderSystem.enableCull();
         float f = (float)m * 12.0F;
         float g = f + 12.0F;
         float h = 0.0F;

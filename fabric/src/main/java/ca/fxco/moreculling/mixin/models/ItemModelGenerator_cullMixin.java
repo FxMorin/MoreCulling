@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
-
-/*import ca.fxco.moreculling.api.model.BakedOpacity;
+/*
+import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;

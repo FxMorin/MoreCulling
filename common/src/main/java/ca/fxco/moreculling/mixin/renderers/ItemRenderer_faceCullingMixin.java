@@ -83,7 +83,7 @@ public class ItemRenderer_faceCullingMixin {
         }
         Vec3 cameraPos = ItemRendererStates.CAMERA.getPosition();
         Vec3 framePos = new Vec3(frame.x, frame.y, frame.z);
-        boolean isBlockItem = !((BakedOpacity) bakedModel).moreculling$isItem();
+        boolean isBlockItem = false;//TODO!((BakedOpacity) bakedModel).moreculling$isItem();
         ItemTransform transformation = ItemRendererStates.TRANSFORMS;
         boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);

@@ -8,19 +8,27 @@ import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.WeightedBakedModel;
+import net.minecraft.client.renderer.block.model.multipart.MultiPartModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-@Mixin(value = WeightedBakedModel.class, priority = 1010)
-public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
+@Mixin(value = MultiPartModel.class, priority = 1010)
+public abstract class MultiPartModel_cacheMixin implements BakedOpacity {
+
+    @Shadow
+    @Final
+    private MultiPartModel.SharedBakedState shared;
 
     @Unique // Only works on chunk update, so the best performance is after placing a block
     private byte solidFaces = 0; // 0 = all sides translucent
@@ -51,5 +59,23 @@ public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
                 }
             }
         }
+    }
+
+    @Override
+    public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
+        VoxelShape cachedShape = null;
+        for (MultiPartModel.Selector<BlockStateModel> selector : this.shared.selectors) {
+            if ((selector.condition()).test(state)) {
+                VoxelShape shape = ((BakedOpacity) selector.model()).moreculling$getCullingShape(state);
+                if (shape != null) {
+                    if (cachedShape == null) {
+                        cachedShape = shape;
+                    } else {
+                        cachedShape = Shapes.or(cachedShape, shape);
+                    }
+                }
+            }
+        }
+        return cachedShape;
     }
 }

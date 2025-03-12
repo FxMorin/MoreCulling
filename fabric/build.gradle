@@ -9,9 +9,9 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modCompileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
     modCompileOnly "maven.modrinth:sodium:${project.sodium_version}-fabric"
     // ^ Change to `modCompileOnly` to test without sodium
     //modImplementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+fabric-${project.minecraft_version}"

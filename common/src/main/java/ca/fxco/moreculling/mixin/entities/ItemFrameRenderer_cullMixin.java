@@ -210,7 +210,6 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                     this.blockRenderer.getModelRenderer().renderModel(
                             poseStack.last(),
                             multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
-                            null,
                             blockstatemodel,
                             1.0f,
                             1.0f,

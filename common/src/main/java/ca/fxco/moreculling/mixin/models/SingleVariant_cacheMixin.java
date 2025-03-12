@@ -8,8 +8,8 @@ import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.resources.model.QuadCollection;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -22,10 +22,10 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(SimpleModelWrapper.class)
-public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
+@Mixin(SingleVariant.class)
+public abstract class SingleVariant_cacheMixin implements BakedOpacity {
 
-    @Shadow @Final private QuadCollection quads;
+    @Shadow @Final private BlockModelPart model;
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
     @Unique
@@ -44,7 +44,7 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     public void moreculling$resetTranslucencyCache(BlockState state) {
         moreculling$solidFaces.clear();
         for (Direction direction : DirectionUtils.DIRECTIONS) {
-            List<BakedQuad> layeredQuads = new ArrayList<>(quads.getQuads(direction));
+            List<BakedQuad> layeredQuads = new ArrayList<>(model.getQuads(direction));
             if (!layeredQuads.isEmpty()) {
                 BakedQuad initialQuad = layeredQuads.removeFirst();
                 SpriteOpacity opacity = ((SpriteOpacity) initialQuad.sprite());
