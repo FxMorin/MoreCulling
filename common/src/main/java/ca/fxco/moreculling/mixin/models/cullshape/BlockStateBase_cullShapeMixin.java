@@ -45,11 +45,6 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
             )
     )
     private void moreculling$customCullingShape(CallbackInfo ci) {
-        if (this.canOcclude) {
-            this.moreculling$cullingShapesByFace = occlusionShapesByFace;
-            return;
-        }
-
         VoxelShape voxelShape = null;
         if (blockRenderManager != null) {
             BakedModel model = blockRenderManager.getBlockModel(this.asState());
@@ -59,6 +54,10 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
         }
 
         if (voxelShape == null) {
+            if (this.canOcclude) {
+                this.moreculling$cullingShapesByFace = occlusionShapesByFace;
+                return;
+            }
             voxelShape = this.getBlock().getOcclusionShape(this.asState());
         }
 
