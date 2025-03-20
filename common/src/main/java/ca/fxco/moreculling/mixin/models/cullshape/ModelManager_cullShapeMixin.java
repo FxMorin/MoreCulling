@@ -30,7 +30,7 @@ public class ModelManager_cullShapeMixin {
                                                    Map.Entry<ResourceLocation, Resource> entry) {
         UnbakedModel model = (UnbakedModel) originalModel;
 
-        if (entry.getValue().sourcePackId().startsWith("file/")) {
+        if (entry.getValue().sourcePackId().startsWith("file/") && entry.getKey().getPath().contains("block/")) {
             ((ExtendedUnbakedModel) model).moreculling$setUseModelShape(true);
         }
 

@@ -26,9 +26,6 @@ import java.util.List;
 @Mixin(value = MultiPartBakedModel.class, priority = 1010)
 public abstract class MultiPartBakedModel_cacheMixin implements BakedOpacity {
 
-    //TODO: Find a proper way to declare all Multipart Caches on game load instead of using `getQuads`
-    //TODO: test how good moreculling$initTranslucencyCache works
-
     @Shadow
     @Final
     private List<MultiPartBakedModel.Selector> selectors;

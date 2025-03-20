@@ -56,7 +56,15 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
             return;
         }
         ResourceLocation id = bakedModel instanceof BlockModel model ? model.parentLocation : null;
-        if (moreculling$getUseModelShape(id)) {
+        List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
+        if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
+            VoxelShape voxelShape = Shapes.empty();
+            for (CullShapeElement e : cullShapeElementList) {
+                VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
+            }
+            bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
+        } else if (moreculling$getUseModelShape(id)) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = Shapes.empty();
@@ -75,7 +83,6 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                     if (direction.getAxis() != Direction.Axis.Y) {
                         voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.NORTH, direction, voxelShape);
                     } else {
-                        voxelShape = null;
                         /*direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.UP); TODO
                         if (direction.getAxis() != Direction.Axis.X) {
                             voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
@@ -84,17 +91,7 @@ public abstract class BlockModel_neoforgeCullShapeMixin implements ExtendedUnbak
                         }*/
                     }
                 }
-                bakedOpacity.moreculling$setCullingShape(voxelShape);
-            }
-        } else {
-            List<CullShapeElement> cullShapeElementList = moreculling$getCullShapeElements(id);
-            if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
-                VoxelShape voxelShape = Shapes.empty();
-                for (CullShapeElement e : cullShapeElementList) {
-                    VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
-                }
-                bakedOpacity.moreculling$setCullingShape(voxelShape);
+                bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
             }
         }
     }
