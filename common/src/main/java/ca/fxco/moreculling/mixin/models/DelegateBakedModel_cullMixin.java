@@ -37,6 +37,16 @@ public class DelegateBakedModel_cullMixin implements BakedOpacity {
     }
 
     @Override
+    public boolean moreculling$getHasAutoModelShape() {
+        return ((BakedOpacity) parent).moreculling$getHasAutoModelShape();
+    }
+
+    @Override
+    public void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {
+        ((BakedOpacity) parent).moreculling$setHasAutoModelShape(hasAutoModelShape);
+    }
+
+    @Override
     public boolean moreculling$canSetCullingShape() {
         return ((BakedOpacity) parent).moreculling$canSetCullingShape();
     }

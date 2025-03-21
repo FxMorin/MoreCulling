@@ -47,6 +47,23 @@ public interface ExtendedUnbakedModel {
     }
 
     /**
+     * When set to false, the cull shape is completely ignored and instead the model
+     * will be used as the cull shape even if block state can occlude
+     *
+     * @since 1.2.10
+     */
+    default void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {}
+
+    /**
+     * Returns if useModelShape was set automatically
+     *
+     * @since 1.2.10
+     */
+    default boolean moreculling$getHasAutoModelShape() {
+        return false;
+    }
+
+    /**
      * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
      * it. Do this to modify the element face data.
      *

@@ -77,6 +77,23 @@ public interface BakedOpacity {
     default void moreculling$setCullingShape(@Nullable VoxelShape cullingShape) {}
 
     /**
+     * When set to false, the cull shape is completely ignored and instead the model
+     * will be used as the cull shape even if block state can occlude
+     *
+     * @since 1.2.10
+     */
+    default void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {}
+
+    /**
+     * Returns if useModelShape was set automatically
+     *
+     * @since 1.2.10
+     */
+    default boolean moreculling$getHasAutoModelShape() {
+        return false;
+    }
+
+    /**
      * Tells you if this model supports setting the culling shape
      *
      * @since 0.25.0

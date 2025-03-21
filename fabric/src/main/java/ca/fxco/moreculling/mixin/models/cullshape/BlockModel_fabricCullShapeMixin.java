@@ -61,7 +61,8 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                 VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
                 voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
             }
-            bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
+            bakedOpacity.moreculling$setCullingShape(voxelShape);
+            bakedOpacity.moreculling$setHasAutoModelShape(false);
         } else if (moreculling$getUseModelShape(id)) {
             List<BlockElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
@@ -89,7 +90,8 @@ public abstract class BlockModel_fabricCullShapeMixin implements ExtendedUnbaked
                         }*/
                     }
                 }
-                bakedOpacity.moreculling$setCullingShape(voxelShape.optimize());
+                bakedOpacity.moreculling$setCullingShape(voxelShape);
+                bakedOpacity.moreculling$setHasAutoModelShape(moreculling$getHasAutoModelShape());
             }
         }
     }
