@@ -5,10 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
-    "blockstates.Block_neoforgeDrawSideMixin",
-    "models.ItemModelGenerator_cullMixin",
-    "models.cullshape.BlockModel_neoforgeCullShapeMixin",
-    "renderers.IBakedModelExtension_faceCullingMixin"
+    "blockstates.Block_neoforgeDrawSideMixin"
   ],
   "injectors": {
     "defaultRequire": 1

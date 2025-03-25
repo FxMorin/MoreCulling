@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BeaconBeamOwner;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +27,7 @@ public class BeaconRenderer_frustumMixin<T extends BlockEntity & BeaconBeamOwner
                             "Lnet/minecraft/client/renderer/MultiBufferSource;FFJIII)V"
             )
     )
-    private boolean moreculling$onRenderBeam(PoseStack p_112185_, MultiBufferSource p_112186_,
+    private boolean moreculling$onRenderBeam(PoseStack poseStack, MultiBufferSource multiBufferSource,
                                              float i, float tickDelta, long worldTime, int yOffset,
                                              int maxY, int color, T blockEntity) {
         if (!MoreCulling.CONFIG.beaconBeamCulling) {

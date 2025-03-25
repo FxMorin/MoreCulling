@@ -4,7 +4,6 @@ import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SpriteGetter;
 import net.neoforged.neoforge.client.RenderTypeGroup;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
+/* TODO
 @Mixin(ItemModelGenerator.class)
 public class ItemModelGenerator_cullMixin {
     @Inject(
@@ -26,4 +25,4 @@ public class ItemModelGenerator_cullMixin {
                             RenderTypeGroup renderTypes, CallbackInfoReturnable<BakedModel> cir) {
         ((BakedOpacity) cir.getReturnValue()).moreculling$setIsItem();
     }
-}
+}*/

@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.WeightedVariants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +40,7 @@ public abstract class WeightedVariants_cacheMixin implements BakedOpacity {
         solidFaces = 0;
         for (Direction face : DirectionUtils.DIRECTIONS) {
             List<BakedQuad> quads = Services.PLATFORM.getQuads((BlockStateModel) this, state,
-                    face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+                    face, CullingUtils.RANDOM, EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO);
             if (quads.isEmpty()) { // no faces = translucent
                 solidFaces = BitUtils.unset(solidFaces, face.ordinal());
             } else {
