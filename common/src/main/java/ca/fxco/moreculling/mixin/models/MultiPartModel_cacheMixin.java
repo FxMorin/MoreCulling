@@ -53,7 +53,7 @@ public abstract class MultiPartModel_cacheMixin implements BakedOpacity {
             } else {
                 solidFaces = BitUtils.set(solidFaces, face.ordinal());
                 for (BakedQuad quad : quads) {
-                    if (((QuadOpacity)  (Object) quad).moreculling$getTextureTranslucency()) {
+                    if (((QuadOpacity) (Object) quad).moreculling$getTextureTranslucency()) {
                         solidFaces = BitUtils.unset(solidFaces, face.ordinal());
                         break;
                     }

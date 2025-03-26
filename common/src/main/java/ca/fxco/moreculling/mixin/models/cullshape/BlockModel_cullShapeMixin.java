@@ -28,6 +28,8 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
 
     @Unique
     private boolean moreculling$useModelShape = false;
+    @Unique
+    private boolean moreculling$hasAutoModelShape = true;
 
     @Override
     public void moreculling$setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
@@ -51,6 +53,16 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     @Override
     public boolean moreculling$getUseModelShape(ResourceLocation id) {
         return this.moreculling$useModelShape;
+    }
+
+    @Override
+    public void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {
+        this.moreculling$hasAutoModelShape = hasAutoModelShape;
+    }
+
+    @Override
+    public boolean moreculling$getHasAutoModelShape() {
+        return this.moreculling$hasAutoModelShape;
     }
 
     @Override

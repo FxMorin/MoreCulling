@@ -37,6 +37,15 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         moreculling$solidFaces.clear();
+
+        if (state.canOcclude()) {
+            if (moreculling$allStatesCanOcclude) {
+                moreculling$solidFaces.fill();
+            }
+        } else {
+            moreculling$allStatesCanOcclude = false;
+        }
+
         for (Direction direction : DirectionUtils.DIRECTIONS) {
             List<BakedQuad> layeredQuads = new ArrayList<>(model.getQuads(direction));
             if (!layeredQuads.isEmpty()) {
@@ -70,6 +79,16 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
     @Override
     public void moreculling$setCullingShape(VoxelShape cullingShape) {
         ((BakedOpacity) this.model).moreculling$setCullingShape(cullingShape);
+    }
+
+    @Override
+    public boolean moreculling$getHasAutoModelShape() {
+        return moreculling$hasAutoModelShape;
+    }
+
+    @Override
+    public void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {
+        moreculling$hasAutoModelShape = hasAutoModelShape;
     }
 
     @Override

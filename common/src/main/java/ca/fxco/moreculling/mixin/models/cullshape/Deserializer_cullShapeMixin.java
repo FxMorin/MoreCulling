@@ -35,6 +35,7 @@ public class Deserializer_cullShapeMixin {
 
         if (jsonObj.has("useModelShape")) {
             unbakedModel.moreculling$setUseModelShape(jsonObj.get("useModelShape").getAsBoolean());
+            unbakedModel.moreculling$setHasAutoModelShape(false);
         }
     }
 

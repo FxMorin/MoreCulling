@@ -39,6 +39,7 @@
     "compat.BambooStalkBlock_clientTweaksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
     "compat.BlockStateBaseMixin_clientTweaksMixin",
+    "compat.SignBlock_ebeMixin",
     "entities.ItemFrameRenderer_cullMixin",
     "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
