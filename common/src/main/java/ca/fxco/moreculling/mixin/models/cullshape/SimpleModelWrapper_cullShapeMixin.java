@@ -33,6 +33,8 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
     private @Nullable VoxelShape moreculling$cullVoxelShape;
     @Unique
     private boolean moreculling$wasShapeOptimized = false;
+    @Unique
+    private boolean moreculling$hasAutoModelShape = true;
 
     @Inject(
             method = "bake",
@@ -53,7 +55,19 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
             return;
         }
         ResourceLocation id = unbakedModel.parent();
-        if (((ExtendedUnbakedModel) unbakedModel).moreculling$getUseModelShape(id)) {
+        ExtendedUnbakedModel extendedUnbakedModel = ((ExtendedUnbakedModel) unbakedModel);
+
+        List<CullShapeElement> cullShapeElementList = extendedUnbakedModel
+                .moreculling$getCullShapeElements(model.parent());
+        if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
+            VoxelShape voxelShape = Shapes.empty();
+            for (CullShapeElement e : cullShapeElementList) {
+                VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
+                voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
+            }
+            bakedOpacity.moreculling$setCullingShape(voxelShape);
+            bakedOpacity.moreculling$setHasAutoModelShape(false);
+        } else if (extendedUnbakedModel.moreculling$getUseModelShape(id)) {
             if (model.getTopGeometry() instanceof SimpleUnbakedGeometry(List<BlockElement> elements)) {
                 if (elements != null && !elements.isEmpty()) {
                     VoxelShape voxelShape = Shapes.empty();
@@ -75,7 +89,6 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                         if (direction.getAxis() != Direction.Axis.Y) {
                             voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.NORTH, direction, voxelShape);
                         } else {
-                            voxelShape = null;
                         /*direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.UP); TODO rotation for non horizontal directions
                         if (direction.getAxis() != Direction.Axis.X) {
                             voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
@@ -85,18 +98,9 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                         }
                     }
                     bakedOpacity.moreculling$setCullingShape(voxelShape);
+                    bakedOpacity.moreculling$setHasAutoModelShape(
+                            extendedUnbakedModel.moreculling$getHasAutoModelShape());
                 }
-            }
-        } else {
-            List<CullShapeElement> cullShapeElementList = ((ExtendedUnbakedModel) unbakedModel)
-                    .moreculling$getCullShapeElements(model.parent());
-            if (cullShapeElementList != null && !cullShapeElementList.isEmpty()) {
-                VoxelShape voxelShape = Shapes.empty();
-                for (CullShapeElement e : cullShapeElementList) {
-                    VoxelShape shape = Block.box(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
-                }
-                bakedOpacity.moreculling$setCullingShape(voxelShape);
             }
         }
     }
@@ -121,5 +125,16 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
     @Override
     public boolean moreculling$canSetCullingShape() {
         return true;
+    }
+
+
+    @Override
+    public boolean moreculling$getHasAutoModelShape() {
+        return moreculling$hasAutoModelShape;
+    }
+
+    @Override
+    public void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {
+        moreculling$hasAutoModelShape = hasAutoModelShape;
     }
 }

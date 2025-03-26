@@ -28,6 +28,8 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
     @Shadow @Final private BlockModelPart model;
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
+    @Unique
+    private boolean moreculling$allStatesCanOcclude = true;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -82,17 +84,17 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
     }
 
     @Override
+    public boolean moreculling$canSetCullingShape() {
+        return true;
+    }
+
+    @Override
     public boolean moreculling$getHasAutoModelShape() {
-        return moreculling$hasAutoModelShape;
+        return ((BakedOpacity) this.model).moreculling$getHasAutoModelShape();
     }
 
     @Override
     public void moreculling$setHasAutoModelShape(boolean hasAutoModelShape) {
-        moreculling$hasAutoModelShape = hasAutoModelShape;
-    }
-
-    @Override
-    public boolean moreculling$canSetCullingShape() {
-        return true;
+        ((BakedOpacity) this.model).moreculling$setHasAutoModelShape(hasAutoModelShape);
     }
 }

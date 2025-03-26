@@ -2,7 +2,7 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
