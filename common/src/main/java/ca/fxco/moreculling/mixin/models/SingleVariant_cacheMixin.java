@@ -28,12 +28,6 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
     @Shadow @Final private BlockModelPart model;
     @Unique
     private final DirectionBits moreculling$solidFaces = new DirectionBits();
-    @Unique
-    private @Nullable VoxelShape moreculling$cullVoxelShape;
-    @Unique
-    private @Nullable boolean moreculling$isItem = false;
-    @Unique
-    private boolean moreculling$wasShapeOptimized = false;
 
     @Override
     public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
@@ -70,33 +64,16 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
 
     @Override
     public @Nullable VoxelShape moreculling$getCullingShape(BlockState state) {
-        if (!this.moreculling$wasShapeOptimized) {
-            if (this.moreculling$cullVoxelShape != null) {
-                this.moreculling$cullVoxelShape = moreculling$cullVoxelShape.optimize();
-            }
-            this.moreculling$wasShapeOptimized = true;
-        }
-
-        return this.moreculling$cullVoxelShape;
+        return ((BakedOpacity) this.model).moreculling$getCullingShape(state);
     }
 
     @Override
     public void moreculling$setCullingShape(VoxelShape cullingShape) {
-        this.moreculling$cullVoxelShape = cullingShape;
+        ((BakedOpacity) this.model).moreculling$setCullingShape(cullingShape);
     }
 
     @Override
     public boolean moreculling$canSetCullingShape() {
         return true;
-    }
-
-    @Override
-    public boolean moreculling$isItem() {
-        return moreculling$isItem;
-    }
-
-    @Override
-    public void moreculling$setIsItem() {
-        moreculling$isItem = true;
     }
 }

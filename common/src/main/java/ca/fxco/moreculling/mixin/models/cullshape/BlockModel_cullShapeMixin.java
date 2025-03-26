@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -34,10 +35,10 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
     }
 
     @Override
-    public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
+    public @Nullable List<CullShapeElement> moreculling$getCullShapeElements(ResolvedModel parent) {
         if (this.moreculling$cullShapeElements == null) {
-            return null;//this.parent instanceof BlockModel ?
-                    //((ExtendedUnbakedModel) this.parent).moreculling$getCullShapeElements(id) : null;
+            return parent != null && parent.wrapped() instanceof BlockModel ?
+                    ((ExtendedUnbakedModel) parent.wrapped()).moreculling$getCullShapeElements(parent.parent()) : null;
         }
         return moreculling$cullShapeElements;
     }

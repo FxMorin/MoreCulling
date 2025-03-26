@@ -85,10 +85,4 @@ public interface BakedOpacity {
     default boolean moreculling$canSetCullingShape() {
         return false;
     }
-
-    default boolean moreculling$isItem() {
-        return false;
-    }
-
-    default void moreculling$setIsItem() {}
 }

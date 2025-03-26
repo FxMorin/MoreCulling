@@ -2,9 +2,11 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -35,6 +37,8 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
 
     @Shadow public abstract Block getBlock();
 
+    @Shadow public abstract boolean is(Block block);
+
     @Unique
     private VoxelShape[] moreculling$cullingShapesByFace;
 
@@ -55,6 +59,10 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
             BlockStateModel model = blockRenderManager.getBlockModel(this.asState());
             if (model != null && !this.asState().hasProperty(BlockStateProperties.FACING)) {
                 voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
+                if (this.is(Blocks.COPPER_GRATE)) {
+                    LogUtils.getLogger().warn(model.getClass().getName());
+                    LogUtils.getLogger().warn(String.valueOf(voxelShape));
+                }
             }
         }
 

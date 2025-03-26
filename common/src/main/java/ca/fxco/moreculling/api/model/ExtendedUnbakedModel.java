@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.api.model;
 
 import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.resources.ResourceLocation;
 
 
@@ -26,7 +27,7 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    default List<CullShapeElement> moreculling$getCullShapeElements(ResourceLocation id) {
+    default List<CullShapeElement> moreculling$getCullShapeElements(ResolvedModel parent) {
         return List.of();
     }
 
