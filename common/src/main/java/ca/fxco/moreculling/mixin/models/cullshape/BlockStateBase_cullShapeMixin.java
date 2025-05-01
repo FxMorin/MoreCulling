@@ -38,13 +38,9 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
     @Unique
     private VoxelShape[] moreculling$cullingShapesByFace;
 
-    @Inject(
-            method = "initCache",
-            at = @At(
-                    value = "TAIL"
-            )
-    )
-    private void moreculling$customCullingShape(CallbackInfo ci) {
+
+    @Override
+    public void moreculling$initCustomCullingShape() {
         VoxelShape voxelShape = null;
         if (blockRenderManager != null) {
             BlockStateModel model = blockRenderManager.getBlockModel(this.asState());

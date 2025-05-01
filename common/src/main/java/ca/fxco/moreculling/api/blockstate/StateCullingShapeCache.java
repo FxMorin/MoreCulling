@@ -19,4 +19,11 @@ public interface StateCullingShapeCache {
      */
     VoxelShape moreculling$getFaceCullingShape(Direction face);
 
+    /**
+     * Initialize custom culling shape on resource reload
+     *
+     * @since 1.3.1
+     */
+    void moreculling$initCustomCullingShape();
+
 }
