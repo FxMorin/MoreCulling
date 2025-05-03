@@ -22,10 +22,6 @@ public class Minecraft_loadBlocksMixin {
             at = @At("RETURN")
     )
     private void moreculling$onInit(GameConfig args, CallbackInfo ci) {
-        if (MoreCulling.CONFIG == null) {
-            return;
-        }
-
         BuiltInRegistries.BLOCK.forEach(block -> {
             ((MoreBlockCulling) block).moreculling$setCanCull(MoreCulling.CONFIG.modCompatibility.putIfAbsent(
                     BuiltInRegistries.BLOCK.getKey(block).getNamespace(),

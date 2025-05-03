@@ -24,7 +24,7 @@ public class MoreCulling {
     public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static MoreCullingConfig CONFIG;
+    public static MoreCullingConfig CONFIG = new MoreCullingConfig(); // prevent crashes due to config being null in case there's error caused by another mod
 
     public static void init() {
         AutoConfig.register(MoreCullingConfig.class, (conf, clazz) -> new Toml4jConfigSerializer<>(conf, clazz) {
