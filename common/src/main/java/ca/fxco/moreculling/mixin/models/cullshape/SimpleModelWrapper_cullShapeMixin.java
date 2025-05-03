@@ -5,14 +5,13 @@ import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import ca.fxco.moreculling.utils.ShapeUtils;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.logging.LogUtils;
+import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -84,17 +83,10 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                     }
 
                     if (settings.transformation() != Transformation.identity()) {
-                        ;
-                        Direction direction = Direction.rotate(settings.transformation().getMatrix(), Direction.NORTH);
-                        if (direction.getAxis() != Direction.Axis.Y) {
-                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.NORTH, direction, voxelShape);
-                        } else {
-                        /*direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.UP); TODO rotation for non horizontal directions
-                        if (direction.getAxis() != Direction.Axis.X) {
-                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
-                        } else {
-                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundZ(Direction.UP, direction, voxelShape);
-                        }*/
+                        OctahedralGroup group = ShapeUtils.MATRIX_TO_OCTAHEDRAL
+                                .get(settings.transformation().getMatrix());
+                        if (group != null) {
+                            voxelShape = Shapes.rotate(voxelShape, group);
                         }
                     }
                     bakedOpacity.moreculling$setCullingShape(voxelShape);

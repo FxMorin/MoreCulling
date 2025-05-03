@@ -7,16 +7,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
@@ -49,9 +45,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
                     this.moreculling$cullingShapesByFace = occlusionShapesByFace;
                     return;
                 }
-                if (!this.asState().hasProperty(BlockStateProperties.FACING)) {
-                    voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
-                }
+                voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
             }
         }
 
