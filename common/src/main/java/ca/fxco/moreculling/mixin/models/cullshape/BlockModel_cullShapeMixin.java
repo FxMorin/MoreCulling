@@ -4,18 +4,16 @@ import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ResolvedModel;
-import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
@@ -70,15 +68,16 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         return elementFace;
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "<clinit>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"
+                    target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;",
+                    remap = false
             )
     )
-    private static Gson moreculling$registerCustomTypeAdapter(GsonBuilder builder) {
-        return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
+    private static Gson moreculling$registerCustomTypeAdapter(GsonBuilder instance, Operation<Gson> original) {
+        return original.call(instance.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()));
     }
 
 }
