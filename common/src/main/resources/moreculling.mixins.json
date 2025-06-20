@@ -7,7 +7,7 @@
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "BakedQuad_cacheMixin",
-    "CloudRenderer_cloudsMixin",
+    //"CloudRenderer_cloudsMixin",TODO
     "MapItemSavedData_cacheMixin",
     "Minecraft_managersMixin",
     "TextureAtlasSprite_opacityMixin",
