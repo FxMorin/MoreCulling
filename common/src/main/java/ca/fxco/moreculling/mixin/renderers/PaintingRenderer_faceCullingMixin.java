@@ -7,6 +7,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.fallenbreath.conditionalmixin.api.annotation.Condition;
+import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.client.renderer.entity.PaintingRenderer;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,6 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static ca.fxco.moreculling.states.PaintingRendererStates.DIRECTION;
 import static ca.fxco.moreculling.states.PaintingRendererStates.PAINTING_POS;
 
+@Restriction(conflict = {
+    @Condition("smoothmaps")
+})
 @Mixin(PaintingRenderer.class)
 public abstract class PaintingRenderer_faceCullingMixin {
 
