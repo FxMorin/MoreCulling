@@ -24,7 +24,7 @@ jobs:
         with:
           files: neoforge/build/libs/!(*-@(dev|sources|api|javadoc)).jar
           github-files: neoforge/build/libs/*-@(dev|sources|api|javadoc).jar
-          version-type: release
+          version-type: beta
           game-versions: |
             1.21.5
           game-version-filter: releases
@@ -60,7 +60,7 @@ jobs:
         with:
           files: fabric/build/libs/!(*-@(dev|sources|api|javadoc)).jar
           github-files: fabric/build/libs/*-@(dev|sources|api|javadoc).jar
-          version-type: release
+          version-type: beta
           game-versions: |
             1.21.5
           game-version-filter: releases
