@@ -92,9 +92,18 @@ public class CullingUtils {
 
     public static boolean areLeavesOpaque() {
         GraphicsStatus mode = Minecraft.getInstance().options.graphicsMode().get();
-        return CompatUtils.IS_SODIUM_LOADED ?
-                !SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
-                mode.getId() < GraphicsStatus.FANCY.getId();
+        if (CompatUtils.IS_SODIUM_LOADED) {
+            try {
+                Object qualitySettings = SodiumClientMod.options().quality;
+                Object leavesQuality = qualitySettings.getClass().getField("leavesQuality").get(qualitySettings);
+                return !(boolean) leavesQuality.getClass().getMethod("isFancy", GraphicsStatus.class)
+                        .invoke(leavesQuality, mode);
+            } catch (Exception e) {
+                MoreCulling.LOGGER.error("Failed to access Sodium leavesQuality setting", e);
+                return mode.getId() < GraphicsStatus.FANCY.getId();
+            }
+        }
+        return mode.getId() < GraphicsStatus.FANCY.getId();
     }
 
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,
