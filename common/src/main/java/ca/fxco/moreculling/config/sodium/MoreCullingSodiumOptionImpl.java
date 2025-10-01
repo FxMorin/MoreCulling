@@ -78,7 +78,7 @@ public class MoreCullingSodiumOptionImpl<S, T> implements Option<T> {
 
     @Override
     public Component getName() {
-        return this.name;
+        return name;
     }
 
     @Override

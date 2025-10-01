@@ -32,7 +32,7 @@ public class MoreCullingNeoforge {
         event.addListener(MoreCulling.RELOAD_LISTENER_ID, (barrier,
                                                            resourceManager,
                                                            executor, gameExecutor) ->
-                barrier.wait(Unit.INSTANCE).thenRunAsync(() -> {
+                executor.wait(Unit.INSTANCE).thenRunAsync(() -> {
                     ProfilerFiller profilerfiller = Profiler.get();
                     profilerfiller.push("listener");
 

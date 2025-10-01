@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -79,12 +81,14 @@ public class DynamicIntSliderEntry extends AbstractDynamicEntry<Integer> {
             DynamicIntSliderEntry.this.setValue((int) ((double) DynamicIntSliderEntry.this.minimum + (double) Math.abs(DynamicIntSliderEntry.this.maximum - DynamicIntSliderEntry.this.minimum) * this.value));
         }
 
-        public boolean keyPressed(int int_1, int int_2, int int_3) {
-            return DynamicIntSliderEntry.this.isEnabled() && (DynamicIntSliderEntry.this.isEditable() && super.keyPressed(int_1, int_2, int_3));
+        @Override
+        public boolean keyPressed(KeyEvent event) {
+            return DynamicIntSliderEntry.this.isEnabled() && (DynamicIntSliderEntry.this.isEditable() && super.keyPressed(event));
         }
 
-        public boolean mouseDragged(double double_1, double double_2, int int_1, double double_3, double double_4) {
-            return DynamicIntSliderEntry.this.isEnabled() && (DynamicIntSliderEntry.this.isEditable() && super.mouseDragged(double_1, double_2, int_1, double_3, double_4));
+        @Override
+        public boolean mouseDragged(MouseButtonEvent event, double p_93645_, double p_93646_) {
+            return DynamicIntSliderEntry.this.isEnabled() && (DynamicIntSliderEntry.this.isEditable() && super.mouseDragged(event, p_93645_, p_93646_));
         }
 
         public double getProgress() {

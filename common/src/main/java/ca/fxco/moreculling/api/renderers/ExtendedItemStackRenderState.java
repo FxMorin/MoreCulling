@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -57,8 +58,8 @@ public interface ExtendedItemStackRenderState {
      * This will render an item as if it was in an item frame like MoreCulling, it will automatically include all of
      * MoreCulling's optimizations.
      *
-     * @since 0.25.0
+     * @since 1.5.0-beta.1
      */
-    void moreculling$renderItemFrameItem(PoseStack poseStack, MultiBufferSource multiBufferSource,
+    void moreculling$renderItemFrameItem(PoseStack poseStack, SubmitNodeCollector multiBufferSource,
                                          int light, ItemFrameRenderState frame, Camera camera);
 }

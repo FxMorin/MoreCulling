@@ -8,10 +8,7 @@ import ca.fxco.moreculling.utils.CullingUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MapRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,7 +16,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BlockStateDefinitions;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -60,20 +59,22 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
 
 
     @Inject(
-            method = "render(Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;" +
-                    "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+            method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;" +
+                    "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
+                    "Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(" +
+                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;submit(" +
                             "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;" +
-                            "Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+                            "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
+                            "Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
                     shift = At.Shift.AFTER
             ),
             cancellable = true
     )
     private void moreculling$optimizedRender(ItemFrameRenderState itemFrameState, PoseStack poseStack,
-                                             MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+                                             SubmitNodeCollector submitNodeCollector, CameraRenderState renderState,
+                                             CallbackInfo ci) {
         if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) {
             return;
         }
@@ -114,7 +115,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                         double di;
                         double offsetZFighting = itemFrameState.isInvisible ? 0.5 :
                                 skipFrontRender ?
-                                        ((di = this.entityRenderDispatcher.distanceToSqr(itemFrameState.x, itemFrameState.y - 1, itemFrameState.z) / 5000) > 6 ?
+                                        ((di = this.entityRenderDispatcher.camera.getPosition().distanceToSqr(itemFrameState.x, itemFrameState.y - 1, itemFrameState.z) / 5000) > 6 ?
                                                 Math.max(0.4452 - di, 0.4) : 0.4452) :
                                         0.4375;
                         poseStack.translate(0.0, 0.0, offsetZFighting);
@@ -128,12 +129,12 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                         mapRenderer.render(
                                 itemFrameState.mapRenderState,
                                 poseStack,
-                                multiBufferSource,
+                                submitNodeCollector,
                                 true,
                                 this.getLightCoords(
                                         itemFrameState.isGlowFrame,
-                                        LightTexture.FULL_SKY | 0xD2,
-                                        i
+                                        15728880,
+                                        itemFrameState.lightCoords
                                 )
                         );
                     }
@@ -143,12 +144,12 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                 poseStack.mulPose(Axis.ZP.rotationDegrees(
                         (float) itemFrameState.rotation * 360.0f / 8.0f)
                 );
-                int l = this.getLightCoords(itemFrameState.isGlowFrame, LightTexture.FULL_BRIGHT, i);
+                int l = this.getLightCoords(itemFrameState.isGlowFrame, LightTexture.FULL_BRIGHT, itemFrameState.lightCoords);
                 poseStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
                 ((ExtendedItemStackRenderState) itemStackState).moreculling$renderItemFrameItem(
                         poseStack,
-                        multiBufferSource,
+                        submitNodeCollector,
                         l,
                         itemFrameState,
                         this.entityRenderDispatcher.camera
@@ -163,59 +164,75 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             var modelRenderer = (ExtendedBlockModelRenderer) this.blockRenderer.getModelRenderer();
             if (CullingUtils.shouldCullBack(itemFrameState)) {
                 if (skipFrontRender) {
-                    modelRenderer.moreculling$renderModelForFaces(
-                            poseStack.last(),
-                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
-                            null,
-                            blockstatemodel,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            i,
-                            OverlayTexture.NO_OVERLAY,
-                            MAP_RENDER_SIDES
+                    submitNodeCollector.submitCustomGeometry(poseStack,
+                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            (pose, consumer) -> {
+                                modelRenderer.moreculling$renderModelForFaces(
+                                        pose,
+                                        consumer,
+                                        null,
+                                        blockstatemodel,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        itemFrameState.lightCoords,
+                                        OverlayTexture.NO_OVERLAY,
+                                        MAP_RENDER_SIDES
+                                );
+                            }
                     );
                 } else {
-                    modelRenderer.moreculling$renderModelWithoutFace(
-                            poseStack.last(),
-                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
-                            null,
-                            blockstatemodel,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            i,
-                            OverlayTexture.NO_OVERLAY,
-                            Direction.SOUTH
+                    submitNodeCollector.submitCustomGeometry(poseStack,
+                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            (pose, consumer) -> {
+                                modelRenderer.moreculling$renderModelWithoutFace(
+                                        pose,
+                                        consumer,
+                                        null,
+                                        blockstatemodel,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        itemFrameState.lightCoords,
+                                        OverlayTexture.NO_OVERLAY,
+                                        Direction.SOUTH
+                                );
+                            }
                     );
                 }
             } else {
                 if (skipFrontRender) {
-                    modelRenderer.moreculling$renderModelWithoutFace(
-                            poseStack.last(),
-                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
-                            null,
-                            blockstatemodel,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            1.0f,
-                            i,
-                            OverlayTexture.NO_OVERLAY,
-                            Direction.NORTH
+                    submitNodeCollector.submitCustomGeometry(poseStack,
+                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            (pose, consumer) -> {
+                                modelRenderer.moreculling$renderModelWithoutFace(
+                                        pose,
+                                        consumer,
+                                        null,
+                                        blockstatemodel,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        1.0f,
+                                        itemFrameState.lightCoords,
+                                        OverlayTexture.NO_OVERLAY,
+                                        Direction.NORTH
+                                );
+                            }
                     );
                 } else {
-                    this.blockRenderer.getModelRenderer().renderModel(
-                            poseStack.last(),
-                            multiBufferSource.getBuffer(Sheets.solidBlockSheet()),
+                    submitNodeCollector.submitBlockModel(
+                            poseStack,
+                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
                             blockstatemodel,
                             1.0f,
                             1.0f,
                             1.0f,
-                            i,
-                            OverlayTexture.NO_OVERLAY
+                            itemFrameState.lightCoords,
+                            OverlayTexture.NO_OVERLAY,
+                            itemFrameState.outlineColor
                     );
                 }
             }

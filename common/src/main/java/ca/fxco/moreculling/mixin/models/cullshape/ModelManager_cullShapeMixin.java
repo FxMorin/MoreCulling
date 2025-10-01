@@ -17,7 +17,7 @@ import java.util.Map;
 public class ModelManager_cullShapeMixin {
 
     @ModifyArg(
-            method = {"method_65750", "lambda$loadBlockModels$9"},
+            method = {"method_65750", "lambda$loadBlockModels$6"},
             at = @At(
                     value = "INVOKE",
                     target = "com/mojang/datafixers/util/Pair.of(Ljava/lang/Object;" +

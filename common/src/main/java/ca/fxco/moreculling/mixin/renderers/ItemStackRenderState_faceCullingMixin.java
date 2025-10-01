@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ItemStackRenderState_faceCullingMixin {
 
     @WrapOperation(
-            method = "render",
+            method = "submit",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;" +

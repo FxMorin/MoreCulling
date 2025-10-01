@@ -8,7 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.AbstractSignRenderer;
+import net.minecraft.client.renderer.blockentity.state.SignRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.StandingSignBlock;
@@ -27,49 +29,37 @@ import static ca.fxco.moreculling.utils.MathUtils.ONE_SIGN_ROTATION;
 public class SignRenderer_textMixin {
 
     @WrapWithCondition(
-            method = "renderSignWithText(Lnet/minecraft/world/level/block/entity/SignBlockEntity;" +
-                    "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;" +
-                    "IILnet/minecraft/world/level/block/state/BlockState;" +
-                    "Lnet/minecraft/world/level/block/SignBlock;" +
-                    "Lnet/minecraft/world/level/block/state/properties/WoodType;Lnet/minecraft/client/model/Model;)V",
+            method = "submitSignWithText",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;renderSignText(" +
-                            "Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/SignText;" +
-                            "Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/MultiBufferSource;IIIZ)V",
+                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;" +
+                            "submitSignText(Lnet/minecraft/client/renderer/blockentity/state/SignRenderState;" +
+                            "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Z)V",
                     ordinal = 0
             )
     )
-    private boolean moreculling$cullFrontSignText(AbstractSignRenderer renderer, BlockPos pos, SignText text,
-                                                  PoseStack poseStack, MultiBufferSource mutliBufferSource,
-                                                  int i, int j, int i2, boolean l,
-                                                  @Local(argsOnly = true) BlockState state,
-                                                  @Local(argsOnly = true) Model model) {
-        return moreculling$cullSignText(pos, state, model, true);
+    private boolean moreculling$cullFrontSignText(AbstractSignRenderer instance, SignRenderState signRenderState,
+                                                  PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
+                                                  boolean bl, @Local(argsOnly = true) BlockState state,
+                                                  @Local(argsOnly = true) Model.Simple model) {
+        return moreculling$cullSignText(signRenderState.blockPos, state, model, true);
     }
 
     @WrapWithCondition(
-            method = "renderSignWithText(Lnet/minecraft/world/level/block/entity/SignBlockEntity;" +
-                    "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;" +
-                    "IILnet/minecraft/world/level/block/state/BlockState;" +
-                    "Lnet/minecraft/world/level/block/SignBlock;" +
-                    "Lnet/minecraft/world/level/block/state/properties/WoodType;Lnet/minecraft/client/model/Model;)V",
+            method = "submitSignWithText",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;renderSignText(" +
-                            "Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/SignText;" +
-                            "Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/MultiBufferSource;IIIZ)V",
+                    target = "Lnet/minecraft/client/renderer/blockentity/AbstractSignRenderer;" +
+            "submitSignText(Lnet/minecraft/client/renderer/blockentity/state/SignRenderState;" +
+            "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Z)V",
                     ordinal = 1
             )
     )
-    private boolean moreculling$cullBackSignText(AbstractSignRenderer renderer, BlockPos pos, SignText text,
-                                                 PoseStack poseStack, MultiBufferSource mutliBufferSource,
-                                                 int i, int j, int i2, boolean l,
-                                                 @Local(argsOnly = true) BlockState state,
-                                                 @Local(argsOnly = true) Model model) {
-        return moreculling$cullSignText(pos, state, model, false);
+    private boolean moreculling$cullBackSignText(AbstractSignRenderer instance, SignRenderState signRenderState,
+                                                 PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
+                                                 boolean bl, @Local(argsOnly = true) BlockState state,
+                                                 @Local(argsOnly = true) Model.Simple model) {
+        return moreculling$cullSignText(signRenderState.blockPos, state, model, false);
     }
 
     @Unique
