@@ -35,10 +35,10 @@
     "cloth-config": ">=16.0.0"
   },
   "suggests": {
-    "sodium": ">=0.6.7"
+    "sodium": ">=0.7.0"
   },
   "breaks": {
-    "sodium": "<=0.6.6"
+    "sodium": "<=0.6.13"
   },
   "custom": {
     "modmenu": {
