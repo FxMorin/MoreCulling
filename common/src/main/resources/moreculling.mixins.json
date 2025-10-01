@@ -57,7 +57,8 @@
     "renderers.ItemStackRenderState_faceCullingMixin",
     "renderers.LayerRenderState_apiMixin",
     "renderers.ModelBlockRenderer_cullMixin",
-    "renderers.PaintingRenderer_faceCullingMixin"
+    "renderers.PaintingRenderer_faceCullingMixin",
+    "renderers.PaintingRenderState_apiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
