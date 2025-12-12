@@ -12,7 +12,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -41,7 +41,7 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                     value = "RETURN"
             )
     )
-    private static void moreculling$onBake(ModelBaker modelBaker, ResourceLocation resourceLocation,
+    private static void moreculling$onBake(ModelBaker modelBaker, Identifier resourceLocation,
                                            ModelState settings, CallbackInfoReturnable<SimpleModelWrapper> cir,
                                            @Local ResolvedModel model) {
         UnbakedModel unbakedModel = model.wrapped();
@@ -53,7 +53,7 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
         if (!bakedOpacity.moreculling$canSetCullingShape()) {
             return;
         }
-        ResourceLocation id = unbakedModel.parent();
+        Identifier id = unbakedModel.parent();
         ExtendedUnbakedModel extendedUnbakedModel = ((ExtendedUnbakedModel) unbakedModel);
 
         List<CullShapeElement> cullShapeElementList = extendedUnbakedModel
@@ -71,7 +71,7 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                 if (elements != null && !elements.isEmpty()) {
                     VoxelShape voxelShape = Shapes.empty();
                     for (BlockElement e : elements) {
-                        if ((e.rotation() == null || e.rotation().angle() == 0) &&
+                        if ((e.rotation() == null) &&
                                 e.from().x() <= e.to().x()
                                 && e.from().y() <= e.to().y()
                                 && e.from().z() <= e.to().z()) {

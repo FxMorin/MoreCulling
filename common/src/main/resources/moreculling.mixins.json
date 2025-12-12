@@ -40,7 +40,6 @@
     "compat.BlockStateBaseMixin_clientTweaksMixin",
     "compat.SignBlock_ebeMixin",
     "entities.ItemFrameRenderer_cullMixin",
-    "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
     "models.MultiPartModel_cacheMixin",
     "models.SingleVariant_cacheMixin",

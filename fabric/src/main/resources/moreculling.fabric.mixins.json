@@ -9,7 +9,7 @@
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
     //"models.ItemModelGenerator_cullMixin",
-    "models.WrapperBlockStateModel_cullMixin",
+    //"models.WrapperBlockStateModel_cullMixin", TODO enable once ported
     "Minecraft_registerReloadListenersMixin"
   ],
   "injectors": {

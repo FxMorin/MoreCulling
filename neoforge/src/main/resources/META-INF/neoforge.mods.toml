@@ -15,6 +15,9 @@ logoFile="assets/moreculling/MoreCulling.png" #optional
 authors="${mod_author}" #optional
 description='''${description}'''
 
+[modproperties.${mod_id}]
+"sodium:config_api_user" = "ca.fxco.moreculling.config.sodium.SodiumConfigBuilder"
+
 [modproperties.modmenu]
 badges=["client"]
 links=["mod_menu.discord=https://discord.gg/SGFDrvA"]

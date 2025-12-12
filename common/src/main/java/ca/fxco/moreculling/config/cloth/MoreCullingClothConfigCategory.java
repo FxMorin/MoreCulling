@@ -6,7 +6,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
     private final ConfigBuilder builder;
     private final List<Object> data;
     @Nullable
-    private ResourceLocation background;
+    private Identifier background;
     private final Component categoryKey;
     @Nullable
     private Supplier<Optional<FormattedText[]>> description = Optional::empty;
@@ -41,7 +41,7 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
         return this;
     }
 
-    public ConfigCategory setCategoryBackground(ResourceLocation identifier) {
+    public ConfigCategory setCategoryBackground(Identifier identifier) {
         if (this.builder.hasTransparentBackground()) {
             throw new IllegalStateException("Cannot set category background if screen is using transparent background.");
         } else {
@@ -54,12 +54,12 @@ public class MoreCullingClothConfigCategory implements ConfigCategory {
         this.builder.removeCategory(this.categoryKey);
     }
 
-    public void setBackground(@Nullable ResourceLocation background) {
+    public void setBackground(@Nullable Identifier background) {
         this.background = background;
     }
 
     @Nullable
-    public ResourceLocation getBackground() {
+    public Identifier getBackground() {
         return this.background;
     }
 

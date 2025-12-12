@@ -2,7 +2,7 @@ package ca.fxco.moreculling.api.model;
 
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.resources.model.ResolvedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 
 import java.util.List;
@@ -43,7 +43,7 @@ public interface ExtendedUnbakedModel {
      *
      * @since 0.25.0
      */
-    default boolean moreculling$getUseModelShape(ResourceLocation id) {
+    default boolean moreculling$getUseModelShape(Identifier id) {
         return false;
     }
 

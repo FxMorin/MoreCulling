@@ -11,7 +11,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -81,13 +81,13 @@ public class ItemRenderer_faceCullingMixin {
             ItemRendererStates.DIRECTIONS = null;
             return;
         }
-        Vec3 cameraPos = ItemRendererStates.CAMERA.getPosition();
+        Vec3 cameraPos = ItemRendererStates.CAMERA.position();
         Vec3 framePos = new Vec3(frame.x, frame.y, frame.z);
         boolean isBlockItem = false;//TODO!((BakedOpacity) bakedModel).moreculling$isItem();
         ItemTransform transformation = ItemRendererStates.TRANSFORMS;
         boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                 TransformationUtils.canCullTransformation(transformation);
-        double dist = ItemRendererStates.CAMERA.getPosition().distanceTo(framePos);
+        double dist = ItemRendererStates.CAMERA.position().distanceTo(framePos);
         // Make blocks use LOD - If more than range, only render the front and maybe back if it can't cull
         if (isBlockItem && dist <= 3) { // 3 Blocks away
             ItemRendererStates.DIRECTIONS = null;

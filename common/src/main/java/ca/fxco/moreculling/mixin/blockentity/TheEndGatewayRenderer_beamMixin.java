@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.TheEndGatewayRenderer;
 import net.minecraft.client.renderer.blockentity.state.EndGatewayRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,11 +29,11 @@ public class TheEndGatewayRenderer_beamMixin {
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;" +
                             "submitBeaconBeam(Lcom/mojang/blaze3d/vertex/PoseStack;" +
                             "Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
-                            "Lnet/minecraft/resources/ResourceLocation;FFIIIFF)V"
+                            "Lnet/minecraft/resources/Identifier;FFIIIFF)V"
             )
     )
     private boolean moreculling$onRenderBeam(PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
-                                             ResourceLocation resourceLocation, float tickDelta, float heightScale,
+                                             Identifier resourceLocation, float tickDelta, float heightScale,
                                              int yOffset, int maxY, int color, float innerRadius, float outerRadius,
                                              EndGatewayRenderState endGatewayRenderState) {
         if (!MoreCulling.CONFIG.beaconBeamCulling) {

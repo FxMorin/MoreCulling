@@ -21,6 +21,9 @@
     ],
     "modmenu": [
       "ca.fxco.moreculling.config.ModMenuCompat"
+    ],
+    "sodium:config_api_user": [
+      "ca.fxco.moreculling.config.sodium.MoreCullingSodiumConfigBuilder"
     ]
   },
   "mixins": [

@@ -67,7 +67,7 @@ public class SignRenderer_textMixin {
         if (MoreCulling.CONFIG.signTextCulling) {
             Vec3 cameraPos;
             if (state.hasProperty(WallSignBlock.FACING) &&
-                    (cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition()) != null) {
+                    (cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position()) != null) {
                 Direction dir = state.getValue(WallSignBlock.FACING);
                 if (model instanceof Model.Simple) {
                     return front == !shouldHideWallSignText(
@@ -78,7 +78,7 @@ public class SignRenderer_textMixin {
                 }
                 return front == !shouldHideWallSignText(dir, pos.getCenter(), cameraPos);
             }
-            cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+            cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position();
             double angle = state.getValue(StandingSignBlock.ROTATION) * ONE_SIGN_ROTATION;
             if (front) { // Switch line orientation xD
                 return !MathUtils.isBehindLine(angle, pos.getCenter(), cameraPos);

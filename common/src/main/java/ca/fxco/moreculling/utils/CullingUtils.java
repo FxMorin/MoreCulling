@@ -5,8 +5,6 @@ import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import net.caffeinemc.mods.sodium.client.SodiumClientMod;
-import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.core.BlockPos;
@@ -91,10 +89,7 @@ public class CullingUtils {
     }
 
     public static boolean areLeavesOpaque() {
-        GraphicsStatus mode = Minecraft.getInstance().options.graphicsMode().get();
-        return CompatUtils.IS_SODIUM_LOADED ?
-                !SodiumClientMod.options().quality.leavesQuality.isFancy(mode) :
-                mode.getId() < GraphicsStatus.FANCY.getId();
+        return Minecraft.getInstance().options.cutoutLeaves().get();
     }
 
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,

@@ -1,7 +1,7 @@
 package ca.fxco.moreculling.utils;
 
 import com.mojang.math.OctahedralGroup;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;

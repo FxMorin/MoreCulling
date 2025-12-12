@@ -2,6 +2,7 @@ package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.api.data.QuadBounds;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.joml.Math;
@@ -27,31 +28,22 @@ public class VertexUtils {
         );
     }
 
-    private static Vector3f getPos(int[] data, int vertexIndex) {
-        final int index = vertexIndex * VERTEX_STRIDE;
-        return new Vector3f(
-                Float.intBitsToFloat(data[index]),
-                Float.intBitsToFloat(data[index + 1]),
-                Float.intBitsToFloat(data[index + 2])
-        );
-    }
-
-    private static Vector2f getUv(TextureAtlasSprite sprite, int[] data, int vertexIndex, int imageWidth, int imageHeight) {
+    private static Vector2f getUv(TextureAtlasSprite sprite, BakedQuad quad, int vertexIndex, int imageWidth, int imageHeight) {
         final int index = vertexIndex * VERTEX_STRIDE;
         float width = sprite.getU1() - sprite.getU0();
         float height = sprite.getV1() - sprite.getV0();
+        long packedUV = quad.packedUV(vertexIndex);
         return new Vector2f(
-                ((Float.intBitsToFloat(data[index + 4]) - sprite.getU0()) / width) * imageWidth, // x
-                ((Float.intBitsToFloat(data[index + 5]) - sprite.getV0()) / height) * imageHeight // y
+                ((UVPair.unpackU(packedUV) - sprite.getU0()) / width) * imageWidth, // x
+                ((UVPair.unpackV(packedUV) - sprite.getV0()) / height) * imageHeight // y
         );
     }
 
     public static QuadBounds getQuadUvBounds(BakedQuad quad, int imageWidth, int imageHeight) {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
-        int[] vertexData = quad.vertices();
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getUv(quad.sprite(), vertexData, i, imageWidth, imageHeight);
+            Vector2f tmpPos = getUv(quad.sprite(), quad, i, imageWidth, imageHeight);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);
@@ -61,13 +53,12 @@ public class VertexUtils {
     }
 
     public static boolean isAxisAligned(BakedQuad quad) {
-        int[] vertexData = quad.vertices();
-        Vector3f p1 = getPos(vertexData, 0);
-        Vector3f p4 = getPos(vertexData, 3);
-        if (p1.y == p4.y) {
-            Vector3f p2 = getPos(vertexData, 1);
-            Vector3f p3 = getPos(vertexData, 2);
-            return p2.y == p3.y && !(p1.y != p2.y && (p1.x != p3.x && p1.z != p3.z));
+        Vector3fc p1 = quad.position0() ;
+        Vector3fc p4 = quad.position3();
+        if (p1.y() == p4.y()) {
+            Vector3fc p2 = quad.position1();
+            Vector3fc p3 = quad.position2();
+            return p2.y() == p3.y() && !(p1.y() != p2.y() && (p1.x() != p3.x() && p1.z() != p3.z()));
         }
         return false;
     }

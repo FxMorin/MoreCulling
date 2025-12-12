@@ -5,7 +5,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
     private boolean listSmoothScroll = true;
     private boolean doesConfirmSave = true;
     private boolean transparentBackground = false;
-    private ResourceLocation defaultBackground;
+    private Identifier defaultBackground;
     private Consumer<Screen> afterInitConsumer;
     protected final Map<String, ConfigCategory> categoryMap;
     private String fallbackCategory;
@@ -176,11 +176,11 @@ public class MoreCullingClothConfigBuilder implements ConfigBuilder {
         return this.doesConfirmSave;
     }
 
-    public ResourceLocation getDefaultBackgroundTexture() {
+    public Identifier getDefaultBackgroundTexture() {
         return this.defaultBackground;
     }
 
-    public ConfigBuilder setDefaultBackgroundTexture(ResourceLocation texture) {
+    public ConfigBuilder setDefaultBackgroundTexture(Identifier texture) {
         this.defaultBackground = texture;
         return this;
     }

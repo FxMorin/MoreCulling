@@ -3,7 +3,7 @@ package ca.fxco.moreculling.mixin.models;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
+//import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel; TODO enable once ported
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Restriction(require = @Condition("fabric-model-loading-api-v1"))
-@Mixin(WrapperBlockStateModel.class)
+//@Mixin(WrapperBlockStateModel.class)
 public class WrapperBlockStateModel_cullMixin implements BakedOpacity {
 
     @Shadow

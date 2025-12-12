@@ -20,7 +20,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -204,7 +204,7 @@ public class ModMenuConfig {
                         value -> {
                             MoreCulling.CONFIG.dontCull.forEach(prevBlockId -> {
                                         Optional<Holder.Reference<Block>> optionalBlock =
-                                                BuiltInRegistries.BLOCK.get(ResourceLocation.parse(prevBlockId));
+                                                BuiltInRegistries.BLOCK.get(Identifier.parse(prevBlockId));
 
                                         if (optionalBlock.isEmpty())
                                             return;
@@ -214,7 +214,7 @@ public class ModMenuConfig {
                             );
 
                             value.forEach(blockId -> {
-                                Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+                                Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(Identifier.parse(blockId));
 
                                 if (optionalBlock.isEmpty()) {
                                     MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);

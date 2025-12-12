@@ -7,7 +7,7 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.slf4j.Logger;
@@ -22,8 +22,8 @@ public class MoreCulling {
 
     public static final String MOD_ID = "moreculling";
     public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(),
-            ResourceLocation.fromNamespaceAndPath(MOD_ID, "dont_cull"));
-    public static final ResourceLocation RELOAD_LISTENER_ID = ResourceLocation
+            Identifier.fromNamespaceAndPath(MOD_ID, "dont_cull"));
+    public static final Identifier RELOAD_LISTENER_ID = Identifier
             .fromNamespaceAndPath(MoreCulling.MOD_ID, "init_blockstate_culling_cache");
 
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);

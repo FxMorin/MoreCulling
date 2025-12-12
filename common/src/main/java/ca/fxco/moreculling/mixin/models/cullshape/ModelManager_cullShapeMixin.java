@@ -4,7 +4,7 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,7 +27,7 @@ public class ModelManager_cullShapeMixin {
             index = 1)
     private static Object moreculling$enableModelShape(Object originalModel, @Local Reader reader,
                                                    @Local(argsOnly = true)
-                                                   Map.Entry<ResourceLocation, Resource> entry) {
+                                                   Map.Entry<Identifier, Resource> entry) {
         UnbakedModel model = (UnbakedModel) originalModel;
 
         if (entry.getValue().sourcePackId().startsWith("file/") && entry.getKey().getPath().contains("block/")) {

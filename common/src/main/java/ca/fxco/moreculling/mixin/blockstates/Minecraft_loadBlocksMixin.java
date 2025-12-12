@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +34,7 @@ public class Minecraft_loadBlocksMixin {
             ));
         });
         MoreCulling.CONFIG.dontCull.forEach(blockId -> {
-            Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+            Optional<Holder.Reference<Block>> optionalBlock = BuiltInRegistries.BLOCK.get(Identifier.parse(blockId));
 
             if (optionalBlock.isEmpty()) {
                 MoreCulling.LOGGER.warn("Block with id {} doesn't exist", blockId);

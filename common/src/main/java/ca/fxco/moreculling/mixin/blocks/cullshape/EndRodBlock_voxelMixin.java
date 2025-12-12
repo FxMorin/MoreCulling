@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.blocks.cullshape;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;

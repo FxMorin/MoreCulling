@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -110,12 +111,12 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                 MapItemSavedData mapState = MapItem.getSavedData(mapIdComponent, Minecraft.getInstance().level);
                 if (mapState != null) { // Map is present
                     if (shouldShowMapFace(direction, itemFrameState,
-                            this.entityRenderDispatcher.camera.getPosition())) {
+                            this.entityRenderDispatcher.camera.position())) {
                         skipFrontRender = !((MapOpacity) mapState).moreculling$hasTransparency();
                         double di;
                         double offsetZFighting = itemFrameState.isInvisible ? 0.5 :
                                 skipFrontRender ?
-                                        ((di = this.entityRenderDispatcher.camera.getPosition().distanceToSqr(itemFrameState.x, itemFrameState.y - 1, itemFrameState.z) / 5000) > 6 ?
+                                        ((di = this.entityRenderDispatcher.camera.position().distanceToSqr(itemFrameState.x, itemFrameState.y - 1, itemFrameState.z) / 5000) > 6 ?
                                                 Math.max(0.4452 - di, 0.4) : 0.4452) :
                                         0.4375;
                         poseStack.translate(0.0, 0.0, offsetZFighting);
@@ -165,7 +166,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             if (CullingUtils.shouldCullBack(itemFrameState)) {
                 if (skipFrontRender) {
                     submitNodeCollector.submitCustomGeometry(poseStack,
-                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            RenderTypes.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
                             (pose, consumer) -> {
                                 modelRenderer.moreculling$renderModelForFaces(
                                         pose,
@@ -184,7 +185,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                     );
                 } else {
                     submitNodeCollector.submitCustomGeometry(poseStack,
-                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            RenderTypes.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
                             (pose, consumer) -> {
                                 modelRenderer.moreculling$renderModelWithoutFace(
                                         pose,
@@ -205,7 +206,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             } else {
                 if (skipFrontRender) {
                     submitNodeCollector.submitCustomGeometry(poseStack,
-                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            RenderTypes.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
                             (pose, consumer) -> {
                                 modelRenderer.moreculling$renderModelWithoutFace(
                                         pose,
@@ -225,7 +226,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                 } else {
                     submitNodeCollector.submitBlockModel(
                             poseStack,
-                            RenderType.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
+                            RenderTypes.entitySolidZOffsetForward(TextureAtlas.LOCATION_BLOCKS),
                             blockstatemodel,
                             1.0f,
                             1.0f,

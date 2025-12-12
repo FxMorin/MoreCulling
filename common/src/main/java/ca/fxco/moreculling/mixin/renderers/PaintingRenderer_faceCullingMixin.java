@@ -8,24 +8,21 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.logging.LogUtils;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.PaintingRenderer;
 import net.minecraft.client.renderer.entity.state.PaintingRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.painting.Painting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Arrays;
 
 @Restriction(conflict = {
     @Condition("smoothmaps")
@@ -37,11 +34,11 @@ public abstract class PaintingRenderer_faceCullingMixin {
                                            float v, float z, int normalX, int normalY, int normalZ, int packedLight);
 
     @Inject(
-            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/Painting;" +
+            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/painting/Painting;" +
                     "Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;F)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/decoration/Painting;level()Lnet/minecraft/world/level/Level;"
+                    target = "Lnet/minecraft/world/entity/decoration/painting/Painting;level()Lnet/minecraft/world/level/Level;"
             )
     )
     private void moreculling$getPaintingPos(Painting painting, PaintingRenderState renderState, float partialTick,
@@ -51,7 +48,7 @@ public abstract class PaintingRenderer_faceCullingMixin {
     }
 
     @WrapOperation(
-            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/Painting;" +
+            method = "extractRenderState(Lnet/minecraft/world/entity/decoration/painting/Painting;" +
                     "Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;F)V",
             at = @At(
                     value = "NEW",
@@ -69,10 +66,9 @@ public abstract class PaintingRenderer_faceCullingMixin {
             method = "submit(Lnet/minecraft/client/renderer/entity/state/PaintingRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/PaintingRenderer;" +
-                            "renderPainting(Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
-                            "Lnet/minecraft/client/renderer/RenderType;" +
+                    target = "Lnet/minecraft/client/renderer/entity/PaintingRenderer;renderPainting(" +
+                            "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
+                            "Lnet/minecraft/client/renderer/rendertype/RenderType;" +
                             "[IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;" +
                             "Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V"
             )

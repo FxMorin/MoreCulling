@@ -2,6 +2,8 @@
 	"modmenu.descriptionTranslation.moreculling": "A mod that changes how multiple types of culling are handled in order to improve performance",
 	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "General Culling",
+	"moreculling.config.category.leaves": "Leaves Culling",
+	"moreculling.config.category.item_frame": "Item Frame Culling",
 	"moreculling.config.category.compat": "Mod Compatibility",
 	"moreculling.config.option.dontCull": "Dont Cull",
 	"moreculling.config.option.dontCull.tooltip": "Add block id here to prevent it from culling. for example minecraft:bamboo",
