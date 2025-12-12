@@ -89,7 +89,7 @@ public class CullingUtils {
     }
 
     public static boolean areLeavesOpaque() {
-        return Minecraft.getInstance().options.cutoutLeaves().get();
+        return !Minecraft.getInstance().options.cutoutLeaves().get();
     }
 
     public static Optional<Boolean> shouldDrawFaceCheck(BlockGetter view, BlockState sideState,

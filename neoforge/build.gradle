@@ -35,8 +35,8 @@ neoForge {
 }
 
 dependencies {
-    implementation "net.caffeinemc:sodium-neoforge:${project.sodium_version}"
-    implementation "net.caffeinemc:sodium-neoforge-mod:${project.sodium_version}"
+    runtimeOnly "maven.modrinth:sodium:mc1.21.11-0.8.0-neoforge-neoforge"
+    compileOnly "net.caffeinemc:sodium-neoforge-mod:${project.sodium_version}"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
     //implementation "maven.modrinth:client-tweaks:${project.clienttweaks_version}+neoforge-${project.minecraft_version}"

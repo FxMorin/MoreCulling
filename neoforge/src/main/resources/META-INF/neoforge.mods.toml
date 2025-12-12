@@ -16,7 +16,7 @@ authors="${mod_author}" #optional
 description='''${description}'''
 
 [modproperties.${mod_id}]
-"sodium:config_api_user" = "ca.fxco.moreculling.config.sodium.SodiumConfigBuilder"
+"sodium:config_api_user" = "ca.fxco.moreculling.config.sodium.MoreCullingSodiumConfigBuilder"
 
 [modproperties.modmenu]
 badges=["client"]
