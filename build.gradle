@@ -6,8 +6,13 @@ plugins {
     id 'maven-publish'
 }
 
+
 version = project.minecraft_version+'-'+project.mod_version
 group = project.maven_group
+
+base {
+    archivesName = archives_base_name
+}
 
 sourceSets {
     api{
