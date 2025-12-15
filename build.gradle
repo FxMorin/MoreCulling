@@ -111,17 +111,17 @@ tasks.withType(Jar) {
 }
 
 task apiJar(type: Jar) {
-    //classifier "api-dev"
+    archiveClassifier = "api-dev"
     from sourceSets.api.output
 }
 
 task remapApiJar(type: RemapJarTask) {
-    //classifier "api"
+    archiveClassifier = "api"
 
     input = apiJar.archiveFile.get().asFile
     addNestedDependencies = false
 }
-//prepareRemapApiJar.dependsOn(apiJar)
+remapApiJar.dependsOn(apiJar)
 
 // configure the maven publication
 publishing {
