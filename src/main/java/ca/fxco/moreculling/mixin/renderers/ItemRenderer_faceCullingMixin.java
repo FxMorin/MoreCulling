@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
@@ -42,7 +43,7 @@ import static net.minecraft.util.math.Direction.SOUTH;
 @Mixin(value = ItemRenderer.class, priority = 1100)
 public class ItemRenderer_faceCullingMixin {
 
-    @Redirect(
+    @WrapOperation(
             method = "renderItem(Lnet/minecraft/item/ItemStack;" +
                     "Lnet/minecraft/client/render/model/json/ModelTransformationMode;" +
                     "ZLnet/minecraft/client/util/math/MatrixStack;" +
@@ -54,7 +55,7 @@ public class ItemRenderer_faceCullingMixin {
                     ordinal = 0
             )
     )
-    private boolean moreculling$skipSlowTransparencyChecks(ModelTransformationMode renderMode) {
+    private boolean moreculling$skipSlowTransparencyChecks(ModelTransformationMode instance, Operation<Boolean> original) {
         return ItemRendererStates.ITEM_FRAME != null;
     }
 
@@ -79,9 +80,7 @@ public class ItemRenderer_faceCullingMixin {
         // Use faster cached check for translucency instead of multiple instanceof checks
         if (ItemRendererStates.ITEM_FRAME != null && stack.getItem() instanceof BlockItem blockItem) {
             isBlockItemRef.set(true);
-            useDirectConsumer.set(!((BakedOpacity) model).hasTextureTranslucency(
-                    blockItem.getBlock().getDefaultState()
-            ));
+            useDirectConsumer.set(!((MoreStateCulling) blockItem.getBlock().getDefaultState()).moreculling$hasTextureTranslucency(null));
         }
     }
 
@@ -182,14 +181,14 @@ public class ItemRenderer_faceCullingMixin {
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "renderBakedItemModel",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Direction;values()[Lnet/minecraft/util/math/Direction;"
             )
     )
-    private Direction[] moreculling$modifyDirections() {
+    private Direction[] moreculling$modifyDirections(Operation<Direction[]> original) {
         return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
     }
 

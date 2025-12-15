@@ -19,46 +19,12 @@ import java.util.List;
 public interface BakedOpacity {
 
     /**
-     * States if any of the textures of the model that are on a face of the block are translucent.
-     * If they are not translucent, MoreCulling will be able to provide faster culling for its states.
-     * <p>
-     * Some baked models will require a blockstate in order to provide more accurate translucency checks,
-     * usually if no blockstate is passed it will work fine, although some baked models will always return true.
-     * If possible, the default state of the block will be used.
-     *
-     * @since 0.12.0
-     */
-    default boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return true;
-    }
-
-    /**
-     * This just acts like hasTextureTranslucency(state, null)
-     * Using this method is slower than if you also pass the direction
-     *
-     * @since 0.8.0
-     */
-    default boolean hasTextureTranslucency(@Nullable BlockState state) {
-        return hasTextureTranslucency(state, null);
-    }
-
-    /**
-     * This just acts like hasTextureTranslucency(null, null)
-     * Using this method is slower than the others
-     *
-     * @since 0.3.0
-     */
-    default boolean hasTextureTranslucency() {
-        return hasTextureTranslucency(null, null);
-    }
-
-    /**
      * When called this method will reset the translucency cache of the model.
      * This should be called if the texture of the model is ever changed!
      *
-     * @since 0.7.0
+     * @since 0.24.1
      */
-    default void resetTranslucencyCache() {
+    default void resetTranslucencyCache(BlockState state) {
     }
 
     /**

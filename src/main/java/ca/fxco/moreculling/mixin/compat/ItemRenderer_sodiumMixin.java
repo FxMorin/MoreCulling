@@ -16,7 +16,6 @@ import net.minecraft.util.math.random.Random;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +31,7 @@ public class ItemRenderer_sodiumMixin {
             mixin = "me.jellysquid.mods.sodium.mixin.features.render.model.item.ItemRendererMixin",
             name = "renderModelFast"
     )
-    @Redirect(
+    @WrapOperation(
             method = "@MixinSquared:Handler",
             at = @At(
                     value = "FIELD",
@@ -41,8 +40,8 @@ public class ItemRenderer_sodiumMixin {
                     opcode = Opcodes.GETSTATIC
             )
     )
-    private Direction[] moreculling$modifyDirections$Sodium() {
-        return ItemRendererStates.DIRECTIONS == null ? DirectionUtils.DIRECTIONS : ItemRendererStates.DIRECTIONS;
+    private Direction[] moreculling$modifyDirections$Sodium(Operation<Direction[]> original) {
+        return ItemRendererStates.DIRECTIONS == null ? original.call() : ItemRendererStates.DIRECTIONS;
     }
 
     @TargetHandler(

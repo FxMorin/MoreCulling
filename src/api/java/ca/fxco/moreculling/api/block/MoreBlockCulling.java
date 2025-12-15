@@ -52,7 +52,7 @@ public interface MoreBlockCulling {
 
     /**
      * This method allows you to specify if this block should be allowed to cull.
-     * By default, it returns true if the blocks model does not have translucency
+     * By default, it returns false if the blocks model does not have quads on that side
      * This is not used if blocks are opaque.
      * Allows you to pass the side to check against
      *
@@ -60,6 +60,18 @@ public interface MoreBlockCulling {
      */
     // Only default so it does not need to be set every time. Actual default is done in Block_drawSideMixin
     default boolean shouldAttemptToCull(BlockState state, @Nullable Direction side) {
+        return false;
+    }
+
+    /**
+     * This method allows you to specify if other blocks should be allowed to cull against this block.
+     * By default, it returns true if the blocks model does not have translucency
+     * This is not used if blocks are opaque.
+     * Allows you to pass the side to check against
+     *
+     * @since 0.24.1
+     */
+    default boolean shouldAttemptToCullAgainst(BlockState state, @Nullable Direction side) {
         return false;
     }
 

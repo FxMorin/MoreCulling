@@ -7,7 +7,9 @@ import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.config.sodium.*;
 import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.options.*;
+import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatter;
 import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
+import me.jellysquid.mods.sodium.client.gui.options.control.SliderControl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
@@ -112,17 +114,6 @@ public class SodiumOptionPage {
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build();
 
-        // Powder Snow Culling
-        MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> powderSnowCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
-                .setNameTranslation("moreculling.config.option.powderSnowCulling")
-                .setTooltip(Text.translatable("moreculling.config.option.powderSnowCulling.tooltip"))
-                .setControl(TickBoxControl::new)
-                .setEnabled(morecullingOpts.getData().useBlockStateCulling)
-                .setImpact(OptionImpact.LOW)
-                .setBinding((opts, value) -> opts.powderSnowCulling = value, opts -> opts.powderSnowCulling)
-                .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                .build();
-
         // End Gateway Culling
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> endGatewayCulling = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.endGatewayCulling")
@@ -145,7 +136,6 @@ public class SodiumOptionPage {
                 .onChanged((instance, value) -> {
                     leavesCullingMode.setAvailable(value);
                     includeMangroveRoots.setAvailable(value);
-                    powderSnowCulling.setAvailable(value);
                     endGatewayCulling.setAvailable(value);
                 })
                 .build();
@@ -162,7 +152,7 @@ public class SodiumOptionPage {
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> itemFrameLODRange = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.itemFrameLODRange")
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
-                .setControl(option -> new IntSliderControl(option, 16, 256, 1, Text.literal("%d")))
+                .setControl(option -> new SliderControl(option, 16, 256, 1, ControlValueFormatter.number()))
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer && morecullingOpts.getData().useItemFrameLOD)
                 .setImpact(OptionImpact.MEDIUM)
                 .setBinding((opts, value) -> opts.itemFrameLODRange = value, opts -> opts.itemFrameLODRange)
@@ -176,13 +166,13 @@ public class SodiumOptionPage {
                 .setBinding((opts, value) -> opts.useItemFrameLOD = value, opts -> opts.useItemFrameLOD)
                 .onChanged((instance, value) -> itemFrameLODRange.setAvailable(instance.isAvailable() && value))
                 .build();
-        MoreCullingSodiumOptionImpl<MoreCullingConfig, Float> itemFrame3FaceRange = MoreCullingSodiumOptionImpl.createBuilder(float.class, morecullingOpts)
+        MoreCullingSodiumOptionImpl<MoreCullingConfig, Integer> itemFrame3FaceRange = MoreCullingSodiumOptionImpl.createBuilder(int.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.itemFrame3FaceCullingRange")
                 .setTooltip(Text.translatable("moreculling.config.option.itemFrame3FaceCullingRange.tooltip"))
-                .setControl(option -> new FloatSliderControl(option, 2F, 16F, 0.2F, Text.literal("%2.1f")))
+                .setControl(option -> new SliderControl(option, 2, 16, 1, ControlValueFormatter.number()))
                 .setEnabled(morecullingOpts.getData().useCustomItemFrameRenderer && morecullingOpts.getData().useItemFrame3FaceCulling)
                 .setImpact(OptionImpact.MEDIUM)
-                .setBinding((opts, value) -> opts.itemFrame3FaceCullingRange = value, opts -> opts.itemFrame3FaceCullingRange)
+                .setBinding((opts, value) -> opts.itemFrame3FaceCullingRange = value, opts -> (int) opts.itemFrame3FaceCullingRange)
                 .build();
         MoreCullingSodiumOptionImpl<MoreCullingConfig, Boolean> itemFrame3FaceOption = MoreCullingSodiumOptionImpl.createBuilder(boolean.class, morecullingOpts)
                 .setNameTranslation("moreculling.config.option.itemFrame3FaceCulling")
@@ -232,7 +222,6 @@ public class SodiumOptionPage {
         );
 
         groups.add(OptionGroup.createBuilder()
-                .add(powderSnowCulling)
                 .add(endGatewayCulling)
                 .build()
         );

@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.utils.CacheUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
@@ -55,6 +56,10 @@ public class MinecraftClient_managersMixin {
         MoreCulling.blockRenderManager = this.blockRenderManager;
 
         // Make sure to reload block states on resource reload
-        this.resourceManager.registerReloader((SynchronousResourceReloader) manager -> Blocks.refreshShapeCache());
+        this.resourceManager.registerReloader((SynchronousResourceReloader) manager -> {
+            Blocks.refreshShapeCache();
+            CacheUtils.resetAllCache();
+        });
+
     }
 }

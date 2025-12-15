@@ -3,3 +3,9 @@ accessible field net/minecraft/block/Block FACE_CULL_MAP Ljava/lang/ThreadLocal;
 accessible field net/minecraft/client/texture/NativeImage pointer J
 accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
 accessible class net/minecraft/client/render/MapRenderer$MapTexture
+
+accessible field net/minecraft/util/shape/VoxelShape voxels Lnet/minecraft/util/shape/VoxelSet;
+accessible field net/minecraft/util/math/DirectionTransformation axisTransformation Lnet/minecraft/util/math/AxisTransformation;
+accessible method net/minecraft/util/shape/SimpleVoxelShape <init> (Lnet/minecraft/util/shape/VoxelSet;)V
+accessible method net/minecraft/util/shape/VoxelShape getPointPositions (Lnet/minecraft/util/math/Direction$Axis;)Lit/unimi/dsi/fastutil/doubles/DoubleList;
+accessible method net/minecraft/util/shape/ArrayVoxelShape <init> (Lnet/minecraft/util/shape/VoxelSet;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;)V

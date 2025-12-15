@@ -89,4 +89,8 @@ public class DirectionBits {
         }
         return bits;
     }
+
+    public byte getBits() {
+        return bits;
+    }
 }

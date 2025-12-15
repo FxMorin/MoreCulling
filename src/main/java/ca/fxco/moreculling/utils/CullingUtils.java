@@ -23,7 +23,7 @@ import static net.minecraft.block.Block.FACE_CULL_MAP;
 
 public class CullingUtils {
 
-    private static final Random random = Random.createLocal();
+    public static final Random RANDOM = Random.createLocal();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -43,11 +43,18 @@ public class CullingUtils {
                 return shouldDrawFace.get();
             }
         }
-        if (sideState.isOpaque() || (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
-                ((MoreStateCulling) sideState).canCull() &&
-                ((MoreStateCulling) thisState).shouldAttemptToCull(side) &&
-                ((MoreStateCulling) sideState).shouldAttemptToCull(side.getOpposite()))) {
+        if (sideState.isOpaque()) {
             return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
+        } else {
+            if (!((MoreStateCulling) thisState).shouldAttemptToCull(side)) {
+                return false;
+            }
+
+            if (!sideState.getRenderType().equals(BlockRenderType.INVISIBLE) &&
+                    ((MoreStateCulling) sideState).canCull() &&
+                    ((MoreStateCulling) sideState).shouldAttemptToCullAgainst(side.getOpposite())) {
+                return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
+            }
         }
         return true;
     }
@@ -146,7 +153,7 @@ public class CullingUtils {
                                                          BlockPos sidePos, Direction side) {
         if (sideState.getBlock() instanceof LeavesBlock ||
                 (sideState.isOpaque() && sideState.isSideSolidFullSquare(view, sidePos, side.getOpposite()))) {
-            if (random.nextBetween(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
+            if (RANDOM.nextBetween(1, MoreCulling.CONFIG.leavesCullingAmount + 1) == 1) {
                 return Optional.of(false);
             }
         }

@@ -1,14 +1,14 @@
 package ca.fxco.moreculling.utils;
 
 import ca.fxco.moreculling.api.data.QuadBounds;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.texture.Sprite;
 import org.joml.*;
 import org.joml.Math;
 
-import static net.fabricmc.fabric.impl.client.indigo.renderer.mesh.EncodingFormat.*;
-
 public class VertexUtils {
+    private static final int VERTEX_STRIDE = VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getVertexSizeInteger();
 
     public static final float FAST_NORM = 0.0625F; // 1 / 16
 
@@ -36,27 +36,22 @@ public class VertexUtils {
         );
     }
 
-    private static Vector2f getPos(int[] data, int vertexIndex, Direction.Axis axis) {
+    private static Vector2f getPos(Sprite sprite, int[] data, int vertexIndex, int imageWidth, int imageHeight) {
         final int index = vertexIndex * VERTEX_STRIDE;
-        if (axis.isVertical()) {
-            return new Vector2f(
-                    Float.intBitsToFloat(data[index]),    // x
-                    Float.intBitsToFloat(data[index + 2]) // z
-            );
-        } else {
-            return new Vector2f(
-                    (float) axis.choose(Float.intBitsToFloat(data[index + 2]), 0, Float.intBitsToFloat(data[index])),
-                    Float.intBitsToFloat(data[index + 1])
-            );
-        }
+        float width = sprite.getMaxU() - sprite.getMinU();
+        float height = sprite.getMaxV() - sprite.getMinV();
+        return new Vector2f(
+                ((Float.intBitsToFloat(data[index + 4]) - sprite.getMinU()) / width) * imageWidth, // x
+                ((Float.intBitsToFloat(data[index + 5]) - sprite.getMinV()) / height) * imageHeight // y
+        );
     }
 
-    public static QuadBounds getQuadBounds(BakedQuad quad, Direction.Axis axis) {
+    public static QuadBounds getQuadBounds(BakedQuad quad, int imageWidth, int imageHeight) {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
         int[] vertexData = quad.getVertexData();
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getPos(vertexData, i, axis).mul(16);
+            Vector2f tmpPos = getPos(quad.getSprite(), vertexData, i, imageWidth, imageHeight);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);

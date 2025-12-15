@@ -1,17 +1,11 @@
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
 }
 
-apply plugin: 'fabric-loom'
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.minecraft_version+'-'+project.mod_version
 group = project.maven_group
 
@@ -54,6 +48,12 @@ repositories {
 
 loom {
     accessWidenerPath = file("src/main/resources/moreculling.accesswidener")
+    runs {
+        client {
+            vmArg("-Dsodium.checks.issue2561=false")
+            programArgs "--username", "PR0CESS", "--uuid", UUID.randomUUID().toString()
+        }
+    }
 }
 
 dependencies {
@@ -67,7 +67,7 @@ dependencies {
     include "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixins_version}"
 
     // Fabric Compat
-    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Sodium Compat
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
@@ -75,6 +75,7 @@ dependencies {
 
     //ModMenu Compat
     modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+    modCompileOnly "maven.modrinth:modernfix:${project.modern_fix_version}"
 
     //AutoConfig
     //modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
@@ -110,21 +111,17 @@ tasks.withType(Jar) {
 }
 
 task apiJar(type: Jar) {
-    classifier "api-dev"
+    //classifier "api-dev"
     from sourceSets.api.output
 }
 
 task remapApiJar(type: RemapJarTask) {
-    classifier "api"
+    //classifier "api"
 
     input = apiJar.archiveFile.get().asFile
     addNestedDependencies = false
 }
-prepareRemapApiJar.dependsOn(apiJar)
-
-runClient.doFirst {
-    args = ['--username', "PR0CESS", '--uuid', UUID.randomUUID()]
-}
+//prepareRemapApiJar.dependsOn(apiJar)
 
 // configure the maven publication
 publishing {

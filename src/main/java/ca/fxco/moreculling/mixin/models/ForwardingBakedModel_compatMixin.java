@@ -20,13 +20,8 @@ public class ForwardingBakedModel_compatMixin implements BakedOpacity {
     protected BakedModel wrapped;
 
     @Override
-    public boolean hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return ((BakedOpacity) wrapped).hasTextureTranslucency(state, direction);
-    }
-
-    @Override
-    public void resetTranslucencyCache() {
-        ((BakedOpacity) wrapped).resetTranslucencyCache();
+    public void resetTranslucencyCache(BlockState state) {
+        ((BakedOpacity) wrapped).resetTranslucencyCache(state);
     }
 
     @Override

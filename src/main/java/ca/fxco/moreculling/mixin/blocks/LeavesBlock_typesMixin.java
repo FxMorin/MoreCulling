@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CullingUtils;
@@ -64,8 +65,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
 
     @Override
     public boolean shouldAttemptToCull(BlockState state) {
-        return CullingUtils.areLeavesOpaque() &&
-                !((BakedOpacity) blockRenderManager.getModel(state)).hasTextureTranslucency(state);
+        return CullingUtils.areLeavesOpaque();
     }
 
     @Override

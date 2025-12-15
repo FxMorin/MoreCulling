@@ -3,8 +3,12 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.model.CullShapeElement;
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
+import ca.fxco.moreculling.utils.ShapeUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.logging.LogUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
@@ -17,6 +21,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.AffineTransformation;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +30,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -42,12 +46,14 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
     @Shadow
     public abstract List<ModelElement> getElements();
 
+    @Shadow
+    public String id;
     @Unique
     @Nullable
     private List<CullShapeElement> cullShapeElements = null;
 
     @Unique
-    private boolean useModelShape = true;
+    private boolean useModelShape = false;
 
     @Override
     public void setCullShapeElements(@Nullable List<CullShapeElement> cullShapeElements) {
@@ -77,18 +83,18 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         return elementFace;
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "<clinit>",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"
             )
     )
-    private static Gson registerCustomTypeAdapter(GsonBuilder builder) {
-        return builder.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()).create();
+    private static Gson registerCustomTypeAdapter(GsonBuilder instance, Operation<Gson> original) {
+        return original.call(instance.registerTypeAdapter(CullShapeElement.class, new CullShapeElement.Deserializer()));
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "bake(Lnet/minecraft/client/render/model/Baker;" +
                     "Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;" +
                     "Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)" +
@@ -98,8 +104,8 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
             )
     )
-    private Object overrideFaceData(Map<Direction, ModelElementFace> map, Object direction) {
-        return modifyElementFace(map.get((Direction) direction));
+    private Object overrideFaceData(Map<Direction, ModelElementFace> map, Object direction, Operation<ModelElementFace> original) {
+        return modifyElementFace(original.call(map, direction));
     }
 
     @Inject(
@@ -108,8 +114,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     "Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)" +
                     "Lnet/minecraft/client/render/model/BakedModel;",
             at = @At(
-                    value = "RETURN",
-                    shift = At.Shift.BEFORE
+                    value = "RETURN"
             )
     )
     private void onBake(Baker baker, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter,
@@ -123,17 +128,31 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
         if (!bakedOpacity.canSetCullingShape()) {
             return;
         }
-        if (getUseModelShape(id) && settings.getRotation() == AffineTransformation.identity()) {
+        if (getUseModelShape(id)) {
+            LogUtils.getLogger().warn("usedfo " + id);
             List<ModelElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (ModelElement e : modelElementList) {
-                    if (e.rotation == null || e.rotation.angle() == 0) {
+                    if ((e.rotation == null || e.rotation.angle() == 0)
+                            && e.from.x <= e.to.x
+                            && e.from.y <= e.to.y
+                            && e.from.z <= e.to.z) {
                         VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                        voxelShape = VoxelShapes.union(voxelShape, shape);
+                        voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
                     }
                 }
-                bakedOpacity.setCullingShape(voxelShape);
+
+                if (settings.getRotation() != AffineTransformation.identity()) {
+                    DirectionTransformation group = ShapeUtils.MATRIX_TO_OCTAHEDRAL
+                            .get(settings.getRotation().getMatrix());
+                    if (group != null) {
+                        voxelShape = ShapeUtils.rotate(voxelShape, group);
+                    } else {
+                        LogUtils.getLogger().warn(id + "  " + settings.getClass().toString());
+                    }
+                }
+                bakedOpacity.setCullingShape(voxelShape.simplify());
                 return;
             }
         } else {
@@ -142,9 +161,9 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                 VoxelShape voxelShape = VoxelShapes.empty();
                 for (CullShapeElement e : cullShapeElementList) {
                     VoxelShape shape = Block.createCuboidShape(e.from.x, e.from.y, e.from.z, e.to.x, e.to.y, e.to.z);
-                    voxelShape = VoxelShapes.union(voxelShape, shape);
+                    voxelShape = ShapeUtils.orUnoptimized(voxelShape, shape);
                 }
-                bakedOpacity.setCullingShape(voxelShape);
+                bakedOpacity.setCullingShape(voxelShape.simplify());
                 return;
             }
         }
