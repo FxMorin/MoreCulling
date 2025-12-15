@@ -32,6 +32,7 @@
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
     "blocks.cullshape.EndRodBlock_voxelMixin",
     "blocks.cullshape.LightningRodBlock_voxelMixin",
+    "blocks.cullshape.MossyCarpetBlock_voxelMixin",
     "blockstates.Block_drawSideMixin",
     "blockstates.BlockStateBase_moreMixin",
     "blockstates.Minecraft_loadBlocksMixin",
