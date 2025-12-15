@@ -2,7 +2,6 @@ package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
-import ca.fxco.moreculling.api.model.BakedOpacity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -12,13 +11,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 import static ca.fxco.moreculling.MoreCulling.DONT_CULL;
-import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
 
 @Mixin(value = Block.class, priority = 2500)
 public class Block_drawSideMixin implements MoreBlockCulling {
 
     @Unique
-    private boolean allowCulling;
+    private boolean moreculling$allowCulling;
 
     @Override
     public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
@@ -37,11 +35,11 @@ public class Block_drawSideMixin implements MoreBlockCulling {
 
     @Override
     public boolean moreculling$canCull() {
-        return this.allowCulling;
+        return this.moreculling$allowCulling;
     }
 
     @Override
     public void moreculling$setCanCull(boolean canCull) {
-        this.allowCulling = canCull;
+        this.moreculling$allowCulling = canCull;
     }
 }

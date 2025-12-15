@@ -49,7 +49,7 @@ public class CullingUtils {
             if (sideState.canOcclude()) {
                 return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
             } else {
-                if (((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side, world, thisPos)) { // Dont have any cullable quads on that face
+                if (!((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side, world, thisPos)) { // Dont have any cullable quads on that face
                     return false;
                 }
 
