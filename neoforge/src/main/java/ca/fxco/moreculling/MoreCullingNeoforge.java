@@ -39,8 +39,11 @@ public class MoreCullingNeoforge {
                     Block.BLOCK_STATE_REGISTRY.forEach(state -> ((StateCullingShapeCache) state).moreculling$initCustomCullingShape());
 
                     ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
-                            .forEach((state, model) ->
-                                    ((BakedOpacity) model).moreculling$resetTranslucencyCache(state));
+                            .forEach((state, model) -> {
+                                if (!state.canOcclude()) {
+                                    ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
+                                }
+                            });
 
                     profilerfiller.pop();
                 }, gameExecutor));

@@ -20,11 +20,6 @@ public class WrapperBlockStateModel_cullMixin implements BakedOpacity {
     protected BlockStateModel wrapped;
 
     @Override
-    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return ((BakedOpacity) wrapped).moreculling$hasTextureTranslucency(state, direction);
-    }
-
-    @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         ((BakedOpacity) wrapped).moreculling$resetTranslucencyCache(state);
     }

@@ -39,13 +39,26 @@ public interface MoreBlockCulling {
 
     /**
      * This method allows you to specify if this block should be allowed to cull.
+     * By default, it returns false if the blocks model does not have quads on that side
+     * This is not used if blocks are opaque.
+     * Allows you to pass the side to check against
+     *
+     * @since 1.6.0
+     */
+    default boolean moreculling$shouldAttemptToCull(BlockState state, @Nullable Direction side,
+                                                    BlockGetter level, BlockPos pos) {
+        return false;
+    }
+
+    /**
+     * This method allows you to specify if other blocks should be allowed to cull against this block.
      * By default, it returns true if the blocks model does not have translucency
      * This is not used if blocks are opaque.
      * Allows you to pass the side to check against
      *
-     * @since 1.2.3
+     * @since 1.6.0
      */
-    default boolean moreculling$shouldAttemptToCull(BlockState state, @Nullable Direction side,
+    default boolean moreculling$shouldAttemptToCullAgainst(BlockState state, @Nullable Direction side,
                                                     BlockGetter level, BlockPos pos) {
         return false;
     }

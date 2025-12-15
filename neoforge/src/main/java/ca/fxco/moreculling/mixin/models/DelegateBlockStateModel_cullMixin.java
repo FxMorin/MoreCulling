@@ -19,11 +19,6 @@ public class DelegateBlockStateModel_cullMixin implements BakedOpacity {
     protected BlockStateModel delegate;
 
     @Override
-    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return ((BakedOpacity) delegate).moreculling$hasTextureTranslucency(state, direction);
-    }
-
-    @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
         ((BakedOpacity) delegate).moreculling$resetTranslucencyCache(state);
     }

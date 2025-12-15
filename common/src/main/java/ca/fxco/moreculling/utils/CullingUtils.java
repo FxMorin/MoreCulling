@@ -4,6 +4,7 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
@@ -12,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -42,11 +44,20 @@ public class CullingUtils {
                 return shouldDrawFace.get();
             }
         }
-        if (((MoreStateCulling) sideState).moreculling$canCull() &&
-                (sideState.canOcclude() || (!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
-                ((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side, world, thisPos) &&
-                ((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite(), world, sidePos)))) {
-            return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
+
+        if (((MoreStateCulling) sideState).moreculling$canCull()) {
+            if (sideState.canOcclude()) {
+                return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
+            } else {
+                if (((MoreStateCulling) thisState).moreculling$shouldAttemptToCull(side, world, thisPos)) { // Dont have any cullable quads on that face
+                    return false;
+                }
+
+                if ((!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
+                        ((MoreStateCulling) sideState).moreculling$shouldAttemptToCullAgainst(null, world, sidePos))) {
+                    return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
+                }
+            }
         }
         return true;
     }

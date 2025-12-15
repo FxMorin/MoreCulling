@@ -31,6 +31,11 @@ public abstract class EndGatewayBlock_cullMixin extends BaseEntityBlock implemen
     }
 
     @Override
+    public boolean moreculling$shouldAttemptToCullAgainst(BlockState state, Direction side, BlockGetter level, BlockPos pos) {
+        return MoreCulling.CONFIG.endGatewayCulling;
+    }
+
+    @Override
     public VoxelShape getOcclusionShape(BlockState state) {
         return Shapes.block();
     }

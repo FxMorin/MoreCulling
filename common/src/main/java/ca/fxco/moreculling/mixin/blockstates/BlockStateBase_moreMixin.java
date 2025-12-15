@@ -2,24 +2,56 @@ package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
+import ca.fxco.moreculling.utils.BitUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
+
+    @Unique
+    private byte moreculling$emptyFaces = 0;
+    @Unique
+    private boolean moreculling$hasTextureTranslucency = true;
+
     @Shadow
     public abstract Block getBlock();
 
     @Shadow
     protected abstract BlockState asState();
+
+    @Override
+    public boolean moreculling$hasQuadsOnSide(@Nullable Direction direction) {
+        if (direction == null) {
+            return moreculling$emptyFaces != BitUtils.ALL_DIRECTIONS;
+        }
+        return !BitUtils.get(moreculling$emptyFaces, direction.ordinal());
+    }
+
+    @Override
+    public void moreculling$setHasQuadsOnSide(byte value) {
+        moreculling$emptyFaces = value;
+    }
+
+    @Override
+    public boolean moreculling$hasTextureTranslucency(@Nullable Direction direction) {
+        return moreculling$hasTextureTranslucency;
+    }
+
+    @Override
+    public void moreculling$setHasTextureTranslucency(boolean value) {
+        moreculling$hasTextureTranslucency = value;
+    }
 
     @Override
     public final boolean moreculling$usesCustomShouldDrawFace() {
@@ -38,6 +70,11 @@ public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
     @Override
     public boolean moreculling$shouldAttemptToCull(Direction side, BlockGetter level, BlockPos pos) {
         return ((MoreBlockCulling) this.getBlock()).moreculling$shouldAttemptToCull(this.asState(), side, level, pos);
+    }
+
+    @Override
+    public boolean moreculling$shouldAttemptToCullAgainst(Direction side, BlockGetter level, BlockPos pos) {
+        return ((MoreBlockCulling) this.getBlock()).moreculling$shouldAttemptToCullAgainst(this.asState(), side, level, pos);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
@@ -17,60 +18,39 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(SingleVariant.class)
 public abstract class SingleVariant_cacheMixin implements BakedOpacity {
 
     @Shadow @Final private BlockModelPart model;
-    @Unique
-    private final DirectionBits moreculling$solidFaces = new DirectionBits();
-    @Unique
-    private boolean moreculling$allStatesCanOcclude = true;
-
-    @Override
-    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return direction == null ? moreculling$solidFaces.notFull() : !moreculling$solidFaces.contains(direction);
-    }
 
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
-        moreculling$solidFaces.clear();
-
-        if (state.canOcclude()) {
-            if (moreculling$allStatesCanOcclude) {
-                moreculling$solidFaces.fill();
-            }
-        } else {
-            moreculling$allStatesCanOcclude = false;
-        }
+        DirectionBits emptyFaces = new DirectionBits();
+        boolean translucency = false;
 
         for (Direction direction : DirectionUtils.DIRECTIONS) {
-            List<BakedQuad> layeredQuads = new ArrayList<>(model.getQuads(direction));
+            List<BakedQuad> layeredQuads = model.getQuads(direction);
             if (!layeredQuads.isEmpty()) {
-                BakedQuad initialQuad = layeredQuads.removeFirst();
-                SpriteOpacity opacity = ((SpriteOpacity) initialQuad.sprite());
-                NativeImage image = opacity.moreculling$getUnmipmappedImage();
-                QuadBounds bounds = VertexUtils.getQuadUvBounds(initialQuad, image.getWidth(), image.getHeight());
-                if (!opacity.moreculling$hasTranslucency(bounds)) {
-                    if (!layeredQuads.isEmpty()) {
-                        List<NativeImage> overlappingImages = new ArrayList<>();
-                        for (BakedQuad quad : layeredQuads) {
-                            overlappingImages.add(((SpriteOpacity) quad.sprite())
-                                    .moreculling$getUnmipmappedImage());
+                if (!translucency) {
+                    for (BakedQuad quad : layeredQuads) {
+                        SpriteOpacity opacity = ((SpriteOpacity) quad.sprite());
+                        NativeImage image = opacity.moreculling$getUnmipmappedImage();
+                        QuadBounds bounds = VertexUtils.getQuadUvBounds(quad, image.getWidth(), image.getHeight());
+                        if (opacity.moreculling$hasTranslucency(bounds)) {
+                            translucency = true;
                         }
-                        if (!opacity.moreculling$hasTranslucency(bounds, overlappingImages)) {
-                            moreculling$solidFaces.add(direction);
-                        }
-                    } else {
-                        moreculling$solidFaces.add(direction);
                     }
                 }
+            } else {
+                emptyFaces.add(direction);
             }
         }
+
+        ((MoreStateCulling) state).moreculling$setHasQuadsOnSide(emptyFaces.getBits());
+        ((MoreStateCulling) state).moreculling$setHasTextureTranslucency(translucency);
     }
 
     @Override
