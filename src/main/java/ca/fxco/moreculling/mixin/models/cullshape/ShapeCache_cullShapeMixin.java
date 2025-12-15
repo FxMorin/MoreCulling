@@ -3,10 +3,8 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.logging.LogUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -27,18 +25,9 @@ public class ShapeCache_cullShapeMixin {
             )
     )
     private boolean shouldDoShapeCache(BlockState state, Operation<Boolean> original) {
-        if (state.isOf(Blocks.OAK_TRAPDOOR)) {
-            LogUtils.getLogger().warn("test");
-        }
         if (blockRenderManager != null) {
-            if (state.isOf(Blocks.OAK_TRAPDOOR)) {
-                LogUtils.getLogger().warn("test1");
-            }
             BakedModel model = blockRenderManager.getModel(state);
             if (model != null && ((BakedOpacity) model).getCullingShape(state) != null) {
-                if (state.isOf(Blocks.OAK_TRAPDOOR)) {
-                    LogUtils.getLogger().warn("test12");
-                }
                 return true;
             }
         }
@@ -55,9 +44,6 @@ public class ShapeCache_cullShapeMixin {
             )
     )
     private VoxelShape customCullingShape(Block instance, BlockState state, BlockView blockView, BlockPos blockPos, Operation<VoxelShape> original) {
-        if (state.isOf(Blocks.OAK_TRAPDOOR)) {
-            LogUtils.getLogger().warn("test2");
-        }
         if (blockRenderManager != null) {
             BakedModel model = blockRenderManager.getModel(state);
             if (model != null) {

@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.logging.LogUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
@@ -129,7 +128,6 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
             return;
         }
         if (getUseModelShape(id)) {
-            LogUtils.getLogger().warn("usedfo " + id);
             List<ModelElement> modelElementList = this.getElements();
             if (modelElementList != null && !modelElementList.isEmpty()) {
                 VoxelShape voxelShape = VoxelShapes.empty();
@@ -149,7 +147,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     if (group != null) {
                         voxelShape = ShapeUtils.rotate(voxelShape, group);
                     } else {
-                        LogUtils.getLogger().warn(id + "  " + settings.getClass().toString());
+                        return;
                     }
                 }
                 bakedOpacity.setCullingShape(voxelShape.simplify());
