@@ -2,6 +2,8 @@
 	"modmenu.descriptionTranslation.moreculling": "سبواه مود يڠ مڠوبه چارا ڤلباݢاي جنيس ڤڽوروقن دکنداليکن اونتوق منيڠکتکن ڤريستاسي",
 	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "ڤڽوروقن عموم",
+	"moreculling.config.category.leaves": "ڤڽوروقن داٴون",
+	"moreculling.config.category.item_frame": "ڤڽوروقن بيڠکاي اٴيتم",
 	"moreculling.config.category.compat": "کسراسين مود",
 	"moreculling.config.option.cloudCulling": "ڤڽوروقن اون",
 	"moreculling.config.option.cloudCulling.tooltip": "منوکر سوسونن ڤڠݢولوڠن opengl اونتوق منرڤکن ڤڽوروقکن موک",

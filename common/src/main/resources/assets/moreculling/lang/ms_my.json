@@ -2,6 +2,8 @@
 	"modmenu.descriptionTranslation.moreculling": "Sebuah mod yang mengubah cara pelbagai jenis penyorokan dikendalikan untuk meningkatkan prestasi",
 	"moreculling.title": "MoreCulling",
 	"moreculling.config.category.general": "Penyorokan Umum",
+	"moreculling.config.category.leaves": "Penyorokan Daun",
+	"moreculling.config.category.item_frame": "Penyorokan Bingkai Item",
 	"moreculling.config.category.compat": "Keserasian Mod",
 	"moreculling.config.option.cloudCulling": "Penyorokan Awan",
 	"moreculling.config.option.cloudCulling.tooltip": "Menukar susunan penggulungan opengl untuk menerapkan penyorokkan muka",
