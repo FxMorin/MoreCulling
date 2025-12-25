@@ -53,8 +53,8 @@ public class CullingUtils {
                     return false;
                 }
 
-                if ((!sideState.getRenderShape().equals(RenderShape.INVISIBLE) &&
-                        ((MoreStateCulling) sideState).moreculling$shouldAttemptToCullAgainst(null, world, sidePos))) {
+                if (!sideState.getRenderShape().equals(RenderShape.INVISIBLE)
+                        && (((MoreStateCulling) sideState).moreculling$shouldAttemptToCull(side.getOpposite(), world, sidePos) && ((MoreStateCulling) sideState).moreculling$shouldAttemptToCullAgainst(null, world, sidePos))) {
                     return shouldDrawFace(world, thisState, sideState, thisPos, sidePos, side);
                 }
             }
