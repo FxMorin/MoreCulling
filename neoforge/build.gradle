@@ -44,6 +44,7 @@ dependencies {
 
     implementation(jarJar("me.fallenbreath:conditional-mixin-neoforge:${project.conditional_mixins_version}"))
 
+    compileOnly "maven.modrinth:modernfix-mvus:${modernfix_version}-neoforge"
 
     compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:${project.mixinsquared_version}"))

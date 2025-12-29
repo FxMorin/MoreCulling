@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.api.blockstate;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -22,8 +23,8 @@ public interface StateCullingShapeCache {
     /**
      * Initialize custom culling shape on resource reload
      *
-     * @since 1.3.1
+     * @since 1.6.0
      */
-    void moreculling$initCustomCullingShape();
+    void moreculling$initCustomCullingShape(BlockStateModel model);
 
 }

@@ -2,7 +2,9 @@ package ca.fxco.moreculling.mixin.blockstates;
 
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
+import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.utils.BitUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -10,17 +12,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
+import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
+
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
 
     @Unique
-    private byte moreculling$emptyFaces = 0;
+    private byte moreculling$emptyFaces = -1;
     @Unique
     private boolean moreculling$hasTextureTranslucency = true;
 
@@ -30,8 +35,18 @@ public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
     @Shadow
     protected abstract BlockState asState();
 
+    @Shadow
+    @Final
+    private boolean canOcclude;
+
     @Override
     public boolean moreculling$hasQuadsOnSide(@Nullable Direction direction) {
+        if (moreculling$emptyFaces == -1) {
+            moreculling$emptyFaces = 0;
+            if (!canOcclude && blockRenderManager != null) {
+                ((BakedOpacity) blockRenderManager.getBlockModel(asState())).moreculling$resetTranslucencyCache(asState());
+            }
+        }
         if (direction == null) {
             return moreculling$emptyFaces != BitUtils.ALL_DIRECTIONS;
         }
