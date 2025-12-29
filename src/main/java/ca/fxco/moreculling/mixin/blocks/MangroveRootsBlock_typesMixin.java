@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import ca.fxco.moreculling.utils.CullingUtils;
@@ -12,25 +13,35 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
 @Mixin(value = MangroveRootsBlock.class, priority = 1220)
-public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCulling {
+public class MangroveRootsBlock_typesMixin extends Block implements MoreBlockCulling, LeavesCulling {
 
     public MangroveRootsBlock_typesMixin(Settings settings) {
         super(settings);
     }
 
-    @Override
-    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+
+    @Inject(
+            method = "isSideInvisible",
+            at = @At(value = "HEAD"),
+            cancellable = true
+    )
+    private void moreculling$skipRendering(BlockState thisState, BlockState sideState,
+                                           Direction face, CallbackInfoReturnable<Boolean> cir) {
         if (!MoreCulling.CONFIG.includeMangroveRoots) {
-            return super.isSideInvisible(state, stateFrom, direction);
+            return;
         }
         if (MoreCulling.CONFIG.leavesCullingMode == LeavesCullingMode.FAST || CullingUtils.areLeavesOpaque()) {
-            return stateFrom.getBlock() instanceof LeavesBlock || super.isSideInvisible(state, stateFrom, direction);
+            if (sideState.getBlock() instanceof LeavesCulling) {
+                cir.setReturnValue(true);
+            }
         }
-        return super.isSideInvisible(state, stateFrom, direction);
     }
 
     @Override

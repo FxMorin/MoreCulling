@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.blocks;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.block.MoreBlockCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
@@ -25,7 +26,7 @@ import static ca.fxco.moreculling.config.option.LeavesCullingMode.FAST;
 import static ca.fxco.moreculling.config.option.LeavesCullingMode.VERTICAL;
 
 @Mixin(value = LeavesBlock.class, priority = 1220)
-public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
+public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling, LeavesCulling {
 
     @Shadow
     @Final
@@ -39,7 +40,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
         if (MoreCulling.CONFIG.leavesCullingMode == FAST || CullingUtils.areLeavesOpaque() ||
                 (MoreCulling.CONFIG.leavesCullingMode == VERTICAL && direction.getAxis() == Direction.Axis.Y)) {
-            return stateFrom.getBlock() instanceof LeavesBlock || super.isSideInvisible(state, stateFrom, direction);
+            return stateFrom.getBlock() instanceof LeavesCulling || super.isSideInvisible(state, stateFrom, direction);
         }
         return super.isSideInvisible(state, stateFrom, direction);
     }
@@ -53,7 +54,7 @@ public class LeavesBlock_typesMixin extends Block implements MoreBlockCulling {
     public Optional<Boolean> customShouldDrawFace(BlockView view, BlockState thisState, BlockState sideState,
                                                   BlockPos thisPos, BlockPos sidePos, Direction side) {
         return switch (MoreCulling.CONFIG.leavesCullingMode) {
-            case STATE -> sideState.getBlock() instanceof LeavesBlock && sideState.get(DISTANCE) % 3 != 1 ?
+            case STATE -> sideState.getBlock() instanceof LeavesCulling && sideState.get(DISTANCE) % 3 != 1 ?
                     Optional.of(false) : Optional.empty();
             case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, thisPos, sidePos, side);
             case GAP -> CullingUtils.shouldDrawFaceGap(view, sideState, sidePos, side);
