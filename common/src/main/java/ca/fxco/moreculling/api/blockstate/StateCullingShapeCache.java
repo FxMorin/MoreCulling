@@ -25,6 +25,6 @@ public interface StateCullingShapeCache {
      *
      * @since 1.6.0
      */
-    void moreculling$initCustomCullingShape(BlockStateModel model);
+    void moreculling$initCustomCullingShape();
 
 }

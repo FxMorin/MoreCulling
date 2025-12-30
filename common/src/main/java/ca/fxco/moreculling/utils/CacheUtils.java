@@ -25,9 +25,9 @@ public class CacheUtils {
             return;
         }
         // Reset all model translucency cache
+        Block.BLOCK_STATE_REGISTRY.forEach(state -> ((StateCullingShapeCache) state).moreculling$initCustomCullingShape());
         Map<BlockState, BlockStateModel> allModels = ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels();
         allModels.forEach((state, model) -> {
-            ((StateCullingShapeCache) state).moreculling$initCustomCullingShape(model);
             if (!state.canOcclude()) {
                 ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
             }

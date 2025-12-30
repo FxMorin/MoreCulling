@@ -36,14 +36,17 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
 
 
     @Override
-    public void moreculling$initCustomCullingShape(BlockStateModel model) {
+    public void moreculling$initCustomCullingShape() {
         VoxelShape voxelShape = null;
-        if (model != null) {
-            if (((BakedOpacity) model).moreculling$getHasAutoModelShape() && this.canOcclude) {
-                this.moreculling$cullingShapesByFace = occlusionShapesByFace;
-                return;
+        if (blockRenderManager != null) {
+            BlockStateModel model = blockRenderManager.getBlockModel(this.asState());
+            if (model != null) {
+                if (((BakedOpacity) model).moreculling$getHasAutoModelShape() && this.canOcclude) {
+                    this.moreculling$cullingShapesByFace = occlusionShapesByFace;
+                    return;
+                }
+                voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
             }
-            voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
         }
 
         if (voxelShape == null) {
@@ -72,12 +75,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
         if (this.moreculling$cullingShapesByFace == null) {
             this.moreculling$cullingShapesByFace = EMPTY_OCCLUSION_SHAPES;
 
-            BlockStateModel model = null;
-            if (blockRenderManager != null) {
-                model = blockRenderManager.getBlockModel(asState());
-            }
-
-            moreculling$initCustomCullingShape(model);
+            moreculling$initCustomCullingShape();
 
         }
         return this.moreculling$cullingShapesByFace[face.ordinal()];
