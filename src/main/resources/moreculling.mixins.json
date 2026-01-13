@@ -20,6 +20,7 @@
     "blocks.AbstractRailBlock_cullAgainstMixin",
     "blocks.cullshape.CampfireBlock_voxelMixin",
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
+    "blocks.cullshape.TorchBlock_voxelMixin",
     "blocks.DoorBlock_cullAgainstMixin",
     "blocks.EndGatewayBlock_cullMixin",
     "blocks.FletchingTableBlock_devMixin",
