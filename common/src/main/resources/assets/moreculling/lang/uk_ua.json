@@ -1,11 +1,14 @@
 {
-	"moreculling.title": "Налаштування MoreCulling",
-	"moreculling.config.category.general": "Основне",
+	"modmenu.descriptionTranslation.moreculling": "Покращує продуктивність багатьох аспектів гри.",
+	"moreculling.title": "MoreCulling",
+	"moreculling.config.category.general": "Загальні",
+	"moreculling.config.category.leaves": "Вибракування листя",
+	"moreculling.config.category.item_frame": "Вибракування рамок",
 	"moreculling.config.category.compat": "Сумісність із модами",
 	"moreculling.config.option.dontCull": "Не вибракувати",
 	"moreculling.config.option.dontCull.tooltip": "Додайте тут ID блока, щоб він не вибракувався.\nНаприклад minecraft:bamboo.",
 	"moreculling.config.option.cloudCulling": "Вибракування хмар",
-	"moreculling.config.option.cloudCulling.tooltip": "Змінює порядок провантаження OpenGL",
+	"moreculling.config.option.cloudCulling.tooltip": "Змінює порядок провантаження OpenGL.",
 	"moreculling.config.option.signTextCulling": "Вибракування тексту табличок",
 	"moreculling.config.option.signTextCulling.tooltip": "Вибракує текст табличок, щоб він не промальовується у випадках, коли ви його не бачите.",
 	"moreculling.config.option.rainCulling": "Вибракування снігопаду/дощу",
@@ -26,7 +29,7 @@
 	"moreculling.config.option.itemFrameLODRange.tooltip": "Змінює відстань, де у рамок починається спрощення текстури.",
 	"moreculling.config.option.itemFrame3FaceCulling": "Вибракування рамки від третьої особи",
 	"moreculling.config.option.itemFrame3FaceCulling.tooltip": "Вибракує від третьої особи.",
-	"moreculling.config.option.itemFrame3FaceCullingRange": "Дальність вибрауквання від третьої особи",
+	"moreculling.config.option.itemFrame3FaceCullingRange": "Дальність вибракування від третьої особи",
 	"moreculling.config.option.itemFrame3FaceCullingRange.tooltip": "Змінює дальність, на якій починає діяти вибракування, може бути видимим на менших дальностях.",
 	"moreculling.config.option.paintingCulling": "Вибракування картин",
 	"moreculling.config.option.paintingCulling.tooltip": "Вирізає зворотні та внутрішні сторони картини.",
@@ -50,6 +53,5 @@
 	"moreculling.config.options.random": "Випадково",
 	"moreculling.config.options.vertical": "По вертикалі",
 	"moreculling.config.resetCache": "Очистити кеш",
-	"moreculling.config.optionDisabled": "Цей параметр не працює через мод «%s»",
-	"modmenu.descriptionTranslation.moreculling": "Покращує продуктивність багатьох аспектів гри"
+	"moreculling.config.optionDisabled": "Цей параметр не працює через мод «%s»"
 }
