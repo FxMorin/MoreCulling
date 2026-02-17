@@ -33,6 +33,6 @@ public class CacheUtils {
             }
         });
         //TODO: Reset quad cache
-        MoreCulling.LOGGER.info(allModels.size() + " cache(s) where cleared!");
+        MoreCulling.LOGGER.info(allModels.size() + " cache(s) were cleared!");
     }
 }
