@@ -132,7 +132,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setName(Component.translatable("moreculling.config.option.itemFrameLODRange")) // use translation keys here
                                                 .setTooltip(Component.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))
                                                 .setImpact(OptionImpact.MEDIUM)
-                                                .setRange(16, 256, 1)
+                                                .setRange(0, 256, 1)
                                                 .setValueFormatter(ControlValueFormatterImpls.number())
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().itemFrameLODRange = value, () -> this.storage.getData().itemFrameLODRange)

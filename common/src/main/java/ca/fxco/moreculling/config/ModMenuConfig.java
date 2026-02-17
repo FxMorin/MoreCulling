@@ -237,7 +237,7 @@ public class ModMenuConfig {
                 .setTooltip(Component.translatable("moreculling.config.option.itemFrameMapCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.itemFrameMapCulling = newValue)
                 .build();
-        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder("moreculling.config.option.itemFrameLODRange", 16, 256) // Between 16 & 256 blocks - 1 & 16 chunks
+        DynamicIntSliderEntry itemFrameLODRange = new DynamicIntSliderBuilder("moreculling.config.option.itemFrameLODRange", 0, 256) // Between 16 & 256 blocks - 1 & 16 chunks
                 .setValue(MoreCulling.CONFIG.itemFrameLODRange)
                 .setDefaultValue(128)
                 .setTooltip(Component.translatable("moreculling.config.option.itemFrameLODRange.tooltip"))

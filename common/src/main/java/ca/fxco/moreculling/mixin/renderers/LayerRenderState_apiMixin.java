@@ -12,12 +12,15 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public abstract class LayerRenderState_apiMixin implements ExtendedItemStackRenderState {
     @Shadow private int[] tintLayers;
+    @Unique
+    private boolean moreculling$blockItem = false;
 
     @Override
     public void moreculling$renderBakedItemModelWithoutFace(List<BakedQuad> quads, int light, int overlay,
@@ -44,5 +47,15 @@ public abstract class LayerRenderState_apiMixin implements ExtendedItemStackRend
         ItemRendererStates.DIRECTIONS = new Direction[] { face };
         ItemRenderer.renderQuadList( pose, vertices, model, this.tintLayers, light, overlay);
         ItemRendererStates.DIRECTIONS = null;
+    }
+
+    @Override
+    public boolean moreculling$isBlockItem() {
+        return moreculling$blockItem;
+    }
+
+    @Override
+    public void moreculling$setIsBlockItem(boolean isBlockItem) {
+        this.moreculling$blockItem = isBlockItem;
     }
 }

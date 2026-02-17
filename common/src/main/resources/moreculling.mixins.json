@@ -52,7 +52,7 @@
     "models.cullshape.ModelManager_cullShapeMixin",
     "models.cullshape.SimpleModelWrapper_cullShapeMixin",
     "models.cullshape.UnbakedModel_extendsMixin",
-    "renderers.ItemRenderer_faceCullingMixin",
+    "renderers.BlockModelWrapper_faceCullingMixin",
     "renderers.ItemStackRenderState_apiMixin",
     "renderers.ItemStackRenderState_faceCullingMixin",
     "renderers.LayerRenderState_apiMixin",

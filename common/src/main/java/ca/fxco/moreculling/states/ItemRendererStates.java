@@ -16,5 +16,4 @@ public class ItemRendererStates {
     public static @Nullable ItemFrameRenderState ITEM_FRAME;
     public static Camera CAMERA;
     public static Direction[] DIRECTIONS;
-    public static @Nullable ItemTransform TRANSFORMS;
 }

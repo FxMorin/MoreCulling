@@ -62,4 +62,18 @@ public interface ExtendedItemStackRenderState {
      */
     void moreculling$renderItemFrameItem(PoseStack poseStack, SubmitNodeCollector multiBufferSource,
                                          int light, ItemFrameRenderState frame, Camera camera);
+
+    /**
+     * If its a block item
+     *
+     * @since 1.6.2
+     */
+    boolean moreculling$isBlockItem();
+
+    /**
+     * Sets if its block item
+     *
+     * @since 1.6.2
+     */
+    void moreculling$setIsBlockItem(boolean isBlockItem);
 }
