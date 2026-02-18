@@ -2,6 +2,7 @@ package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
+import ca.fxco.moreculling.api.renderers.ExtendedLayerRenderState;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
@@ -54,7 +55,7 @@ public class ItemStackRenderState_faceCullingMixin {
         } else {
             Vec3 cameraPos = ItemRendererStates.CAMERA.position();
             Vec3 framePos = new Vec3(frame.x, frame.y, frame.z);
-            boolean isBlockItem = ((ExtendedItemStackRenderState) instance).moreculling$isBlockItem();
+            boolean isBlockItem = ((ExtendedLayerRenderState) instance).moreculling$isBlockItem();
             ItemTransform transformation = transform;
             boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                     TransformationUtils.canCullTransformation(transformation);
@@ -100,36 +101,20 @@ public class ItemStackRenderState_faceCullingMixin {
             }
         }
         if (ItemRendererStates.DIRECTIONS != null) {
-            List<BakedQuad> bakedQuads = new ArrayList<>(quads);
-            Iterator<BakedQuad> iterator = bakedQuads.iterator();
+            List<BakedQuad> bakedQuads = new ArrayList<>();
+            Iterator<BakedQuad> iterator = quads.iterator();
             quads: while (iterator.hasNext()) {
                 BakedQuad bakedQuad = iterator.next();
                 Direction face = bakedQuad.direction();
                 for (Direction dir : ItemRendererStates.DIRECTIONS) {
                     if (face == dir) {
+                        bakedQuads.add(bakedQuad);
                         continue quads;
                     }
                 }
-                iterator.remove();
             }
             return bakedQuads;
         }
         return quads;
-    }
-
-    @Inject(
-            method = "submit",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
-                            "submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/world/item/ItemDisplayContext;" +
-                            "III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;" +
-                            "Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"
-            )
-    )
-    private void moreculling$faceRemoval(PoseStack poseStack, SubmitNodeCollector nodeCollector,
-                                                int packedLight, int packedOverlay, int outlineColor, CallbackInfo ci) {
-
     }
 }

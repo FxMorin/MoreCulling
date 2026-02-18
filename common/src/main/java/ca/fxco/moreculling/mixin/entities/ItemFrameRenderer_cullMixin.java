@@ -148,7 +148,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                 int l = this.getLightCoords(itemFrameState.isGlowFrame, LightTexture.FULL_BRIGHT, itemFrameState.lightCoords);
                 poseStack.scale(0.5f, 0.5f, 0.5f);
                 // Use extended item renderer here
-                ((ExtendedItemStackRenderState) itemStackState).moreculling$renderItemFrameItem(
+                ((ExtendedItemStackRenderState) itemStackState).moreculling$submitItemFrameItem(
                         poseStack,
                         submitNodeCollector,
                         l,

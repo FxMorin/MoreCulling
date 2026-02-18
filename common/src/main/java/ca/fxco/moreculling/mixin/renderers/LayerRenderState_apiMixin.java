@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
+import ca.fxco.moreculling.api.renderers.ExtendedLayerRenderState;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,37 +18,9 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.List;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
-public abstract class LayerRenderState_apiMixin implements ExtendedItemStackRenderState {
-    @Shadow private int[] tintLayers;
+public abstract class LayerRenderState_apiMixin implements ExtendedLayerRenderState {
     @Unique
     private boolean moreculling$blockItem = false;
-
-    @Override
-    public void moreculling$renderBakedItemModelWithoutFace(List<BakedQuad> quads, int light, int overlay,
-                                                            PoseStack pose, VertexConsumer vertices,
-                                                            @Nullable Direction withoutFace) {
-        ItemRendererStates.DIRECTIONS = DirectionUtils.getAllDirectionsExcluding(withoutFace);
-        ItemRenderer.renderQuadList(pose, vertices, quads, this.tintLayers, light, overlay);
-        ItemRendererStates.DIRECTIONS = null;
-    }
-
-    @Override
-    public void moreculling$renderBakedItemModelOnly3Faces(List<BakedQuad> model, int light, int overlay,
-                                                           PoseStack pose, VertexConsumer vertices,
-                                                           Direction faceX, Direction faceY, Direction faceZ) {
-        ItemRendererStates.DIRECTIONS = new Direction[] { faceX, faceY, faceZ };
-        ItemRenderer.renderQuadList( pose, vertices, model, this.tintLayers, light, overlay);
-        ItemRendererStates.DIRECTIONS = null;
-    }
-
-    @Override
-    public void moreculling$renderBakedItemModelForFace(List<BakedQuad> model, int light, int overlay,
-                                                        PoseStack pose, VertexConsumer vertices,
-                                                        Direction face) {
-        ItemRendererStates.DIRECTIONS = new Direction[] { face };
-        ItemRenderer.renderQuadList( pose, vertices, model, this.tintLayers, light, overlay);
-        ItemRendererStates.DIRECTIONS = null;
-    }
 
     @Override
     public boolean moreculling$isBlockItem() {

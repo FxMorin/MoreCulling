@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.mixin.renderers;
 
-import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
+import ca.fxco.moreculling.api.renderers.ExtendedLayerRenderState;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
@@ -27,6 +27,6 @@ public class BlockModelWrapper_faceCullingMixin {
                                               CallbackInfo ci, @Local(ordinal = 0)
                                                   ItemStackRenderState.LayerRenderState layerRenderState
     ) {
-        ((ExtendedItemStackRenderState) layerRenderState).moreculling$setIsBlockItem(stack.getItem() instanceof BlockItem);
+        ((ExtendedLayerRenderState) layerRenderState).moreculling$setIsBlockItem(stack.getItem() instanceof BlockItem);
     }
 }
