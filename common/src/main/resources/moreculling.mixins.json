@@ -7,7 +7,7 @@
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
     "BakedQuad_cacheMixin",
-    //"CloudRenderer_cloudsMixin",TODO
+    "LevelRenderer_frustumMixin",
     "MapItemSavedData_cacheMixin",
     "Minecraft_managersMixin",
     "TextureAtlasSprite_opacityMixin",
@@ -20,7 +20,6 @@
     "blocks.BaseRailBlock_cullAgainstMixin",
     "blocks.DoorBlock_cullAgainstMixin",
     "blocks.EndGatewayBlock_cullMixin",
-    "LevelRenderer_frustumMixin",
     "blocks.LadderBlock_cullAgainstMixin",
     "blocks.LeavesBlock_typesMixin",
     "blocks.MangroveRootsBlock_typesMixin",
@@ -52,10 +51,8 @@
     "models.cullshape.ModelManager_cullShapeMixin",
     "models.cullshape.SimpleModelWrapper_cullShapeMixin",
     "models.cullshape.UnbakedModel_extendsMixin",
-    "renderers.BlockModelWrapper_faceCullingMixin",
     "renderers.ItemStackRenderState_apiMixin",
     "renderers.ItemStackRenderState_faceCullingMixin",
-    "renderers.LayerRenderState_apiMixin",
     "renderers.ModelBlockRenderer_cullMixin",
     "renderers.PaintingRenderer_faceCullingMixin",
     "renderers.PaintingRenderState_apiMixin"

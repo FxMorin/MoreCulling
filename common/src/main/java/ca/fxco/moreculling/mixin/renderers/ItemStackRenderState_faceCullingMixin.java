@@ -1,16 +1,12 @@
 package ca.fxco.moreculling.mixin.renderers;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
-import ca.fxco.moreculling.api.renderers.ExtendedLayerRenderState;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.TransformationUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
@@ -21,8 +17,6 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +31,9 @@ public class ItemStackRenderState_faceCullingMixin {
 
     @Shadow
     ItemTransform transform;
+
+    @Shadow
+    boolean usesBlockLight;
 
     @WrapOperation(
             method = "submit",
@@ -55,7 +52,7 @@ public class ItemStackRenderState_faceCullingMixin {
         } else {
             Vec3 cameraPos = ItemRendererStates.CAMERA.position();
             Vec3 framePos = new Vec3(frame.x, frame.y, frame.z);
-            boolean isBlockItem = ((ExtendedLayerRenderState) instance).moreculling$isBlockItem();
+            boolean isBlockItem = usesBlockLight;
             ItemTransform transformation = transform;
             boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                     TransformationUtils.canCullTransformation(transformation);
