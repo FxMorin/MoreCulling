@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.sprite.SpriteOpacity;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -24,20 +25,12 @@ public abstract class BuiltInModel_cacheMixin implements BakedOpacity {
     @Shadow
     @Final
     private TextureAtlasSprite particleTexture;
-
-    @Unique
-    private boolean moreculling$hasTranslucency;
     @Unique
     private @Nullable VoxelShape moreculling$cullVoxelShape;
 
     @Override
-    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState state, @Nullable Direction direction) {
-        return moreculling$hasTranslucency;
-    }
-
-    @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
-        moreculling$hasTranslucency = ((SpriteOpacity) particleTexture).moreculling$hasTranslucency();
+        ((MoreStateCulling) state).moreculling$setHasTextureTranslucency(((SpriteOpacity) particleTexture).moreculling$hasTranslucency());
     }
 
     @Override

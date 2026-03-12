@@ -32,7 +32,12 @@ public class Block_drawSideMixin implements MoreBlockCulling {
 
     @Override
     public boolean moreculling$shouldAttemptToCull(BlockState state, Direction side, BlockGetter level, BlockPos pos) {
-        return !((BakedOpacity) blockRenderManager.getBlockModel(state)).moreculling$hasTextureTranslucency(state, side);
+        return ((MoreStateCulling) state).moreculling$hasQuadsOnSide(side);
+    }
+
+    @Override
+    public boolean moreculling$shouldAttemptToCullAgainst(BlockState state, Direction side, BlockGetter level, BlockPos pos) {
+        return !((MoreStateCulling) state).moreculling$hasTextureTranslucency(side);
     }
 
     @Override

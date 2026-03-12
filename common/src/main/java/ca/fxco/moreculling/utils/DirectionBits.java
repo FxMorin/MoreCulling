@@ -66,6 +66,10 @@ public class DirectionBits {
         return bits != ALL_DIRECTIONS;
     }
 
+    public byte getBits() {
+        return bits;
+    }
+
     public static DirectionBits of(byte bits) {
         return new DirectionBits(bits);
     }

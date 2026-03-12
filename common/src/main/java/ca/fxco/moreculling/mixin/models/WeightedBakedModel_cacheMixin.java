@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.mixin.models;
 
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.model.BakedOpacity;
 import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.platform.Services;
@@ -22,34 +23,26 @@ import java.util.List;
 @Mixin(value = WeightedBakedModel.class, priority = 1010)
 public abstract class WeightedBakedModel_cacheMixin implements BakedOpacity {
 
-    @Unique // Only works on chunk update, so the best performance is after placing a block
-    private byte solidFaces = 0; // 0 = all sides translucent
-
-    @Override
-    public boolean moreculling$hasTextureTranslucency(@Nullable BlockState blockState, @Nullable Direction direction) {
-        if (direction == null) {
-            return solidFaces != BitUtils.ALL_DIRECTIONS; // If any translucency, returns true
-        }
-        return !BitUtils.get(solidFaces, direction.ordinal());
-    }
-
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
-        solidFaces = 0;
+        byte emptyFaces = 0;
+        boolean translucency = false;
         for (Direction face : DirectionUtils.DIRECTIONS) {
             List<BakedQuad> quads = Services.PLATFORM.getQuads((BakedModel) this, state,
                     face, CullingUtils.RANDOM, EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
-            if (quads.isEmpty()) { // no faces = translucent
-                solidFaces = BitUtils.unset(solidFaces, face.ordinal());
-            } else {
-                solidFaces = BitUtils.set(solidFaces, face.ordinal());
+            if (quads.isEmpty()) { // no faces = empty
+                emptyFaces = BitUtils.set(emptyFaces, face.ordinal());
+            } else if (!translucency) {
                 for (BakedQuad quad : quads) {
-                    if (((QuadOpacity) quad).moreculling$getTextureTranslucency()) {
-                        solidFaces = BitUtils.unset(solidFaces, face.ordinal());
+                    if (((QuadOpacity)  (Object) quad).moreculling$getTextureTranslucency()) {
+                        translucency = true;
                         break;
                     }
                 }
             }
         }
+
+        ((MoreStateCulling) state).moreculling$setHasQuadsOnSide(emptyFaces);
+        ((MoreStateCulling) state).moreculling$setHasTextureTranslucency(translucency);
     }
 }
