@@ -45,17 +45,17 @@ public class ItemRenderer_faceCullingMixin {
                                                               Direction direction, RandomSource random,
                                                               Operation<List<BakedQuad>> original) {
         if (ItemRendererStates.DIRECTIONS != null) {
-            List<BakedQuad> bakedQuads = new ArrayList<>(original.call(instance, blockState, direction, random));
-            Iterator<BakedQuad> iterator = bakedQuads.iterator();
+            List<BakedQuad> bakedQuads = new ArrayList<>();
+            Iterator<BakedQuad> iterator = original.call(instance, blockState, direction, random).iterator();
             quads: while (iterator.hasNext()) {
                 BakedQuad bakedQuad = iterator.next();
                 Direction face = bakedQuad.getDirection();
                 for (Direction dir : ItemRendererStates.DIRECTIONS) {
                     if (face == dir) {
+                        bakedQuads.add(bakedQuad);
                         continue quads;
                     }
                 }
-                iterator.remove();
             }
             return bakedQuads;
         }
