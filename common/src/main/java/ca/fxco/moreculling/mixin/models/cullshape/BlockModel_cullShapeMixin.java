@@ -6,7 +6,6 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import ca.fxco.moreculling.utils.ShapeUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.logging.LogUtils;
 import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BlockElement;

@@ -2,7 +2,6 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
