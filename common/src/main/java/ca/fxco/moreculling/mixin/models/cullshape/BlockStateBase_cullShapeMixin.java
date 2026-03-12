@@ -48,7 +48,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
         if (!this.canOcclude) {
             if (blockRenderManager != null) {
                 BakedModel model = blockRenderManager.getBlockModel(this.asState());
-                if (model != null && !this.asState().hasProperty(BlockStateProperties.FACING)) {
+                if (model != null) {
                     voxelShape = ((BakedOpacity) model).moreculling$getCullingShape(this.asState());
                 }
             }

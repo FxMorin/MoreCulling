@@ -32,8 +32,6 @@ public abstract class SimpleBakedModel_cacheMixin implements BakedOpacity {
     @Final
     protected List<BakedQuad> unculledFaces;
     @Unique
-    private boolean moreculling$allStatesCanOcclude = true;
-    @Unique
     private @Nullable VoxelShape moreculling$cullVoxelShape;
     @Unique
     private boolean moreculling$wasShapeOptimized = false;

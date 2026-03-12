@@ -6,6 +6,8 @@ import ca.fxco.moreculling.api.model.ExtendedUnbakedModel;
 import ca.fxco.moreculling.utils.ShapeUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.logging.LogUtils;
+import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
@@ -139,18 +141,11 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
                     }
                 }
 
-                if (settings.getRotation() != Transformation.identity()) {;
-                    Direction direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.NORTH);
-                    if (direction.getAxis() != Direction.Axis.Y) {
-                        voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundY(Direction.NORTH, direction, voxelShape);
-                    } else {
-                        voxelShape = null;
-                        /*direction = Direction.rotate(settings.getRotation().getMatrix(), Direction.UP); TODO rotation for non horizontal directions
-                        if (direction.getAxis() != Direction.Axis.X) {
-                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundX(Direction.UP, direction, voxelShape);
-                        } else {
-                            voxelShape = ShapeUtils.rotateShapeUnoptimizedAroundZ(Direction.UP, direction, voxelShape);
-                        }*/
+                if (settings.getRotation() != Transformation.identity()) {
+                    OctahedralGroup group = ShapeUtils.MATRIX_TO_OCTAHEDRAL
+                            .get(settings.getRotation().getMatrix());
+                    if (group != null) {
+                        voxelShape = ShapeUtils.rotate(voxelShape, group);
                     }
                 }
 

@@ -2,3 +2,7 @@ accessWidener	v1	 named
 accessible field net/minecraft/world/level/block/Block OCCLUSION_CACHE Ljava/lang/ThreadLocal;
 accessible method net/minecraft/world/level/block/state/BlockBehaviour getOcclusionShape (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;
 accessible field net/minecraft/client/renderer/block/model/BlockModel parentLocation Lnet/minecraft/resources/ResourceLocation;
+accessible field net/minecraft/world/phys/shapes/VoxelShape shape Lnet/minecraft/world/phys/shapes/DiscreteVoxelShape;
+accessible field com/mojang/math/OctahedralGroup permutation Lcom/mojang/math/SymmetricGroup3;
+accessible method net/minecraft/world/phys/shapes/CubeVoxelShape <init> (Lnet/minecraft/world/phys/shapes/DiscreteVoxelShape;)V
+accessible method net/minecraft/world/phys/shapes/ArrayVoxelShape <init> (Lnet/minecraft/world/phys/shapes/DiscreteVoxelShape;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;Lit/unimi/dsi/fastutil/doubles/DoubleList;)V
