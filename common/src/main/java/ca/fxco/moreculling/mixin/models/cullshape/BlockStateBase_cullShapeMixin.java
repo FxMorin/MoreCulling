@@ -40,7 +40,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
     @Shadow public abstract Block getBlock();
 
     @Unique
-    private VoxelShape[] moreculling$cullingShapesByFace;
+    private VoxelShape[] moreculling$cullingShapesByFace = moreculling$EMPTY_OCCLUSION_SHAPES;
 
     @Override
     public void moreculling$initShapeCache() {
