@@ -23,7 +23,7 @@ public class TheEndGatewayRenderer_beamMixin {
     @WrapWithCondition(
             method = "submit(Lnet/minecraft/client/renderer/blockentity/state/EndGatewayRenderState;" +
                     "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
-                    "Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+                    "Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;" +

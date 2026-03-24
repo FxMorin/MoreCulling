@@ -23,7 +23,7 @@ public class BeaconRenderer_frustumMixin<T extends BlockEntity & BeaconBeamOwner
     @WrapWithCondition(
             method = "submit(Lnet/minecraft/client/renderer/blockentity/state/BeaconRenderState;" +
                     "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
-                    "Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+                    "Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/blockentity/BeaconRenderer;submitBeaconBeam(" +

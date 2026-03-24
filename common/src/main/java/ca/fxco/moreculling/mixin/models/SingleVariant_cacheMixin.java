@@ -8,9 +8,9 @@ import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.VertexUtils;
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -24,7 +24,7 @@ import java.util.List;
 @Mixin(SingleVariant.class)
 public abstract class SingleVariant_cacheMixin implements BakedOpacity {
 
-    @Shadow @Final private BlockModelPart model;
+    @Shadow @Final private BlockStateModelPart model;
 
     @Override
     public void moreculling$resetTranslucencyCache(BlockState state) {
@@ -36,7 +36,7 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
             if (!layeredQuads.isEmpty()) {
                 if (!translucency) {
                     for (BakedQuad quad : layeredQuads) {
-                        SpriteOpacity opacity = ((SpriteOpacity) quad.sprite());
+                        SpriteOpacity opacity = ((SpriteOpacity) quad.materialInfo().sprite());
                         NativeImage image = opacity.moreculling$getUnmipmappedImage();
                         QuadBounds bounds = VertexUtils.getQuadUvBounds(quad, image.getWidth(), image.getHeight());
                         if (opacity.moreculling$hasTranslucency(bounds)) {

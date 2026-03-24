@@ -13,7 +13,7 @@ public class SpriteUtils {
     public static boolean doesHaveTransparency(TextureAtlasSprite sprite) {
         int width = sprite.contents().width();
         int height = sprite.contents().height();
-        for (int frame : sprite.contents().getUniqueFrames().toArray()) {
+        for (int frame : sprite.contents().getUniqueFrames()) {
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     if (sprite.contents().isTransparent(frame, x, y)) {
@@ -30,7 +30,7 @@ public class SpriteUtils {
         int minHeight = Math.max(0, bounds.getMinY());
         int maxWidth = Math.min(bounds.getMaxX(), sprite.contents().width());
         int maxHeight = Math.min(bounds.getMaxY(), sprite.contents().height());
-        for (int frame : sprite.contents().getUniqueFrames().toArray()) {
+        for (int frame : sprite.contents().getUniqueFrames()) {
             for (int y = minHeight; y < maxHeight; ++y) {
                 for (int x = minWidth; x < maxWidth; ++x) {
                     if (sprite.contents().isTransparent(frame, x, y)) {

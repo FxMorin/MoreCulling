@@ -1,6 +1,6 @@
 package ca.fxco.moreculling.utils;
 
-import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.core.Direction;
 
 import java.util.Map;

@@ -3,7 +3,7 @@ package ca.fxco.moreculling.utils;
 import ca.fxco.moreculling.api.data.QuadBounds;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.joml.Math;
 import org.joml.*;
@@ -43,7 +43,7 @@ public class VertexUtils {
         Vector2i minPos = new Vector2i(Integer.MAX_VALUE);
         Vector2i maxPos = new Vector2i(-Integer.MAX_VALUE);
         for (int i = 0; i < 4; i++) {
-            Vector2f tmpPos = getUv(quad.sprite(), quad, i, imageWidth, imageHeight);
+            Vector2f tmpPos = getUv(quad.materialInfo().sprite(), quad, i, imageWidth, imageHeight);
             Vector2i pos = new Vector2i(Math.round(tmpPos.x), Math.round(tmpPos.y));
             minPos.min(pos);
             maxPos.max(pos);

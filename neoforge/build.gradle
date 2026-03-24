@@ -11,10 +11,6 @@ neoForge {
     if (at.exists()) {
         accessTransformers.from at.absolutePath
     }
-    parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
-    }
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
@@ -35,7 +31,7 @@ neoForge {
 }
 
 dependencies {
-    runtimeOnly "maven.modrinth:sodium:mc1.21.11-0.8.0-neoforge-neoforge"
+    //runtimeOnly "maven.modrinth:sodium:mc1.21.11-0.8.0-neoforge-neoforge"
     compileOnly "net.caffeinemc:sodium-neoforge-mod:${project.sodium_version}"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 

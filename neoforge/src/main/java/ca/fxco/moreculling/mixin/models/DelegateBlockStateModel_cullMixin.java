@@ -1,8 +1,7 @@
 package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.model.DelegateBlockStateModel;

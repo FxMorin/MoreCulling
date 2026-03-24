@@ -5,7 +5,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -116,8 +116,8 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
         return this.defaultValue == null ? Optional.empty() : Optional.ofNullable(this.defaultValue.get());
     }
 
-    @Override
-    public final void render(GuiGraphics drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+   /* @Override
+    public final void render(GuiGraphicsExtractor drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         super.render(drawContext, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
         this.resetButton.active = this.isEnabled() && this.isEditable() && this.getDefaultValue().isPresent() && !this.getDefaultValue().get().equals(this.getValue());
         this.resetButton.setY(y);
@@ -128,13 +128,13 @@ public abstract class AbstractDynamicEntry<T> extends TooltipListEntry<T> {
 
         this.resetButton.render(drawContext, mouseX, mouseY, delta);
         this.mainWidget.render(drawContext, mouseX, mouseY, delta);
-    }
+    }*/
 
     // Create the main widget to use for this entry
     abstract AbstractWidget createMainWidget();
 
     // This is where you render your widgets & text
-    abstract void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight);
+    abstract void onRender(GuiGraphicsExtractor drawContext, int y, int x, int entryWidth, int entryHeight);
 
     @Override
     public Component getDisplayedFieldName() {

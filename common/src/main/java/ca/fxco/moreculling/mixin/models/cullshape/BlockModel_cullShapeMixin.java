@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.cuboid.CuboidModel;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
 
-@Mixin(BlockModel.class)
+@Mixin(CuboidModel.class)
 public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel {
 
     @Unique
@@ -63,17 +63,11 @@ public abstract class BlockModel_cullShapeMixin implements ExtendedUnbakedModel 
         return this.moreculling$hasAutoModelShape;
     }
 
-    @Override
-    public BlockElementFace moreculling$modifyElementFace(BlockElementFace elementFace) {
-        return elementFace;
-    }
-
     @WrapOperation(
             method = "<clinit>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;",
-                    remap = false
+                    target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"
             )
     )
     private static Gson moreculling$registerCustomTypeAdapter(GsonBuilder instance, Operation<Gson> original) {

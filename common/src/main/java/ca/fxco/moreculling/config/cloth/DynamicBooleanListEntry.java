@@ -3,7 +3,7 @@ package ca.fxco.moreculling.config.cloth;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -39,16 +39,16 @@ public class DynamicBooleanListEntry extends AbstractDynamicEntry<Boolean> {
     }
 
     @Override
-    protected void onRender(GuiGraphics drawContext, int y, int x, int entryWidth, int entryHeight) {
+    protected void onRender(GuiGraphicsExtractor drawContext, int y, int x, int entryWidth, int entryHeight) {
         Window window = Minecraft.getInstance().getWindow();
         this.mainWidget.setMessage(this.getYesNoText(this.getValue()));
         Component displayedFieldName = this.getDisplayedFieldName();
         if (Minecraft.getInstance().font.isBidirectional()) {
-            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), window.getGuiScaledWidth() - x - Minecraft.getInstance().font.width(displayedFieldName), y + 6, 16777215);
+            drawContext.text(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), window.getGuiScaledWidth() - x - Minecraft.getInstance().font.width(displayedFieldName), y + 6, 16777215);
             this.resetButton.setX(x);
             this.mainWidget.setX(x + this.resetButton.getWidth() + 2);
         } else {
-            drawContext.drawString(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), x, y + 6, this.getPreferredTextColor());
+            drawContext.text(Minecraft.getInstance().font, displayedFieldName.getVisualOrderText(), x, y + 6, this.getPreferredTextColor());
             this.resetButton.setX(x + entryWidth - this.resetButton.getWidth());
             this.mainWidget.setX(x + entryWidth - 150);
         }

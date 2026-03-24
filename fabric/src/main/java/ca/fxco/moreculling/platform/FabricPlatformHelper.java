@@ -1,22 +1,23 @@
 package ca.fxco.moreculling.platform;
 
 import ca.fxco.moreculling.platform.services.IPlatformHelper;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FabricPlatformHelper implements IPlatformHelper {
+    private final List<BlockStateModelPart> parts = new ObjectArrayList<>();
 
     @Override
     public String getPlatformName() {
@@ -45,9 +46,16 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public List<BakedQuad> getQuads(BlockStateModel model, BlockState state, Direction direction,
                                     RandomSource source, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = new ArrayList<>();
+        model.collectParts(source, parts);
 
-        for (BlockModelPart part : model.collectParts(source)) {
-            quads.addAll(part.getQuads(direction));
+        if (!this.parts.isEmpty()) {
+            try {
+                for (BlockStateModelPart part : parts) {
+                    quads.addAll(part.getQuads(direction));
+                }
+            } finally {
+                this.parts.clear();
+            }
         }
 
         return quads;

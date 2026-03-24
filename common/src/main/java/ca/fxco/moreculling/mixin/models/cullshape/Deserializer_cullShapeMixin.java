@@ -7,6 +7,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.cuboid.CuboidModel;
 import net.minecraft.util.GsonHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,13 +18,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.lang.reflect.Type;
 import java.util.List;
 
-@Mixin(BlockModel.Deserializer.class)
+@Mixin(CuboidModel.Deserializer.class)
 public class Deserializer_cullShapeMixin {
 
     @Inject(
             method = "deserialize(Lcom/google/gson/JsonElement;" +
                     "Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)" +
-                    "Lnet/minecraft/client/renderer/block/model/BlockModel;",
+                    "Lnet/minecraft/client/resources/model/cuboid/CuboidModel;",
             at = @At("RETURN")
     )
     private void moreculling$onDeserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonContext,

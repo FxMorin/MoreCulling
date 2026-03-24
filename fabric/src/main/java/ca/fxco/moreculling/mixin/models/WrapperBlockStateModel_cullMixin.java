@@ -4,7 +4,7 @@ import ca.fxco.moreculling.api.model.BakedOpacity;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 //import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel; TODO enable once ported
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
-import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
+import static ca.fxco.moreculling.MoreCulling.bakedModelManager;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
@@ -43,8 +43,8 @@ public abstract class BlockStateBase_moreMixin implements MoreStateCulling {
     public boolean moreculling$hasQuadsOnSide(@Nullable Direction direction) {
         if (moreculling$emptyFaces == -1) {
             moreculling$emptyFaces = 0;
-            if (!canOcclude && blockRenderManager != null) {
-                ((BakedOpacity) blockRenderManager.getBlockModel(asState())).moreculling$resetTranslucencyCache(asState());
+            if (!canOcclude && bakedModelManager != null) {
+                ((BakedOpacity) bakedModelManager.getBlockStateModelSet().get(asState())).moreculling$resetTranslucencyCache(asState());
             }
         }
         if (direction == null) {

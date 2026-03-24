@@ -2,7 +2,7 @@ package ca.fxco.moreculling.mixin.models.cullshape;
 
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import static ca.fxco.moreculling.MoreCulling.blockRenderManager;
+import static ca.fxco.moreculling.MoreCulling.bakedModelManager;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBase_cullShapeMixin implements StateCullingShapeCache {
@@ -38,8 +38,8 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
     @Override
     public void moreculling$initCustomCullingShape() {
         VoxelShape voxelShape = null;
-        if (blockRenderManager != null) {
-            BlockStateModel model = blockRenderManager.getBlockModel(this.asState());
+        if (bakedModelManager != null) {
+            BlockStateModel model = bakedModelManager.getBlockStateModelSet().get(this.asState());
             if (model != null) {
                 if (((BakedOpacity) model).moreculling$getHasAutoModelShape() && this.canOcclude) {
                     this.moreculling$cullingShapesByFace = occlusionShapesByFace;

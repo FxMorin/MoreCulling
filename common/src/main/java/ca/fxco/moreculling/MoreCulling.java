@@ -4,7 +4,8 @@ import ca.fxco.moreculling.config.ConfigUpdater;
 import ca.fxco.moreculling.config.MoreCullingConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.BlockStateModelSet;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -18,7 +19,6 @@ public class MoreCulling {
     public static int CURRENT_VERSION = 1;
 
     public static ModelManager bakedModelManager = null;
-    public static BlockRenderDispatcher blockRenderManager = null;
 
     public static final String MOD_ID = "moreculling";
     public static final TagKey<Block> DONT_CULL = TagKey.create(BuiltInRegistries.BLOCK.key(),

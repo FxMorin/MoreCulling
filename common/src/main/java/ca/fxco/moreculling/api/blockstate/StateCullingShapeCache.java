@@ -1,6 +1,5 @@
 package ca.fxco.moreculling.api.blockstate;
 
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 

@@ -7,7 +7,6 @@ import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vulkanmod.render.chunk.build.frapi.render.AbstractBlockRenderContext;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Restriction(require = @Condition("vulkanmod"))
 @Mixin(AbstractBlockRenderContext.class)
 public class AbstractBlockRenderContext_vulkanModMixin {
-    @Shadow protected BlockAndTintGetter renderRegion;
+    /*@Shadow protected BlockAndTintGetter renderRegion; TODO enable once vulkan updates
 
     @Shadow protected BlockPos blockPos;
 
@@ -43,5 +42,5 @@ public class AbstractBlockRenderContext_vulkanModMixin {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(
                     blockState, renderRegion.getBlockState(adjPos), renderRegion, blockPos, face, adjPos));
         }
-    }
+    }*/
 }

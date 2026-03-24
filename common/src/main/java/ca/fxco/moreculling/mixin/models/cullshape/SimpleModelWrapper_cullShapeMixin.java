@@ -7,11 +7,15 @@ import ca.fxco.moreculling.utils.ShapeUtils;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.cuboid.CuboidModelElement;
+import net.minecraft.client.resources.model.cuboid.UnbakedCuboidGeometry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,7 +49,7 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                                            ModelState settings, CallbackInfoReturnable<SimpleModelWrapper> cir,
                                            @Local ResolvedModel model) {
         UnbakedModel unbakedModel = model.wrapped();
-        BlockModelPart bakedModel = cir.getReturnValue();
+        BlockStateModelPart bakedModel = cir.getReturnValue();
         if (bakedModel == null) {
             return;
         }
@@ -67,10 +71,10 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
             bakedOpacity.moreculling$setCullingShape(voxelShape);
             bakedOpacity.moreculling$setHasAutoModelShape(false);
         } else if (extendedUnbakedModel.moreculling$getUseModelShape(id)) {
-            if (model.getTopGeometry() instanceof SimpleUnbakedGeometry(List<BlockElement> elements)) {
+            if (model.getTopGeometry() instanceof UnbakedCuboidGeometry(List<CuboidModelElement> elements)) {
                 if (elements != null && !elements.isEmpty()) {
                     VoxelShape voxelShape = Shapes.empty();
-                    for (BlockElement e : elements) {
+                    for (CuboidModelElement e : elements) {
                         if ((e.rotation() == null) &&
                                 e.from().x() <= e.to().x()
                                 && e.from().y() <= e.to().y()
@@ -82,7 +86,7 @@ public abstract class SimpleModelWrapper_cullShapeMixin implements BakedOpacity 
                         }
                     }
 
-                    if (settings.transformation() != Transformation.identity()) {
+                    if (settings.transformation() != Transformation.IDENTITY) {
                         OctahedralGroup group = ShapeUtils.MATRIX_TO_OCTAHEDRAL
                                 .get(settings.transformation().getMatrix());
                         if (group != null) {

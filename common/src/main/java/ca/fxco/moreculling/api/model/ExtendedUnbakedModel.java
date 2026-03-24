@@ -1,6 +1,5 @@
 package ca.fxco.moreculling.api.model;
 
-import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.resources.Identifier;
 
@@ -63,12 +62,4 @@ public interface ExtendedUnbakedModel {
     default boolean moreculling$getHasAutoModelShape() {
         return false;
     }
-
-    /**
-     * ModelElementFace is just final's, that should not change. However, you can create a new ModelElementFace or wrap
-     * it. Do this to modify the element face data.
-     *
-     * @since 0.25.0
-     */
-    BlockElementFace moreculling$modifyElementFace(BlockElementFace elementFace);
 }

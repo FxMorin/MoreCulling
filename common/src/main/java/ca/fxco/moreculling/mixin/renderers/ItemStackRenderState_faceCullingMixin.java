@@ -7,8 +7,8 @@ import ca.fxco.moreculling.utils.DirectionUtils;
 import ca.fxco.moreculling.utils.TransformationUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.resources.model.cuboid.ItemTransform;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.core.Direction;
@@ -30,10 +30,10 @@ import static net.minecraft.core.Direction.SOUTH;
 public class ItemStackRenderState_faceCullingMixin {
 
     @Shadow
-    ItemTransform transform;
+    private ItemTransform itemTransform;
 
     @Shadow
-    boolean usesBlockLight;
+    private boolean usesBlockLight;
 
     @WrapOperation(
             method = "submit",
@@ -53,7 +53,7 @@ public class ItemStackRenderState_faceCullingMixin {
             Vec3 cameraPos = ItemRendererStates.CAMERA.position();
             Vec3 framePos = new Vec3(frame.x, frame.y, frame.z);
             boolean isBlockItem = usesBlockLight;
-            ItemTransform transformation = transform;
+            ItemTransform transformation = itemTransform;
             boolean canCull = ((!isBlockItem && !frame.isInvisible) || CullingUtils.shouldCullBack(frame)) &&
                     TransformationUtils.canCullTransformation(transformation);
             double dist = ItemRendererStates.CAMERA.position().distanceTo(framePos);

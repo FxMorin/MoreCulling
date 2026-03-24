@@ -13,6 +13,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.StandingSignBlock;
+import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -21,9 +23,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Optional;
 
+import static ca.fxco.moreculling.utils.MathUtils.ONE_SIGN_ROTATION;
+
 public class CullingUtils {
 
-    public static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
+    public static final RandomSource RANDOM = RandomSource.createThreadLocalInstance();
 
     /**
      * Replaces the default vanilla culling with a custom implementation
@@ -192,6 +196,26 @@ public class CullingUtils {
             case EAST -> cameraPos.x < framePos.x;
             default -> false;
         };
+    }
+
+    public static boolean cullSignText(BlockPos pos, BlockState state, boolean front) {
+        if (MoreCulling.CONFIG.signTextCulling) {
+            Vec3 cameraPos = Minecraft.getInstance().player.position();
+            if (state.hasProperty(WallSignBlock.FACING)) {
+                Direction dir = state.getValue(WallSignBlock.FACING);
+                return front == !shouldHideWallSignText(
+                        dir,
+                        pos.getCenter().subtract(dir.getStepX() * 0.39, 0, dir.getStepZ() * 0.39),
+                        cameraPos
+                );
+            }
+            double angle = state.getValue(StandingSignBlock.ROTATION) * ONE_SIGN_ROTATION;
+            if (front) { // Switch line orientation xD
+                return !MathUtils.isBehindLine(angle, pos.getCenter(), cameraPos);
+            }
+            return !MathUtils.isBehindLine(angle, cameraPos, pos.getCenter());
+        }
+        return true;
     }
 
     public static boolean shouldCullPaintingBack(BlockPos paintingPos, Direction oppositeDir) {

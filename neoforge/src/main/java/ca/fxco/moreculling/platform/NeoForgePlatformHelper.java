@@ -1,14 +1,14 @@
 package ca.fxco.moreculling.platform;
 
 import ca.fxco.moreculling.platform.services.IPlatformHelper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
+    private final List<BlockStateModelPart> parts = new ObjectArrayList<>();
 
     @Override
     public String getPlatformName() {
@@ -47,9 +48,16 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     public List<BakedQuad> getQuads(BlockStateModel model, BlockState state, Direction direction,
                                     RandomSource source, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = new ArrayList<>();
+        model.collectParts(level, pos, state, source, parts);
 
-        for (BlockModelPart part : model.collectParts(level, pos, state, source)) {
-            quads.addAll(part.getQuads(direction));
+        if (!this.parts.isEmpty()) {
+            try {
+                for (BlockStateModelPart part : parts) {
+                    quads.addAll(part.getQuads(direction));
+                }
+            } finally {
+                this.parts.clear();
+            }
         }
 
         return quads;
