@@ -5,6 +5,9 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
   "client": [
     "BakedQuad_cacheMixin",
     "LevelRenderer_frustumMixin",
