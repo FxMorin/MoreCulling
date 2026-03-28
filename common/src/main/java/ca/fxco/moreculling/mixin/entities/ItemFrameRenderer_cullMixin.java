@@ -1,9 +1,9 @@
 package ca.fxco.moreculling.mixin.entities;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.api.map.MapOpacity;
 import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderState;
 import ca.fxco.moreculling.api.renderers.ExtendedItemStackRenderState;
+import ca.fxco.moreculling.api.renderers.ExtendedMapRenderState;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -96,39 +96,35 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
         poseStack.pushPose();
         boolean skipFrontRender = false;
-        MapId mapIdComponent = state.mapId;
-        if (mapIdComponent != null) {
-            MapItemSavedData mapState = MapItem.getSavedData(mapIdComponent, Minecraft.getInstance().level);
-            if (mapState != null) { // Map is present
-                if (shouldShowMapFace(direction, state,
-                        this.entityRenderDispatcher.camera.position())) {
-                    skipFrontRender = !((MapOpacity) mapState).moreculling$hasTransparency();
-                    double di;
-                    double offsetZFighting = state.isInvisible ? 0.5 :
-                            skipFrontRender ?
-                                    ((di = this.entityRenderDispatcher.camera.position().distanceToSqr(state.x, state.y - 1, state.z) / 5000) > 6 ?
-                                            Math.max(0.4452 - di, 0.4) : 0.4452) :
-                                    0.4375;
-                    poseStack.translate(0.0, 0.0, offsetZFighting);
-                    int rotation = state.rotation % 4 * 2;
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(rotation * 360.0f / 8.0f));
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f));
-                    float s = 0.0078125f;
-                    poseStack.scale(s, s, s);
-                    poseStack.translate(-64.0, -64.0, 0.0);
-                    poseStack.translate(0.0, 0.0, -1.0);
-                    mapRenderer.render(
-                            state.mapRenderState,
-                            poseStack,
-                            submitNodeCollector,
-                            true,
-                            this.getLightCoords(
-                                    state.isGlowFrame,
-                                    15728880,
-                                    state.lightCoords
-                            )
-                    );
-                }
+        if (state.mapId != null) {
+            if (shouldShowMapFace(direction, state,
+                    this.entityRenderDispatcher.camera.position())) {
+                skipFrontRender = !((ExtendedMapRenderState) state).moreculling$hasTransparency();
+                double di;
+                double offsetZFighting = state.isInvisible ? 0.5 :
+                        skipFrontRender ?
+                                ((di = this.entityRenderDispatcher.camera.position().distanceToSqr(state.x, state.y - 1, state.z) / 5000) > 6 ?
+                                        Math.max(0.4452 - di, 0.4) : 0.4452) :
+                                0.4375;
+                poseStack.translate(0.0, 0.0, offsetZFighting);
+                int rotation = state.rotation % 4 * 2;
+                poseStack.mulPose(Axis.ZP.rotationDegrees(rotation * 360.0f / 8.0f));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(180.0f));
+                float s = 0.0078125f;
+                poseStack.scale(s, s, s);
+                poseStack.translate(-64.0, -64.0, 0.0);
+                poseStack.translate(0.0, 0.0, -1.0);
+                mapRenderer.render(
+                        state.mapRenderState,
+                        poseStack,
+                        submitNodeCollector,
+                        true,
+                        this.getLightCoords(
+                                state.isGlowFrame,
+                                15728880,
+                                state.lightCoords
+                        )
+                );
             }
         } else if (!state.item.isEmpty()) {
             poseStack.translate(0.0, 0.0, state.isInvisible ? 0.5 : 0.4375);
