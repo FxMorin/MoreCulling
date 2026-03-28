@@ -160,7 +160,7 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         if (CullingUtils.shouldShowMapFace(direction, state,
                 this.entityRenderDispatcher.camera.position())) {
 
-            if (!state.isInvisible && !((ExtendedMapRenderState) state).moreculling$hasTransparency()) {
+            if (!state.isInvisible && !((ExtendedMapRenderState) state.mapRenderState).moreculling$hasTransparency()) {
                     double di = this.entityRenderDispatcher.camera.position()
                             .distanceToSqr(state.x, state.y - 1, state.z) / 5000;
                     poseStack.translate(0.0, 0.0, (di > 6 ? Math.max(0.4452 - di, 0.4) : 0.4452) - 0.4375);
