@@ -8,8 +8,7 @@
   "client": [
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "blockstates.Block_fabricDrawSideMixin",
-    //"models.ItemModelGenerator_cullMixin",
-    //"models.WrapperBlockStateModel_cullMixin", TODO enable once ported
+    "models.WrapperBlockStateModel_cullMixin",
     "Minecraft_registerReloadListenersMixin"
   ],
   "injectors": {
