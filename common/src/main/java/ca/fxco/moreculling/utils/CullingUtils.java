@@ -200,7 +200,7 @@ public class CullingUtils {
 
     public static boolean cullSignText(BlockPos pos, BlockState state, boolean front) {
         if (MoreCulling.CONFIG.signTextCulling) {
-            Vec3 cameraPos = Minecraft.getInstance().player.position();
+            Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position();
             if (state.hasProperty(WallSignBlock.FACING)) {
                 Direction dir = state.getValue(WallSignBlock.FACING);
                 return front == !shouldHideWallSignText(
