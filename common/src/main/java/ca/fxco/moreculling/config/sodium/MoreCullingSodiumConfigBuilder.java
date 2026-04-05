@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.config.sodium;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.config.MoreCullingConfig;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
 import com.google.common.collect.ImmutableList;
@@ -23,6 +24,9 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
 
     @Override
     public void registerConfigLate(ConfigBuilder builder) {
+        if (!MoreCulling.CONFIG.enableSodiumMenu) {
+            return;
+        }
         builder.registerOwnModOptions()
                 .setIcon(Identifier.parse("moreculling:more_culling.png"))
                 .addPage(builder.createOptionPage()
