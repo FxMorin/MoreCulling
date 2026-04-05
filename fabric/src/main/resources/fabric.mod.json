@@ -39,11 +39,11 @@
   },
   "suggests": {
     "sodium": ">=0.6.7",
-    "fabirc-api": "<=1.145.3"
+    "fabric-api": ">=1.145.3"
   },
   "breaks": {
     "sodium": "<=0.6.6",
-    "fabirc-api": "<=1.145.2"
+    "fabric-api": "<=1.145.2"
   },
   "custom": {
     "modmenu": {
