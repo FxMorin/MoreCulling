@@ -1,4 +1,4 @@
-accessWidener	v1	 official
+classTweaker v1 official
 accessible field net/minecraft/world/level/block/Block OCCLUSION_CACHE Ljava/lang/ThreadLocal;
 accessible method net/minecraft/world/level/block/state/BlockBehaviour getOcclusionShape (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/phys/shapes/VoxelShape;
 accessible class net/minecraft/client/renderer/CloudRenderer$RelativeCameraPos
@@ -7,3 +7,6 @@ accessible method net/minecraft/world/level/block/Block$ShapePairKey <init> (Lne
 
 accessible class net/minecraft/client/renderer/block/dispatch/multipart/MultiPartModel$SharedBakedState
 accessible field net/minecraft/client/renderer/block/dispatch/multipart/MultiPartModel$SharedBakedState selectors Ljava/util/List;
+
+inject-interface net/minecraft/client/renderer/OrderedSubmitNodeCollector ca/fxco/moreculling/api/renderers/ExtendedOrderedSubmitNodeCollector
+inject-interface net/minecraft/client/renderer/SubmitNodeCollection ca/fxco/moreculling/api/renderers/ExtendedSubmitNodeCollection

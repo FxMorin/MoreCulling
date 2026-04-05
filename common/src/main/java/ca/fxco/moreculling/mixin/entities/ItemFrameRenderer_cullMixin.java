@@ -5,14 +5,10 @@ import ca.fxco.moreculling.api.renderers.ExtendedBlockModelRenderState;
 import ca.fxco.moreculling.api.renderers.ExtendedMapRenderState;
 import ca.fxco.moreculling.states.ItemRendererStates;
 import ca.fxco.moreculling.utils.CullingUtils;
-import com.llamalad7.mixinextras.expression.Definition;
-import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MapRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -21,14 +17,16 @@ import net.minecraft.client.renderer.entity.ItemFrameRenderer;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.ItemFrame;
-import org.spongepowered.asm.mixin.Final;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ItemFrameRenderer.class, priority = 1200)
 public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends EntityRenderer<T, ItemFrameRenderState> {
@@ -38,14 +36,9 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
             Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST
     };
 
-    @Shadow @Final private MapRenderer mapRenderer;
-
-    @Shadow protected abstract int getLightCoords(boolean bl, int i, int j);
-
     protected ItemFrameRenderer_cullMixin(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
-
 
     @WrapOperation(
             method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;" +
@@ -135,26 +128,24 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
         ItemRendererStates.CAMERA = null;
     }
 
-
-    @Definition(
-            id = "mapId",
-            field = "Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;mapId:" +
-                    "Lnet/minecraft/world/level/saveddata/maps/MapId;"
-    )
-    @Definition(id = "state", local = @Local(type = ItemFrameRenderState.class, argsOnly = true))
-    @Expression("state.mapId != null")
-    @ModifyExpressionValue(
+    @Inject(
             method = "submit(Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;" +
                     "Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;" +
                     "Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
-                    value = "MIXINEXTRAS:EXPRESSION"
-            )
+                    value = "FIELD",
+                    target = "Lnet/minecraft/client/renderer/entity/state/ItemFrameRenderState;rotation:I",
+                    ordinal = 0,
+                    opcode = Opcodes.GETFIELD
+            ),
+            cancellable = true
     )
-    private boolean moreculling$cullMap(boolean original, @Local(argsOnly = true) ItemFrameRenderState state,
-                                        @Local Direction direction, @Local(argsOnly = true) PoseStack poseStack) {
-        if (!original) {
-            return false;
+    private void moreculling$cullFrameWithMap(ItemFrameRenderState state, PoseStack poseStack,
+                                     SubmitNodeCollector submitNodeCollector, CameraRenderState camera,
+                                     CallbackInfo ci,
+                                     @Local Direction direction) {
+        if (!MoreCulling.CONFIG.useCustomItemFrameRenderer) {
+            return;
         }
 
         if (CullingUtils.shouldShowMapFace(direction, state,
@@ -165,9 +156,10 @@ public abstract class ItemFrameRenderer_cullMixin<T extends ItemFrame> extends E
                             .distanceToSqr(state.x, state.y - 1, state.z) / 5000;
                     poseStack.translate(0.0, 0.0, (di > 6 ? Math.max(0.4452 - di, 0.4) : 0.4452) - 0.4375);
             }
-                            ;
-            return true;
+
+            return;
         }
-        return false;
+        poseStack.popPose();
+        ci.cancel();
     }
 }

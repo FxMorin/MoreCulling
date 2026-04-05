@@ -30,18 +30,20 @@
     "${mod_id}.mixins.json",
     "${mod_id}.fabric.mixins.json"
   ],
-  "accessWidener" : "moreculling.accesswidener",
+  "accessWidener" : "moreculling.classTweaker",
   "depends": {
     "fabricloader": ">=0.15.0",
-    "minecraft": ">=1.21",
-    "java": ">=21",
+    "minecraft": ">=26.1",
+    "java": ">=25",
     "cloth-config": ">=16.0.0"
   },
   "suggests": {
-    "sodium": ">=0.6.7"
+    "sodium": ">=0.6.7",
+    "fabirc-api": "<=1.145.3"
   },
   "breaks": {
-    "sodium": "<=0.6.6"
+    "sodium": "<=0.6.6",
+    "fabirc-api": "<=1.145.2"
   },
   "custom": {
     "modmenu": {

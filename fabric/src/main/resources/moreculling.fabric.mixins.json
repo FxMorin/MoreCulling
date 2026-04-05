@@ -2,14 +2,15 @@
   "required": true,
   "minVersion": "0.8",
   "package": "ca.fxco.moreculling.mixin",
-  "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "client": [
-    "compat.AbstractBlockRenderContext_vulkanModMixin",
+    "Minecraft_registerReloadListenersMixin",
     "blockstates.Block_fabricDrawSideMixin",
+    "compat.AbstractBlockRenderContext_vulkanModMixin",
     "models.WrapperBlockStateModel_cullMixin",
-    "Minecraft_registerReloadListenersMixin"
+    "renderers.BlockFeatureRenderer_fabricCullMixin",
+    "renderers.BlockModelRenderState_fabricCullMixin"
   ],
   "injectors": {
     "defaultRequire": 1

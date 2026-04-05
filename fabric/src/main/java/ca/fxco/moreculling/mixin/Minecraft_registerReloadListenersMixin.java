@@ -17,8 +17,6 @@ public abstract class Minecraft_registerReloadListenersMixin {
 
     @Shadow @Final private ReloadableResourceManager resourceManager;
 
-    @Shadow public abstract void stop();
-
     @Inject(
             method = "<init>",
             at = @At(

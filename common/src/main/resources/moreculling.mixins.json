@@ -2,7 +2,6 @@
   "required": true,
   "minVersion": "0.8",
   "package": "ca.fxco.moreculling.mixin",
-  "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "plugin": "ca.fxco.moreculling.config.MixinConfigPlugin",
   "mixinextras": {
@@ -54,13 +53,17 @@
     "models.cullshape.ModelManager_cullShapeMixin",
     "models.cullshape.SimpleModelWrapper_cullShapeMixin",
     "models.cullshape.UnbakedModel_extendsMixin",
+    "renderers.BlockFeatureRenderer_cullMixin",
     "renderers.BlockModelRenderState_cullMixin",
     "renderers.ItemStackRenderState_apiMixin",
     "renderers.ItemStackRenderState_faceCullingMixin",
     "renderers.MapRenderer_cullMixin",
     "renderers.MapRenderState_apiMixin",
+    "renderers.OrderedSubmitNodeCollector_apiMixin",
     "renderers.PaintingRenderer_faceCullingMixin",
-    "renderers.PaintingRenderState_apiMixin"
+    "renderers.PaintingRenderState_apiMixin",
+    "renderers.SubmitNodeCollection_apiMixin",
+    "renderers.SubmitNodeStorage_apiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

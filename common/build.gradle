@@ -11,6 +11,7 @@ neoForge {
     if (at.exists()) {
         accessTransformers.from at.absolutePath
     }
+    interfaceInjectionData.from "../interfaces.json"
 }
 
 dependencies {
