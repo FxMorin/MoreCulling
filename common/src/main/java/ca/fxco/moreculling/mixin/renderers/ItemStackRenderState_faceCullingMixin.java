@@ -62,9 +62,13 @@ public class ItemStackRenderState_faceCullingMixin {
                 ItemRendererStates.DIRECTIONS = null;
             } else if (MoreCulling.CONFIG.useItemFrameLOD && !isBlockItem && dist > MoreCulling.CONFIG.itemFrameLODRange) {
                 if (!canCull) {
-                    ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH, NORTH };
+                    ItemRendererStates.DIRECTIONS = DirectionUtils.SOUTH_NORTH_ARRAY;
                 } else {
-                    ItemRendererStates.DIRECTIONS = new Direction[] { SOUTH };
+                    if (transformation.scale().x() < 0) {
+                        ItemRendererStates.DIRECTIONS = DirectionUtils.NORTH_ARRAY;
+                    } else {
+                        ItemRendererStates.DIRECTIONS = DirectionUtils.SOUTH_ARRAY;
+                    }
                 }
             } else {
                 // EXPERIMENTAL CULLING
@@ -88,9 +92,15 @@ public class ItemStackRenderState_faceCullingMixin {
                     ItemRendererStates.DIRECTIONS = new Direction[] { dirX, dirY, dirZ };
                 } else {
                     if (canCull) {
-                        ItemRendererStates.DIRECTIONS = DirectionUtils.getAllDirectionsExcluding(
-                                DirectionUtils.changeDirectionUsingTransformation(NORTH, transformation)
-                        );
+                        if (transformation.scale().x() < 0) {
+                            ItemRendererStates.DIRECTIONS = DirectionUtils.getAllDirectionsExcluding(
+                                    DirectionUtils.changeDirectionUsingTransformation(SOUTH, transformation)
+                            );
+                        } else {
+                            ItemRendererStates.DIRECTIONS = DirectionUtils.getAllDirectionsExcluding(
+                                    DirectionUtils.changeDirectionUsingTransformation(NORTH, transformation)
+                            );
+                        }
                     } else {
                         ItemRendererStates.DIRECTIONS = null;
                     }

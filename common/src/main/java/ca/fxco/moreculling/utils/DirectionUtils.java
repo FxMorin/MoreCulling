@@ -1,15 +1,22 @@
 package ca.fxco.moreculling.utils;
 
+import net.minecraft.client.Options;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.core.Direction;
 
 import java.util.Map;
 
 import static net.minecraft.core.Direction.*;
+import static net.minecraft.core.Direction.NORTH;
+import static net.minecraft.core.Direction.SOUTH;
 
 public class DirectionUtils {
 
     public static final Direction[] DIRECTIONS = Direction.values();
+
+    public static final Direction[] SOUTH_ARRAY = new Direction[] { Direction.SOUTH };
+    public static final Direction[] NORTH_ARRAY = new Direction[] { Direction.NORTH };
+    public static final Direction[] SOUTH_NORTH_ARRAY = new Direction[] { Direction.SOUTH, Direction.NORTH };
 
     private static final Map<Direction, Direction[]> DIRECTIONS_EXCLUDING_DIRECTION_MAP = Map.of( // Cached
             DOWN, new Direction[] { UP, NORTH, SOUTH, WEST, EAST },
