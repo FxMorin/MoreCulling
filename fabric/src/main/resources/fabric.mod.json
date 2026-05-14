@@ -12,7 +12,7 @@
     "sources": "https://github.com/fxmorin/moreculling",
     "issues": "https://github.com/fxmorin/moreculling/issues"
   },
-  "icon": "assets/moreculling/MoreCulling.png",
+  "icon": "assets/moreculling/moreculling.png",
   "license": "${license}",
   "environment": "client",
   "entrypoints": {
@@ -21,6 +21,9 @@
     ],
     "modmenu": [
       "ca.fxco.moreculling.config.ModMenuCompat"
+    ],
+    "sodium:config_api_user": [
+      "ca.fxco.moreculling.config.sodium.MoreCullingSodiumConfigBuilder"
     ]
   },
   "mixins": [

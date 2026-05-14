@@ -50,6 +50,10 @@ repositories {
     maven { // forgified fabric api
         url "https://maven.su5ed.dev/releases"
     }
+    maven { //sodium
+        name "CaffeineMC"
+        url "https://maven.caffeinemc.net/releases" // or /snapshots
+    }
 }
 
 // Declare capabilities on the outgoing configurations.

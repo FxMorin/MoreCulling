@@ -41,7 +41,6 @@
     "compat.ItemRenderer_sodiumMixin",
     "compat.SignBlock_ebeMixin",
     "entities.ItemFrameRenderer_cullMixin",
-    "gui.SodiumOptionsGUIMixin",
     "models.BakedModel_extendsMixin",
     "models.MultiPartBakedModel_cacheMixin",
     "models.SimpleBakedModel_cacheMixin",
