@@ -1,5 +1,6 @@
 package ca.fxco.moreculling.config.cloth;
 
+import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.config.ConfigAdditions;
 import ca.fxco.moreculling.api.config.OptionOverride;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -149,6 +150,7 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final @NotNull A build() {
         Objects.requireNonNull(this.value);
@@ -157,6 +159,16 @@ public abstract class AbstractDynamicBuilder<T, A extends AbstractConfigListEntr
             this.setTooltip(Component.literal(optionOverride.reason()));
             if (this.defaultValue != null && this.value != null && this.defaultValue.get() != this.value) {
                 this.value = this.defaultValue.get();
+            }
+            if (optionOverride.newValue().isPresent()) {
+                try {
+                    value = (T) optionOverride.newValue().get();
+                    if (saveConsumer != null) {
+                        saveConsumer.accept(value);
+                    }
+                } catch (ClassCastException exception) {
+                    MoreCulling.LOGGER.warn("wrong class for config disabling, expected: {}, got: {}", value.getClass(), optionOverride.newValue().get().getClass());
+                }
             }
             this.locked = true;
             this.requireRestart(false);

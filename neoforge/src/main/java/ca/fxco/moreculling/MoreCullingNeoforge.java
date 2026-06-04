@@ -9,6 +9,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
@@ -21,6 +22,7 @@ public class MoreCullingNeoforge {
                 (con, screen) ->  ModMenuConfig.createConfigScreen(screen));
 
         bus.addListener(this::registerReloadListener);
+        bus.addListener(this::onClientSetup);
     }
 
     public void registerReloadListener(AddClientReloadListenersEvent event) {
@@ -35,5 +37,9 @@ public class MoreCullingNeoforge {
 
                     profilerfiller.pop();
                 }, gameExecutor));
+    }
+
+    public void onClientSetup(FMLClientSetupEvent event) {
+        ModMenuConfig.createConfigScreen(null);
     }
 }

@@ -40,6 +40,20 @@ public class ConfigAdditions {
     }
 
     /**
+     * Use this method to disable an option in the MoreCulling config.
+     * @param id        The option to be disabled. This will attempt to match against the option name, if the option
+     *                  uses a translation key, it will attempt to match the translation key.
+     * @param reason    The reason why this option was disabled.
+     * @param canChange A supplier that returns if the option can be changed.
+     * @param newValue A new value of the disabled option.
+     *
+     * @since 1.7.1
+     */
+    public static void disableOption(String id, String reason, BooleanSupplier canChange, Object newValue) {
+        ConfigAdditions.disabledOptions.put(id, new OptionOverride(reason, canChange, Optional.of(newValue)));
+    }
+
+    /**
      * Allows you to set if a group should be separated into its own tab.
      * This only works in mod menu
      *

@@ -4,8 +4,6 @@ import ca.fxco.moreculling.config.ConfigUpdater;
 import ca.fxco.moreculling.config.MoreCullingConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.minecraft.client.renderer.block.BlockModelResolver;
-import net.minecraft.client.renderer.block.BlockStateModelSet;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -44,7 +42,7 @@ public class MoreCulling {
         CONFIG.modCompatibility.defaultReturnValue(CONFIG.useOnModdedBlocksByDefault);
     }
 
-    public void saveConfig() {
+    public static void saveConfig() {
         AutoConfig.getConfigHolder(MoreCullingConfig.class).save();
     }
 }

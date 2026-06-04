@@ -1,9 +1,9 @@
 package ca.fxco.moreculling.config.sodium;
 
 import ca.fxco.moreculling.MoreCulling;
-import ca.fxco.moreculling.config.MoreCullingConfig;
+import ca.fxco.moreculling.api.config.ConfigAdditions;
+import ca.fxco.moreculling.api.config.OptionOverride;
 import ca.fxco.moreculling.config.option.LeavesCullingMode;
-import com.google.common.collect.ImmutableList;
 import net.caffeinemc.mods.sodium.api.config.ConfigEntryPoint;
 import net.caffeinemc.mods.sodium.api.config.StorageEventHandler;
 import net.caffeinemc.mods.sodium.api.config.option.OptionFlag;
@@ -41,6 +41,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(this.storage::setRainCulling, this.storage::getRainCulling)
                                                 .setDefaultValue(true)
+                                                .setEnabledProvider(_ -> isEnabled("moreculling.config.option.rainCulling"))
                                 )
                                 // Cloud Culling
                                 .addOption(
@@ -52,6 +53,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setBinding(this.storage::setCloudCulling, this.storage::getCloudCulling)
                                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                                         .setDefaultValue(true)
+                                        .setEnabledProvider(_ -> isEnabled("moreculling.config.option.cloudCulling"))
                                 )
                                 // Sign Text Culling
                                 .addOption(
@@ -61,7 +63,8 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setImpact(OptionImpact.HIGH)
                                         .setStorageHandler(this.handler)
                                         .setBinding(this.storage::setSignTextCulling, this.storage::getSignTextCulling)
-                                                .setDefaultValue(true)
+                                        .setDefaultValue(true)
+                                        .setEnabledProvider(_ -> isEnabled("moreculling.config.option.signTextCulling"))
                                 )
                                 // Beacon Beam Culling
                                 .addOption(
@@ -72,7 +75,8 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setStorageHandler(this.handler)
                                         .setBinding(this.storage::setBeaconBeamCulling, this.storage::getBeaconBeamCulling)
                                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                                                .setDefaultValue(true)
+                                        .setDefaultValue(true)
+                                        .setEnabledProvider(_ -> isEnabled("moreculling.config.option.beaconBeamCulling"))
                                 )
                                 // BlockStates
                                 .addOption(
@@ -84,6 +88,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setBinding(this.storage::setUseBlockStateCulling, this.storage::getUseBlockStateCulling)
                                                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                                                 .setDefaultValue(true)
+                                                .setEnabledProvider(_ -> isEnabled("moreculling.config.option.blockStateCulling"))
                                 )
                                 .addOption(
                                         builder.createBooleanOption(Identifier.parse("moreculling:end_gateway_culling"))
@@ -93,9 +98,8 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(this.storage::setEndGatewayCulling, this.storage::getEndGatewayCulling)
                                                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                                                .setEnabled(storage.getData().useBlockStateCulling)
                                                 .setDefaultValue(false)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE), BLOCK_STATE)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE) && isEnabled("moreculling.config.option.endGatewayCulling"), BLOCK_STATE)
                                 )
                         )
                 ).addPage(builder.createOptionPage()
@@ -110,6 +114,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().useCustomItemFrameRenderer = value, () -> this.storage.getData().useCustomItemFrameRenderer)
                                                 .setDefaultValue(true)
+                                                .setEnabledProvider(_ -> isEnabled("moreculling.config.option.customItemFrameRenderer"))
                                 )
                                 .addOption(
                                         builder.createBooleanOption(Identifier.parse("moreculling:item_frame_map_culling"))
@@ -119,7 +124,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().itemFrameMapCulling = value, () -> this.storage.getData().itemFrameMapCulling)
                                                 .setDefaultValue(true)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER), ITEM_RENDERER)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER) && isEnabled("moreculling.config.option.itemFrameMapCulling"), ITEM_RENDERER)
                                 )
                                 .addOption(
                                         builder.createBooleanOption(ITEM_LOD)
@@ -129,7 +134,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().useItemFrameLOD = value, () -> this.storage.getData().useItemFrameLOD)
                                                 .setDefaultValue(true)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER), ITEM_RENDERER)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER) && isEnabled("moreculling.config.option.itemFrameLOD"), ITEM_RENDERER)
                                 )
                                 .addOption(
                                         builder.createIntegerOption(Identifier.parse("moreculling:item_frame_lodrange"))
@@ -141,7 +146,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().itemFrameLODRange = value, () -> this.storage.getData().itemFrameLODRange)
                                                 .setDefaultValue(128)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER) && configState.readBooleanOption(ITEM_LOD), ITEM_RENDERER, ITEM_LOD)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER) && configState.readBooleanOption(ITEM_LOD) && isEnabled("moreculling.config.option.itemFrameLODRange"), ITEM_RENDERER, ITEM_LOD)
                                 )
                                 .addOption(
                                         builder.createBooleanOption(ITEM_3F_CULLING)
@@ -149,10 +154,12 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setTooltip(Component.translatable("moreculling.config.option.itemFrame3FaceCulling.tooltip"))
                                                 .setImpact(OptionImpact.MEDIUM)
                                                 .setStorageHandler(this.handler)
-                                                .setEnabled(storage.getData().useCustomItemFrameRenderer)
                                                 .setBinding(value -> this.storage.getData().useItemFrame3FaceCulling = value, () -> this.storage.getData().useItemFrame3FaceCulling)
                                                 .setDefaultValue(true)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER), ITEM_RENDERER)
+                                                .setEnabledProvider(configState ->
+                                                        configState.readBooleanOption(ITEM_RENDERER) &&
+                                                        isEnabled("moreculling.config.option.itemFrame3FaceCulling"),
+                                                        ITEM_RENDERER)
                                 )
                                 .addOption(
                                         builder.createIntegerOption(Identifier.parse("moreculling:item_frame_3_face_culling_range"))
@@ -164,7 +171,10 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(value -> this.storage.getData().itemFrame3FaceCullingRange = value, () -> (int) this.storage.getData().itemFrame3FaceCullingRange)
                                                 .setDefaultValue(4)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(ITEM_RENDERER) && configState.readBooleanOption(ITEM_3F_CULLING), ITEM_RENDERER, ITEM_3F_CULLING)
+                                                .setEnabledProvider(state -> state.readBooleanOption(ITEM_RENDERER) &&
+                                                        state.readBooleanOption(ITEM_3F_CULLING) &&
+                                                        isEnabled("moreculling.config.option.itemFrame3FaceCullingRange"),
+                                                        ITEM_RENDERER, ITEM_3F_CULLING)
                                 )
                         )
                 ).addPage(builder.createOptionPage()
@@ -180,7 +190,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setBinding(this.storage::setLeavesCullingMode, this.storage::getLeavesCullingMode)
                                                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                                                 .setDefaultValue(LeavesCullingMode.DEFAULT).setElementNameProvider(LeavesCullingMode::getText)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE), BLOCK_STATE)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE) && isEnabled("moreculling.config.option.leavesCulling"), BLOCK_STATE)
                                 )
                                 .addOption(
                                         builder.createIntegerOption(Identifier.parse("moreculling:leaves_culling_amount"))
@@ -195,7 +205,7 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setDefaultValue(2)
                                         .setEnabledProvider(configState ->
                                                 configState.readEnumOption(LEAVES_CULLING, LeavesCullingMode.class).hasAmount()
-                                                        && configState.readBooleanOption(BLOCK_STATE), LEAVES_CULLING, BLOCK_STATE)
+                                                        && configState.readBooleanOption(BLOCK_STATE) && isEnabled("moreculling.config.option.leavesCullingAmount"), LEAVES_CULLING, BLOCK_STATE)
 
                                 )
                                 .addOption(
@@ -206,11 +216,19 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setStorageHandler(this.handler)
                                                 .setBinding(this.storage::setIncludeMangroveRoots, this.storage::getIncludeMangroveRoots)
                                                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                                                .setEnabled(storage.getData().useBlockStateCulling)
                                                 .setDefaultValue(false)
-                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE), BLOCK_STATE)
+                                                .setEnabledProvider(configState -> configState.readBooleanOption(BLOCK_STATE) && isEnabled("moreculling.config.option.includeMangroveRoots"), BLOCK_STATE)
                                 )
                         )
                 );
+    }
+
+    public boolean isEnabled(String name) {
+        OptionOverride override = ConfigAdditions.getDisabledOptions().get(name);
+        if (override != null) {
+            return override.canChange().getAsBoolean();
+        }
+
+        return true;
     }
 }
