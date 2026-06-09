@@ -79,7 +79,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.cloudCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
@@ -117,7 +117,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingAmount = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
@@ -129,7 +129,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
@@ -147,7 +147,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.includeMangroveRoots = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
@@ -166,7 +166,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.endGatewayCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
@@ -180,7 +180,7 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelRenderer != null) {
+                    if (mc != null && mc.levelRenderer != null && mc.level != null) {
                         mc.levelRenderer.allChanged();
                     }
                 })
