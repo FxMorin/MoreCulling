@@ -29,10 +29,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ModMenuConfig {
+    public static Screen createConfigScreen(Screen parent) {
+        return createConfigScreenBuilder(parent).build();
+    }
 
     //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
-
-    public static Screen createConfigScreen(Screen parent) {
+    public static ConfigBuilder createConfigScreenBuilder(Screen parent) {
         ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.general"));
@@ -99,14 +101,6 @@ public class ModMenuConfig {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("moreculling.config.option.rainCulling.tooltip"))
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.rainCulling = newValue)
-                .build());
-
-        // Beacon Beam Culling
-        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.beaconBeamCulling")
-                .setValue(MoreCulling.CONFIG.beaconBeamCulling)
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
-                .setSaveConsumer(newValue -> MoreCulling.CONFIG.beaconBeamCulling = newValue)
                 .build());
 
         // Leaves Culling
@@ -305,7 +299,7 @@ public class ModMenuConfig {
         // Generates all categories created through the API
         generateConfigCategories(builder, generalCategory);
 
-        return builder.build();
+        return builder;
     }
 
     //TODO: Add more Sodium option to the ModMenu options

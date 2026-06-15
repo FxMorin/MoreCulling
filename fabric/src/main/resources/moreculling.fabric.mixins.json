@@ -9,10 +9,13 @@
     "blockstates.Block_fabricDrawSideMixin",
     "compat.AbstractBlockRenderContext_vulkanModMixin",
     "models.WrapperBlockStateModel_cullMixin",
-    "renderers.BlockFeatureRenderer_fabricCullMixin",
-    "renderers.BlockModelRenderState_fabricCullMixin"
+    "renderers.BlockModelRenderState_fabricCullMixin",
+    "renderers.FeatureRenderDispatcher_fabricCullMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "compat.FabricCullingUtils_sodiumMixin"
+  ]
 }

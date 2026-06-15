@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -12,8 +13,9 @@ public final class BlockModelSubmitWithoutFace extends MorecullingBlockModelSubm
     public BlockModelSubmitWithoutFace(PoseStack.Pose pose, RenderType renderType,
                                        List<BlockStateModelPart> modelParts, int[] tintLayers,
                                        int lightCoords, int overlayCoords, int outlineColor,
+                                       PoseStack.@Nullable Pose sheetedDecalPose,
                                        Object mesh, Direction withoutFace) {
-        super(pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords, outlineColor, mesh);
+        super(pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords, outlineColor, sheetedDecalPose, mesh);
         this.withoutFace = withoutFace;
     }
 

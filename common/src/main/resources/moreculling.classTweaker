@@ -9,4 +9,3 @@ accessible class net/minecraft/client/renderer/block/dispatch/multipart/MultiPar
 accessible field net/minecraft/client/renderer/block/dispatch/multipart/MultiPartModel$SharedBakedState selectors Ljava/util/List;
 
 inject-interface net/minecraft/client/renderer/OrderedSubmitNodeCollector ca/fxco/moreculling/api/renderers/ExtendedOrderedSubmitNodeCollector
-inject-interface net/minecraft/client/renderer/SubmitNodeCollection ca/fxco/moreculling/api/renderers/ExtendedSubmitNodeCollection

@@ -39,14 +39,6 @@ public class MoreCullingSodiumOptionsStorage {
         return getData().rainCulling;
     }
 
-    public void setBeaconBeamCulling(boolean value) {
-        getData().beaconBeamCulling = value;
-    }
-
-    public boolean getBeaconBeamCulling() {
-        return getData().beaconBeamCulling;
-    }
-
     public void setIncludeMangroveRoots(boolean value) {
         getData().includeMangroveRoots = value;
 

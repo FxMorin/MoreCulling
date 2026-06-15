@@ -1,121 +1,169 @@
 package ca.fxco.moreculling.mixin.renderers;
 
-import ca.fxco.moreculling.api.renderers.ExtendedSubmitNodeCollection;
 import ca.fxco.moreculling.api.renderers.modelsubmit.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.feature.phase.SimpleFeatureRenderPhase;
+import net.minecraft.client.renderer.feature.phase.TranslucentFeatureRenderPhase;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(SubmitNodeCollection.class)
-abstract class SubmitNodeCollection_apiMixin implements OrderedSubmitNodeCollector, ExtendedSubmitNodeCollection {
-    @Shadow
-    private boolean wasUsed;
+abstract class SubmitNodeCollection_apiMixin implements OrderedSubmitNodeCollector {
 
-    @Unique
-    private final List<MorecullingBlockModelSubmit> moreculling$BlockModelSubmits = new ArrayList<>();
+    @Shadow
+    @Final
+    public TranslucentFeatureRenderPhase translucentBlocksAndItems;
+    @Shadow
+    @Final
+    public SimpleFeatureRenderPhase solid;
+
+    @Shadow
+    private static @Nullable RenderType getOutlineRenderType(RenderType renderType) {
+        throw new UnsupportedOperationException("Implemented via mixin");
+    }
+
+    @Shadow
+    @Final
+    public SimpleFeatureRenderPhase outline;
 
 
     @Override
     public void moreculling$submitBlockModelWithoutFace(PoseStack poseStack, RenderType renderType,
-                                                        List<BlockStateModelPart> parts, int[] tintLayers,
+                                                        List<BlockStateModelPart> modelParts, int[] tintLayers,
                                                         int lightCoords, int overlayCoords, int outlineColor,
                                                         Object mesh, Direction withoutFace) {
-        wasUsed = true;
-        moreculling$BlockModelSubmits.add(new BlockModelSubmitWithoutFace(
-                        poseStack.last().copy(),
-                        renderType,
-                        parts,
-                        tintLayers,
-                        lightCoords,
-                        overlayCoords,
-                        outlineColor,
-                        mesh,
-                        withoutFace
-                )
-        );
+        PoseStack.Pose pose = poseStack.last().copy();
+        if (!renderType.isOutline()) {
+            BlockModelSubmitWithoutFace submit = new BlockModelSubmitWithoutFace(
+                    pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords, -1, null, mesh, withoutFace
+            );
+            if (renderType.hasBlending()) {
+                this.translucentBlocksAndItems.submit(submit);
+            } else {
+                this.solid.submit(submit);
+            }
+        }
+
+        if (outlineColor != 0) {
+            RenderType outlineRenderType = getOutlineRenderType(renderType);
+            if (outlineRenderType != null) {
+                this.outline
+                        .submit(
+                                new BlockModelSubmitWithoutFace(
+                                        pose, outlineRenderType, modelParts, BlockModelRenderState.EMPTY_TINTS,
+                                        15728880, OverlayTexture.NO_OVERLAY, outlineColor, null, mesh, withoutFace
+                                )
+                        );
+            }
+        }
     }
 
     @Override
     public void moreculling$submitBlockModelForFace(PoseStack poseStack, RenderType renderType,
-                                                        List<BlockStateModelPart> parts, int[] tintLayers,
+                                                        List<BlockStateModelPart> modelParts, int[] tintLayers,
                                                         int lightCoords, int overlayCoords, int outlineColor,
                                                         Object mesh, Direction forFace) {
-        wasUsed = true;
-        moreculling$BlockModelSubmits.add(new BlockModelSubmitForFace(
-                        poseStack.last().copy(),
-                        renderType,
-                        parts,
-                        tintLayers,
-                        lightCoords,
-                        overlayCoords,
-                        outlineColor,
-                        mesh,
-                forFace
-                )
-        );
+        PoseStack.Pose pose = poseStack.last().copy();
+        if (!renderType.isOutline()) {
+            BlockModelSubmitForFace submit = new BlockModelSubmitForFace(
+                    pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords, -1, null, mesh, forFace
+            );
+            if (renderType.hasBlending()) {
+                this.translucentBlocksAndItems.submit(submit);
+            } else {
+                this.solid.submit(submit);
+            }
+        }
+
+        if (outlineColor != 0) {
+            RenderType outlineRenderType = getOutlineRenderType(renderType);
+            if (outlineRenderType != null) {
+                this.outline
+                        .submit(
+                                new BlockModelSubmitForFace(
+                                        pose, outlineRenderType, modelParts, BlockModelRenderState.EMPTY_TINTS, 15728880, OverlayTexture.NO_OVERLAY, outlineColor, null, mesh, forFace
+                                )
+                        );
+            }
+        }
     }
 
     @Override
     public void moreculling$submitBlockModelFor3Faces(PoseStack poseStack, RenderType renderType,
-                                                      List<BlockStateModelPart> parts, int[] tintLayers,
+                                                      List<BlockStateModelPart> modelParts, int[] tintLayers,
                                                       int lightCoords, int overlayCoords, int outlineColor,
                                                       Object mesh, Direction faceX, Direction faceY, Direction faceZ) {
-        wasUsed = true;
-        moreculling$BlockModelSubmits.add(new BlockModelSubmitFor3Faces(
-                        poseStack.last().copy(),
-                        renderType,
-                        parts,
-                        tintLayers,
-                        lightCoords,
-                        overlayCoords,
-                        outlineColor,
-                        mesh,
-                        faceX,
-                        faceY,
-                        faceZ
-                )
-        );
+        PoseStack.Pose pose = poseStack.last().copy();
+        if (!renderType.isOutline()) {
+            BlockModelSubmitFor3Faces submit = new BlockModelSubmitFor3Faces(
+                    pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords,
+                    -1, null, mesh, faceX, faceY, faceZ
+            );
+            if (renderType.hasBlending()) {
+                this.translucentBlocksAndItems.submit(submit);
+            } else {
+                this.solid.submit(submit);
+            }
+        }
+
+        if (outlineColor != 0) {
+            RenderType outlineRenderType = getOutlineRenderType(renderType);
+            if (outlineRenderType != null) {
+                this.outline
+                        .submit(
+                                new BlockModelSubmitFor3Faces(
+                                        pose, outlineRenderType, modelParts,
+                                        BlockModelRenderState.EMPTY_TINTS, 15728880,
+                                        OverlayTexture.NO_OVERLAY, outlineColor,
+                                        null, mesh, faceX, faceY, faceZ
+                                )
+                        );
+            }
+        }
     }
 
     @Override
     public void moreculling$submitBlockModelForFaces(PoseStack poseStack, RenderType renderType,
-                                                      List<BlockStateModelPart> parts, int[] tintLayers,
+                                                      List<BlockStateModelPart> modelParts, int[] tintLayers,
                                                       int lightCoords, int overlayCoords, int outlineColor,
                                                       Object mesh, Direction[] faces) {
-        wasUsed = true;
-        moreculling$BlockModelSubmits.add(new BlockModelSubmitForFaces(
-                        poseStack.last().copy(),
-                        renderType,
-                        parts,
-                        tintLayers,
-                        lightCoords,
-                        overlayCoords,
-                        outlineColor,
-                        mesh,
-                        faces
-                )
-        );
-    }
+        PoseStack.Pose pose = poseStack.last().copy();
+        if (!renderType.isOutline()) {
+            BlockModelSubmitForFaces submit = new BlockModelSubmitForFaces(
+                    pose, renderType, modelParts, tintLayers, lightCoords, overlayCoords,
+                    -1, null, mesh, faces
+            );
+            if (renderType.hasBlending()) {
+                this.translucentBlocksAndItems.submit(submit);
+            } else {
+                this.solid.submit(submit);
+            }
+        }
 
-    @Override
-    public List<MorecullingBlockModelSubmit> moreculling$getBlockModelSubmits() {
-        return moreculling$BlockModelSubmits;
-    }
-
-    @Inject(method = "clear", at = @At("RETURN"))
-    private void onReturnClear(CallbackInfo ci) {
-        moreculling$BlockModelSubmits.clear();
+        if (outlineColor != 0) {
+            RenderType outlineRenderType = getOutlineRenderType(renderType);
+            if (outlineRenderType != null) {
+                this.outline
+                        .submit(
+                                new BlockModelSubmitForFaces(
+                                        pose, outlineRenderType, modelParts,
+                                        BlockModelRenderState.EMPTY_TINTS, 15728880,
+                                        OverlayTexture.NO_OVERLAY, outlineColor,
+                                        null, mesh, faces
+                                )
+                        );
+            }
+        }
     }
 }

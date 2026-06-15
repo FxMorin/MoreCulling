@@ -50,8 +50,6 @@ public class MoreCullingConfig implements ConfigData {
 
     public boolean endGatewayCulling = false;
 
-    public boolean beaconBeamCulling = true;
-
     public boolean useOnModdedBlocksByDefault = true;
 
     public Object2BooleanOpenHashMap<String> modCompatibility = new Object2BooleanOpenHashMap<>() {{

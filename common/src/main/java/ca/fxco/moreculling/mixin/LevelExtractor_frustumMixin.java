@@ -1,24 +1,22 @@
 package ca.fxco.moreculling.mixin;
 
-import ca.fxco.moreculling.api.renderers.ExtendedLevelRenderer;
+import ca.fxco.moreculling.api.renderers.ExtendedLevelExtractor;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
+import net.minecraft.client.renderer.extract.LevelExtractor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(LevelRenderer.class)
-public class LevelRenderer_frustumMixin implements ExtendedLevelRenderer {
+@Mixin(LevelExtractor.class)
+public class LevelExtractor_frustumMixin implements ExtendedLevelExtractor {
     @Unique
     private Frustum moreculling$cullingFrustum;
 
     @WrapOperation(
-            method = "extractLevel",
+            method = "extract",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/Camera;getCullFrustum()Lnet/minecraft/client/renderer/culling/Frustum;"
