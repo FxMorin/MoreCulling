@@ -66,18 +66,6 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setDefaultValue(true)
                                         .setEnabledProvider(_ -> isEnabled("moreculling.config.option.signTextCulling"))
                                 )
-                                // Beacon Beam Culling
-                                .addOption(
-                                        builder.createBooleanOption(Identifier.parse("moreculling:beacon_beam_culling"))
-                                        .setName(Component.translatable("moreculling.config.option.beaconBeamCulling")) // use translation keys here
-                                        .setTooltip(Component.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
-                                        .setImpact(OptionImpact.MEDIUM)
-                                        .setStorageHandler(this.handler)
-                                        .setBinding(this.storage::setBeaconBeamCulling, this.storage::getBeaconBeamCulling)
-                                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                                        .setDefaultValue(true)
-                                        .setEnabledProvider(_ -> isEnabled("moreculling.config.option.beaconBeamCulling"))
-                                )
                                 // BlockStates
                                 .addOption(
                                         builder.createBooleanOption(Identifier.parse("moreculling:block_state_culling"))

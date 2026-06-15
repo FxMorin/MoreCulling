@@ -29,10 +29,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ModMenuConfig {
+    public static Screen createConfigScreen(Screen parent) {
+        return createConfigScreenBuilder(parent).build();
+    }
 
     //TODO: Convert all settings to ConfigOption using the MoreCulling config API if those settings can be converted
-
-    public static Screen createConfigScreen(Screen parent) {
+    public static ConfigBuilder createConfigScreenBuilder(Screen parent) {
         ConfigBuilder builder = MoreCullingClothConfigBuilder.create().setParentScreen(parent);
         builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(MoreCullingConfig.class).save());
         ConfigCategory generalCategory = builder.getOrCreateCategory(Component.translatable("moreculling.config.category.general"));
@@ -80,7 +82,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.cloudCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .build());
@@ -101,14 +103,6 @@ public class ModMenuConfig {
                 .setSaveConsumer(newValue -> MoreCulling.CONFIG.rainCulling = newValue)
                 .build());
 
-        // Beacon Beam Culling
-        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.beaconBeamCulling")
-                .setValue(MoreCulling.CONFIG.beaconBeamCulling)
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("moreculling.config.option.beaconBeamCulling.tooltip"))
-                .setSaveConsumer(newValue -> MoreCulling.CONFIG.beaconBeamCulling = newValue)
-                .build());
-
         // Leaves Culling
         DynamicIntSliderEntry leavesCullingAmount = new DynamicIntSliderBuilder("moreculling.config.option.leavesCullingAmount", 1, 4)
                 .setValue(MoreCulling.CONFIG.leavesCullingAmount)
@@ -118,7 +112,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.leavesCullingAmount = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .build();
@@ -130,7 +124,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.leavesCullingMode = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -148,7 +142,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.includeMangroveRoots = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -167,7 +161,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.endGatewayCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .build();
@@ -181,7 +175,7 @@ public class ModMenuConfig {
                     MoreCulling.CONFIG.useBlockStateCulling = newValue;
                     Minecraft mc = Minecraft.getInstance();
                     if (mc != null && mc.levelRenderer != null) {
-                        mc.levelRenderer.allChanged();
+                        //mc.levelRenderer.allChanged();
                     }
                 })
                 .setChangeConsumer((instance, value) -> {
@@ -305,7 +299,7 @@ public class ModMenuConfig {
         // Generates all categories created through the API
         generateConfigCategories(builder, generalCategory);
 
-        return builder.build();
+        return builder;
     }
 
     //TODO: Add more Sodium option to the ModMenu options

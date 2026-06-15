@@ -1,8 +1,5 @@
 {
   "net/minecraft/client/renderer/OrderedSubmitNodeCollector": [
     "ca/fxco/moreculling/api/renderers/ExtendedOrderedSubmitNodeCollector"
-  ],
-  "net/minecraft/client/renderer/SubmitNodeCollection": [
-    "ca/fxco/moreculling/api/renderers/ExtendedSubmitNodeCollection"
   ]
 }

@@ -200,20 +200,20 @@ public class CullingUtils {
 
     public static boolean cullSignText(BlockPos pos, BlockState state, boolean front) {
         if (MoreCulling.CONFIG.signTextCulling) {
-            Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+            Vec3 cameraPos = Minecraft.getInstance().gameRenderer.mainCamera().position();
             if (state.hasProperty(WallSignBlock.FACING)) {
                 Direction dir = state.getValue(WallSignBlock.FACING);
                 return front == !shouldHideWallSignText(
                         dir,
-                        pos.getCenter().subtract(dir.getStepX() * 0.39, 0, dir.getStepZ() * 0.39),
+                        Vec3.atCenterOf(pos).subtract(dir.getStepX() * 0.39, 0, dir.getStepZ() * 0.39),
                         cameraPos
                 );
             }
             double angle = state.getValue(StandingSignBlock.ROTATION) * ONE_SIGN_ROTATION;
             if (front) { // Switch line orientation xD
-                return !MathUtils.isBehindLine(angle, pos.getCenter(), cameraPos);
+                return !MathUtils.isBehindLine(angle, Vec3.atCenterOf(pos), cameraPos);
             }
-            return !MathUtils.isBehindLine(angle, cameraPos, pos.getCenter());
+            return !MathUtils.isBehindLine(angle, cameraPos, Vec3.atCenterOf(pos));
         }
         return true;
     }

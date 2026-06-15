@@ -8,6 +8,6 @@ public class MoreCullingFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MoreCulling.init();
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> ModMenuConfig.createConfigScreen(null));
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> ModMenuConfig.createConfigScreenBuilder(null));
     }
 }

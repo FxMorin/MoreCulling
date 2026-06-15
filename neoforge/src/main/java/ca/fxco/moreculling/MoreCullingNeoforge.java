@@ -40,6 +40,6 @@ public class MoreCullingNeoforge {
     }
 
     public void onClientSetup(FMLClientSetupEvent event) {
-        ModMenuConfig.createConfigScreen(null);
+        ModMenuConfig.createConfigScreenBuilder(null);
     }
 }
