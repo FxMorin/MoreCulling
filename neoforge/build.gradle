@@ -32,7 +32,7 @@ neoForge {
 }
 
 dependencies {
-    runtimeOnly "maven.modrinth:sodium:mc26.1.2-0.8.12-neoforge"
+   // runtimeOnly "maven.modrinth:sodium:mc26.1.2-0.8.12-neoforge"
     compileOnly "net.caffeinemc:sodium-neoforge-mod:${project.sodium_version}"
     runtimeOnly "me.shedaniel.cloth:cloth-config-neoforge:${project.cloth_config_version}"
 
