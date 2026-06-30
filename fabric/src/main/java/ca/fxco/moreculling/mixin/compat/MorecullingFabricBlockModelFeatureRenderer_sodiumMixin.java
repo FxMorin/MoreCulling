@@ -1,6 +1,5 @@
 package ca.fxco.moreculling.mixin.compat;
 
-import ca.fxco.moreculling.api.renderers.MorecullingBlockModelFeatureRenderer;
 import ca.fxco.moreculling.api.renderers.MorecullingFabricBlockModelFeatureRenderer;
 import ca.fxco.moreculling.api.renderers.modelsubmit.MorecullingBlockModelSubmit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -23,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Restriction(require = {@Condition("sodium"), @Condition("fabric-renderer-api-v1")})
 @Mixin(MorecullingFabricBlockModelFeatureRenderer.class)
-public class FabricCullingUtils_sodiumMixin {
+public class MorecullingFabricBlockModelFeatureRenderer_sodiumMixin {
     @Shadow private MorecullingBlockModelSubmit submit;
     @Final
     @Shadow private MorecullingFabricBlockModelFeatureRenderer.BufferCache bufferCache;

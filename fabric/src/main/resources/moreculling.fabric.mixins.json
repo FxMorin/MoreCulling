@@ -16,6 +16,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "compat.FabricCullingUtils_sodiumMixin"
+    "compat.MorecullingFabricBlockModelFeatureRenderer_sodiumMixin"
   ]
 }
