@@ -43,18 +43,6 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                                 .setDefaultValue(true)
                                                 .setEnabledProvider(_ -> isEnabled("moreculling.config.option.rainCulling"))
                                 )
-                                // Cloud Culling
-                                .addOption(
-                                        builder.createBooleanOption(Identifier.parse("moreculling:cloud_culling"))
-                                        .setName(Component.translatable("moreculling.config.option.cloudCulling")) // use translation keys here
-                                        .setTooltip(Component.translatable("moreculling.config.option.cloudCulling.tooltip"))
-                                        .setImpact(OptionImpact.LOW)
-                                        .setStorageHandler(this.handler)
-                                        .setBinding(this.storage::setCloudCulling, this.storage::getCloudCulling)
-                                        .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
-                                        .setDefaultValue(true)
-                                        .setEnabledProvider(_ -> isEnabled("moreculling.config.option.cloudCulling"))
-                                )
                                 // Sign Text Culling
                                 .addOption(
                                         builder.createBooleanOption(Identifier.parse("moreculling:sign_text_culling"))

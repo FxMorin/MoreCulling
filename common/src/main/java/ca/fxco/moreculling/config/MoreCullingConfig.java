@@ -20,8 +20,6 @@ public class MoreCullingConfig implements ConfigData {
 
     public List<String> dontCull = new ArrayList<>();
 
-    public boolean cloudCulling = true;
-
     public boolean signTextCulling = true;
 
     public boolean rainCulling = true;

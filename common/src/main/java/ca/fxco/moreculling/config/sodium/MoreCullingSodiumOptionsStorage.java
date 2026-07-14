@@ -15,24 +15,16 @@ public class MoreCullingSodiumOptionsStorage {
         AutoConfig.getConfigHolder(MoreCullingConfig.class).save();
     }
 
-    public void setCloudCulling(boolean cloudCulling) {
-        getData().cloudCulling = cloudCulling;
-    }
-
-    public boolean getCloudCulling() {
-        return getData().cloudCulling;
-    }
-
-    public void setSignTextCulling(boolean cloudCulling) {
-        getData().signTextCulling = cloudCulling;
+    public void setSignTextCulling(boolean value) {
+        getData().signTextCulling = value;
     }
 
     public boolean getSignTextCulling() {
         return getData().signTextCulling;
     }
 
-    public void setRainCulling(boolean cloudCulling) {
-        getData().rainCulling = cloudCulling;
+    public void setRainCulling(boolean value) {
+        getData().rainCulling = value;
     }
 
     public boolean getRainCulling() {

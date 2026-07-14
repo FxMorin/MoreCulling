@@ -73,20 +73,6 @@ public class ModMenuConfig {
             modsOption.add(aMod);
         }
 
-        // Cloud Culling
-        generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.cloudCulling")
-                .setValue(MoreCulling.CONFIG.cloudCulling)
-                .setDefaultValue(true)
-                .setTooltip(Component.translatable("moreculling.config.option.cloudCulling.tooltip"))
-                .setSaveConsumer(newValue -> {
-                    MoreCulling.CONFIG.cloudCulling = newValue;
-                    Minecraft mc = Minecraft.getInstance();
-                    if (mc != null && mc.levelExtractor != null && mc.level != null) {
-                        mc.levelExtractor.allChanged();
-                    }
-                })
-                .build());
-
         // Sign Text Culling
         generalCategory.addEntry(new DynamicBooleanBuilder("moreculling.config.option.signTextCulling")
                 .setValue(MoreCulling.CONFIG.signTextCulling)
