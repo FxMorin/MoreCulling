@@ -33,15 +33,18 @@ public class WeatherEffectRenderer_rainMixin {
             return original.call(instance, pos);
         }
 
-        if (!((ExtendedLevelExtractor) Minecraft.getInstance().levelExtractor).moreculling$getFrustum().isVisible(new AABB(
-                pos.getX() + 1,
-                instance.getHeight(),
-                pos.getZ() + 1,
-                pos.getX(),
-                instance.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()),
-                pos.getZ()
-        ))) {
-            return Biome.Precipitation.NONE;
+        if (Minecraft.getInstance().levelExtractor instanceof ExtendedLevelExtractor extractor) {
+            Frustum frustum = extractor.moreculling$getFrustum();
+            if (frustum != null && !frustum.isVisible(new AABB(
+                    pos.getX() + 1,
+                    instance.getHeight(),
+                    pos.getZ() + 1,
+                    pos.getX(),
+                    instance.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()),
+                    pos.getZ()
+            ))) {
+                return Biome.Precipitation.NONE;
+            }
         }
 
         return original.call(instance, pos);
