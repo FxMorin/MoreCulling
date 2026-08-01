@@ -1,6 +1,5 @@
 classTweaker v1 official
 accessible field net/minecraft/world/level/block/Block OCCLUSION_CACHE Ljava/lang/ThreadLocal;
-accessible method net/minecraft/world/level/block/state/BlockBehaviour getOcclusionShape (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/phys/shapes/VoxelShape;
 accessible class net/minecraft/client/renderer/CloudRenderer$RelativeCameraPos
 accessible class net/minecraft/world/level/block/Block$ShapePairKey
 accessible method net/minecraft/world/level/block/Block$ShapePairKey <init> (Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/phys/shapes/VoxelShape;)V

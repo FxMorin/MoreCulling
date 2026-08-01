@@ -14,6 +14,7 @@
     "Minecraft_managersMixin",
     "TextureAtlasSprite_opacityMixin",
     "WeatherEffectRenderer_rainMixin",
+    "accessors.BlockBehaviourAccessor",
     "accessors.BlockStateModelSetAccessor",
     "accessors.SpriteContentsAccessor",
     "blockentity.BeaconRenderer_frustumMixin",
