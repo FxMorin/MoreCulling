@@ -1,0 +1,69 @@
+package ca.fxco.moreculling.mixin.compat;
+
+import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.block.LeavesCulling;
+import ca.fxco.moreculling.api.block.MoreBlockCulling;
+import ca.fxco.moreculling.config.option.LeavesCullingMode;
+import ca.fxco.moreculling.utils.CullingUtils;
+import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+
+import java.util.Optional;
+
+import static ca.fxco.moreculling.config.option.LeavesCullingMode.FAST;
+import static ca.fxco.moreculling.config.option.LeavesCullingMode.VERTICAL;
+
+@Mixin(TFCLeavesBlock.class)
+public class TFCLeavesBlockMixin extends Block implements LeavesCulling, MoreBlockCulling {
+
+    @Shadow
+    @Final
+    public static IntegerProperty DISTANCE;
+
+    public TFCLeavesBlockMixin(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+        if (MoreCulling.CONFIG.leavesCullingMode == FAST ||
+                (MoreCulling.CONFIG.leavesCullingMode == VERTICAL && direction.getAxis() == Direction.Axis.Y)) {
+            return stateFrom.getBlock() instanceof LeavesCulling || super.skipRendering(state, stateFrom, direction);
+        }
+        return super.skipRendering(state, stateFrom, direction);
+    }
+
+    @Override
+    public boolean moreculling$usesCustomShouldDrawFace(BlockState state) {
+        return MoreCulling.CONFIG.leavesCullingMode != LeavesCullingMode.DEFAULT; //Fast & Vertical will skip this call
+    }
+
+    @Override
+    public Optional<Boolean> moreculling$customShouldDrawFace(BlockGetter view, BlockState thisState,
+                                                              BlockState sideState, BlockPos thisPos,
+                                                              BlockPos sidePos, Direction side) {
+        return switch (MoreCulling.CONFIG.leavesCullingMode) {
+            case STATE -> sideState.getBlock() instanceof TFCLeavesBlock && sideState.getValue(DISTANCE) % 3 != 1 ?
+                    Optional.of(false) : Optional.empty();
+            case CHECK -> CullingUtils.shouldDrawFaceCheck(view, sideState, thisPos, sidePos, side);
+            case GAP -> CullingUtils.shouldDrawFaceGap(view, sideState, sidePos, side);
+            case DEPTH -> CullingUtils.shouldDrawFaceDepth(view, sideState, sidePos, side);
+            case RANDOM -> CullingUtils.shouldDrawFaceRandom(view, sideState, sidePos, side);
+            default -> Optional.empty();
+        };
+    }
+
+    @Override
+    public boolean moreculling$cantCullAgainst(BlockState state, Direction side) {
+        return true;
+    }
+}

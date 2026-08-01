@@ -31,7 +31,9 @@ public class Minecraft_managersMixin {
     @Final
     private ModelManager modelManager;
 
-    @Shadow @Final private ReloadableResourceManager resourceManager;
+    @Shadow
+    @Final
+    private ReloadableResourceManager resourceManager;
 
     @Inject(
             method = "<init>",
@@ -65,7 +67,10 @@ public class Minecraft_managersMixin {
                 ((BlockModelShaperAccessor) blockRenderManager.getBlockModelShaper()).getModels()
                         .forEach((state, model) -> {
                             if (!state.canOcclude()) {
-                                ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
+                                try {
+                                    ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
+                                } catch (Throwable ignored) {
+                                }
                             }
                         }));
     }
