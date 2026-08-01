@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
@@ -36,11 +37,11 @@ public class AbstractBlockRenderContext_vulkanModMixin {
             ),
             cancellable = true
     )
-    private void moreculling$useMoreCulling(BlockState blockState, Direction face,
+    private void moreculling$useMoreCulling(BlockState thisState, Direction face,
                                             CallbackInfoReturnable<Boolean> cir,
                                             @Local BlockPos adjPos) {
-        if (MoreCulling.CONFIG.useBlockStateCulling) {
-            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(blockState, renderRegion, blockPos, face, adjPos));
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) thisState).moreculling$canCull()) {
+            cir.setReturnValue(CullingUtils.shouldDrawSideCulling(thisState, renderRegion, blockPos, face, adjPos));
         }
     }
 }
