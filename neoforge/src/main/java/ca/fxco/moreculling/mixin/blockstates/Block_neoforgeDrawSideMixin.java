@@ -33,7 +33,7 @@ public class Block_neoforgeDrawSideMixin implements MoreBlockCulling {
                                                          CallbackInfoReturnable<Boolean> cir) {
         if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) thisState).moreculling$canCull()) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(thisState, sideState,
-                    EmptyBlockGetter.INSTANCE, pos, side, pos.relative(side)));
+                    level, pos, side, pos.relative(side)));
         }
     }
 }

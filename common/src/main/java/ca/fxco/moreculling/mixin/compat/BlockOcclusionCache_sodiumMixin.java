@@ -1,6 +1,7 @@
 package ca.fxco.moreculling.mixin.compat;
 
 import ca.fxco.moreculling.MoreCulling;
+import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.utils.CullingUtils;
 import com.llamalad7.mixinextras.sugar.Local;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
@@ -48,7 +49,7 @@ public class BlockOcclusionCache_sodiumMixin {
             cancellable = true
     )
     private void moreculling$useMoreCulling(Direction facing, CallbackInfoReturnable<Boolean> cir, @Local BlockPos.MutableBlockPos adjPos) {
-        if (MoreCulling.CONFIG.useBlockStateCulling) {
+        if (MoreCulling.CONFIG.useBlockStateCulling && ((MoreStateCulling) (Object) state).moreculling$canCull()) {
             cir.setReturnValue(CullingUtils.shouldDrawSideCulling(state, level.getBlockState(adjPos), level, pos, facing, adjPos));
         }
     }
