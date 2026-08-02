@@ -48,8 +48,7 @@ public class MinecraftClient_managersMixin {
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "net/minecraft/client/render/WorldRenderer",
-                    shift = At.Shift.BEFORE
+                    target = "net/minecraft/client/render/WorldRenderer"
             )
     )
     private void onBlockRenderManagerInitialized(RunArgs args, CallbackInfo ci) {

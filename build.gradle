@@ -2,7 +2,6 @@ import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
     id 'fabric-loom' version '1.14-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
 }
 
@@ -56,6 +55,7 @@ loom {
     runs {
         client {
             vmArg("-Dsodium.checks.issue2561=false")
+            vmArg("-Dmixin.debug.export=true")
             programArgs "--username", "PR0CESS", "--uuid", UUID.randomUUID().toString()
         }
     }

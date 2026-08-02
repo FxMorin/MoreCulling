@@ -141,7 +141,7 @@ public abstract class JsonUnbakedModel_cullShapeMixin implements ExtendedUnbaked
                     }
                 }
 
-                if (settings.getRotation() != AffineTransformation.identity()) {
+                if (!settings.getRotation().equals(AffineTransformation.identity())) {
                     DirectionTransformation group = ShapeUtils.MATRIX_TO_OCTAHEDRAL
                             .get(settings.getRotation().getMatrix());
                     if (group != null) {
