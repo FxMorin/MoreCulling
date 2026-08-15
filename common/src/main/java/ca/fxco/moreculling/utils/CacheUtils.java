@@ -26,13 +26,15 @@ public class CacheUtils {
         }
         // Reset all model translucency cache
         Block.BLOCK_STATE_REGISTRY.forEach(state -> ((StateCullingShapeCache) state).moreculling$initCustomCullingShape());
-        Map<BlockState, BlockStateModel> allModels = ((BlockStateModelSetAccessor) bakedModelManager.getBlockStateModelSet()).getModels();
-        allModels.forEach((state, model) -> {
-            if (!state.canOcclude()) {
-                ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
-            }
-        });
-        //TODO: Reset quad cache
-        MoreCulling.LOGGER.info(allModels.size() + " cache(s) were cleared!");
+        if (bakedModelManager != null) {
+            Map<BlockState, BlockStateModel> allModels = ((BlockStateModelSetAccessor) bakedModelManager.getBlockStateModelSet()).getModels();
+            allModels.forEach((state, model) -> {
+                if (!state.canOcclude()) {
+                    ((BakedOpacity) model).moreculling$resetTranslucencyCache(state);
+                }
+            });
+            //TODO: Reset quad cache
+            MoreCulling.LOGGER.info(allModels.size() + " cache(s) were cleared!");
+        }
     }
 }
