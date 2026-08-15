@@ -33,7 +33,7 @@ public class TextureAtlasSprite_opacityMixin implements SpriteOpacity {
 
     @Override
     public boolean moreculling$hasTransparency(QuadBounds bounds) {
-        return SpriteUtils.doesHaveTransparency(moreculling$getUnmipmappedImage());
+        return SpriteUtils.doesHaveTransparency(moreculling$getUnmipmappedImage(), bounds);
     }
 
     @Override
