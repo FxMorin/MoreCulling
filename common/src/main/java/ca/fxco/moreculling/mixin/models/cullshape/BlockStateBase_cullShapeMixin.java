@@ -56,6 +56,9 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
 
         if (voxelShape == null) {
             voxelShape = this.getBlock().getOcclusionShape(this.asState(), EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+            if (voxelShape == null) {
+                voxelShape = Shapes.empty();
+            }
         }
 
         if (voxelShape == Shapes.empty() || voxelShape.isEmpty()) {
