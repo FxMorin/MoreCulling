@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FabricPlatformHelper implements IPlatformHelper {
-    private final List<BlockStateModelPart> parts = new ObjectArrayList<>();
 
     @Override
     public String getPlatformName() {
@@ -46,16 +45,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public List<BakedQuad> getQuads(BlockStateModel model, BlockState state, Direction direction,
                                     RandomSource source, BlockAndTintGetter level, BlockPos pos) {
         List<BakedQuad> quads = new ArrayList<>();
+        List<BlockStateModelPart> parts = new ObjectArrayList<>();
         model.collectParts(source, parts);
 
-        if (!this.parts.isEmpty()) {
-            try {
-                for (BlockStateModelPart part : parts) {
-                    quads.addAll(part.getQuads(direction));
-                }
-            } finally {
-                this.parts.clear();
-            }
+        for (BlockStateModelPart part : parts) {
+            quads.addAll(part.getQuads(direction));
         }
 
         return quads;

@@ -53,7 +53,7 @@ public class MorecullingFabricBlockModelFeatureRenderer extends MorecullingBlock
             quadInstance.setOverlayCoords(submit.overlayCoords());
 
             for (BlockStateModelPart part : submit.modelParts()) {
-                putPartQuads(part, submit.pose(), quadInstance, submit.tintColor(), submit.tintLayers(), bufferCache);
+                putPartQuads(submit, part, submit.pose(), quadInstance, submit.tintColor(), submit.tintLayers(), bufferCache);
             }
 
             if (submit.mesh() != null) {
@@ -66,8 +66,11 @@ public class MorecullingFabricBlockModelFeatureRenderer extends MorecullingBlock
         submit = null;
     }
 
-    private void putPartQuads(BlockStateModelPart part, PoseStack.Pose pose, QuadInstance quadInstance, int baseTintColor, int[] tintLayers, BufferCache bufferCache) {
+    private void putPartQuads(MorecullingBlockModelSubmit submit, BlockStateModelPart part, PoseStack.Pose pose, QuadInstance quadInstance, int baseTintColor, int[] tintLayers, BufferCache bufferCache) {
         for (Direction direction : DirectionUtils.DIRECTIONS) {
+            if (submit.shouldCull(direction)) {
+                continue;
+            }
             for (BakedQuad quad : part.getQuads(direction)) {
                 VertexConsumer buffer = bufferCache.getBuffer(quad.materialInfo().layer());
 
@@ -80,6 +83,9 @@ public class MorecullingFabricBlockModelFeatureRenderer extends MorecullingBlock
         }
 
         for (BakedQuad quad : part.getQuads(null)) {
+            if (submit.shouldCull(quad.direction())) {
+                continue;
+            }
             VertexConsumer buffer = bufferCache.getBuffer(quad.materialInfo().layer());
 
             if (buffer == null) {

@@ -244,6 +244,6 @@ public class CullingUtils {
         BlockPos posBehind = paintingPos.relative(oppositeDir, 1);
         BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
         return blockState.canOcclude() && ((StateCullingShapeCache) blockState)
-                .moreculling$getFaceCullingShape(oppositeDir) == Shapes.block();
+                .moreculling$getFaceCullingShape(oppositeDir.getOpposite()) == Shapes.block();
     }
 }
