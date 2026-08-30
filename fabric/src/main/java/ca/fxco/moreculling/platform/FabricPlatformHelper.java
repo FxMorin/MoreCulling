@@ -48,8 +48,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
         List<BlockStateModelPart> parts = new ObjectArrayList<>();
         model.collectParts(source, parts);
 
-        for (BlockStateModelPart part : parts) {
-            quads.addAll(part.getQuads(direction));
+        if (!parts.isEmpty()) {
+            for (BlockStateModelPart part : parts) {
+                quads.addAll(part.getQuads(direction));
+            }
         }
 
         return quads;

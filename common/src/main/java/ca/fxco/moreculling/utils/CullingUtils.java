@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.StandingSignBlock;
@@ -240,10 +241,13 @@ public class CullingUtils {
         return true;
     }
 
-    public static boolean shouldCullPaintingBack(BlockPos paintingPos, Direction oppositeDir) {
+    public static boolean shouldCullPaintingBack(BlockPos paintingPos, Direction dir, Direction oppositeDir) {
         BlockPos posBehind = paintingPos.relative(oppositeDir, 1);
-        BlockState blockState = Minecraft.getInstance().level.getBlockState(posBehind);
-        return blockState.canOcclude() && ((StateCullingShapeCache) blockState)
-                .moreculling$getFaceCullingShape(oppositeDir.getOpposite()) == Shapes.block();
+        Level level = Minecraft.getInstance().level;
+        BlockState blockState = level.getBlockState(posBehind);
+        return (blockState.canOcclude() || ((MoreStateCulling) blockState)
+                .moreculling$shouldAttemptToCullAgainst(oppositeDir, level, posBehind)) &&
+                ((StateCullingShapeCache) blockState)
+                        .moreculling$getFaceCullingShape(dir) == Shapes.block();
     }
 }

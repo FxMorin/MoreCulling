@@ -96,7 +96,8 @@ public abstract class PaintingRenderer_faceCullingMixin {
             float uY = paintingAtlas.getU(0.0625F);
             double d0 = 1.0 / (double) width;  // fast math
             double d1 = 1.0 / (double) height; // fast math
-            Direction opposite = paintingRenderState.direction.getOpposite();
+            Direction direction = paintingRenderState.direction;
+            Direction opposite = direction.getOpposite();
 
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -117,7 +118,7 @@ public abstract class PaintingRenderer_faceCullingMixin {
                     vertex(pose, consumer, x1, y2, fU0, fV1, -0.03125F, 0, 0, -1, light);
                     vertex(pose, consumer, x2, y2, fU1, fV1, -0.03125F, 0, 0, -1, light);
 
-                    if (!CullingUtils.shouldCullPaintingBack(((ExtendedPaintingRenderState) paintingRenderState).moreculling$getBlockPoses()[x][y], opposite)) {
+                    if (!CullingUtils.shouldCullPaintingBack(((ExtendedPaintingRenderState) paintingRenderState).moreculling$getBlockPoses()[x][y], direction, opposite)) {
                         //back
                         vertex(pose, consumer, x2, y2, u1, v0, 0.03125F, 0, 0, 1, light);
                         vertex(pose, consumer, x1, y2, u0, v0, 0.03125F, 0, 0, 1, light);

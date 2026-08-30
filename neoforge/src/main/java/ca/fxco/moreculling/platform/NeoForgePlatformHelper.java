@@ -50,8 +50,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
         List<BlockStateModelPart> parts = new ObjectArrayList<>();
         model.collectParts(level, pos, state, source, parts);
 
-        for (BlockStateModelPart part : parts) {
-            quads.addAll(part.getQuads(direction));
+        if (!parts.isEmpty()) {
+            for (BlockStateModelPart part : parts) {
+                quads.addAll(part.getQuads(direction));
+            }
         }
 
         return quads;
