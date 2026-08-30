@@ -100,7 +100,7 @@ public class DynamicIntSliderEntry extends AbstractDynamicEntry<Integer> {
         }
 
         public void setValue(double integer) {
-            this.value = integer;
+            super.setValue(integer);
         }
     }
 }

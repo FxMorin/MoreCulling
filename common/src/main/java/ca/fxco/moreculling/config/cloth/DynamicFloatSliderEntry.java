@@ -107,7 +107,7 @@ public class DynamicFloatSliderEntry extends AbstractDynamicEntry<Float> {
         }
 
         public void setValue(double f) {
-            this.value = f;
+            super.setValue(f);
         }
     }
 }
