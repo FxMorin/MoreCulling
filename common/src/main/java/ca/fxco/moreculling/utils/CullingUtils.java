@@ -4,17 +4,20 @@ import ca.fxco.moreculling.MoreCulling;
 import ca.fxco.moreculling.api.block.LeavesCulling;
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
 import ca.fxco.moreculling.api.blockstate.StateCullingShapeCache;
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -198,8 +201,12 @@ public class CullingUtils {
         };
     }
 
-    public static boolean cullSignText(BlockPos pos, BlockState state, boolean front) {
+    public static boolean cullSignText(BlockPos pos, BlockState state, boolean front, SignText original) {
         if (MoreCulling.CONFIG.signTextCulling) {
+            if (isSignTextEmpty(original)) {
+                return false;
+            }
+
             Vec3 cameraPos = Minecraft.getInstance().gameRenderer.mainCamera().position();
             if (state.hasProperty(WallSignBlock.FACING)) {
                 Direction dir = state.getValue(WallSignBlock.FACING);
@@ -215,6 +222,21 @@ public class CullingUtils {
             }
             return !MathUtils.isBehindLine(angle, cameraPos, Vec3.atCenterOf(pos));
         }
+        return true;
+    }
+
+    public static boolean isSignTextEmpty(SignText text) {
+        if (text == null) {
+            return true;
+        }
+
+        Component[] messages = text.getMessages(false);
+        for (Component message : messages) {
+            if (!message.getString().isEmpty()) {
+                return false;
+            }
+        }
+
         return true;
     }
 

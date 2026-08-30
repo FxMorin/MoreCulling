@@ -24,7 +24,8 @@ public class SignRenderer_textMixin {
             )
     )
     private SignText moreculling$cullFrontSignText(SignBlockEntity instance, Operation<SignText> original) {
-        return CullingUtils.cullSignText(instance.getBlockPos(), instance.getBlockState(), true) ? original.call(instance) : null;
+        SignText text = original.call(instance);
+        return CullingUtils.cullSignText(instance.getBlockPos(), instance.getBlockState(), true, text) ? text : null;
     }
 
     @WrapOperation(
@@ -39,6 +40,7 @@ public class SignRenderer_textMixin {
             )
     )
     private SignText moreculling$cullBackSignText(SignBlockEntity instance, Operation<SignText> original) {
-        return CullingUtils.cullSignText(instance.getBlockPos(), instance.getBlockState(), false) ? original.call(instance) : null;
+        SignText text = original.call(instance);
+        return CullingUtils.cullSignText(instance.getBlockPos(), instance.getBlockState(), false, text) ? text : null;
     }
 }
