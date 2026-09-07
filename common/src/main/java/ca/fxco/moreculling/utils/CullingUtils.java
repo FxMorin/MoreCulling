@@ -63,21 +63,26 @@ public class CullingUtils {
         if (((MoreStateCulling) sideState).moreculling$cantCullAgainst(side)) {
             return true; // Check if we can cull against this block
         }
-        Block.BlockStatePairKey statePairKey = new Block.BlockStatePairKey(thisState, sideState, side);
-        Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
-        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(statePairKey);
-        if (b != 127) {
-            return b != 0;
-        }
         Direction opposite = side.getOpposite();
         VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
         if (sideShape == Shapes.block()) {
             return false;
         }
 
-        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
-        if (sideShape == Shapes.empty() || thisShape == Shapes.empty()) {
+        if (sideShape == Shapes.empty() || sideShape.isEmpty()) {
             return true;
+        }
+
+        VoxelShape thisShape = ((StateCullingShapeCache) thisState).moreculling$getFaceCullingShape(side);
+        if (thisShape == Shapes.empty() || thisShape.isEmpty()) {
+            return true;
+        }
+
+        Block.BlockStatePairKey statePairKey = new Block.BlockStatePairKey(thisState, sideState, side);
+        Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> object2ByteLinkedOpenHashMap = Block.OCCLUSION_CACHE.get();
+        byte b = object2ByteLinkedOpenHashMap.getAndMoveToFirst(statePairKey);
+        if (b != 127) {
+            return b != 0;
         }
         boolean bl = Shapes.joinIsNotEmpty(thisShape, sideShape, BooleanOp.ONLY_FIRST);
         if (object2ByteLinkedOpenHashMap.size() == 2048) {
