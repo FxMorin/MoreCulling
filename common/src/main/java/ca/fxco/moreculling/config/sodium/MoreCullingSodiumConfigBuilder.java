@@ -54,6 +54,16 @@ public class MoreCullingSodiumConfigBuilder implements ConfigEntryPoint {
                                         .setDefaultValue(true)
                                         .setEnabledProvider(_ -> isEnabled("moreculling.config.option.signTextCulling"))
                                 )
+                                // Painting Culling
+                                .addOption(
+                                        builder.createBooleanOption(Identifier.parse("moreculling:painting_culling"))
+                                        .setName(Component.translatable("moreculling.config.option.paintingCulling")) // use translation keys here
+                                        .setTooltip(Component.translatable("moreculling.config.option.paintingCulling.tooltip"))
+                                        .setImpact(OptionImpact.LOW)
+                                        .setStorageHandler(this.handler)
+                                        .setBinding(v -> this.storage.getData().paintingCulling = v, () -> this.storage.getData().paintingCulling)
+                                        .setDefaultValue(true)
+                                )
                                 // BlockStates
                                 .addOption(
                                         builder.createBooleanOption(Identifier.parse("moreculling:block_state_culling"))
