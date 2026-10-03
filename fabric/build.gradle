@@ -7,7 +7,7 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+    implementation "maven.modrinth:modmenu:${project.modmenu_version}"
 
     implementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
     // ^ Change to `compileOnly` to test without sodium

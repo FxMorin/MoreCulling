@@ -12,7 +12,7 @@
     "sources": "https://github.com/fxmorin/moreculling",
     "issues": "https://github.com/fxmorin/moreculling/issues"
   },
-  "icon": "assets/moreculling/MoreCulling.png",
+  "icon": "assets/moreculling/more_culling.png",
   "license": "${license}",
   "environment": "client",
   "entrypoints": {
