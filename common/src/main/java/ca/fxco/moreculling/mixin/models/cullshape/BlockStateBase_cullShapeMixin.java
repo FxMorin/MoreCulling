@@ -10,7 +10,6 @@ import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
@@ -76,7 +75,7 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
 
         // other mods can turn off occlusion for a face through getFaceOcclusionShape
         // (Terrain Slabs does this for snow layer sides), so respect that here too
-        if (this.canOcclude) {
+        if (this.canOcclude && moreculling$cullingShapesByFace != moreculling$EMPTY_OCCLUSION_SHAPES) {
             VoxelShape[] faces = null;
             for (Direction direction : DIRECTIONS) {
                 if (this.moreculling$cullingShapesByFace[direction.ordinal()].isEmpty()) {
@@ -87,7 +86,11 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
                 if (faceShape.isEmpty()) {
                     if (faces == null) {
                         // copy so we don't edit the shared full block / empty arrays
-                        faces = this.moreculling$cullingShapesByFace.clone();
+                        if (this.moreculling$cullingShapesByFace == moreculling$FULL_BLOCK_OCCLUSION_SHAPES) {
+                            faces = this.moreculling$cullingShapesByFace.clone();
+                        } else {
+                            faces = this.moreculling$cullingShapesByFace;
+                        }
                     }
                     faces[direction.ordinal()] = Shapes.empty();
                 }

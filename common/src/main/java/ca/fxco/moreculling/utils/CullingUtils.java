@@ -65,9 +65,6 @@ public class CullingUtils {
         }
         Direction opposite = side.getOpposite();
         VoxelShape sideShape = ((StateCullingShapeCache) sideState).moreculling$getFaceCullingShape(opposite);
-        if (sideShape == Shapes.block()) {
-            return false;
-        }
 
         if (sideShape == Shapes.empty() || sideShape.isEmpty()) {
             return true;
