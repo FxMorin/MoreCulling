@@ -72,6 +72,30 @@ public abstract class BlockStateBase_cullShapeMixin implements StateCullingShape
                 this.moreculling$cullingShapesByFace[direction.ordinal()] = voxelShape.getFaceShape(direction);
             }
         }
+
+
+        // other mods can turn off occlusion for a face through getFaceOcclusionShape
+        // (Terrain Slabs does this for snow layer sides), so respect that here too
+        if (this.canOcclude) {
+            VoxelShape[] faces = null;
+            for (Direction direction : DIRECTIONS) {
+                if (this.moreculling$cullingShapesByFace[direction.ordinal()].isEmpty()) {
+                    continue;
+                }
+                VoxelShape faceShape = this.asState().getFaceOcclusionShape(
+                        EmptyBlockGetter.INSTANCE, BlockPos.ZERO, direction);
+                if (faceShape.isEmpty()) {
+                    if (faces == null) {
+                        // copy so we don't edit the shared full block / empty arrays
+                        faces = this.moreculling$cullingShapesByFace.clone();
+                    }
+                    faces[direction.ordinal()] = Shapes.empty();
+                }
+            }
+            if (faces != null) {
+                this.moreculling$cullingShapesByFace = faces;
+            }
+        }
     }
 
     @Override
