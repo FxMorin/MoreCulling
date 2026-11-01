@@ -21,7 +21,7 @@ public class CacheUtils {
      */
     public static void resetAllCache() {
         // Not really needed as ModernFix automatically caches and releases models, which is good enough.
-        if (IS_MODERNFIX_LOADED && ModernFixMixinPlugin.instance.isOptionEnabled("perf.dynamic_resources")) {
+        if (IS_MODERNFIX_LOADED && ModernFixMixinPlugin.instance.isOptionEnabled("perf.dynamic_resources.MixinBlockState")) {
             return;
         }
         // Reset all model translucency cache

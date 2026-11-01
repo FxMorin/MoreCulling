@@ -21,7 +21,7 @@ dependencies {
     }
 
     compileOnly "maven.modrinth:vulkanmod:${vulkan_version}"
-    compileOnly "maven.modrinth:modernfix-mvus:${modernfix_version}-fabric"
+    implementation "maven.modrinth:modernfix-mvus:${modernfix_mvus_version}-fabric"
 
     implementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
     include("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixins_version}")
