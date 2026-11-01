@@ -1,5 +1,7 @@
 package ca.fxco.moreculling.mixin.blocks.cullshape;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CandleBlock;
@@ -19,7 +21,7 @@ public abstract class CandleBlock_voxelMixin extends AbstractCandleBlock {
     public static IntegerProperty CANDLES;
     @Unique
     private static final VoxelShape[] moreculling$occlusionShapes = new VoxelShape[]{
-            Block.column(2.0, 0.0, 6.0),
+            Block.box(7.0, 0.0, 7.0, 9.0, 6.0, 9.0),
             Shapes.or(
                     Block.box(5.0, 0.0, 7.0, 7.0, 5.0, 9.0),
                     Block.box(9.0, 0.0, 6.0, 11.0, 6.0, 8.0)
@@ -42,7 +44,7 @@ public abstract class CandleBlock_voxelMixin extends AbstractCandleBlock {
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState state) {
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
         return moreculling$occlusionShapes[state.getValue(CANDLES) - 1];
     }
 }
