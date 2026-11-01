@@ -31,6 +31,7 @@
     "blocks.cullshape.BaseTorchBlock_voxelMixin",
     "blocks.cullshape.BrewingStandBlock_voxelMixin",
     "blocks.cullshape.CampfireBlock_voxelMixin",
+    "blocks.cullshape.CandleBlock_voxelMixin",
     "blocks.cullshape.ChorusFlowerBlock_voxelMixin",
     "blocks.cullshape.EndRodBlock_voxelMixin",
     "blocks.cullshape.LightningRodBlock_voxelMixin",
