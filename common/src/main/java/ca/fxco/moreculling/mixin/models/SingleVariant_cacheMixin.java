@@ -1,13 +1,10 @@
 package ca.fxco.moreculling.mixin.models;
 
 import ca.fxco.moreculling.api.blockstate.MoreStateCulling;
-import ca.fxco.moreculling.api.data.QuadBounds;
 import ca.fxco.moreculling.api.model.BakedOpacity;
-import ca.fxco.moreculling.api.sprite.SpriteOpacity;
+import ca.fxco.moreculling.api.quad.QuadOpacity;
 import ca.fxco.moreculling.utils.DirectionBits;
 import ca.fxco.moreculling.utils.DirectionUtils;
-import ca.fxco.moreculling.utils.VertexUtils;
-import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.SingleVariant;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
@@ -31,20 +28,18 @@ public abstract class SingleVariant_cacheMixin implements BakedOpacity {
         DirectionBits emptyFaces = new DirectionBits();
         boolean translucency = false;
 
-        for (Direction direction : DirectionUtils.DIRECTIONS) {
+        for (Direction direction : DirectionUtils.DIRECTIONS_AND_NULL) {
             List<BakedQuad> layeredQuads = model.getQuads(direction);
             if (!layeredQuads.isEmpty()) {
                 if (!translucency) {
                     for (BakedQuad quad : layeredQuads) {
-                        SpriteOpacity opacity = ((SpriteOpacity) quad.materialInfo().sprite());
-                        NativeImage image = opacity.moreculling$getUnmipmappedImage();
-                        QuadBounds bounds = VertexUtils.getQuadUvBounds(quad, image.getWidth(), image.getHeight());
-                        if (opacity.moreculling$hasTranslucency(bounds)) {
+                        if (((QuadOpacity) (Object) quad).moreculling$getTextureTranslucency()) {
                             translucency = true;
+                            break;
                         }
                     }
                 }
-            } else {
+            } else if (direction != null) {
                 emptyFaces.add(direction);
             }
         }

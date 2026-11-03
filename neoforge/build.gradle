@@ -45,6 +45,7 @@ dependencies {
 
     compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${project.mixinsquared_version}"))
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:${project.mixinsquared_version}"))
+    implementation "maven.modrinth:n2fvCDlM:guJEg4jK"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

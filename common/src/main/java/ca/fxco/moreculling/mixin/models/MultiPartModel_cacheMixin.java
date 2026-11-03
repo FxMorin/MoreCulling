@@ -35,11 +35,13 @@ public abstract class MultiPartModel_cacheMixin implements BakedOpacity {
     public void moreculling$resetTranslucencyCache(BlockState state) {
         byte emptyFaces = 0;
         boolean translucency = false;
-        for (Direction face : DirectionUtils.DIRECTIONS) {
+        for (Direction face : DirectionUtils.DIRECTIONS_AND_NULL) {
             List<BakedQuad> quads = Services.PLATFORM.getQuads((BlockStateModel) this, state,
                     face, CullingUtils.RANDOM, BlockAndTintGetter.EMPTY, BlockPos.ZERO);
             if (quads.isEmpty()) { // no faces = translucent
-                emptyFaces = BitUtils.set(emptyFaces, face.ordinal());
+                if (face != null) {
+                    emptyFaces = BitUtils.set(emptyFaces, face.ordinal());
+                }
             } else if (!translucency) {
                 for (BakedQuad quad : quads) {
                     if (((QuadOpacity) (Object) quad).moreculling$getTextureTranslucency()) {
