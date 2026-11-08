@@ -38,7 +38,7 @@
     "blockstates.BlockStateBase_moreMixin",
     "blockstates.Minecraft_loadBlocksMixin",
     "compat.BlockOcclusionCache_sodiumMixin",
-    "compat.SignBlock_ebeMixin",
+    "blocks.cullshape.SignBlock_voxelMixin",
     "entities.ItemFrameRenderer_cullMixin",
     "models.BakedModel_extendsMixin",
     "models.MultiPartModel_cacheMixin",
