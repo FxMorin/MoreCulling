@@ -49,7 +49,7 @@ public class MorecullingFabricBlockModelFeatureRenderer_sodiumMixin {
             )
     )
     private void render(Mesh instance, QuadEmitter emitter, Operation<Void> original) {
-        original.call(instance, ((ExtendedMutableQuadViewImpl) this.emitter).getWrapper());
+        original.call(instance, ((ExtendedMutableQuadViewImpl) this.emitter).sodium$getWrapper());
     }
 
     private void bufferQuad(MutableQuadViewImpl quad) {
@@ -60,17 +60,17 @@ public class MorecullingFabricBlockModelFeatureRenderer_sodiumMixin {
         }
 
         if (quad.emissive()) {
-            ((ExtendedMutableQuadViewImpl) quad).getWrapper().lightmap(LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT);
+            ((ExtendedMutableQuadViewImpl) quad).sodium$getWrapper().lightmap(LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT);
         } else {
-            ((ExtendedMutableQuadViewImpl) quad).getWrapper().minLightmap(submit.lightCoords());
+            ((ExtendedMutableQuadViewImpl) quad).sodium$getWrapper().minLightmap(submit.lightCoords());
         }
 
         int[] tintLayers = submit.tintLayers();
         int baseTintColor = submit.tintColor();
 
-        int tintIndex = quad.getTintIndex();
+        int tintIndex = quad.sodium$getTintIndex();
         boolean useTintLayer = tintIndex != -1 && tintIndex < tintLayers.length;
-        ((ExtendedMutableQuadViewImpl) quad).getWrapper().multiplyColor(useTintLayer ? ARGB.multiply(baseTintColor, tintLayers[tintIndex]) : baseTintColor);
-        ((ExtendedMutableQuadViewImpl) quad).getWrapper().buffer(submit.overlayCoords(), submit.pose(), buffer);
+        ((ExtendedMutableQuadViewImpl) quad).sodium$getWrapper().multiplyColor(useTintLayer ? ARGB.multiply(baseTintColor, tintLayers[tintIndex]) : baseTintColor);
+        ((ExtendedMutableQuadViewImpl) quad).sodium$getWrapper().buffer(submit.overlayCoords(), submit.pose(), buffer);
     }
 }

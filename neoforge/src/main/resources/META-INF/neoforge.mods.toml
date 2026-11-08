@@ -53,7 +53,7 @@ side="BOTH"
 [[dependencies.${mod_id}]]
     modId="sodium"
     type="incompatible"
-    versionRange="[, 0.6.7)"
+    versionRange="[, 0.9.3-beta.2)"
     ordering="AFTER"
     side="BOTH"
 
