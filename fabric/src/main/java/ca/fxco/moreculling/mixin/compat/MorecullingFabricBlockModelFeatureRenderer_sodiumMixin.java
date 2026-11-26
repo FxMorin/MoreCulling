@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.caffeinemc.mods.sodium.client.render.frapi.wrapper.ExtendedMutableQuadViewImpl;
+import net.caffeinemc.mods.sodium.client.render.frapi.wrapper.MutableQuadViewWrapper;
 import net.caffeinemc.mods.sodium.client.render.model.EncodingFormat;
 import net.caffeinemc.mods.sodium.client.render.model.MutableQuadViewImpl;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.Mesh;
@@ -49,7 +50,7 @@ public class MorecullingFabricBlockModelFeatureRenderer_sodiumMixin {
             )
     )
     private void render(Mesh instance, QuadEmitter emitter, Operation<Void> original) {
-        original.call(instance, ((ExtendedMutableQuadViewImpl) this.emitter).getWrapper());
+        original.call(instance, ((ExtendedMutableQuadViewImpl) this.emitter).sodium$getWrapper());
     }
 
     private void bufferQuad(MutableQuadViewImpl quad) {
@@ -59,18 +60,19 @@ public class MorecullingFabricBlockModelFeatureRenderer_sodiumMixin {
             return;
         }
 
+        MutableQuadViewWrapper wrapper = ((ExtendedMutableQuadViewImpl) quad).sodium$getWrapper();
         if (quad.emissive()) {
-            ((ExtendedMutableQuadViewImpl) quad).getWrapper().lightmap(LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT);
+            wrapper.lightmap(LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT, LightCoordsUtil.FULL_BRIGHT);
         } else {
-            ((ExtendedMutableQuadViewImpl) quad).getWrapper().minLightmap(submit.lightCoords());
+            wrapper.minLightmap(submit.lightCoords());
         }
 
         int[] tintLayers = submit.tintLayers();
         int baseTintColor = submit.tintColor();
 
-        int tintIndex = quad.getTintIndex();
+        int tintIndex = quad.sodium$getTintIndex();
         boolean useTintLayer = tintIndex != -1 && tintIndex < tintLayers.length;
-        ((ExtendedMutableQuadViewImpl) quad).getWrapper().multiplyColor(useTintLayer ? ARGB.multiply(baseTintColor, tintLayers[tintIndex]) : baseTintColor);
-        ((ExtendedMutableQuadViewImpl) quad).getWrapper().buffer(submit.overlayCoords(), submit.pose(), buffer);
+        wrapper.multiplyColor(useTintLayer ? ARGB.multiply(baseTintColor, tintLayers[tintIndex]) : baseTintColor);
+        wrapper.buffer(submit.overlayCoords(), submit.pose(), buffer);
     }
 }
